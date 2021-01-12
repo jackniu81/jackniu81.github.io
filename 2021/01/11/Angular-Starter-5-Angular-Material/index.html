@@ -16,20 +16,20 @@
 
 
   
-  <title>SQL Server: The database could not be exclusively locked to perform the operation | Jack N @ GitHub</title>
+  <title>Angular入门到精通系列教程（5）- 第三方UI库（Angular Material） | Jack N @ GitHub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Error on renaming database in SQL Server, when rename the database: 1ALTER DATABASE MY_DB MODIFY NAME = [MY_DB_bak] But it shows an error when executing: 1The database could not be exclusively locked">
-<meta name="keywords" content="SQL Server">
+  <meta name="description" content="1. 第三方UI库的选择 2. Angular Material 2.1. 优缺点 2.1.1. 优点 2.1.2. 缺点   2.2. 引入到项目   3. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: VSCode   1. 第三方UI库的选择Angular开发，除非你只有简单一">
+<meta name="keywords" content="Angular,Angular入门">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SQL Server: The database could not be exclusively locked to perform the operation">
-<meta property="og:url" content="jackniu81.github.io/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/index.html">
+<meta property="og:title" content="Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）">
+<meta property="og:url" content="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/index.html">
 <meta property="og:site_name" content="Jack N @ GitHub">
-<meta property="og:description" content="Error on renaming database in SQL Server, when rename the database: 1ALTER DATABASE MY_DB MODIFY NAME = [MY_DB_bak] But it shows an error when executing: 1The database could not be exclusively locked">
+<meta property="og:description" content="1. 第三方UI库的选择 2. Angular Material 2.1. 优缺点 2.1.1. 优点 2.1.2. 缺点   2.2. 引入到项目   3. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: VSCode   1. 第三方UI库的选择Angular开发，除非你只有简单一">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-01-08T07:55:52.115Z">
+<meta property="og:updated_time" content="2021-01-12T06:34:18.717Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SQL Server: The database could not be exclusively locked to perform the operation">
-<meta name="twitter:description" content="Error on renaming database in SQL Server, when rename the database: 1ALTER DATABASE MY_DB MODIFY NAME = [MY_DB_bak] But it shows an error when executing: 1The database could not be exclusively locked">
+<meta name="twitter:title" content="Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）">
+<meta name="twitter:description" content="1. 第三方UI库的选择 2. Angular Material 2.1. 优缺点 2.1.1. 优点 2.1.2. 缺点   2.2. 引入到项目   3. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: VSCode   1. 第三方UI库的选择Angular开发，除非你只有简单一">
   
   <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
   
@@ -86,10 +86,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Angular-Starter-5-Angular-Material" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" class="article-date">
-  <time datetime="2019-11-22T01:53:39.000Z" itemprop="datePublished">2019-11-22</time>
+    <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="article-date">
+  <time datetime="2021-01-11T04:11:30.000Z" itemprop="datePublished">2021-01-11</time>
 </a>
     
   </div>
@@ -100,7 +100,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      SQL Server: The database could not be exclusively locked to perform the operation
+      Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）
     </h1>
   
 
@@ -108,20 +108,76 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Error on renaming database in SQL Server, when rename the database:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">MODIFY</span> <span class="keyword">NAME</span> = [MY_DB_bak]</span><br></pre></td></tr></table></figure>
-<p>But it shows an error when executing:</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The database could <span class="keyword">not</span> be exclusively locked <span class="built_in">to</span> perform <span class="keyword">the</span> operation.</span><br></pre></td></tr></table></figure>
-<p>The solution is setting the database to single user mode.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">master</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">SET</span> SINGLE_USER <span class="keyword">WITH</span> <span class="keyword">ROLLBACK</span> <span class="keyword">IMMEDIATE</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">MODIFY</span> <span class="keyword">NAME</span> = [MY_DB_bak]</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB_bak <span class="keyword">SET</span> MULTI_USER</span><br></pre></td></tr></table></figure>
+        <ul>
+<li><a href="#1-第三方ui库的选择">1. 第三方UI库的选择</a></li>
+<li><a href="#2-angular-material">2. Angular Material</a><ul>
+<li><a href="#21-优缺点">2.1. 优缺点</a><ul>
+<li><a href="#211-优点">2.1.1. 优点</a></li>
+<li><a href="#212-缺点">2.1.2. 缺点</a></li>
+</ul>
+</li>
+<li><a href="#22-引入到项目">2.2. 引入到项目</a></li>
+</ul>
+</li>
+<li><a href="#3-总结">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: VSCode</li>
+</ul>
+</blockquote>
+<h1 id="1-第三方UI库的选择"><a href="#1-第三方UI库的选择" class="headerlink" title="1. 第三方UI库的选择"></a>1. 第三方UI库的选择</h1><p>Angular开发，除非你只有简单一两个页面，否则引入第三方UI库就是必不可少的。而具体用哪个库，就需要考虑多方面的东西了。比如：</p>
+<ol>
+<li>流行程度</li>
+<li>版本更新情况 （是否能跟进anuglar更新，bug是否及时修复）</li>
+<li>UI风格，是否适用于项目</li>
+<li>入手难易程度</li>
+<li>文档完善程度</li>
+</ol>
+<p>市面上有很多Angular可用的类库，可用根据项目、企业情况去选择。简单列一下可选的UI库。</p>
+<ol>
+<li><code>Angular Material</code>: angular 官方UI库。<a href="https://material.angular.io/" target="_blank" rel="noopener">https://material.angular.io/</a></li>
+<li><code>clarity</code>: 国外的一套比较流行的框架， <a href="https://clarity.design/。" target="_blank" rel="noopener">https://clarity.design/。</a> </li>
+<li><code>NG-ZORRO</code>: 阿里Ant Design的Angular版本。 <a href="https://ng.ant.design/docs/introduce/en" target="_blank" rel="noopener">https://ng.ant.design/docs/introduce/en</a> </li>
+<li><code>Element Angular</code>：国内非常流行的基于Vue的Element，同样有Angular版本。 <a href="https://element-angular.faas.ele.me/" target="_blank" rel="noopener">https://element-angular.faas.ele.me/</a></li>
+<li><code>Kendo UI</code>。很多很强大，只是要收费。<a href="https://www.telerik.com/kendo-angular-ui" target="_blank" rel="noopener">https://www.telerik.com/kendo-angular-ui</a></li>
+</ol>
+<h1 id="2-Angular-Material"><a href="#2-Angular-Material" class="headerlink" title="2. Angular Material"></a>2. Angular Material</h1><h2 id="2-1-优缺点"><a href="#2-1-优缺点" class="headerlink" title="2.1. 优缺点"></a>2.1. 优缺点</h2><h3 id="2-1-1-优点"><a href="#2-1-1-优点" class="headerlink" title="2.1.1. 优点"></a>2.1.1. 优点</h3><ul>
+<li>官方UI组件</li>
+<li>最标准的Material实现</li>
+<li>紧跟Angular核心组件的更新进度</li>
+<li>官方支持与Angular的同步升级</li>
+</ul>
+<h3 id="2-1-2-缺点"><a href="#2-1-2-缺点" class="headerlink" title="2.1.2. 缺点"></a>2.1.2. 缺点</h3><ul>
+<li>组件不像其他框架那么多，但是基本够用</li>
+<li>风格不是特别像国内的框架</li>
+</ul>
+<h2 id="2-2-引入到项目"><a href="#2-2-引入到项目" class="headerlink" title="2.2. 引入到项目"></a>2.2. 引入到项目</h2><ol>
+<li><p>根目录下执行下面命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng add @angular/material</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>import 到页面所属的module，或者是app.module.ts中。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import MatSliderModule</span></span><br><span class="line"><span class="keyword">import</span> &#123; MatSliderModule &#125; <span class="keyword">from</span> <span class="string">'@angular/material/slider'</span>;</span><br><span class="line"></span><br><span class="line">…</span><br><span class="line"><span class="meta">@NgModule</span> (&#123;....</span><br><span class="line">  imports: [...,</span><br><span class="line">  MatSliderModule,</span><br><span class="line">…]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
+<li>第三方组件各有优缺点</li>
+<li>根据公司、项目的需求去选择</li>
+<li>Angular Material升级更容易，官方支持。</li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" data-id="ckjtme0io000fcg9xo2brs8ee" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckjtme0hu0000cg9xkbbojo5o" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL-Server/">SQL Server</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
 
     </footer>
   </div>
@@ -129,19 +185,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/01/11/Angular-Starter-6-update/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          嵌入在iframe中的Angular站点，如何打开一个新的tab页面
+          Angular入门到精通系列教程（6）- Angular的升级
         
       </div>
     </a>
   
   
-    <a href="/2015/12/10/Hello-Hexo/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello Hexo</div>
+      <div class="article-nav-title">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</div>
     </a>
   
 </nav>
