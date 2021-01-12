@@ -83,6 +83,99 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" class="article-date">
+  <time datetime="2019-11-22T01:53:39.000Z" itemprop="datePublished">2019-11-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/">SQL Server: The database could not be exclusively locked to perform the operation</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Error on renaming database in SQL Server, when rename the database:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">MODIFY</span> <span class="keyword">NAME</span> = [MY_DB_bak]</span><br></pre></td></tr></table></figure>
+<p>But it shows an error when executing:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The database could <span class="keyword">not</span> be exclusively locked <span class="built_in">to</span> perform <span class="keyword">the</span> operation.</span><br></pre></td></tr></table></figure>
+<p>The solution is setting the database to single user mode.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">master</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">SET</span> SINGLE_USER <span class="keyword">WITH</span> <span class="keyword">ROLLBACK</span> <span class="keyword">IMMEDIATE</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">MODIFY</span> <span class="keyword">NAME</span> = [MY_DB_bak]</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB_bak <span class="keyword">SET</span> MULTI_USER</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" data-id="ckjtqtks2000j689x19f773dd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL-Server/">SQL Server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hello-Hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/10/Hello-Hexo/" class="article-date">
+  <time datetime="2015-12-10T02:14:59.000Z" itemprop="datePublished">2015-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/10/Hello-Hexo/">Hello Hexo</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Why-Hexo"><a href="#Why-Hexo" class="headerlink" title="Why Hexo"></a>Why Hexo</h1><p>I’m a fan of <a href="http://nodejs.org" target="_blank" rel="noopener">Node.js</a>, and github, and I want to choose a tool written in node.js to help me write blogs.<br>And it is <a href="https://github.com/hexojs/hexo" target="_blank" rel="noopener">Hexo</a>! It is a fast, simple &amp; powerful blog framework, powered by Node.js.</p>
+<h2 id="Features-of-Hexo"><a href="#Features-of-Hexo" class="headerlink" title="Features of Hexo"></a>Features of Hexo</h2><ul>
+<li>Blazing fast generating</li>
+<li>Support for GitHub Flavored Markdown and most Octopress plugins</li>
+<li>One-command deploy to GitHub Pages, Heroku, etc.</li>
+<li>Powerful plugin system</li>
+</ul>
+<h1 id="Several-Node-js-Static-Site-Generators"><a href="#Several-Node-js-Static-Site-Generators" class="headerlink" title="Several Node.js Static Site Generators"></a>Several Node.js Static Site Generators</h1><p>I like Node.js, so I give you several choose beside the Hexo!</p>
+<h2 id="Metalsmith"><a href="#Metalsmith" class="headerlink" title="Metalsmith"></a>Metalsmith</h2><p>Metalsmith immediately caught my attention not only thanks to its beautiful and minimal design, but also because of the following tagline: An extremely simple, pluggable static site generator. The first blurb goes on to explain that all of the logic in Metalsmith is handled by plugins. You simply chain them together. This makes Metalsmith the most versatile of all the systems presented here.</p>
+<h2 id="Wintersmith"><a href="#Wintersmith" class="headerlink" title="Wintersmith"></a>Wintersmith</h2><p>Wintersmith claims to be a flexible, minimalistic, multi-platform static site generator built on top of Node.js. Certainly, minimalistic is the key word! Wintersmith isn’t suited for beginners, but it’s perfectly fine for intermediate or advanced developers looking to get up and running with little fuss. Wintersmith’s approach isn’t the only thing that’s minimal. It was coded in CoffeeScript and ships with Jade and Markdown ready to go.</p>
+<h2 id="Assemble"><a href="#Assemble" class="headerlink" title="Assemble"></a>Assemble</h2><p>Assemble is a powerful tool that integrates Grunt and Yeoman into its workflow. Like Punch and DocPad discussed later in this article, Assemble tries to get designers and developers on the same page. For example, Assemble comes pre-packaged with Handlebars, one of the most widely used and beginner-friendly templating systems available.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2015/12/10/Hello-Hexo/" data-id="ckjtqtks2000f689x3wih0umk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Assemble/">Assemble</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Metalsmith/">Metalsmith</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Wintersmith/">Wintersmith</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node-js/">node.js</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Hello-World" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/12/10/Hello-World/" class="article-date">
@@ -111,7 +204,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2015/12/10/Hello-World/" data-id="ckjtmfag7000dy89xorhkgfsm" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2015/12/10/Hello-World/" data-id="ckjtqtks2000i689x27s3ntep" class="article-share-link">Share</a>
       
       
     </footer>
@@ -148,7 +241,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -166,7 +259,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -182,19 +275,19 @@
           </li>
         
           <li>
+            <a href="/2021/01/11/Angular-Starter-9-Component-Lifecycle/">Angular入门到精通系列教程（9）- 组件的生命周期(Component Lifecycle Hook)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/11/Angular-Starter-8-component-child-parent/">Angular入门到精通系列教程（8）- 父子组件（Component）之间传递数据</a>
+          </li>
+        
+          <li>
             <a href="/2021/01/11/Angular-Starter-6-update/">Angular入门到精通系列教程（6）- Angular的升级</a>
           </li>
         
           <li>
             <a href="/2021/01/11/Angular-Starter-5-Angular-Material/">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/11/Angular-Starter-tech-stack/">Angular入门到精通系列教程（3） - Angular 技术栈 （Tech Stack）</a>
           </li>
         
       </ul>
