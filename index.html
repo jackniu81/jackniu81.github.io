@@ -83,6 +83,693 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Angular-Starter-15-folder-structure" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-15-folder-structure/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.829Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐<br>date: 2021-01-29 13:06:00<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-目录结构工程结构推荐">2. 目录结构（工程结构）推荐</a><ul>
+<li><a href="#21-总的原则">2.1. 总的原则</a></li>
+<li><a href="#22-实例">2.2. 实例</a></li>
+<li><a href="#23-共享模块-sharedmodule">2.3. 共享模块-SharedModule</a></li>
+</ul>
+</li>
+<li><a href="#3-高级应用---angular库工作空间workspace-">3. 高级应用 - angular库、工作空间（workspace ）</a><ul>
+<li><a href="#31-目录结构示意">3.1. 目录结构示意</a></li>
+</ul>
+</li>
+<li><a href="#4-总结">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>实际的Angular项目，肯定不是一个简单的Hello World程序，会包含很多的功能，很多的文件。那么如何更好的组织这些文件呢？官方给了一个原则，可以供参考：<br><a href="https://angular.io/guide/styleguide#application-structure-and-ngmodules。" target="_blank" rel="noopener">https://angular.io/guide/styleguide#application-structure-and-ngmodules。</a><br>下面，我们来通过一个例子具体解释一下。</p>
+<h1 id="2-目录结构（工程结构）推荐"><a href="#2-目录结构（工程结构）推荐" class="headerlink" title="2. 目录结构（工程结构）推荐"></a>2. 目录结构（工程结构）推荐</h1><h2 id="2-1-总的原则"><a href="#2-1-总的原则" class="headerlink" title="2.1. 总的原则"></a>2.1. 总的原则</h2><ol>
+<li>基于Angular CLI创建模块（module），组件（component）等等的内容；</li>
+<li>源代码都放到<code>src</code> 文件夹下；</li>
+<li>应用的根目录创建一个 NgModule, 并命名为app.module.ts（例如 /src/app，这个Angular CLI 会自动帮我们做)</li>
+<li>组件具有多个伴生文件 (.ts、.html、.css 和 .spec)，建议为它创建一个文件夹;(Angular CLI 会自动帮我们做)</li>
+<li>为每一组功能（特性区）创建一个模块（<code>NgModule</code>）；（这个也方便我们应用惰性加载/延迟加载，预加载）</li>
+<li>在 src/app/shared 目录中创建名叫 SharedModule 的共享模块，方便其他功能调用； </li>
+</ol>
+<h2 id="2-2-实例"><a href="#2-2-实例" class="headerlink" title="2.2. 实例"></a>2.2. 实例</h2><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">src/ 目录下：</span><br><span class="line">+---app</span><br><span class="line">|   |   app-routing.module.ts</span><br><span class="line">|   |   app.component.css</span><br><span class="line">|   |   app.component.html</span><br><span class="line">|   |   app.component.spec.ts</span><br><span class="line">|   |   app.component.ts</span><br><span class="line">|   |   app.module.ts</span><br><span class="line">|   |   </span><br><span class="line">|   +---feature1</span><br><span class="line">|   |   |   ......</span><br><span class="line">|   |           </span><br><span class="line">|   +---feature1</span><br><span class="line">|   |   |   ......</span><br><span class="line">|   |           </span><br><span class="line">|   +---core</span><br><span class="line">|   |   |   core.module.ts</span><br><span class="line">|   |   |   ....</span><br><span class="line">|   |           </span><br><span class="line">|   \---shared</span><br><span class="line">|       |   shared.module.ts</span><br><span class="line">|       |   </span><br><span class="line">|       +---components</span><br><span class="line">|       +---pipes</span><br><span class="line">|       +---services</span><br><span class="line">|               </span><br><span class="line">+---assets</span><br><span class="line">|       .gitkeep</span><br><span class="line">|       </span><br><span class="line">\---environments</span><br><span class="line">        environment.prod.ts</span><br><span class="line">        environment.ts</span><br></pre></td></tr></table></figure>
+<p><strong>说明</strong>：</p>
+<ol>
+<li>根目录下的<code>NgModule</code> 默认是 <code>app.module.ts</code>, 不要改名，方便阅读</li>
+<li>app 下，每个目录，同时也都是一个模块-<code>NgModule</code></li>
+<li>一个项目，一般包含多个功能（feature）模块</li>
+<li>推荐使用共享模块-SharedModule，将通用的、功能的功能（service/component/pipe等）放到改模块中。 （下文详细介绍）</li>
+<li>推荐使用核心模块-CoreModule，可以将项目的一些全局的设置、UI等放到该模块。如header、footer组件，安全组件（服务），上下文存储服务等。</li>
+</ol>
+<h2 id="2-3-共享模块-SharedModule"><a href="#2-3-共享模块-SharedModule" class="headerlink" title="2.3. 共享模块-SharedModule"></a>2.3. 共享模块-SharedModule</h2><p>上文提到，推荐使用共享模块-SharedModule，将通用的、功能的功能（service/component/pipe等）放到改模块中。具体存放内容包括：</p>
+<ol>
+<li>共享模块中声明那些可能被特性模块引用的可复用组件(Component)、指令(Directive)和管道(Pipe)。</li>
+<li>如果放置服务（Service），由于服务的单例特性，共享模块中只建议放置无状态的服务（Service），对于有状态、或者和业务紧密相关的服务，建议放到CoreModule中。</li>
+<li>SharedModule 中声明(declarations)和导出(exports)所有组件、指令和管道，方便其他模块调用</li>
+<li>共享模块（SharedModule）在项目中处于底层，从逻辑上，只能由其他业务逻辑模块调用，不能调用其他模块；</li>
+<li>共享模块（SharedModule）不建议使用延迟加载（惰性加载），因为这样会破坏服务的单例特性；</li>
+</ol>
+<h1 id="3-高级应用-angular库、工作空间（workspace-）"><a href="#3-高级应用-angular库、工作空间（workspace-）" class="headerlink" title="3. 高级应用 - angular库、工作空间（workspace ）"></a>3. 高级应用 - angular库、工作空间（workspace ）</h1><p>想一想你是如何安装angular相关的类库的？我们使用的是<code>npm install xxx</code>。那么这些第三方angular库是如何开发的呢？我们是否可以把通用的内容写成Angular类库，然后方便在多个angular项目间共享了？又或者直接发布到官方npm站点？</p>
+<p>Angular 从6.0开始，引入了工作区的概念。使用Angular CLI，默认创建的就是一个工作空间(workspace)。一个工作空间(workspace)可以有一个主项目，同时可以有多个子项目。当然这些子项目可以是angular的application， 也可以是Library。Angular的子项目，都在<code>app</code>下的<code>projects</code> 之下，和<code>src</code>目录平级。</p>
+<p>这样，一般来说，我们的项目中，除了主程序，还可以包含多个子类库。这样在开发时方便主程序、类库同时开发调试；也可以项目结束后，单独发布类库，实现项目之间的代码共享。</p>
+<p>创建子项目也很简单，子项目有2种类型，application（可以启动的）和Library（Angular类库），默认都在<code>projects</code>文件夹下：</p>
+<ol>
+<li><p>创建子Applicaton</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng <span class="keyword">generate</span> application &lt;name&gt; [options]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建子类库（Angular Library)</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng <span class="keyword">generate</span> <span class="keyword">library</span> &lt;name&gt; [options]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="3-1-目录结构示意"><a href="#3-1-目录结构示意" class="headerlink" title="3.1. 目录结构示意"></a>3.1. 目录结构示意</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">+---projects</span><br><span class="line">|   \---ng-<span class="class"><span class="keyword">lib</span>-<span class="title">a</span></span></span><br><span class="line">|       \---src</span><br><span class="line">|           \---<span class="class"><span class="keyword">lib</span></span></span><br><span class="line">|   \---ng-<span class="class"><span class="keyword">lib</span>-<span class="title">b</span></span></span><br><span class="line">|       \---src</span><br><span class="line">|           \---<span class="class"><span class="keyword">lib</span></span></span><br><span class="line">\---src</span><br><span class="line">    +---app</span><br><span class="line">    |   +---feature1</span><br><span class="line">    |   +---feature2</span><br><span class="line">    |   +---core</span><br><span class="line">    |   |   +---footer</span><br><span class="line">    |   |   \---header</span><br><span class="line">    |   \---shared</span><br><span class="line">    |       +---components</span><br><span class="line">    |       +---pipes</span><br><span class="line">    |       \---services</span><br><span class="line">    +---assets</span><br><span class="line">    \---environments</span><br></pre></td></tr></table></figure>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>Angular CLI默认创建的Angular项目，实际是一个工作空间（workspace ），在其内部还可以创建多个子项目</li>
+<li>子项目可以是Application，也可以是类库（Library）；</li>
+<li>对于主项目（一般来说是一个Application），以功能模块的方式进行组织；</li>
+<li>公共内容，建议放到共享模块-SharedModule中。</li>
+<li>对于功能模块，可以通过惰性加载（延迟）加载，提高首页加载速度；同时通过预加载技术，可以在空闲时间加载这部分模块，使用户体验更好。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-15-folder-structure/" data-id="ckkrkcahx00083c9xyj1zub06" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-css3-flex-box" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/css3-flex-box/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.829Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: CSS3 Flex Box 弹性盒子、弹性布局<br>date: 2021-01-29 13:06:00<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-justify-content-属性">2. justify-content 属性</a></li>
+<li><a href="#3-align-items-属性">3. align-items 属性</a></li>
+<li><a href="#4-flex-wrap-属性">4. flex-wrap 属性</a></li>
+<li><a href="#5-align-content-属性">5. align-content 属性</a></li>
+<li><a href="#6-居中">6. 居中</a></li>
+<li><a href="#7-align-self">7. align-self</a></li>
+<li><a href="#8-总结">8. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>Flexible Box翻译过来就是弹性盒子、弹性布局，是css3中新增的一种布局方式，是当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。引入弹性布局模型的目的是提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间。</p>
+<p>弹性盒子由弹性容器(Flex container)和弹性子元素(Flex item)组成。</p>
+<ul>
+<li>弹性容器通过设置 display 属性的值为 flex 或 inline-flex将其定义为弹性容器。</li>
+<li>弹性容器内包含了一个或多个弹性子元素。</li>
+</ul>
+<table class="reference"><br>    <tbody><br>        <tr><br>            <th style="width:25%">属性</th><br>            <th>描述</th><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/pr-class-display.html">display</a><br>            </td><br>            <td>指定 HTML 元素盒子类型。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex-direction.html">flex-direction</a><br>            </td><br>            <td>指定了弹性容器中子元素的排列方式</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-justify-content.html">justify-content</a><br>            </td><br>            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-align-items.html">align-items</a><br>            </td><br>            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex-wrap.html">flex-wrap</a><br>            </td><br>            <td>设置弹性盒子的子元素超出父容器时是否换行。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-align-content.html">align-content</a><br>            </td><br>            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex-flow.html">flex-flow</a><br>            </td><br>            <td>flex-direction 和 flex-wrap 的简写</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-order.html">order</a><br>            </td><br>            <td>设置弹性盒子的子元素排列顺序。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-align-self.html">align-self</a><br>            </td><br>            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex.html">flex</a><br>            </td><br>            <td>设置弹性盒子的子元素如何分配空间。</td><br>        </tr><br>    </tbody><br></table>
+
+
+<h1 id="2-justify-content-属性"><a href="#2-justify-content-属性" class="headerlink" title="2. justify-content 属性"></a>2. justify-content 属性</h1><p>内容对齐（justify-content）属性应用在弹性容器上，把弹性项沿着弹性容器的横轴（主轴线，main axis）对齐。</p>
+<p><code>·justify-content</code> 语法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">justify-content: flex-start | flex-end | center | space-between | space-around</span><br></pre></td></tr></table></figure></p>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性项目向行头紧挨着填充。这个是默认值。第一个弹性项的main-start外边距边线被放置在该行的main-start边线，而后续弹性项依次平齐摆放。</li>
+<li>flex-end：弹性项目向行尾紧挨着填充。第一个弹性项的main-end外边距边线被放置在该行的main-end边线，而后续弹性项依次平齐摆放。</li>
+<li>center：弹性项目居中紧挨着填充。（如果剩余的自由空间是负的，则弹性项目将在两个方向上同时溢出）。</li>
+<li>space-between：弹性项目平均分布在该行上。如果剩余空间为负或者只有一个弹性项，则该值等同于flex-start。否则，第1个弹性项的外边距和行的main-start边线对齐，而最后1个弹性项的外边距和行的main-end边线对齐，然后剩余的弹性项分布在该行上，相邻项目的间隔相等。</li>
+<li>space-around：弹性项目平均分布在该行上，两边留有一半的间隔空间。如果剩余空间为负或者只有一个弹性项，则该值等同于center。否则，弹性项目沿该行分布，且彼此间隔相等（比如是20px），同时首尾两边和弹性容器之间留有一半的间隔（1/2*20px=10px）。</li>
+</ul>
+<h1 id="3-align-items-属性"><a href="#3-align-items-属性" class="headerlink" title="3. align-items 属性"></a>3. align-items 属性</h1><p>align-items 设置或检索弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</p>
+<p><code>align-items</code>语法<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">align-items: flex-start | flex-end | center | baseline | stretch</span><br></pre></td></tr></table></figure></p>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min/max-width/height’属性的限制。</li>
+</ul>
+<h1 id="4-flex-wrap-属性"><a href="#4-flex-wrap-属性" class="headerlink" title="4. flex-wrap 属性"></a>4. flex-wrap 属性</h1><p>flex-wrap 属性用于指定弹性盒子的子元素换行方式。</p>
+<p>语法<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flex-wrap: nowrap|wrap|wrap-reverse|initial|inherit;</span><br></pre></td></tr></table></figure></p>
+<p>可选项:</p>
+<ul>
+<li>nowrap - 默认，弹性容器为单行。该情况下弹性子项可能会溢出容器。</li>
+<li>wrap - 弹性容器为多行。该情况下弹性子项溢出的部分会被放置到新行，子项内部会发生断行</li>
+<li>wrap-reverse -反转 wrap 排列。</li>
+</ul>
+<h1 id="5-align-content-属性"><a href="#5-align-content-属性" class="headerlink" title="5. align-content 属性"></a>5. align-content 属性</h1><p><code>align-content</code> 属性用于修改 flex-wrap 属性的行为。类似于 align-items, 但它不是设置弹性子元素的对齐，而是设置各个行的对齐。</p>
+<p>语法<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">align-content: flex-start | flex-end | center | space-between | space-around | stretch</span><br></pre></td></tr></table></figure></p>
+<p>各个值解析:</p>
+<ul>
+<li>stretch - 默认。各行将会伸展以占用剩余的空间。</li>
+<li>flex-start - 各行向弹性盒容器的起始位置堆叠。</li>
+<li>flex-end - 各行向弹性盒容器的结束位置堆叠。</li>
+<li>center -各行向弹性盒容器的中间位置堆叠。</li>
+<li>space-between -各行在弹性盒容器中平均分布。</li>
+<li>space-around - 各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。</li>
+</ul>
+<h1 id="6-居中"><a href="#6-居中" class="headerlink" title="6. 居中"></a>6. 居中</h1><p>使用弹性盒子，居中变的很简单，只想要设置 margin: auto; 可以使得弹性子元素在两上轴方向上完全居中:</p>
+<p>如<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.flex-item</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="7-align-self"><a href="#7-align-self" class="headerlink" title="7. align-self"></a>7. align-self</h1><p>align-self 属性用于设置弹性元素自身在侧轴（纵轴）方向上的对齐方式。</p>
+<p>选项：</p>
+<ul>
+<li>auto：如果’align-self’的值为’auto’，则其计算值为元素的父元素的’align-items’值，如果其没有父元素，则计算值为’stretch’。</li>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min/max-width/height’属性的限制。</li>
+</ul>
+<h1 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h1><ol>
+<li><p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/css3-flex-box/" data-id="ckkrkcaj1000p3c9xmjvywykl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Starter-10-Directive-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-10-Directive-1/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（10）- 指令（Directive）<br>date: 2021-01-13 13:11:30<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-组件与指令之间的关系">2. 组件与指令之间的关系</a><ul>
+<li><a href="#21-指令的种类">2.1. 指令的种类</a></li>
+</ul>
+</li>
+<li><a href="#3-angular-中指令的用途">3. Angular 中指令的用途</a></li>
+<li><a href="#4-指令举例">4. 指令举例</a><ul>
+<li><a href="#41-指令功能">4.1. 指令功能</a></li>
+<li><a href="#42-anuglar-cli生成基本文件">4.2. Anuglar CLI生成基本文件</a></li>
+<li><a href="#43-directive指令核心代码">4.3. Directive指令核心代码</a></li>
+<li><a href="#44-使用该指令">4.4. 使用该指令</a></li>
+</ul>
+</li>
+<li><a href="#5-总结">5. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>指令（Directive）在Angular 1.0时代（当时叫AngularJS）是很流行的，现在用到的偏少。可以简单理解为，指令（Directive）用于扩展已有Element（DOM）。</p>
+<h1 id="2-组件与指令之间的关系"><a href="#2-组件与指令之间的关系" class="headerlink" title="2. 组件与指令之间的关系"></a>2. 组件与指令之间的关系</h1><p>如果去看Angular源码，可以看到下面定义<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Supplies configuration metadata for an Angular component.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * @publicApi</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">interface</span> Component <span class="keyword">extends</span> Directive &#123;</span><br></pre></td></tr></table></figure></p>
+<p>是的，Component派生于Directive，也就是说，Component属于Directive。</p>
+<h2 id="2-1-指令的种类"><a href="#2-1-指令的种类" class="headerlink" title="2.1. 指令的种类"></a>2.1. 指令的种类</h2><ol>
+<li>Component 是 Directive 的子接口，是一种特殊的指令，Component 可以带有 HTML 模板，Directive 不能有模板。</li>
+<li>属性型指令：用来修改 DOM 元素的外观和行为，但是不会改变DOM 结构，Angular 内置指令里面典型的属性型指令有 ngClass、ngStyle，如果打算封装自己的组件库，属性型指令是必备的内容。</li>
+<li>结构型指令：可以修改 DOM 结构，内置的常用结构型指令有 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code>。由于结构型指令会修改 DOM 结构，因而同一个 HTML 标签上面不能同时使用多个结构型指令。如果要在同一个 HTML 元素上面使用多个结构性指令，可以考虑加一层空的元素来嵌套，比如在外面套一层空的（<code>div</code>) 。</li>
+</ol>
+<h1 id="3-Angular-中指令的用途"><a href="#3-Angular-中指令的用途" class="headerlink" title="3. Angular 中指令的用途"></a>3. Angular 中指令的用途</h1><p>Angualr中用指令来增强DOM的功能，包括 HTML 原生DOM和我们自己自定义的组件（Component）。举例来说，可以扩展一个Button，实现避免点击后，服务器端未响应前的二次点击；高亮某些收入内容等等。</p>
+<h1 id="4-指令举例"><a href="#4-指令举例" class="headerlink" title="4. 指令举例"></a>4. 指令举例</h1><h2 id="4-1-指令功能"><a href="#4-1-指令功能" class="headerlink" title="4.1. 指令功能"></a>4.1. 指令功能</h2><p>实现一个指令，鼠标移动到上面时， 背景显示为黄色，鼠标移开，恢复正常。</p>
+<h2 id="4-2-Anuglar-CLI生成基本文件"><a href="#4-2-Anuglar-CLI生成基本文件" class="headerlink" title="4.2. Anuglar CLI生成基本文件"></a>4.2. Anuglar CLI生成基本文件</h2><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng <span class="keyword">generate</span> directive MyHighlight</span><br></pre></td></tr></table></figure>
+<p>Anuglar CLI自动生成html、css、ut等文件。</p>
+<p>##</p>
+<h2 id="4-3-Directive指令核心代码"><a href="#4-3-Directive指令核心代码" class="headerlink" title="4.3. Directive指令核心代码"></a>4.3. Directive指令核心代码</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Directive, ElementRef &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Directive</span>(&#123;</span><br><span class="line">  selector: <span class="string">'[appHighlight]'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> HighlightDirective &#123;</span><br><span class="line">    <span class="keyword">constructor</span>(<span class="params">el: ElementRef</span>) &#123;</span><br><span class="line">       el.nativeElement.style.backgroundColor = <span class="string">'yellow'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">'mouseenter'</span>) onMouseEnter() &#123;</span><br><span class="line">        <span class="keyword">this</span>.highlight(<span class="string">'yellow'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">'mouseleave'</span>) onMouseLeave() &#123;</span><br><span class="line">        <span class="keyword">this</span>.highlight(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> highlight(color: <span class="built_in">string</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.el.nativeElement.style.backgroundColor = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-4-使用该指令"><a href="#4-4-使用该指令" class="headerlink" title="4.4. 使用该指令"></a>4.4. 使用该指令</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">my-highlight</span>&gt;</span>Highlight me!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>my-highlight</code> 即我们的元素扩展属性（指令、directive）。</p>
+</blockquote>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ul>
+<li>指令（Directive）用于扩展DOM 元素或组件的功能。</li>
+<li>Angular中的 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code> 都是Angular内置的指令。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-10-Directive-1/" data-id="ckkrkcahd00003c9xwustwob0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Starter-11-ngmodule" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-11-ngmodule/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块<br>date: 2021-01-11 17:11:30<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-ngmodule举例说明">2. NgModule举例、说明</a></li>
+<li><a href="#3-angular-cli生成模块">3. Angular CLI生成模块</a></li>
+<li><a href="#4-延迟加载模块">4. 延迟加载模块</a></li>
+<li><a href="#5-总结">5. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>模块(NgModule)是Angular的核心概念之一。模块(NgModule)用于组织业务代码，按照自己的业务场景，把组件、服务、路由打包到模块里面。</p>
+<p>模块(NgModule)的主要作用：</p>
+<ol>
+<li>NgModule 组织业务代码，开发者可以利用 NgModule 把关系比较紧密的组件组织到一起。</li>
+<li>NgModule 用来控制组件、指令、管道等的可见性，处于同一个NgModule 里面的组件默认互相可见，而对于外部的组件来说，只能看到NgModule 导出（exports）的内容。这样就实现了封装，只暴露希望暴露的组件、服务给调用者。</li>
+<li>NgModule 是 @angular/cli 打包的最小单位。打包的时候，@angular/cli 会检查所有 @NgModule 和路由配置，如果你配置了异步模块，cli 会自动把模块切分成独立的 chunk（块）。在 Angular 里面，打包和切分的动作是 @angular/cli 自动处理的，不需要你干预。当然，如果需要，你也可以修改angular的编译配置，基于Webpack 配一个环境出来，自定义打包规则。</li>
+<li>NgModule 是 Router 进行异步加载的最小单位，Router 能加载的最小单位是模块，而不是组件。当然，也可以一个模块里面只放一个组件是。</li>
+</ol>
+<h1 id="2-NgModule举例、说明"><a href="#2-NgModule举例、说明" class="headerlink" title="2. NgModule举例、说明"></a>2. NgModule举例、说明</h1><p>前文说过，Angular中任何的Component、service，都必须属于一个NgModule。所以，使用AngularCLI生成的框架程序，自动生成的组件，也是属于一个Component的，并且标记为启动模块。<br>这样，angular站点启动后，会以这个模块为入口，根据配置加载各个模块。</p>
+<p>下面以默认生成的启动模块为例，进行解释：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent,</span><br><span class="line">    MyComponentComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule,</span><br><span class="line">    AppRoutingModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>declarations，用来放组件、指令、管道的声明；</li>
+<li>imports，用来导入外部模块。比如当前模块需要调用其他模块的组件，需要加入到这里。比如上面例子，导入了Browser和Routing 2个模块。</li>
+<li>providers，需要使用的第三方或者其他模块的Service 都放在这里；</li>
+<li>bootstrap，定义启动组件。 一个可以启动的Angular项目（如果只是一个Library除外），需要定义一个启动组件。</li>
+<li>exports, 声明的组件、指令和管道可以在导入了本模块的模块下任何组件的模板中使用。 导出的这些可声明对象就是该模块的公共 API。换句话说，其他模块想用本模块中定义的内容，需要在这里声明。</li>
+<li>entryComponents， 如果其他模块想要动态加载本模块中的组件到视图中， 那么，这些组件需要写入entryComponents。</li>
+</ul>
+<h1 id="3-Angular-CLI生成模块"><a href="#3-Angular-CLI生成模块" class="headerlink" title="3. Angular CLI生成模块"></a>3. Angular CLI生成模块</h1><p>AngularCLI是一个很好很强大的工具集，可以帮助我们生成很多基础代码、文件， 包括创建一个模块，并且可以制定参数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate <span class="built_in">module</span> &lt;name&gt; [options]</span><br></pre></td></tr></table></figure></p>
+<p>详情参考<a href="https://angular.io/cli/generate#module。" target="_blank" rel="noopener">https://angular.io/cli/generate#module。</a></p>
+<p>几个简单的例子：</p>
+<ol>
+<li>创建feature1模块： <code>ng generate module feature1</code></li>
+<li>创建feature2模块， 并且带路由：<code>ng generate module feature2 --routing</code></li>
+<li>创建一个延迟加载的feature3模块(延迟加载模块，参考下面章节)： <code>ng generate module feature3 --route feature3  --module app.module</code></li>
+</ol>
+<blockquote>
+<p>说明： <code>ng generate module xxx</code> 可以简写为 <code>ng g m xxx</code></p>
+</blockquote>
+<h1 id="4-延迟加载模块"><a href="#4-延迟加载模块" class="headerlink" title="4. 延迟加载模块"></a>4. 延迟加载模块</h1><p>延迟加载使得应用程序在启动时不被载入，而是结合路由配置，在需要时才动态加载相应模块。这样 Angular 就不需要在第一个界面从服务器下载所有的文件，直到请求它，才下载相应的模块。这对提供性能和减少首屏的初始下载文件尺寸有巨大的帮助，而且它可以很容易设置。</p>
+<p>举例来说，上文创建了3个模块，主程序模块以及feature1、feature2会被打成一个包（js），feature3会被单独打一个包（js），当用户访问/feature3/* 的地址后，才会加载feature3这个包（js），否则永远不会请求、加载feature3的模块，从而提高性能（首页加载时间）。当一个项目大到一定程度时，最好考虑把某些模块设置为延迟加载模块。</p>
+<p>延迟加载的路由定义（angular CLI会自动生成）：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/app-routing.module.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Routes, RouterModule &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'feature3'</span>,</span><br><span class="line">    loadChildren: <span class="function"><span class="params">()</span> =&gt;</span></span><br><span class="line">      <span class="keyword">import</span>(<span class="string">'./feature3/feature3.module'</span>).then(<span class="function">(<span class="params">m</span>) =&gt;</span> m.Feature3Module),</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  exports: [RouterModule],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppRoutingModule &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后复习一下生成延迟加载模块的命令<code>ng generate module feature3 --route feature3  --module app.module</code>，或者简写为 <code>ng g m feature3 --route feature3  --module app.module</code>。</p>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
+<li>Angular项目，就是模块（NgModule）的一个集合，任组件、服务等必须包含在一个模块中。</li>
+<li>延迟加载模块用于提高首页加载性能。</li>
+<li>Angular CLI命令，生成模块。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-11-ngmodule/" data-id="ckkrkcahn00023c9xnhaw99ka" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Starter-13-gard-routing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-13-gard-routing/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（13）- 路由守卫（Route Guards）<br>date: 2021-01-25 15:06:00<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-路由守卫route-guards">2. 路由守卫（Route Guards）</a><ul>
+<li><a href="#21-创建路由守卫">2.1. 创建路由守卫</a></li>
+<li><a href="#22-控制路由是否可以激活">2.2. 控制路由是否可以激活</a></li>
+<li><a href="#23-控制路由是否退出离开">2.3. 控制路由是否退出（离开）</a></li>
+</ul>
+</li>
+<li><a href="#3-总结">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>在我们的实际的业务开发过程中，我们经常会遇到如下需求：</p>
+<ol>
+<li>需要限制某些 URL 的可访问性，例如，对于系统管理界面，只有那些拥有管理员权限的用户才能打开。</li>
+<li>当用户处于编辑界面时，在没有保存就离开时，需要提示用户是否放弃修改。</li>
+</ol>
+<p>针对以上场景，Angualr使用<code>路由守卫</code>（Route Guards）来实现。</p>
+<h1 id="2-路由守卫（Route-Guards）"><a href="#2-路由守卫（Route-Guards）" class="headerlink" title="2. 路由守卫（Route Guards）"></a>2. 路由守卫（Route Guards）</h1><h2 id="2-1-创建路由守卫"><a href="#2-1-创建路由守卫" class="headerlink" title="2.1. 创建路由守卫"></a>2.1. 创建路由守卫</h2><p>Angular CLI提供了命令行工具，可以快速创建路由守卫框架文件：<code>ng generate guard auth</code>。 执行后，Angular CLI会问我们需要实现哪些接口，我们直接勾选即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">? Which interfaces would you like to implement? (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">(*) CanActivate</span></span><br><span class="line"> ( ) CanActivateChild</span><br><span class="line"> ( ) CanDeactivate</span><br><span class="line"> ( ) CanLoad</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li>CanActivate: 控制路由是否可以激活</li>
+<li>CanActivateChild: 控制子路由是否可以激活</li>
+<li>CanDeactivate: 控制路由是否可以退出</li>
+<li>CanLoad: 控制模块（module）是否可以被加载</li>
+</ol>
+<p>比较经常使用的是1、3，分别控制进入和退出。 按照上面配置，AngularCLI自动生成如下代码，<code>return true;</code> 替换为我们实际的代码即可。<code>return false;</code> 表示不允许跳转，或者取消离开当前页面。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// auth.guard.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CanActivate, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Observable &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Injectable</span>(&#123;</span><br><span class="line">  providedIn: <span class="string">'root'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AuthGuard <span class="keyword">implements</span> CanActivate, CanDeactivate&lt;unknown&gt; &#123;</span><br><span class="line">  canActivate(</span><br><span class="line">    route: ActivatedRouteSnapshot,</span><br><span class="line">    state: RouterStateSnapshot): Observable&lt;<span class="built_in">boolean</span> | UrlTree&gt; | <span class="built_in">Promise</span>&lt;<span class="built_in">boolean</span> | UrlTree&gt; | <span class="built_in">boolean</span> | UrlTree &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在canActivate方法中，我们还可以使用跳转。如页面判断是否已经登录，如果没有登录，跳转到Login页面：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.router.navigate([<span class="string">'/login'</span>]);</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-2-控制路由是否可以激活"><a href="#2-2-控制路由是否可以激活" class="headerlink" title="2.2. 控制路由是否可以激活"></a>2.2. 控制路由是否可以激活</h2><p>控制路由是否可以激活，需要定义在定义路由的地方，增加canActivate属性。如果需要，还可以增加data属性， 比如告诉我们的AuthGuard进入当前路由需要验证哪些权限。data属性是可选的。<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">"page1"</span>,</span><br><span class="line">    component: Page1Component,</span><br><span class="line">    data: &#123; permissions: [<span class="string">'YourPage1Permission'</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    canActivate: [AuthGuard]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">"page2"</span>,</span><br><span class="line">    component: Page2omponent,</span><br><span class="line">    data: &#123; permissions: [<span class="string">'YourPage2Permission'</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    canActivate: [AuthGuard]</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-3-控制路由是否退出（离开）"><a href="#2-3-控制路由是否退出（离开）" class="headerlink" title="2.3. 控制路由是否退出（离开）"></a>2.3. 控制路由是否退出（离开）</h2><p>和控制路由是否可以激活类似，在路由定义出增加 <code>canDeactivate</code>，并制定相应的Guard守卫即可。这里不再举例</p>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
+<li>通过路由守卫（Route Guards）实现控制URL的进入和离开;</li>
+<li>Angular CLI可以辅助我们创建guard文件;</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-13-gard-routing/" data-id="ckkrkcahx00043c9x8qnschhy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Starter-14-compile-publish" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-14-compile-publish/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（14）- Angular 编译打包 &amp; Docker发布<br>date: 2021-01-29 10:06:00<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-编译打包">2. 编译打包</a><ul>
+<li><a href="#21-基本打包命令">2.1. 基本打包命令</a></li>
+<li><a href="#22-打包部署到二级目录">2.2. 打包部署到二级目录</a></li>
+</ul>
+</li>
+<li><a href="#3-angular站点的发布">3. Angular站点的发布</a><ul>
+<li><a href="#31-web服务器发布">3.1. web服务器发布</a></li>
+<li><a href="#32-使用docker发布">3.2. 使用docker发布</a></li>
+</ul>
+</li>
+<li><a href="#4-总结">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
+<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件<br><figure class="highlight rsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject/src/environments/</span><br><span class="line">               └──<span class="built_in">environment</span>.ts</span><br><span class="line">               └──<span class="built_in">environment</span>.prod.ts</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>environment.ts: 针对开发环境使用的环境文件</li>
+<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
+</ol>
+<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
+<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build <span class="comment">--prod</span></span><br></pre></td></tr></table></figure></p>
+<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"configurations"</span>: &#123;</span><br><span class="line">    <span class="string">"production"</span>: &#123;</span><br><span class="line">        <span class="string">"fileReplacements"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"replace"</span>: <span class="string">"src/environments/environment.ts"</span>,</span><br><span class="line">            <span class="string">"with"</span>: <span class="string">"src/environments/environment.prod.ts"</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"optimization"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"outputHashing"</span>: <span class="string">"all"</span>,</span><br><span class="line">        <span class="string">"sourceMap"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"extractCss"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"namedChunks"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"aot"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"extractLicenses"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"vendorChunk"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"buildOptimizer"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"budgets"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"initial"</span>,</span><br><span class="line">            <span class="string">"maximumWarning"</span>: <span class="string">"5mb"</span>,</span><br><span class="line">            <span class="string">"maximumError"</span>: <span class="string">"10mb"</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
+<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a href="http://abc.com下，要求部署到" target="_blank" rel="noopener">http://abc.com下，要求部署到</a> <a href="http://abc.com/demo" target="_blank" rel="noopener">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：<br><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build <span class="params">--prod</span> <span class="params">--deploy-url</span> <span class="string">/demo/</span> <span class="params">--base-href</span> <span class="string">/demo/</span></span><br></pre></td></tr></table></figure></p>
+<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
+<blockquote>
+<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
+</blockquote>
+<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
+<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
+<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
+<p>基本步骤：</p>
+<ol>
+<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . /usr/share/nginx/html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
+</blockquote>
+<ol start="2">
+<li>编译docker。 在Dockerfile目录下，执行<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>三条命令分别为：</p>
+<ul>
+<li>生成docker image， 名字（name）为your-docker-name</li>
+<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
+<li>压缩docker image</li>
+</ul>
+<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>为生产环境编译，一定要加参数<code>--prod</code></li>
+<li>如果要部署到二级目录，编译时加参数。如部署到/demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
+<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-14-compile-publish/" data-id="ckkrkcahx00063c9xfnlaqp6r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Starter-12-routing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-12-routing/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（12）- 路由（Routing）<br>date: 2021-01-25 10:06:00<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-路由router基本用法">2. 路由（Router）基本用法</a><ul>
+<li><a href="#21-准备">2.1. 准备</a></li>
+<li><a href="#22-注册路由">2.2. 注册路由</a></li>
+<li><a href="#23-html中的用法">2.3. html中的用法</a></li>
+<li><a href="#24-ts-代码中的用法">2.4. ts 代码中的用法</a></li>
+</ul>
+</li>
+<li><a href="#3-接收参数">3. 接收参数</a><ul>
+<li><a href="#31-路径中的参数">3.1. 路径中的参数</a></li>
+<li><a href="#32-参数queryparameter中的参数">3.2. 参数（QueryParameter）中的参数</a></li>
+</ul>
+</li>
+<li><a href="#4-url路径显示格式">4. URL路径显示格式</a></li>
+<li><a href="#5-部署中遇到的问题">5. 部署中遇到的问题</a></li>
+<li><a href="#6-总结">6. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>简单来说地址栏中，不同的地址（URL）对应不同的页面，这就是路由。同时，点击浏览器的前进和后退按钮，浏览器就会在你的浏览历史中向前或向后导航，这也是基于路由。</p>
+<p>在 Angular 里面，Router 是一个独立的模块，定义在 @angular/router 模块中，</p>
+<ol>
+<li>Router 可以配合 NgModule 进行模块的延迟加载（懒加载）、预加载操作（参考《Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块》）；</li>
+<li>Router 会管理组件的生命周期，它会负责创建、销毁组件。</li>
+</ol>
+<p>对于一个新的基于AngularCLI的项目，初始化时可以通过选项，将AppRoutingModule默认加入到app.component.ts中。</p>
+<h1 id="2-路由（Router）基本用法"><a href="#2-路由（Router）基本用法" class="headerlink" title="2. 路由（Router）基本用法"></a>2. 路由（Router）基本用法</h1><h2 id="2-1-准备"><a href="#2-1-准备" class="headerlink" title="2.1. 准备"></a>2.1. 准备</h2><p>我们首先创建2个页面，用于说明路由的使用：<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ng g <span class="keyword">c</span> page<span class="number">1</span></span><br><span class="line">ng g <span class="keyword">c</span> page<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>使用上面AnuglarCLI命令，创建Page1Component, Page2Component 2个组件。</p>
+<h2 id="2-2-注册路由"><a href="#2-2-注册路由" class="headerlink" title="2.2. 注册路由"></a>2.2. 注册路由</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//src\app\app-routing.module.ts</span></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page1'</span>,</span><br><span class="line">    component: Page1Component</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page2'</span>,</span><br><span class="line">    component: Page2Component</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  exports: [RouterModule],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppRoutingModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，简单的路由注册，只需要path和component2个属性，分别定义路由的相对路径，以及这个路由的响应组件。</p>
+<h2 id="2-3-html中的用法"><a href="#2-3-html中的用法" class="headerlink" title="2.3. html中的用法"></a>2.3. html中的用法</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">"page1"</span>&gt;</span>Page1<span class="tag">&lt;/<span class="name">a</span>&gt;</span> |</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">"page2"</span>&gt;</span>Page2<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在html模板中，直接使用routerLink属性，标识为angular的路由。执行代码，可以看到 Page1和Page2 两个超链接，点击可以看到地址栏地址改为<a href="http://localhost:4200/page2或http://localhost:4200/page1，" target="_blank" rel="noopener">http://localhost:4200/page2或http://localhost:4200/page1，</a> 页面内容在page1和page2中切换</p>
+<h2 id="2-4-ts-代码中的用法"><a href="#2-4-ts-代码中的用法" class="headerlink" title="2.4. ts 代码中的用法"></a>2.4. ts 代码中的用法</h2><p>有时候，需要根据ts中的业务逻辑，进行跳转。ts中，需要注入Router实例，如<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> router: Router</span>) &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>跳转代码：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到 /page1</span></span><br><span class="line"><span class="keyword">this</span>.router.navigate([<span class="string">'/page1'</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 跳转到 /page1/123</span></span><br><span class="line"><span class="keyword">this</span>.router.navigate([<span class="string">'/page1'</span>, <span class="number">123</span>]);</span><br></pre></td></tr></table></figure></p>
+<h1 id="3-接收参数"><a href="#3-接收参数" class="headerlink" title="3. 接收参数"></a>3. 接收参数</h1><h2 id="3-1-路径中的参数"><a href="#3-1-路径中的参数" class="headerlink" title="3.1. 路径中的参数"></a>3.1. 路径中的参数</h2><p>一般来说，我们把参数作为url中的一段，如/users/1, 代表查询id是1的用户，路由定义为”/users/id” 这种风格。</p>
+<p>针对我们的简单页面，比如我们的page1页面可以传id参数，那么我们需要修改我们的routing为：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page1/:id'</span>,    <span class="comment">//接收id参数</span></span><br><span class="line">    component: Page1Component,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 实现可选参数的小技巧。 这个routing处理没有参数的url</span></span><br><span class="line">    path: <span class="string">'page1'</span>,        </span><br><span class="line">    redirectTo: <span class="string">'page1/'</span>,   <span class="comment">// 跳转到'page1/:id'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page2'</span>,</span><br><span class="line">    component: Page2Component,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>ts代码读取参数时， 首先需要注入ActivatedRoute，代码如下：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> activatedRoute: ActivatedRoute</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.activatedRoute.paramMap.subscribe(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Parameter id: '</span>, params.get(<span class="string">'id'</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/33   </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:  33</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/     </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-2-参数（QueryParameter）中的参数"><a href="#3-2-参数（QueryParameter）中的参数" class="headerlink" title="3.2. 参数（QueryParameter）中的参数"></a>3.2. 参数（QueryParameter）中的参数</h2><p>参数还有另外一种写法，如<a href="http://localhost:4200/?name=cat" target="_blank" rel="noopener">http://localhost:4200/?name=cat</a>, 即URL地址后，加一个问号’?’, 之后再加参数名和参数值（’name=cat’）。这种称为查询参数(QueryParameter)。</p>
+<p>取这查询参数时，和之前的路由参数类似，只是paramMap改为queryParamMap，代码如下：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.activatedRoute.queryParamMap.subscribe(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Query Parameter name: '</span>, params.get(<span class="string">'name'</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1?name=cat</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:  cat</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1/</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h1 id="4-URL路径显示格式"><a href="#4-URL路径显示格式" class="headerlink" title="4. URL路径显示格式"></a>4. URL路径显示格式</h1><p>不同于传统的纯静态（html）站点，angular中的url不是对应一个真实的文件（页面），因为anuglar接管的路由（Routing）处理，来决定显示那个Component给终端用户。为了针对不同的场景，angular的URL路径显示格式有2中：</p>
+<ol>
+<li><a href="http://localhost:4200/page1/123" target="_blank" rel="noopener">http://localhost:4200/page1/123</a></li>
+<li><a href="http://localhost:4200/#/page1/123" target="_blank" rel="noopener">http://localhost:4200/#/page1/123</a></li>
+</ol>
+<p>默认是第一种，不加#的。如果需要，可以在app-routing.ts中，加入<code>useHash: true</code>, 如：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-routing.ts</span></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes, &#123; useHash: <span class="literal">true</span> &#125;)],</span><br><span class="line">  exports: [RouterModule],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="5-部署中遇到的问题"><a href="#5-部署中遇到的问题" class="headerlink" title="5. 部署中遇到的问题"></a>5. 部署中遇到的问题</h1><p>同样，因为anuglar接管的路由（Routing）处理，所以部署时，部署到iis, nginx等等的服务器，都会有不同的技巧（要求），详细参考：<br><a href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode" target="_blank" rel="noopener">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode</a></p>
+<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
+<li>angular默认不支持可选路由（e.g. /user/:id?),但是我们可以定义2个路由，指向同一个Component来实现这个，达到代码复用；（或者使用redirectTo）</li>
+<li>可以使用useHash参数，实现augular路径前加一个#；</li>
+<li>读取参数时，都需要subscribe订阅一下，不能直接读取。</li>
+<li>打包后部署问题，查看官方wifi （<a href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode）" target="_blank" rel="noopener">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode）</a></li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-12-routing/" data-id="ckkrkcahx00073c9xul1l57j5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Angular-starter-7-component" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/12/Angular-starter-7-component/" class="article-date">
@@ -189,7 +876,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckjtqtks2000d689xnjjs293z" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckkrkcaj1000o3c9xge7c7e8h" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -292,7 +979,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckjtqtkri0008689xhzvgja8b" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckkrkcair000d3c9xnnv2cm2s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -392,573 +1079,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckjtqtkri0007689xdf8xf72s" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckkrkcai7000a3c9x24dc83xh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-6-update" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-6-update/" class="article-date">
-  <time datetime="2021-01-11T06:11:30.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-6-update/">Angular入门到精通系列教程（6）- Angular的升级</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-摘要">1. 摘要</a></li>
-<li><a href="#2-httpsupdateangulario">2. https://update.angular.io/</a></li>
-<li><a href="#3-总结">3. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<hr>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容的升级。笔者之前维护的一个6年项目，是用jQueryMobile开发的，估计入门web开发比较短的同学都没有听说过吧。另外，就拿Angular来说，从2.0开始，使用ts开发，不再兼容1.0 版本。从2.0开始，命名为Angular，1.0的叫angularJS, 2个版本彻底切割。而这也是angular流失很多用户的其中一个原因。</p>
-<p>针对这些问题，Angular专门提供了版本升级的指导方案，非常详细、准确（Angular每半年发布一个主版本，这个也是必须的）。</p>
-<h1 id="2-https-update-angular-io"><a href="#2-https-update-angular-io" class="headerlink" title="2. https://update.angular.io/"></a>2. <a href="https://update.angular.io/" target="_blank" rel="noopener">https://update.angular.io/</a></h1><p><a href="https://update.angular.io/" target="_blank" rel="noopener">https://update.angular.io/</a> 是官方的angular升级指导页面，你可以选择你的项目的版本，以及要升级到的版本；同时可以选择项目使用的技术，比如是否使用了Angular Material （这也是之前推荐这个UI框架的原因–升级方便），是否和AngualrJS同时使用等等。之后，自动提示升级步骤。</p>
-<p>升级主要通过 <code>ng update xxx</code> 来实现， <code>ng update</code> 命令不同于npm命令，<code>npm update</code>相当于 npm+更改配置（代码），也就是说，再更新完node-modules之后，<code>ng update</code>会自动更新配置文件，甚至是代码中的基本的import的代码，实现自动升级、更新。</p>
-<p>举例，10.2升级到11.1，如果没有涉及到复杂的anuglar技术，大致的升级步骤是：</p>
-<ul>
-<li>Run <code>ng update @angular/core @angular/cli</code> which should bring you to version 11 of Angular.</li>
-<li>Run <code>ng update @angular/material</code>.</li>
-<li>Angular now requires TypeScript 4.0. ng update will migrate you automatically.</li>
-<li>Support for IE9, IE10, and IE mobile has been removed. This was announced * in the v10 update.</li>
-</ul>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ul>
-<li>Angular虽然更新、升级比较频繁（从某种意义上也是优点），但是升级部分确实做得最完善的</li>
-<li>UI框架，@angular/material可以实现和Angular的同步升级，其他第三方框架，都会有演示，时间不等</li>
-<li>个人不推荐使用最新的版本，不做小白鼠。可以使用之前发布的一个版本，比如现在是v11，那么我们就使用v10。更稳定，同时网上资料也多。</li>
-<li>及时更新angular版本，免得技术债欠的越来越多而导致无法升级。</li>
-<li>这个升级指导也是相对的，如果你对Angular有些特殊的用法，或者没有安装官方推荐方式使用，升级也是比较麻烦的。</li>
-<li>升级时，如果跨多版本，建议一个版本一个版本的升级，每升级一次，执行UT或者把站点跑起来试试，以防出错。</li>
-</ul>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckjtqtkri0005689xxnscp5pn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-5-Angular-Material" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="article-date">
-  <time datetime="2021-01-11T04:11:30.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-5-Angular-Material/">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-第三方ui库的选择">1. 第三方UI库的选择</a></li>
-<li><a href="#2-angular-material">2. Angular Material</a><ul>
-<li><a href="#21-优缺点">2.1. 优缺点</a><ul>
-<li><a href="#211-优点">2.1.1. 优点</a></li>
-<li><a href="#212-缺点">2.1.2. 缺点</a></li>
-</ul>
-</li>
-<li><a href="#22-引入到项目">2.2. 引入到项目</a></li>
-</ul>
-</li>
-<li><a href="#3-总结">3. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-第三方UI库的选择"><a href="#1-第三方UI库的选择" class="headerlink" title="1. 第三方UI库的选择"></a>1. 第三方UI库的选择</h1><p>Angular开发，除非你只有简单一两个页面，否则引入第三方UI库就是必不可少的。而具体用哪个库，就需要考虑多方面的东西了。比如：</p>
-<ol>
-<li>流行程度</li>
-<li>版本更新情况 （是否能跟进anuglar更新，bug是否及时修复）</li>
-<li>UI风格，是否适用于项目</li>
-<li>入手难易程度</li>
-<li>文档完善程度</li>
-</ol>
-<p>市面上有很多Angular可用的类库，可用根据项目、企业情况去选择。简单列一下可选的UI库。</p>
-<ol>
-<li><code>Angular Material</code>: angular 官方UI库。<a href="https://material.angular.io/" target="_blank" rel="noopener">https://material.angular.io/</a></li>
-<li><code>clarity</code>: 国外的一套比较流行的框架， <a href="https://clarity.design/。" target="_blank" rel="noopener">https://clarity.design/。</a> </li>
-<li><code>NG-ZORRO</code>: 阿里Ant Design的Angular版本。 <a href="https://ng.ant.design/docs/introduce/en" target="_blank" rel="noopener">https://ng.ant.design/docs/introduce/en</a> </li>
-<li><code>Element Angular</code>：国内非常流行的基于Vue的Element，同样有Angular版本。 <a href="https://element-angular.faas.ele.me/" target="_blank" rel="noopener">https://element-angular.faas.ele.me/</a></li>
-<li><code>Kendo UI</code>。很多很强大，只是要收费。<a href="https://www.telerik.com/kendo-angular-ui" target="_blank" rel="noopener">https://www.telerik.com/kendo-angular-ui</a></li>
-</ol>
-<h1 id="2-Angular-Material"><a href="#2-Angular-Material" class="headerlink" title="2. Angular Material"></a>2. Angular Material</h1><h2 id="2-1-优缺点"><a href="#2-1-优缺点" class="headerlink" title="2.1. 优缺点"></a>2.1. 优缺点</h2><h3 id="2-1-1-优点"><a href="#2-1-1-优点" class="headerlink" title="2.1.1. 优点"></a>2.1.1. 优点</h3><ul>
-<li>官方UI组件</li>
-<li>最标准的Material实现</li>
-<li>紧跟Angular核心组件的更新进度</li>
-<li>官方支持与Angular的同步升级</li>
-</ul>
-<h3 id="2-1-2-缺点"><a href="#2-1-2-缺点" class="headerlink" title="2.1.2. 缺点"></a>2.1.2. 缺点</h3><ul>
-<li>组件不像其他框架那么多，但是基本够用</li>
-<li>风格不是特别像国内的框架</li>
-</ul>
-<h2 id="2-2-引入到项目"><a href="#2-2-引入到项目" class="headerlink" title="2.2. 引入到项目"></a>2.2. 引入到项目</h2><ol>
-<li><p>根目录下执行下面命令：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng add @angular/material</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>import 到页面所属的module，或者是app.module.ts中。</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import MatSliderModule</span></span><br><span class="line"><span class="keyword">import</span> &#123; MatSliderModule &#125; <span class="keyword">from</span> <span class="string">'@angular/material/slider'</span>;</span><br><span class="line"></span><br><span class="line">…</span><br><span class="line"><span class="meta">@NgModule</span> (&#123;....</span><br><span class="line">  imports: [...,</span><br><span class="line">  MatSliderModule,</span><br><span class="line">…]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
-<li>第三方组件各有优缺点</li>
-<li>根据公司、项目的需求去选择</li>
-<li>Angular Material升级更容易，官方支持。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckjtqtkr80002689xf1pt8hx2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-environment-cli-vscode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/" class="article-date">
-  <time datetime="2021-01-11T03:11:35.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-environment-cli-vscode/">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>@[TOC]</p>
-<ul>
-<li><a href="#1-本地开发环境搭建">1. 本地开发环境搭建</a><ul>
-<li><a href="#11-nodejs">1.1. node.js</a></li>
-<li><a href="#12-angular-cli">1.2. Angular CLI</a></li>
-</ul>
-</li>
-<li><a href="#2-开发工具---visual-studio-code">2. 开发工具 - Visual Studio Code</a></li>
-<li><a href="#第一个anuglar项目">第一个Anuglar项目</a><ul>
-<li><a href="#创建第一个anuglar项目">创建第一个anuglar项目</a></li>
-<li><a href="#angular-cli常用命令">Angular CLI常用命令</a></li>
-</ul>
-</li>
-<li><a href="#在线实战项目">在线实战项目</a><ul>
-<li><a href="#新手项目basic-angular-app">新手项目：<code>Basic Angular app</code></a></li>
-<li><a href="#入门项目tour-of-heroes">入门项目：<code>Tour of Heroes</code></a></li>
-</ul>
-</li>
-</ul>
-<p>了解了一些Angular的基本概念后，如果想进一步学习Angular，接下来让我们来搭建本地开发环境，并从一个入门项目了解Angular的基本用法。</p>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-本地开发环境搭建"><a href="#1-本地开发环境搭建" class="headerlink" title="1. 本地开发环境搭建"></a>1. 本地开发环境搭建</h1><p>本地开发环境搭建只需要node.js, 和Angular CLI。</p>
-<h2 id="1-1-node-js"><a href="#1-1-node-js" class="headerlink" title="1.1. node.js"></a>1.1. node.js</h2><p>官网（<a href="https://nodejs.org/）下载最新的LTS（Long" target="_blank" rel="noopener">https://nodejs.org/）下载最新的LTS（Long</a> Time Support)版本的node.js，安装。</p>
-<p>说明：</p>
-<ol>
-<li>LTS（Long Time Support)版本, 官方会支持更长时间，比如打补丁，改bug等。相对更稳定、靠谱。</li>
-<li>node.js 安装后，同时会安装npm</li>
-</ol>
-<p>检查本地node.js, npm环境<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js 版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="comment"># npm 版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure></p>
-<h2 id="1-2-Angular-CLI"><a href="#1-2-Angular-CLI" class="headerlink" title="1.2. Angular CLI"></a>1.2. Angular CLI</h2><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。(参考：<a href="https://cli.angular.io/" target="_blank" rel="noopener">https://cli.angular.io/</a>)</p>
-<p>npm安装最新版本@angular/cli<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @angular/cli</span><br></pre></td></tr></table></figure></p>
-<p>检查本地angular环境<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng v</span><br></pre></td></tr></table></figure></p>
-<p>说明：</p>
-<ol>
-<li>该命令如果在非angular项目下执行，返回全局的Angular CLI环境版本</li>
-<li>在angular项目下执行, 返回当前angular项目使用的angular，angular CLI，以及核心angular组件的版本。</li>
-<li>全局Angular CLI版本有何能与项目的Angular CLI版本不一致，不冲突。项目中，使用项目制定的CLI版本。</li>
-</ol>
-<h1 id="2-开发工具-Visual-Studio-Code"><a href="#2-开发工具-Visual-Studio-Code" class="headerlink" title="2. 开发工具 - Visual Studio Code"></a>2. 开发工具 - Visual Studio Code</h1><p>推荐使用，Visual Studio Code （VSCode），微软开发的，可以说是现今为止最好的免费的Angular开发工具。并且有很多非常好用的插件。</p>
-<p>推荐插件：</p>
-<ul>
-<li>Angular Language Service： Angular语法自动提示, Angular开发必备。 This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.</li>
-<li>Prettier - 代码自动格式化插件。VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.</li>
-<li>Code Spell Checker - 语法检查插件. 注释可以写中文，变量名不行吧，如果拼写不对不好看吧。所以推荐把这个语法检查插件装上。</li>
-<li>GitLens - GIT 辅助插件。If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.</li>
-<li>Markdown All in One： 如果用Markdown写东西，这个东西一定要有，增加了对MD文件的很多支持，比如生成目录(TOC)， 目录编号等。</li>
-</ul>
-<h1 id="第一个Anuglar项目"><a href="#第一个Anuglar项目" class="headerlink" title="第一个Anuglar项目"></a>第一个Anuglar项目</h1><h2 id="创建第一个anuglar项目"><a href="#创建第一个anuglar项目" class="headerlink" title="创建第一个anuglar项目"></a>创建第一个anuglar项目</h2><p>使用Anuglar CLI可以很轻松的创建angular项目。使用的Angular版本与当前环境的Anuglar CLI一致。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建angular项目，项目名 ·my-ngular-app·</span></span><br><span class="line">ng new my-ngular-app</span><br><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line"><span class="built_in">cd</span> my-ngular-app</span><br><span class="line"><span class="comment"># 启动angualar项目</span></span><br><span class="line">ng serve</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-<ol>
-<li><code>ng</code> 是angular CLI的简称</li>
-<li><code>ng serve</code>: 启动angular项目。</li>
-</ol>
-</blockquote>
-<h2 id="Angular-CLI常用命令"><a href="#Angular-CLI常用命令" class="headerlink" title="Angular CLI常用命令"></a>Angular CLI常用命令</h2><ol>
-<li><code>ng serve</code>: 启动angular项目。默认情况下，angular CLI检测代码改动，如果文件改动，自动编译更改部分代码，然后重新加载（reload）页面。</li>
-<li><code>ng build</code>: 编译代码，默认输出到根目录下的<code>dist</code>目录。</li>
-<li><code>ng test</code>： 执行单元测试（Unit Test）</li>
-</ol>
-<h1 id="在线实战项目"><a href="#在线实战项目" class="headerlink" title="在线实战项目"></a>在线实战项目</h1><p>Angular官方提供了2个新手入门项目，并且都是基于StackBlitz（针对 Web 开发者的在线 IDE），可以不使用本地环境，直接基于Web学习和练习Angular。</p>
-<h2 id="新手项目：Basic-Angular-app"><a href="#新手项目：Basic-Angular-app" class="headerlink" title="新手项目：Basic Angular app"></a>新手项目：<code>Basic Angular app</code></h2><ul>
-<li><a href="https://angular.io/start" target="_blank" rel="noopener">https://angular.io/start</a></li>
-</ul>
-<h2 id="入门项目：Tour-of-Heroes"><a href="#入门项目：Tour-of-Heroes" class="headerlink" title="入门项目：Tour of Heroes"></a>入门项目：<code>Tour of Heroes</code></h2><ul>
-<li><a href="https://angular.io/tutorial" target="_blank" rel="noopener">https://angular.io/tutorial</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckjtqtkrr000a689xlwt8usop" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-tech-stack" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-tech-stack/" class="article-date">
-  <time datetime="2021-01-11T01:11:35.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-tech-stack/">Angular入门到精通系列教程（3） - Angular 技术栈 （Tech Stack）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>(Based on Angular V8.x ~ 11.x)</p>
-<ol>
-<li>Angular-CLI<br>Angular CLI is a command-line interface tool that you use to initialize, develop, scaffold, and maintain Angular applications directly from a command shell.</li>
-</ol>
-<p>It is the MUST have tool to write Angular code, so make sure you are familiar with its commands.</p>
-<ol>
-<li>IDE<br>1.1 Visual Studio Code<br>Visual Studio Code: Best and free IDE for web developing.<br>Plugins:</li>
-</ol>
-<p>Angular Language Service - This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.<br>Prettier - VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.<br>Code Spell Checker - A basic spell checker that works well with camelCase code.<br>The goal of this spell checker is to help catch common spelling errors while keeping the number of false positives low.<br>GitLens - If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.<br>1.2 Alternatives<br>Atom by GitHub<br>Sublime Text 3<br>PyCharm<br>IntelliJ IDEA<br>Webstorm<br>There are may alternatives, you can choose which you are familiar with.<br>*</p>
-<ol start="2">
-<li>UI Framework<br>2.1 Angular Material<br>Angular Material is Material Design components for Angular.<br>There are many alternatives. But Angular Material is the official one from Angular, and Angular also give detail upgrade solution on Angular plus Angular Material in <a href="https://update.angular.io/" target="_blank" rel="noopener">https://update.angular.io/</a>.</li>
-</ol>
-<p>For future upgrade reason, this is your best choice.</p>
-<ol start="3">
-<li>State Management - NgRx<br>@ngrx/store is RxJS powered global state management for Angular applications, inspired by Redux. Store is a controlled state container designed to help write performant, consistent applications on top of Angular.</li>
-</ol>
-<p>NgRx Store is mainly for managing global state across an entire application.</p>
-<ol start="4">
-<li>Code Reuse<br>4.1 Angular libraries<br>Angular libraries should what you need.</li>
-</ol>
-<p>Many applications need to solve the same general problems, such as presenting a unified user interface, presenting data, and allowing data entry. Developers can create general solutions for particular domains that can be adapted for re-use in different apps. Such a solution can be built as Angular libraries and these libraries can be published and shared as npm packages.</p>
-<p>An Angular library is an Angular project that differs from an app in that it cannot run on its own. A library must be imported and used in an app.</p>
-<p>You can easily reuse your Angular library or also submit your library into npm server.</p>
-<p>4.2 Alternatives - Angular custom elements<br>Note that libraries are intended to be used by Angular apps. To add Angular functionality to non-Angular web apps, you can use Angular custom elements.</p>
-<p>Angular elements are Angular components packaged as custom elements (also called Web Components), a web standard for defining new HTML elements in a framework-agnostic way.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="ckjtqtkrr000b689xkedwvyel" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-angular-Starter-Basic-Concept" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/08/angular-Starter-Basic-Concept/" class="article-date">
-  <time datetime="2021-01-08T09:13:44.000Z" itemprop="datePublished">2021-01-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/08/angular-Starter-Basic-Concept/">Angular入门到精通系列教程（2） - 基本概念</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Angular入门到精通系列教程（2） - 基本概念</p>
-<ul>
-<li><a href="#1-angular-angular2vs-angularjs">1. Angular （Angular2）v.s. AngularJS</a></li>
-<li><a href="#2-检查本地环境的版本">2. 检查本地环境的版本</a></li>
-<li><a href="#3-typescript">3. TypeScript</a></li>
-<li><a href="#4-angular-cli">4. Angular CLI</a></li>
-<li><a href="#5-angular-的版本">5. Angular 的版本</a></li>
-<li><a href="#6-angular-版本如何升级">6. Angular 版本如何升级</a></li>
-<li><a href="#7-依赖注入dependency-injection">7. 依赖注入（dependency injection）</a></li>
-<li><a href="#8-编译-aot和jit的区别">8. 编译-AOT和JIT的区别</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-Angular-（Angular2）v-s-AngularJS"><a href="#1-Angular-（Angular2）v-s-AngularJS" class="headerlink" title="1. Angular （Angular2）v.s. AngularJS"></a>1. Angular （Angular2）v.s. AngularJS</h1><p>Angular最早期的版本，也叫AnugularJS，使用javascript开发；新的版本，才叫Angular，也称为Angular2，使用typescript开发，Angular和AngularJS是不兼容的（当然，官方也有2个版本的集成方案）。</p>
-<h1 id="2-检查本地环境的版本"><a href="#2-检查本地环境的版本" class="headerlink" title="2. 检查本地环境的版本"></a>2. 检查本地环境的版本</h1><p>检查npm, node 版本:</p>
-<ul>
-<li>npm 版本：<code>npm -v</code></li>
-<li>node版本： <code>node -v</code></li>
-<li>angular、angular CLI全局、本地版本 <code>ng --version</code></li>
-</ul>
-<h1 id="3-TypeScript"><a href="#3-TypeScript" class="headerlink" title="3. TypeScript"></a>3. TypeScript</h1><p>Angular要求开发语言必须为TypeScript。TypeScript有很多好处，比如引入了类、接口的概念，比如强类型，可以在写代码时（编译时）就能检查到一些错误，避免只有代码在执行时才发现异常。</p>
-<p>如果没用过TypeScript，不要害怕TypeScript这个新的概念，只要你有javascript经验，直接入手，没有任何难度。只需要用到class、interface等东西时，参考一下别人如何使用，或者查一下typescript文档即可。</p>
-<h1 id="4-Angular-CLI"><a href="#4-Angular-CLI" class="headerlink" title="4. Angular CLI"></a>4. Angular CLI</h1><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。<br>参考：<a href="https://cli.angular.io/" target="_blank" rel="noopener">https://cli.angular.io/</a></p>
-<p>ng generate: 新建component、service、pipe, class 等<br>ng new: 新建angular app<br>ng update: 升级angular自身，以及依赖<br>ng version： 显示anuglar cli全局版本、以及本地的angular cli、angular code等的版本<br>ng add: 新增第三方库。会做2件事，1）基于npm安装node_modules, 2）自动更改配置文件，保证新的依赖正常工作</p>
-<p>总结一下，Angular的开放，离不开AngularCLI。</p>
-<h1 id="5-Angular-的版本"><a href="#5-Angular-的版本" class="headerlink" title="5. Angular 的版本"></a>5. Angular 的版本</h1><p>不同于Angular2+Angular的不兼容， Angular 2.0 之后会保证向下兼容。官方的版本发布计划是：</p>
-<ul>
-<li>每 6 个月发布一个主版本（第一位版本号，主版本）</li>
-<li>每个主版本发布 1 ~ 3 个小版本（第二位版本号，Feature 版本号）</li>
-<li>每周发布一个补丁版本（第三位版本号，Hotfix 版本号）</li>
-</ul>
-<h1 id="6-Angular-版本如何升级"><a href="#6-Angular-版本如何升级" class="headerlink" title="6. Angular 版本如何升级"></a>6. Angular 版本如何升级</h1><p>Angular CLI提供了升级命令(ng update)，同时，官网（<a href="https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。" target="_blank" rel="noopener">https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。</a></p>
-<h1 id="7-依赖注入（dependency-injection）"><a href="#7-依赖注入（dependency-injection）" class="headerlink" title="7. 依赖注入（dependency injection）"></a>7. 依赖注入（dependency injection）</h1><p>依赖注入是Angular实现的一种应用程序设计模式， 是Angular的核心概念之一。</p>
-<p>依赖就是具有一系列功能的服务(service)， 应用程序中的各种组件和指令（derictives）可能需要服务的功能。 Angular提供了一种平滑的机制，通过它我们可以将这些依赖项注入我们的组件和指令中。因此，我们只是在构建依赖关系，这些依赖关系可以在应用程序的所有组件之间注入。</p>
-<p>使用依赖注入还有以下好处，</p>
-<ol>
-<li>不需要实例化，（new 实例）。不需要关心class的构造函数里需要什么参数</li>
-<li>一次注入（app module通过Providers注入），所有组件都可以使用。而且是用同一个service实例（Singleton），也就是说一个service里的数据是共分享的，可以用于组件间数据传递。</li>
-</ol>
-<h1 id="8-编译-AOT和JIT的区别"><a href="#8-编译-AOT和JIT的区别" class="headerlink" title="8. 编译-AOT和JIT的区别"></a>8. 编译-AOT和JIT的区别</h1><p>每个Angular应用程序都包含浏览器无法理解的组件和模板。 因此，在浏览器内部运行之前，需要先编译所有Angular应用程序。</p>
-<p>Angular提供两种编译类型：</p>
-<ol>
-<li>JIT(Just-in-Time) compilation</li>
-<li>AOT(Ahead-of-Time) compilation</li>
-</ol>
-<p>区别在于，在JIT编译中，应用程序在运行时在浏览器内部进行编译；而在AOT编译中，应用程序在构建期间进行编译。<br>显而易见，AOT编译好处多多，因而是Angular的默认编译方式。主要优点</p>
-<p>由于应用程序是在浏览器内部运行之前进行编译的，因此浏览器会加载可执行代码并立即呈现应用程序，从而加快了呈现速度。</p>
-<p>在AOT编译中，编译器将与应用程序一起发送外部HTML和CSS文件，从而消除了对那些源文件的单独AJAX请求，从而减少了ajax请求。</p>
-<p>开发人员可以在构建阶段检测并处理错误，这有助于最大程度地减少错误。<br>AOT编译器将HTML和模板添加到JS文件中，然后再在浏览器中运行。 因此，没有多余的HTML文件可读取，从而为应用程序提供了更好的安全性。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/" data-id="ckjtqtksb000n689xqwx6njaf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-angular-Starter-Angular-Vue-React" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/08/angular-Starter-Angular-Vue-React/" class="article-date">
-  <time datetime="2021-01-08T07:02:55.000Z" itemprop="datePublished">2021-01-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/08/angular-Starter-Angular-Vue-React/">Angular入门到精通系列教程（1） - Angular,Vue,React 选型</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-概述">1. 概述</a></li>
-<li><a href="#2-框架比较">2. 框架比较</a></li>
-<li><a href="#3-为什么国内angular不是很流行">3. 为什么国内Angular不是很流行</a></li>
-</ul>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>总的来说一句话，如果你是老大，你可以选择用什么；如果你不是，那么，老大让用什么，你就用什么。</p>
-<ul>
-<li>前端框架Angular,Vue,React三选一，没有第四种。 （当然，如果只是一两个简单的页面，纯JS、jquery足够了）。</li>
-<li>国内的话，React和vue更流行一点，国外的话React和Angular更流行。</li>
-<li>Vue 中文资料更多一些</li>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-</ul>
-<h1 id="2-框架比较"><a href="#2-框架比较" class="headerlink" title="2. 框架比较"></a>2. 框架比较</h1><p>网上比较的文章太多了，如果想了解，baidu、google一下吧，这个就不再多说了。</p>
-<h1 id="3-为什么国内Angular不是很流行"><a href="#3-为什么国内Angular不是很流行" class="headerlink" title="3. 为什么国内Angular不是很流行"></a>3. 为什么国内Angular不是很流行</h1><p>只说些个人看法，更多原因请自行搜索。</p>
-<ol>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-<li>上手难度稍大，或者说需要更多的时间培训才能开发。</li>
-<li>Angular对anuglarJS（1.0版本）不支持（虽然后期推出了兼容方案）， 伤了很多人的心。不过这个难免，一个组件、框架的升级，如果一直背负的早期债务，很难有更好的提升。</li>
-<li>TypeScript。Angular是第一个吃螃蟹的，完全抛弃了js，转入Typscript，得罪的很多js的铁杆粉丝，以及惧怕ts的人。不过现在看来，typescript才是前端的趋势。vue3也声称用typescript重写了，并打算更完美的支持typescript。</li>
-<li>大而全的框架。选择Angular的话，它自带了很多东西，路由、表单、动画、http请求等等，需要更多的时间去学习和理解。而其他框架，很多组件都是有备选方案，或者第三方提供的（如vue使用axios处理http请求），让人觉得了解框架更简单。</li>
-<li>版本升级较快。每半年一个主版本，优缺点共存吧。</li>
-<li>恶性循环：用的人少 》 聊的人少 》 资源少 》 用的人更少。</li>
-<li>vue更符合国人的习惯，考虑了一些小的常用细节。比如自带支持避免一个按钮点击多次（修饰符once，@click.prevent.once）。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/" data-id="ckjtqtksb000l689xllbay4p2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Open-a-new-tab-from-Iframe" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" class="article-date">
-  <time datetime="2021-01-07T13:39:21.000Z" itemprop="datePublished">2021-01-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/07/Angular-Open-a-new-tab-from-Iframe/">嵌入在iframe中的Angular站点，如何打开一个新的tab页面</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-需求">1. 需求</a></li>
-<li><a href="#2-方案">2. 方案</a></li>
-<li><a href="#3-总结">3. 总结</a><h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1>一个angular web站点，通过一个iframe嵌套在另一个web站点中。点击一个按钮，希望能够在一个新的页面（Tab）中打开另外一个页面。</li>
-</ul>
-<h1 id="2-方案"><a href="#2-方案" class="headerlink" title="2. 方案"></a>2. 方案</h1><p>主要困难在于处理2个站点的地址不同的问题。既可以通过 html 设置href实现，又可以直接使用js代码实现。</p>
-<p>Code:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">href</span>]=<span class="string">"url"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span>1. open New Tab - based on a.href <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> (<span class="attr">click</span>)=<span class="string">"openNewTab()"</span> &gt;</span>2. open New Tab -  by pure js/ts<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. open New Tab - based on a.href</span></span><br><span class="line">url = <span class="string">""</span>;</span><br><span class="line">ngOnInit() &#123;</span><br><span class="line"><span class="keyword">this</span>.url = <span class="built_in">window</span>.location.origin + <span class="string">"/help.html"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. open New Tab -  by pure js/ts</span></span><br><span class="line">openNewTab() &#123;</span><br><span class="line"><span class="built_in">window</span>.open(<span class="built_in">window</span>.location.origin + <span class="string">"/help.html"</span>, <span class="string">"_blank"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>主要困难在于处理2个站点的地址不同的问题（window.location.origin），和是否嵌套在其他站点（iframe）没有关系。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" data-id="ckjtqtkr80000689xobbgzp6j" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iframe/">iframe</a></li></ul>
 
     </footer>
   </div>
@@ -1012,7 +1136,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1024,23 +1148,23 @@
       <ul>
         
           <li>
-            <a href="/2021/01/12/Angular-starter-7-component/">Angular入门到精通系列教程（7）- 组件（@Component）基本知识</a>
+            <a href="/2021/02/05/Angular-Starter-15-folder-structure/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2021/01/11/Angular-Starter-9-Component-Lifecycle/">Angular入门到精通系列教程（9）- 组件的生命周期(Component Lifecycle Hook)</a>
+            <a href="/2021/02/05/css3-flex-box/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2021/01/11/Angular-Starter-8-component-child-parent/">Angular入门到精通系列教程（8）- 父子组件（Component）之间传递数据</a>
+            <a href="/2021/02/05/Angular-Starter-10-Directive-1/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2021/01/11/Angular-Starter-6-update/">Angular入门到精通系列教程（6）- Angular的升级</a>
+            <a href="/2021/02/05/Angular-Starter-11-ngmodule/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2021/01/11/Angular-Starter-5-Angular-Material/">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
+            <a href="/2021/02/05/Angular-Starter-13-gard-routing/">(no title)</a>
           </li>
         
       </ul>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TFJ6HHB');</script>
+  <!-- End Google Tag Manager -->
+
+
+  
+  <title>Jack N @ GitHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: Angular入门到精通系列教程（10）- 指令（Directive）date: 2021-01-13 13:11:30tags: - Angular  - Angular入门  1. 摘要 2. 组件与指令之间的关系 2.1. 指令的种类   3. Angular 中指令的用途 4. 指令举例 4.1. 指令功能 4.2. Anuglar CLI生成基本文件 4.3. Direct">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jack N @ GitHub">
+<meta property="og:url" content="jackniu81.github.io/2021/02/05/Angular-Starter-10-Directive-1/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="title: Angular入门到精通系列教程（10）- 指令（Directive）date: 2021-01-13 13:11:30tags: - Angular  - Angular入门  1. 摘要 2. 组件与指令之间的关系 2.1. 指令的种类   3. Angular 中指令的用途 4. 指令举例 4.1. 指令功能 4.2. Anuglar CLI生成基本文件 4.3. Direct">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-02-05T00:41:05.819Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jack N @ GitHub">
+<meta name="twitter:description" content="title: Angular入门到精通系列教程（10）- 指令（Directive）date: 2021-01-13 13:11:30tags: - Angular  - Angular入门  1. 摘要 2. 组件与指令之间的关系 2.1. 指令的种类   3. Angular 中指令的用途 4. 指令举例 4.1. 指令功能 4.2. Anuglar CLI生成基本文件 4.3. Direct">
+  
+  <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
+  
+  
+  <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head></html>
+
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFJ6HHB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jack N @ GitHub</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="jackniu81.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Angular-Starter-10-Directive-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-10-Directive-1/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（10）- 指令（Directive）<br>date: 2021-01-13 13:11:30<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-组件与指令之间的关系">2. 组件与指令之间的关系</a><ul>
+<li><a href="#21-指令的种类">2.1. 指令的种类</a></li>
+</ul>
+</li>
+<li><a href="#3-angular-中指令的用途">3. Angular 中指令的用途</a></li>
+<li><a href="#4-指令举例">4. 指令举例</a><ul>
+<li><a href="#41-指令功能">4.1. 指令功能</a></li>
+<li><a href="#42-anuglar-cli生成基本文件">4.2. Anuglar CLI生成基本文件</a></li>
+<li><a href="#43-directive指令核心代码">4.3. Directive指令核心代码</a></li>
+<li><a href="#44-使用该指令">4.4. 使用该指令</a></li>
+</ul>
+</li>
+<li><a href="#5-总结">5. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>指令（Directive）在Angular 1.0时代（当时叫AngularJS）是很流行的，现在用到的偏少。可以简单理解为，指令（Directive）用于扩展已有Element（DOM）。</p>
+<h1 id="2-组件与指令之间的关系"><a href="#2-组件与指令之间的关系" class="headerlink" title="2. 组件与指令之间的关系"></a>2. 组件与指令之间的关系</h1><p>如果去看Angular源码，可以看到下面定义<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Supplies configuration metadata for an Angular component.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * @publicApi</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">interface</span> Component <span class="keyword">extends</span> Directive &#123;</span><br></pre></td></tr></table></figure></p>
+<p>是的，Component派生于Directive，也就是说，Component属于Directive。</p>
+<h2 id="2-1-指令的种类"><a href="#2-1-指令的种类" class="headerlink" title="2.1. 指令的种类"></a>2.1. 指令的种类</h2><ol>
+<li>Component 是 Directive 的子接口，是一种特殊的指令，Component 可以带有 HTML 模板，Directive 不能有模板。</li>
+<li>属性型指令：用来修改 DOM 元素的外观和行为，但是不会改变DOM 结构，Angular 内置指令里面典型的属性型指令有 ngClass、ngStyle，如果打算封装自己的组件库，属性型指令是必备的内容。</li>
+<li>结构型指令：可以修改 DOM 结构，内置的常用结构型指令有 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code>。由于结构型指令会修改 DOM 结构，因而同一个 HTML 标签上面不能同时使用多个结构型指令。如果要在同一个 HTML 元素上面使用多个结构性指令，可以考虑加一层空的元素来嵌套，比如在外面套一层空的（<code>div</code>) 。</li>
+</ol>
+<h1 id="3-Angular-中指令的用途"><a href="#3-Angular-中指令的用途" class="headerlink" title="3. Angular 中指令的用途"></a>3. Angular 中指令的用途</h1><p>Angualr中用指令来增强DOM的功能，包括 HTML 原生DOM和我们自己自定义的组件（Component）。举例来说，可以扩展一个Button，实现避免点击后，服务器端未响应前的二次点击；高亮某些收入内容等等。</p>
+<h1 id="4-指令举例"><a href="#4-指令举例" class="headerlink" title="4. 指令举例"></a>4. 指令举例</h1><h2 id="4-1-指令功能"><a href="#4-1-指令功能" class="headerlink" title="4.1. 指令功能"></a>4.1. 指令功能</h2><p>实现一个指令，鼠标移动到上面时， 背景显示为黄色，鼠标移开，恢复正常。</p>
+<h2 id="4-2-Anuglar-CLI生成基本文件"><a href="#4-2-Anuglar-CLI生成基本文件" class="headerlink" title="4.2. Anuglar CLI生成基本文件"></a>4.2. Anuglar CLI生成基本文件</h2><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng <span class="keyword">generate</span> directive MyHighlight</span><br></pre></td></tr></table></figure>
+<p>Anuglar CLI自动生成html、css、ut等文件。</p>
+<p>##</p>
+<h2 id="4-3-Directive指令核心代码"><a href="#4-3-Directive指令核心代码" class="headerlink" title="4.3. Directive指令核心代码"></a>4.3. Directive指令核心代码</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Directive, ElementRef &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Directive</span>(&#123;</span><br><span class="line">  selector: <span class="string">'[appHighlight]'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> HighlightDirective &#123;</span><br><span class="line">    <span class="keyword">constructor</span>(<span class="params">el: ElementRef</span>) &#123;</span><br><span class="line">       el.nativeElement.style.backgroundColor = <span class="string">'yellow'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">'mouseenter'</span>) onMouseEnter() &#123;</span><br><span class="line">        <span class="keyword">this</span>.highlight(<span class="string">'yellow'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">'mouseleave'</span>) onMouseLeave() &#123;</span><br><span class="line">        <span class="keyword">this</span>.highlight(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> highlight(color: <span class="built_in">string</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.el.nativeElement.style.backgroundColor = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-4-使用该指令"><a href="#4-4-使用该指令" class="headerlink" title="4.4. 使用该指令"></a>4.4. 使用该指令</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">my-highlight</span>&gt;</span>Highlight me!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>my-highlight</code> 即我们的元素扩展属性（指令、directive）。</p>
+</blockquote>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ul>
+<li>指令（Directive）用于扩展DOM 元素或组件的功能。</li>
+<li>Angular中的 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code> 都是Angular内置的指令。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-10-Directive-1/" data-id="ckkrkcahd00003c9xwustwob0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/02/05/css3-flex-box/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/02/05/Angular-Starter-11-ngmodule/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+        <aside id="sidebar">
+
+<div class="widget-wrap">
+    <h3 class="widget-title">Recommended</h3>
+    <div class="widget">
+      <ul>
+        <li><a href="/css">CSS Tips</a></li>
+        <li><a href="/javascript">javascript Tips</a></li>
+        <li><a href="/node-js">Node.js Tips</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 15px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-15-folder-structure/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/css3-flex-box/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-10-Directive-1/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-11-ngmodule/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-13-gard-routing/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 Jack
+      |
+      <a href="https://hexo.io">HEXO</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+
+</html>

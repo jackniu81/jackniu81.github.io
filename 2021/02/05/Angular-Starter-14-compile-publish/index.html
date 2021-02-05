@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TFJ6HHB');</script>
+  <!-- End Google Tag Manager -->
+
+
+  
+  <title>Jack N @ GitHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: Angular入门到精通系列教程（14）- Angular 编译打包 &amp;amp; Docker发布date: 2021-01-29 10:06:00tags: - Angular  - Angular入门  1. 概要 2. 编译打包 2.1. 基本打包命令 2.2. 打包部署到二级目录   3. Angular站点的发布 3.1. web服务器发布 3.2. 使用docker发布">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jack N @ GitHub">
+<meta property="og:url" content="jackniu81.github.io/2021/02/05/Angular-Starter-14-compile-publish/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="title: Angular入门到精通系列教程（14）- Angular 编译打包 &amp;amp; Docker发布date: 2021-01-29 10:06:00tags: - Angular  - Angular入门  1. 概要 2. 编译打包 2.1. 基本打包命令 2.2. 打包部署到二级目录   3. Angular站点的发布 3.1. web服务器发布 3.2. 使用docker发布">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-02-05T00:41:05.819Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jack N @ GitHub">
+<meta name="twitter:description" content="title: Angular入门到精通系列教程（14）- Angular 编译打包 &amp;amp; Docker发布date: 2021-01-29 10:06:00tags: - Angular  - Angular入门  1. 概要 2. 编译打包 2.1. 基本打包命令 2.2. 打包部署到二级目录   3. Angular站点的发布 3.1. web服务器发布 3.2. 使用docker发布">
+  
+  <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
+  
+  
+  <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head></html>
+
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFJ6HHB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jack N @ GitHub</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="jackniu81.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Angular-Starter-14-compile-publish" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/05/Angular-Starter-14-compile-publish/" class="article-date">
+  <time datetime="2021-02-05T00:41:05.819Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Angular入门到精通系列教程（14）- Angular 编译打包 &amp; Docker发布<br>date: 2021-01-29 10:06:00<br>tags:</p>
+<pre><code>- Angular 
+- Angular入门
+</code></pre><ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-编译打包">2. 编译打包</a><ul>
+<li><a href="#21-基本打包命令">2.1. 基本打包命令</a></li>
+<li><a href="#22-打包部署到二级目录">2.2. 打包部署到二级目录</a></li>
+</ul>
+</li>
+<li><a href="#3-angular站点的发布">3. Angular站点的发布</a><ul>
+<li><a href="#31-web服务器发布">3.1. web服务器发布</a></li>
+<li><a href="#32-使用docker发布">3.2. 使用docker发布</a></li>
+</ul>
+</li>
+<li><a href="#4-总结">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
+<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件<br><figure class="highlight rsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject/src/environments/</span><br><span class="line">               └──<span class="built_in">environment</span>.ts</span><br><span class="line">               └──<span class="built_in">environment</span>.prod.ts</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>environment.ts: 针对开发环境使用的环境文件</li>
+<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
+</ol>
+<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
+<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build <span class="comment">--prod</span></span><br></pre></td></tr></table></figure></p>
+<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"configurations"</span>: &#123;</span><br><span class="line">    <span class="string">"production"</span>: &#123;</span><br><span class="line">        <span class="string">"fileReplacements"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"replace"</span>: <span class="string">"src/environments/environment.ts"</span>,</span><br><span class="line">            <span class="string">"with"</span>: <span class="string">"src/environments/environment.prod.ts"</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"optimization"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"outputHashing"</span>: <span class="string">"all"</span>,</span><br><span class="line">        <span class="string">"sourceMap"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"extractCss"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"namedChunks"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"aot"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"extractLicenses"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"vendorChunk"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"buildOptimizer"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"budgets"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"initial"</span>,</span><br><span class="line">            <span class="string">"maximumWarning"</span>: <span class="string">"5mb"</span>,</span><br><span class="line">            <span class="string">"maximumError"</span>: <span class="string">"10mb"</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
+<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a href="http://abc.com下，要求部署到" target="_blank" rel="noopener">http://abc.com下，要求部署到</a> <a href="http://abc.com/demo" target="_blank" rel="noopener">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：<br><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build <span class="params">--prod</span> <span class="params">--deploy-url</span> <span class="string">/demo/</span> <span class="params">--base-href</span> <span class="string">/demo/</span></span><br></pre></td></tr></table></figure></p>
+<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
+<blockquote>
+<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
+</blockquote>
+<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
+<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
+<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
+<p>基本步骤：</p>
+<ol>
+<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . /usr/share/nginx/html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
+</blockquote>
+<ol start="2">
+<li>编译docker。 在Dockerfile目录下，执行<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>三条命令分别为：</p>
+<ul>
+<li>生成docker image， 名字（name）为your-docker-name</li>
+<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
+<li>压缩docker image</li>
+</ul>
+<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>为生产环境编译，一定要加参数<code>--prod</code></li>
+<li>如果要部署到二级目录，编译时加参数。如部署到/demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
+<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/05/Angular-Starter-14-compile-publish/" data-id="ckkrkcahx00063c9xfnlaqp6r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/02/05/Angular-Starter-13-gard-routing/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/02/05/Angular-Starter-12-routing/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+        <aside id="sidebar">
+
+<div class="widget-wrap">
+    <h3 class="widget-title">Recommended</h3>
+    <div class="widget">
+      <ul>
+        <li><a href="/css">CSS Tips</a></li>
+        <li><a href="/javascript">javascript Tips</a></li>
+        <li><a href="/node-js">Node.js Tips</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 15px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-15-folder-structure/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/css3-flex-box/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-10-Directive-1/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-11-ngmodule/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/Angular-Starter-13-gard-routing/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 Jack
+      |
+      <a href="https://hexo.io">HEXO</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+
+</html>
