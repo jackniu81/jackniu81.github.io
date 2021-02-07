@@ -16,15 +16,21 @@
 
 
   
-  <title>Archives: 2015 | Jack N @ GitHub</title>
+  <title>Jack N @ GitHub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="title: javascript中常见的非人类（java/c#)知识date: 2021-01-29 13:06:00tags: - javascript - 面试   1. 概要 2. this 3. new操作符都做了什么 4. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sa">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Jack N @ GitHub">
-<meta property="og:url" content="jackniu81.github.io/archives/2015/index.html">
+<meta property="og:url" content="jackniu81.github.io/2021/02/07/js-speical/index.html">
 <meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="title: javascript中常见的非人类（java/c#)知识date: 2021-01-29 13:06:00tags: - javascript - 面试   1. 概要 2. this 3. new操作符都做了什么 4. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sa">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="/img/javascript.jpg">
+<meta property="og:updated_time" content="2021-02-07T02:33:02.192Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jack N @ GitHub">
+<meta name="twitter:description" content="title: javascript中常见的非人类（java/c#)知识date: 2021-01-29 13:06:00tags: - javascript - 面试   1. 概要 2. this 3. new操作符都做了什么 4. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sa">
+<meta name="twitter:image" content="/img/javascript.jpg">
   
   <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
   
@@ -81,58 +87,82 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/12/10/Hello-Hexo/" class="archive-article-date">
-  <time datetime="2015-12-10T02:14:59.000Z" itemprop="datePublished">Dec 10</time>
+        <section id="main"><article id="post-js-speical" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/07/js-speical/" class="article-date">
+  <time datetime="2021-02-07T02:33:02.192Z" itemprop="datePublished">2021-02-07</time>
 </a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/10/Hello-Hexo/">Hello Hexo</a>
-    </h1>
-  
-
-    </header>
+    
   </div>
-</article>
-  
+  <div class="article-inner">
     
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/12/10/Hello-World/" class="archive-article-date">
-  <time datetime="2015-12-10T01:06:00.000Z" itemprop="datePublished">Dec 10</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/10/Hello-World/">Hello World, Hello Hexo!</a>
-    </h1>
-  
+        <p>title: javascript中常见的非人类（java/c#)知识<br>date: 2021-01-29 13:06:00<br>tags:</p>
+<pre><code>- javascript
+- 面试
+</code></pre><p><img src="/img/javascript.jpg" alt></p>
+<ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-this">2. this</a></li>
+<li><a href="#3-new操作符都做了什么">3. new操作符都做了什么</a></li>
+<li><a href="#4-总结">4. 总结</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javascript。对于广大程序员来说，随着web流行度越来越高，那么为了同时支持大多数浏览器，那么使用标准的javascript成为趋势。而第三方（coffeescript, typescript, dart等)也都是选择将代码编译为JavaScript，然后在浏览器端执行。</p>
+<p>作为从C#、java等语言转到javascript的同学来说，会发现不少C#、java的“我觉得应该是这样”的东西，JavaScript中却是不一样的。下面总结一下</p>
+<h1 id="2-this"><a href="#2-this" class="headerlink" title="2. this"></a>2. this</h1><p>对C#、Java等语言，this就是当前对象，但是javascript不是，简单来说：</p>
+<ul>
+<li>全局this 是window;</li>
+<li>函数this 是调用者;</li>
+<li>构造函数的this 是new 之后的新对象,</li>
+<li>call 和 apply bind的this第一个参数</li>
+</ul>
+<h1 id="3-new操作符都做了什么"><a href="#3-new操作符都做了什么" class="headerlink" title="3. new操作符都做了什么"></a>3. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型指向构造函数的prototype</li>
+<li>把构造函数里的this指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>Javascipt 中有些内容和其他编程语言不一致，需要牢记</li>
+<li>JavaScript中拿不准的东西，可以简单测试一下，免得代码写好后出错。</li>
+<li>简单测试，可以打开浏览器，直接F12（进入Dev Tools），再选择Console(控制台)， 直接输入要测试的内容，查看返回结果</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/07/js-speical/" data-id="ckkuj7r9w000wmk9xtnjbay8i" class="article-share-link">Share</a>
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/02/05/Angular-Starter-15-folder-structure/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
 </section>
         
         <aside id="sidebar">

@@ -18,17 +18,17 @@
   
   <title>Jack N @ GitHub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="title: CSS3 Flex Box 弹性盒子、弹性布局date: 2021-01-29 13:06:00tags: - Angular  - Angular入门  1. 概要 2. justify-content 属性 3. align-items 属性 4. flex-wrap 属性 5. align-content 属性 6. 居中 7. align-self 8. 总结   环境:">
+  <meta name="description" content="title: CSS3 Flex Box 弹性盒子、弹性布局date: 2021-01-29 13:06:00tags: - css3  1. 概要 2. justify-content 属性 3. align-items 属性 4. flex-wrap 属性 5. align-content 属性 6. 居中 7. align-self 8. 总结  1. 概要Flexible Box翻译过来就">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jack N @ GitHub">
 <meta property="og:url" content="jackniu81.github.io/2021/02/05/css3-flex-box/index.html">
 <meta property="og:site_name" content="Jack N @ GitHub">
-<meta property="og:description" content="title: CSS3 Flex Box 弹性盒子、弹性布局date: 2021-01-29 13:06:00tags: - Angular  - Angular入门  1. 概要 2. justify-content 属性 3. align-items 属性 4. flex-wrap 属性 5. align-content 属性 6. 居中 7. align-self 8. 总结   环境:">
+<meta property="og:description" content="title: CSS3 Flex Box 弹性盒子、弹性布局date: 2021-01-29 13:06:00tags: - css3  1. 概要 2. justify-content 属性 3. align-items 属性 4. flex-wrap 属性 5. align-content 属性 6. 居中 7. align-self 8. 总结  1. 概要Flexible Box翻译过来就">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-02-05T00:41:05.829Z">
+<meta property="og:updated_time" content="2021-02-07T02:33:02.192Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jack N @ GitHub">
-<meta name="twitter:description" content="title: CSS3 Flex Box 弹性盒子、弹性布局date: 2021-01-29 13:06:00tags: - Angular  - Angular入门  1. 概要 2. justify-content 属性 3. align-items 属性 4. flex-wrap 属性 5. align-content 属性 6. 居中 7. align-self 8. 总结   环境:">
+<meta name="twitter:description" content="title: CSS3 Flex Box 弹性盒子、弹性布局date: 2021-01-29 13:06:00tags: - css3  1. 概要 2. justify-content 属性 3. align-items 属性 4. flex-wrap 属性 5. align-content 属性 6. 居中 7. align-self 8. 总结  1. 概要Flexible Box翻译过来就">
   
   <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
   
@@ -98,8 +98,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>title: CSS3 Flex Box 弹性盒子、弹性布局<br>date: 2021-01-29 13:06:00<br>tags:</p>
-<pre><code>- Angular 
-- Angular入门
+<pre><code>- css3
 </code></pre><ul>
 <li><a href="#1-概要">1. 概要</a></li>
 <li><a href="#2-justify-content-属性">2. justify-content 属性</a></li>
@@ -110,23 +109,13 @@
 <li><a href="#7-align-self">7. align-self</a></li>
 <li><a href="#8-总结">8. 总结</a></li>
 </ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
 <h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>Flexible Box翻译过来就是弹性盒子、弹性布局，是css3中新增的一种布局方式，是当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。引入弹性布局模型的目的是提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间。</p>
 <p>弹性盒子由弹性容器(Flex container)和弹性子元素(Flex item)组成。</p>
 <ul>
 <li>弹性容器通过设置 display 属性的值为 flex 或 inline-flex将其定义为弹性容器。</li>
 <li>弹性容器内包含了一个或多个弹性子元素。</li>
 </ul>
-<table class="reference"><br>    <tbody><br>        <tr><br>            <th style="width:25%">属性</th><br>            <th>描述</th><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/pr-class-display.html">display</a><br>            </td><br>            <td>指定 HTML 元素盒子类型。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex-direction.html">flex-direction</a><br>            </td><br>            <td>指定了弹性容器中子元素的排列方式</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-justify-content.html">justify-content</a><br>            </td><br>            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-align-items.html">align-items</a><br>            </td><br>            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex-wrap.html">flex-wrap</a><br>            </td><br>            <td>设置弹性盒子的子元素超出父容器时是否换行。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-align-content.html">align-content</a><br>            </td><br>            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex-flow.html">flex-flow</a><br>            </td><br>            <td>flex-direction 和 flex-wrap 的简写</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-order.html">order</a><br>            </td><br>            <td>设置弹性盒子的子元素排列顺序。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-align-self.html">align-self</a><br>            </td><br>            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td><br>        </tr><br>        <tr><br>            <td><a target="_blank" href="/cssref/css3-pr-flex.html">flex</a><br>            </td><br>            <td>设置弹性盒子的子元素如何分配空间。</td><br>        </tr><br>    </tbody><br></table>
+<table><br>    <tbody><br>        <tr><br>            <th style="width:25%">属性</th><br>            <th>描述</th><br>        </tr><br>        <tr><br>            <td>display<br>            </td><br>            <td>指定 HTML 元素盒子类型。</td><br>        </tr><br>        <tr><br>            <td>flex-direction</td><br>            <td>指定了弹性容器中子元素的排列方式</td><br>        </tr><br>        <tr><br>            <td>justify-content<br>            </td><br>            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td>align-items<br>            </td><br>            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td>flex-wrap<br>            </td><br>            <td>设置弹性盒子的子元素超出父容器时是否换行。</td><br>        </tr><br>        <tr><br>            <td>align-content<br>            </td><br>            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td><br>        </tr><br>        <tr><br>            <td>flex-flow<br>            </td><br>            <td>flex-direction 和 flex-wrap 的简写</td><br>        </tr><br>        <tr><br>            <td>order<br>            </td><br>            <td>设置弹性盒子的子元素排列顺序。</td><br>        </tr><br>        <tr><br>            <td>align-self<br>            </td><br>            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td><br>        </tr><br>        <tr><br>            <td>flex<br>            </td><br>            <td>设置弹性盒子的子元素如何分配空间。</td><br>        </tr><br>    </tbody><br></table>
 
 
 <h1 id="2-justify-content-属性"><a href="#2-justify-content-属性" class="headerlink" title="2. justify-content 属性"></a>2. justify-content 属性</h1><p>内容对齐（justify-content）属性应用在弹性容器上，把弹性项沿着弹性容器的横轴（主轴线，main axis）对齐。</p>
@@ -195,7 +184,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/02/05/css3-flex-box/" data-id="ckkrkcaj1000p3c9xmjvywykl" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/02/05/css3-flex-box/" data-id="ckkuj7r9w000tmk9x5bhc0ldg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -246,7 +235,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -255,7 +244,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 15px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 15px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a>
     </div>
   </div>
 
@@ -264,7 +253,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -274,6 +263,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/02/07/js-speical/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2021/02/05/Angular-Starter-15-folder-structure/">(no title)</a>
@@ -289,10 +282,6 @@
         
           <li>
             <a href="/2021/02/05/Angular-Starter-11-ngmodule/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/05/Angular-Starter-13-gard-routing/">(no title)</a>
           </li>
         
       </ul>
