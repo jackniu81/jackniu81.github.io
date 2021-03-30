@@ -83,6 +83,216 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CSS-interview-qa" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/07/CSS-interview-qa/" class="article-date">
+  <time datetime="2021-03-07T05:06:00.000Z" itemprop="datePublished">2021-03-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/07/CSS-interview-qa/">CSS面试题汇总</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CSS实现水平垂直居中"><a href="#CSS实现水平垂直居中" class="headerlink" title="CSS实现水平垂直居中"></a>CSS实现水平垂直居中</h1><ol>
+<li>margin: auto;实现绝对定位元素的居中</li>
+</ol>
+<pre><code class="css"><span class="selector-class">.center-vertical</span>{
+    <span class="attribute">width</span>: <span class="number">100px</span>;
+    <span class="attribute">height</span>: <span class="number">100px</span>;
+    <span class="attribute">background</span>: orange;
+    <span class="attribute">position</span>: absolute;
+    <span class="attribute">top</span>: <span class="number">0</span>;
+    <span class="attribute">left</span>: <span class="number">0</span>;
+    <span class="attribute">right</span>: <span class="number">0</span>;
+    <span class="attribute">bottom</span>: <span class="number">0</span>;
+    <span class="attribute">margin</span>: auto;
+}
+</code></pre>
+<ol start="2">
+<li>CSS3.0弹性布局<pre><code class="css"><span class="selector-tag">html</span>,
+<span class="selector-tag">body</span> {
+  <span class="attribute">width</span>: <span class="number">100%</span>;
+  <span class="attribute">height</span>: <span class="number">100%</span>;
+}
+<span class="selector-tag">body</span> {
+  <span class="attribute">display</span>: flex;
+  <span class="attribute">align-items</span>: center;
+  <span class="attribute">justify-content</span>: center; <span class="comment">/* 定义body的元素水平居中 */</span>
+}
+<span class="selector-class">.content</span> {
+  <span class="attribute">width</span>: <span class="number">300px</span>;
+  <span class="attribute">height</span>: <span class="number">300px</span>;
+  <span class="attribute">background</span>: orange;
+}
+</code></pre>
+</li>
+</ol>
+<h1 id="行内元素有哪些？块级元素有哪些？"><a href="#行内元素有哪些？块级元素有哪些？" class="headerlink" title="行内元素有哪些？块级元素有哪些？"></a>行内元素有哪些？块级元素有哪些？</h1><ol>
+<li>行内元素有：<code>a b span img input select strong</code></li>
+<li>块级元素有：<code>div ul ol li dl dt dd h1 h2 h3 h4…p</code></li>
+<li>常见的空元素：    <code>&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt; &lt;link&gt; &lt;meta&gt;</code></li>
+</ol>
+<h1 id="CSS3有哪些新特性？"><a href="#CSS3有哪些新特性？" class="headerlink" title="CSS3有哪些新特性？"></a>CSS3有哪些新特性？</h1><ol>
+<li>新增各种CSS选择器  （: not(.input)：）</li>
+<li>圆角            （border-radius:8px）</li>
+<li>多列布局      （multi-column layout）</li>
+<li>阴影和反射   （Shadow\Reflect）</li>
+<li>文字特效      （text-shadow）</li>
+<li>文字渲染      （Text-decoration）</li>
+<li>线性渐变      （gradient）</li>
+<li>旋转            （transform）</li>
+<li>缩放,定位,倾斜,动画,多背景</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/03/07/CSS-interview-qa/" data-id="ckmv9yzoi000qoo9xfihiqqs2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css/">css</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-mobile-ux-performance" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/02/mobile-ux-performance/" class="article-date">
+  <time datetime="2021-03-02T05:06:00.000Z" itemprop="datePublished">2021-03-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/02/mobile-ux-performance/">移动端如何做好用户体验</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-在移动端如何做好用户体验">1. 在移动端如何做好用户体验</a></li>
+<li><a href="#2-总结">2. 总结</a></li>
+</ul>
+<h1 id="1-在移动端如何做好用户体验"><a href="#1-在移动端如何做好用户体验" class="headerlink" title="1. 在移动端如何做好用户体验"></a>1. 在移动端如何做好用户体验</h1><ul>
+<li>清晰的视觉纵线</li>
+<li>信息的分组</li>
+<li>极致的减法</li>
+<li>利用选择代替输入</li>
+<li>标签以及文字的排布方式</li>
+<li>依靠明文确认密码</li>
+<li>合理地利用键盘</li>
+</ul>
+<h1 id="2-总结"><a href="#2-总结" class="headerlink" title="2. 总结"></a>2. 总结</h1><ol>
+<li><p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/03/02/mobile-ux-performance/" data-id="ckmv9yzpz001aoo9x251upuwt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mobile/">mobile</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-keyword" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/09/Angular-keyword/" class="article-date">
+  <time datetime="2021-02-09T05:06:00.000Z" itemprop="datePublished">2021-02-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/09/Angular-keyword/">Angular 词汇表</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#1-概要-1">1. 概要</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>大多数 Angular 短语都是日常用语或计算机术语，但是在 Angular 体系中，它们有特别的含义。</p>
+<h1 id="1-概要-1"><a href="#1-概要-1" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>预编译 (ahead-of-time, AOT)<br>即时编译 (just-in-time, JIT)<br>Angular元素（element， Angular Element）<br>注解（Annotation）: 注解也叫装饰器；<br>装饰器（decorator | decoration）: 注解也叫装饰器；<br>应用外壳（app-shell）<br>架构（Architect）<br>指令 directives<br>属性型指令（attribute directives）<br>绑定 (binding)<br>启动/引导 (bootstrap)<br>构建器（Builder）<br>大小写类型（case types）<br>小驼峰形式（camelCase）：小驼峰（也叫标准驼峰）形式的第一个字母要使用小写形式。<br>大驼峰形式（UpperCamelCase）或叫帕斯卡形式（PascalCase）<br>中线形式（dash-case）或叫烤串形式（kebab-case）<br>下划线形式（underscore_case）或叫蛇形形式（snake_case）<br>大写下划线形式（UPPER_UNDERSCORE_CASE）或叫大写蛇形形式（UPPER_SNAKE_CASE）<br>变更检测（change detection）<br>类装饰器（class decorator）<br>类字段装饰器（class field decorator）<br>集合（collection）<br>命令行工具,命令行客户端（CLI， Angular CLI）<br>组件 (component)<br>配置（configuration）<br>内容投影 （content projection）<br>自定义元素（Custom element）:也叫 Web Component<br>数据绑定 (data binding)<br>可声明对象（declarable）<br>装饰器（decorator | decoration）<br>依赖注入（dependency injection）<br>DI 令牌（Token）<br>差异化加载 (differential loading)<br>指令 (directive)<br>领域特定语言（domain-specific language, DSL)<br>动态组件加载（dynamic component loading）<br>急性加载（Eager Loading）<br>惰性加载（Lazy loading）<br>元素（Element, Angular Element）<br>入口点（Entry Point）<br>表单控件（form control）<br>表单模型（form model）<br>表单验证（form validation）<br>不可变性（immutability）<br>可注入对象（injectable）<br>注入器 (injector)<br>输入属性 (input)<br>输出属性 (output)<br>插值 (interpolation)<br>常春藤引擎（Ivy）<br>惰性加载（Lazy loading）<br>库（Library）<br>生命周期钩子（Lifecycle hook）<br>模块 (module)<br>ngcc (Angular 兼容性编译器)<br>npm 包 (npm package)<br>ngc (ngc 是一个 TypeScript 到 JavaScript 的转译器)<br>可观察对象（Observable）<br>观察者（Observer）<br>管道（pipe）<br>平台（platform）<br>腻子脚本（polyfill）<br>项目（project）<br>提供者 (provider)<br>响应式表单 (reactive forms)<br>解析器（resolver）<br>路由守卫 (route guard)<br>路由器 (router)<br>路由出口（router outlet）<br>路由组件 (routing component)<br>规则（rule）<br>原理图（schematic）<br>Schematics CLI (Schematics 自带了一个命令行工具)<br>范围化包 (scoped package)<br>服务端渲染 (server-side rendering)<br>服务 (service)<br>结构型指令（Structural directives）<br>订阅者（Subscriber）<br>目标 (target)<br>模板 (template)<br>模板驱动表单（template-driven forms）<br>模板表达式（template expression）<br>模板引用变量 (template reference variable)<br>令牌（Token）<br>转译（transpile)<br>目录树（tree）<br>TypeScript 配置文件<br>单向数据流 (unidirectional data flow)<br>视图 (view)<br>视图引擎（View Engine）<br>视图树（View hierarchy）<br>Web 组件 (web component)<br>工作空间（Workspace）<br>工作空间配置（Workspace configuration）<br>区域 (zone)</p>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/09/Angular-keyword/" data-id="ckmv9yzo7000loo9x2gn2tt65" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-js-speical" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/02/07/js-speical/" class="article-date">
@@ -109,9 +319,11 @@
 <ul>
 <li><a href="#1-概要">1. 概要</a></li>
 <li><a href="#2-this">2. this</a></li>
-<li><a href="#3-new操作符都做了什么">3. new操作符都做了什么</a></li>
-<li><a href="#-vs-">=== VS ==</a></li>
-<li><a href="#4-总结">4. 总结</a></li>
+<li><a href="#3-原型链-prototype">3. 原型链, prototype</a></li>
+<li><a href="#4-new操作符都做了什么">4. new操作符都做了什么</a></li>
+<li><a href="#5--vs-">5. === VS ==</a></li>
+<li><a href="#6-闭包">6. 闭包</a></li>
+<li><a href="#7-总结">7. 总结</a></li>
 </ul>
 <h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javascript。对于广大程序员来说，随着web流行度越来越高，那么为了同时支持大多数浏览器，那么使用标准的javascript成为趋势。而第三方（coffeescript, typescript, dart等)也都是选择将代码编译为JavaScript，然后在浏览器端执行。</p>
 <p>作为从C#、java等语言转到javascript的同学来说，会发现不少C#、java的“我觉得应该是这样”的东西，JavaScript中却是不一样的。下面总结一下</p>
@@ -122,7 +334,16 @@
 <li>构造函数的this 是new 之后的新对象,</li>
 <li>call 和 apply bind的this第一个参数</li>
 </ul>
-<h1 id="3-new操作符都做了什么"><a href="#3-new操作符都做了什么" class="headerlink" title="3. new操作符都做了什么"></a>3. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一</p>
+<h1 id="3-原型链-prototype"><a href="#3-原型链-prototype" class="headerlink" title="3. 原型链, prototype"></a>3. 原型链, prototype</h1><ul>
+<li>函数对象都包含prototype属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor属性的含义就是指向该对象的构造函数</li>
+<li>①<strong>proto</strong>和constructor属性是对象所独有的；② prototype属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<strong>proto</strong>和constructor属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为null。</li>
+<li>当访问一个对象的属性或方法时，js引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为null,这就是原型链。</li>
+<li>每个构造函数都有一个prototype属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="4-new操作符都做了什么"><a href="#4-new操作符都做了什么" class="headerlink" title="4. new操作符都做了什么"></a>4. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
 <p>new Object()举例:</p>
 <ol>
 <li>创建一个新对象</li>
@@ -130,9 +351,10 @@
 <li>把构造函数里的this指向新对象</li>
 <li>返回这个新对象</li>
 </ol>
-<h1 id="VS"><a href="#VS" class="headerlink" title="=== VS =="></a>=== VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">'100'</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">''</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">''</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h1 id="5-VS"><a href="#5-VS" class="headerlink" title="5. === VS =="></a>5. === VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">'100'</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">''</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">''</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 <p>很有意思吧， 看看这两个，是等效的：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span></span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<h1 id="6-闭包"><a href="#6-闭包" class="headerlink" title="6. 闭包"></a>6. 闭包</h1><p>在JavaScript中的一大特点就是闭包，很多高级应用(早期的jquery，现在的angular、vue)都要依靠闭包来实现。由于闭包会使得函数中的变量都被保存在内存中，会消耗很大的内存，导致页面的性能问题，甚至导致内存泄漏。建议不要或者少用闭包。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> a = <span class="string">"some value"</span>;</span><br><span class="line"> <span class="keyword">var</span> innerMethod = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">console</span>.log( a + <span class="string">"!"</span>) ;&#125;</span><br><span class="line"> innerMethod(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><ol>
 <li>Javascipt 中有些内容和其他编程语言不一致，需要牢记</li>
 <li>JavaScript中拿不准的东西，可以简单测试一下，免得代码写好后出错。</li>
 <li>简单测试，可以打开浏览器，直接F12（进入Dev Tools），再选择Console(控制台)， 直接输入要测试的内容，查看返回结果</li>
@@ -149,7 +371,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/02/07/js-speical/" data-id="cklsqyozi0015809xsp1y8ung" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/02/07/js-speical/" data-id="ckmv9yzpy0018oo9xsnnvwn8d" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试/">面试</a></li></ul>
@@ -265,7 +487,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/29/Angular-Starter-15-folder-structure/" data-id="cklsqyoxw000a809xkeux22td" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/29/Angular-Starter-15-folder-structure/" data-id="ckmv9yznr000aoo9xbv9araa2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -384,7 +606,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/29/css3-flex-box/" data-id="cklsqyozb0010809xr8tegq7p" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/29/css3-flex-box/" data-id="ckmv9yzpv0015oo9x9pbhn89x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css3/">css3</a></li></ul>
@@ -496,7 +718,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/" data-id="cklsqyoxy000b809xce7vkzfe" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/" data-id="ckmv9yznr0008oo9x85crmetb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -586,7 +808,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/" data-id="cklsqyoya000e809xp0dyukrr" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/" data-id="ckmv9yznb0007oo9xyke3c29u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -694,7 +916,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="cklsqyoxo0006809xj0893sn7" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="ckmv9yznb0005oo9x1cvs55gg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -788,329 +1010,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="cklsqyoxi0004809x2s874wig" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-starter-7-component" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/12/Angular-starter-7-component/" class="article-date">
-  <time datetime="2021-01-12T06:11:30.000Z" itemprop="datePublished">2021-01-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/12/Angular-starter-7-component/">Angular入门到精通系列教程（7）- 组件（@Component）基本知识</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-概述">1. 概述</a></li>
-<li><a href="#2-创建component">2. 创建Component</a><ul>
-<li><a href="#21-组件模板">2.1. 组件模板</a></li>
-</ul>
-</li>
-<li><a href="#3-视图封装模式">3. 视图封装模式</a><ul>
-<li><a href="#31-特殊的选择器-host">3.1. 特殊的选择器 :host</a></li>
-<li><a href="#32-inline-styles">3.2. inline-styles</a></li>
-</ul>
-</li>
-<li><a href="#4-总结">4. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>组件是 Angular 应用的主要构造块。每个组件包括如下部分：</p>
-<ul>
-<li>一个 HTML 模板，用于声明页面要渲染的内容</li>
-<li>一个用于定义行为的 Typescript 类</li>
-<li>一个 CSS 选择器，用于定义组件在模板中的使用方式</li>
-<li>（可选）要应用在模板上的 CSS 样式</li>
-</ul>
-<p>Component可以是一个页面，也可以是一个组件（控件）。总是，是一个页面元素。</p>
-<p>任何一个Component都是NgModule的一部分，这样它就可以被其他应用和其他Component所调用。为了定义Component是NgModule的一个成员之一，开发者应该在NgModule的declarations属性中，将自己开发的Component列出。</p>
-<p>另外，通过Component修饰符（也就是@Component）开发者可以配置元数据，这样通过各式各样的Life-Cycle hooks，Components就可以控制他们的运行环境。</p>
-<h1 id="2-创建Component"><a href="#2-创建Component" class="headerlink" title="2. 创建Component"></a>2. 创建Component</h1><p>基于AngularCLI，可以很方便的创建Component。在要创建Component的目录下，执行如下命令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate component &lt;component-name&gt;</span><br></pre></td></tr></table></figure></p>
-<p>e.g. <code>ng generate component MyComponent</code><br>AngularCLI会自动生成一个文件夹和4个文件：</p>
-<ul>
-<li>一个以该组件命名的文件夹（e.g my-component)</li>
-<li>一个组件文件 &lt; component-name &gt;.component.ts（e.g my-component.component.ts)</li>
-<li>一个模板文件 &lt; component-name &gt;.component.html（e.g my-component.component.html)</li>
-<li>一个 CSS 文件， &lt; component-name &gt;.component.css（e.g my-component.component.css)</li>
-<li>测试文件 &lt; component-name &gt;.component.spec.ts（e.g my-component.component.spec.ts)</li>
-</ul>
-<blockquote>
-<p>对于Component，所有文件名都会自动增加Component后缀，所以不建议&lt; component-name &gt; 中带有‘component’这个单词。</p>
-</blockquote>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">'app-my-component'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./my-component.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="string">'./my-component.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> MyComponentComponent <span class="keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上是核心的ts文件，指定了selector(CSS 选择器)，template（html）文件，css文件。html/css文件如果需要可以多个component公用。尤其是css，可以看到参数是Array，所以可以制定多个css。</p>
-<h2 id="2-1-组件模板"><a href="#2-1-组件模板" class="headerlink" title="2.1. 组件模板"></a>2.1. 组件模板</h2><p>组件模板，即HTML部分，可以是一个html文件，也可以是一段html描述，是等价的。Angular 组件需要一个用 template 或 templateUrl 定义的模板。但你不能在组件中同时拥有这两个语句。</p>
-<ol>
-<li><p>html 文件方式</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">'app-component-overview'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./component-overview.component.html'</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>html代码方式</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">'app-component-overview'</span>,</span><br><span class="line">  template: <span class="string">'&lt;h1&gt;Hello World!&lt;/h1&gt;'</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 3. 视图封装模式</span></span><br><span class="line"><span class="string">在 Angular 中，组件的 CSS 样式被封装进了自己的视图中，而不希望影响到应用程序的其它部分。这部分也是可以通过配置去进行控制的。</span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>ts</span><br><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">'app-my-component'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./my-component.component.html'</span>,</span><br><span class="line">  encapsulation: ViewEncapsulation.None,</span><br><span class="line">  styleUrls: [<span class="string">'./my-component.component.css'</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>可以看到，增加了一个<code>encapsulation</code>属性 （视图封装模式）。通过在组件的元数据上设置视图封装模式，你可以分别控制每个组件的封装模式。 可选的封装模式一共有如下几种：</p>
-<ol>
-<li>Emulated 模式（默认值）通过预处理（并改名）CSS 代码来模拟 Shadow DOM 的行为，以达到把 CSS 样式局限在组件视图中的目的。 更多信息，见附录 1。(说明：只进不出，全局样式能进来，组件样式出不去)</li>
-<li>ShadowDom 模式使用浏览器原生的 Shadow DOM 实现来为组件的宿主元素附加一个 Shadow DOM。组件的视图被附加到这个 Shadow DOM 中，组件的样式也被包含在这个 Shadow DOM 中。(说明：不进不出，没有样式能进来，组件样式出不去。)</li>
-<li>None 意味着 Angular 不使用视图封装。 Angular 会把 CSS 添加到全局样式中。而不会应用上前面讨论过的那些作用域规则、隔离和保护等。 从本质上来说，这跟把组件的样式直接放进 HTML 是一样的。</li>
-</ol>
-<h2 id="3-1-特殊的选择器-host"><a href="#3-1-特殊的选择器-host" class="headerlink" title="3.1. 特殊的选择器 :host"></a>3.1. 特殊的选择器 :host</h2><p>使用 :host 伪类选择器，用来选择组件宿主元素中的元素（相对于组件模板内部的元素）。 :host 选择是是把宿主元素作为目标的唯一方式。除此之外，你将没办法指定它， 因为宿主不是组件自身模板的一部分，而是父组件模板的一部分。</p>
-<p>e.g.<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:host</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="3-2-inline-styles"><a href="#3-2-inline-styles" class="headerlink" title="3.2. inline-styles"></a>3.2. inline-styles</h2><p>默认AngularCLI生成的component，css在一个单独文件中。当然，同html模板类似，如果需要，你也可以制定css样式写在ts中， 不单独放到一个文件中。命令：<code>ng generate component MyComponent --inline-style</code>。</p>
-<p>生成component如下<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">'app-my-component'</span>,</span><br><span class="line">  template: <span class="string">'&lt;h1&gt;Hello World!&lt;/h1&gt;'</span>,</span><br><span class="line">  styles: [<span class="string">'h1 &#123; font-weight: normal; &#125;'</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ul>
-<li>Angular CLI辅助创建一个component所需的多个文件</li>
-<li>建议html/css/ts分开</li>
-<li>在期望目录下执行Angular CLI命令，可以生成到制定目录</li>
-<li><code>ng generate component XXX</code> 可以简写为 <code>ng g c</code></li>
-</ul>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="cklsqyoyv000q809xuy5joufs" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-11-ngmodule" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-11-ngmodule/" class="article-date">
-  <time datetime="2021-01-11T09:11:30.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-11-ngmodule/">Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-摘要">1. 摘要</a></li>
-<li><a href="#2-ngmodule举例说明">2. NgModule举例、说明</a></li>
-<li><a href="#3-angular-cli生成模块">3. Angular CLI生成模块</a></li>
-<li><a href="#4-延迟加载模块">4. 延迟加载模块</a></li>
-<li><a href="#5-总结">5. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>模块(NgModule)是Angular的核心概念之一。模块(NgModule)用于组织业务代码，按照自己的业务场景，把组件、服务、路由打包到模块里面。</p>
-<p>模块(NgModule)的主要作用：</p>
-<ol>
-<li>NgModule 组织业务代码，开发者可以利用 NgModule 把关系比较紧密的组件组织到一起。</li>
-<li>NgModule 用来控制组件、指令、管道等的可见性，处于同一个NgModule 里面的组件默认互相可见，而对于外部的组件来说，只能看到NgModule 导出（exports）的内容。这样就实现了封装，只暴露希望暴露的组件、服务给调用者。</li>
-<li>NgModule 是 @angular/cli 打包的最小单位。打包的时候，@angular/cli 会检查所有 @NgModule 和路由配置，如果你配置了异步模块，cli 会自动把模块切分成独立的 chunk（块）。在 Angular 里面，打包和切分的动作是 @angular/cli 自动处理的，不需要你干预。当然，如果需要，你也可以修改angular的编译配置，基于Webpack 配一个环境出来，自定义打包规则。</li>
-<li>NgModule 是 Router 进行异步加载的最小单位，Router 能加载的最小单位是模块，而不是组件。当然，也可以一个模块里面只放一个组件是。</li>
-</ol>
-<h1 id="2-NgModule举例、说明"><a href="#2-NgModule举例、说明" class="headerlink" title="2. NgModule举例、说明"></a>2. NgModule举例、说明</h1><p>前文说过，Angular中任何的Component、service，都必须属于一个NgModule。所以，使用AngularCLI生成的框架程序，自动生成的组件，也是属于一个Component的，并且标记为启动模块。<br>这样，angular站点启动后，会以这个模块为入口，根据配置加载各个模块。</p>
-<p>下面以默认生成的启动模块为例，进行解释：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent,</span><br><span class="line">    MyComponentComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule,</span><br><span class="line">    AppRoutingModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>declarations，用来放组件、指令、管道的声明；</li>
-<li>imports，用来导入外部模块。比如当前模块需要调用其他模块的组件，需要加入到这里。比如上面例子，导入了Browser和Routing 2个模块。</li>
-<li>providers，需要使用的第三方或者其他模块的Service 都放在这里；</li>
-<li>bootstrap，定义启动组件。 一个可以启动的Angular项目（如果只是一个Library除外），需要定义一个启动组件。</li>
-<li>exports, 声明的组件、指令和管道可以在导入了本模块的模块下任何组件的模板中使用。 导出的这些可声明对象就是该模块的公共 API。换句话说，其他模块想用本模块中定义的内容，需要在这里声明。</li>
-<li>entryComponents， 如果其他模块想要动态加载本模块中的组件到视图中， 那么，这些组件需要写入entryComponents。</li>
-</ul>
-<h1 id="3-Angular-CLI生成模块"><a href="#3-Angular-CLI生成模块" class="headerlink" title="3. Angular CLI生成模块"></a>3. Angular CLI生成模块</h1><p>AngularCLI是一个很好很强大的工具集，可以帮助我们生成很多基础代码、文件， 包括创建一个模块，并且可以制定参数。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate <span class="built_in">module</span> &lt;name&gt; [options]</span><br></pre></td></tr></table></figure></p>
-<p>详情参考<a href="https://angular.io/cli/generate#module。" target="_blank" rel="noopener">https://angular.io/cli/generate#module。</a></p>
-<p>几个简单的例子：</p>
-<ol>
-<li>创建feature1模块： <code>ng generate module feature1</code></li>
-<li>创建feature2模块， 并且带路由：<code>ng generate module feature2 --routing</code></li>
-<li>创建一个延迟加载的feature3模块(延迟加载模块，参考下面章节)： <code>ng generate module feature3 --route feature3  --module app.module</code></li>
-</ol>
-<blockquote>
-<p>说明： <code>ng generate module xxx</code> 可以简写为 <code>ng g m xxx</code></p>
-</blockquote>
-<h1 id="4-延迟加载模块"><a href="#4-延迟加载模块" class="headerlink" title="4. 延迟加载模块"></a>4. 延迟加载模块</h1><p>延迟加载使得应用程序在启动时不被载入，而是结合路由配置，在需要时才动态加载相应模块。这样 Angular 就不需要在第一个界面从服务器下载所有的文件，直到请求它，才下载相应的模块。这对提供性能和减少首屏的初始下载文件尺寸有巨大的帮助，而且它可以很容易设置。</p>
-<p>举例来说，上文创建了3个模块，主程序模块以及feature1、feature2会被打成一个包（js），feature3会被单独打一个包（js），当用户访问/feature3/* 的地址后，才会加载feature3这个包（js），否则永远不会请求、加载feature3的模块，从而提高性能（首页加载时间）。当一个项目大到一定程度时，最好考虑把某些模块设置为延迟加载模块。</p>
-<p>延迟加载的路由定义（angular CLI会自动生成）：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/app-routing.module.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Routes, RouterModule &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'feature3'</span>,</span><br><span class="line">    loadChildren: <span class="function"><span class="params">()</span> =&gt;</span></span><br><span class="line">      <span class="keyword">import</span>(<span class="string">'./feature3/feature3.module'</span>).then(<span class="function">(<span class="params">m</span>) =&gt;</span> m.Feature3Module),</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  exports: [RouterModule],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppRoutingModule &#123;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后复习一下生成延迟加载模块的命令<code>ng generate module feature3 --route feature3  --module app.module</code>，或者简写为 <code>ng g m feature3 --route feature3  --module app.module</code>。</p>
-<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
-<li>Angular项目，就是模块（NgModule）的一个集合，任组件、服务等必须包含在一个模块中。</li>
-<li>延迟加载模块用于提高首页加载性能。</li>
-<li>Angular CLI命令，生成模块。</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="cklsqyox80003809xg812mix8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-9-Component-Lifecycle" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-9-Component-Lifecycle/" class="article-date">
-  <time datetime="2021-01-11T09:11:30.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-9-Component-Lifecycle/">Angular入门到精通系列教程（9）- 组件的生命周期(Component Lifecycle Hook)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-摘要">1. 摘要</a></li>
-<li><a href="#2-生命周期及顺序">2. 生命周期及顺序</a></li>
-<li><a href="#3-响应生命周期事件">3. 响应生命周期事件</a></li>
-<li><a href="#4-主要生命周期事件">4. 主要生命周期事件</a><ul>
-<li><a href="#41-初始化事件-ngoninit">4.1. 初始化事件 ngOnInit()</a></li>
-<li><a href="#42-实例销毁-ngondestroy">4.2. 实例销毁 ngOnDestroy()</a></li>
-</ul>
-</li>
-<li><a href="#5-总结">5. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>当 Angular 实例化组件类并渲染组件视图及其子视图时，组件实例的生命周期就开始了。生命周期一直伴随着变更检测，Angular 会检查数据绑定属性何时发生变化，并按需更新视图和组件实例。当 Angular 销毁组件实例并从 DOM 中移除它渲染的模板时，生命周期就结束了。当 Angular 在执行过程中创建、更新和销毁实例时，指令就有了类似的生命周期。</p>
-<p>你的应用可以使用生命周期钩子方法来触发组件或指令生命周期中的关键事件，以初始化新实例，需要时启动变更检测，在变更检测过程中响应更新，并在删除实例之前进行清理。</p>
-<h1 id="2-生命周期及顺序"><a href="#2-生命周期及顺序" class="headerlink" title="2. 生命周期及顺序"></a>2. 生命周期及顺序</h1><ol>
-<li>ngOnChanges(): 当 Angular 设置或重新设置数据绑定的输入属性时响应。</li>
-<li>ngOnInit(): 在 Angular 第一次显示数据绑定和设置指令/组件的输入属性之后，初始化指令/组件。 </li>
-<li>ngDoCheck(): 每次执行变更检测时的 ngOnChanges() 和 首次执行变更检测时的 ngOnInit() 后调用。</li>
-<li>ngAfterContentInit(): 当 Angular 把外部内容投影进组件视图或指令所在的视图之后调用。</li>
-<li>ngAfterContentChecked(): ngAfterContentInit() 和每次 ngDoCheck() 之后调用</li>
-<li>ngAfterViewInit(): 当 Angular 初始化完组件视图及其子视图或包含该指令的视图之后调用。</li>
-<li>ngAfterViewChecked(): ngAfterViewInit() 和每次 ngAfterContentChecked() 之后调用。</li>
-<li>ngOnDestroy(): 每当 Angular 每次销毁指令/组件之前调用，清理释放资源。</li>
-</ol>
-<h1 id="3-响应生命周期事件"><a href="#3-响应生命周期事件" class="headerlink" title="3. 响应生命周期事件"></a>3. 响应生命周期事件</h1><p>我们以通过实现一个或多个 Angular中定义的生命周期钩子接口来响应组件或指令生命周期中的事件。每个接口都有唯一的一个钩子方法，它们的名字是由接口名再加上 ng 前缀构成的。例如：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DemoComponent <span class="keyword">implements</span> OnInit &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// implement OnInit's `ngOnInit` method</span></span><br><span class="line">  ngOnInit() &#123; </span><br><span class="line">      <span class="comment">// do something here</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>说明：<br>1） 通过生命周期钩子接口来响应生命周期中的事件，需要在类名之后，声明实现(implements) 具体的钩子接口。然后代码中定义个钩子函数才能被执行。如 <code>ngOnInit()</code> 对应 接口<code>OnInit</code> 。<br>2） 可以实现多个钩子接口，例如 <code>export class DemoComponent implements OnInit, OnDestroy {</code></p>
-</blockquote>
-<h1 id="4-主要生命周期事件"><a href="#4-主要生命周期事件" class="headerlink" title="4. 主要生命周期事件"></a>4. 主要生命周期事件</h1><h2 id="4-1-初始化事件-ngOnInit"><a href="#4-1-初始化事件-ngOnInit" class="headerlink" title="4.1. 初始化事件 ngOnInit()"></a>4.1. 初始化事件 ngOnInit()</h2><p>使用 ngOnInit() 方法执行以下初始化任务:</p>
-<ol>
-<li>逻辑稍复杂，不适合放到构造函数中的逻辑</li>
-<li>初始化中的数据访问逻辑</li>
-<li>处理需要根据父组件传入参数（@Input）进行初始化的逻辑</li>
-</ol>
-<h2 id="4-2-实例销毁-ngOnDestroy"><a href="#4-2-实例销毁-ngOnDestroy" class="headerlink" title="4.2. 实例销毁 ngOnDestroy()"></a>4.2. 实例销毁 ngOnDestroy()</h2><p>把清理逻辑放进 ngOnDestroy() 中，这个逻辑就必然会在 Angular 销毁该指令之前运行。下列逻辑可言放到ngOnDestroy()：</p>
-<ul>
-<li>取消订阅可观察对象和 DOM 事件。</li>
-<li>停止 interval 计时器。</li>
-<li>反注册该指令在全局或应用服务中注册过的所有回调。</li>
-<li>释放其他占有的资源。</li>
-</ul>
-<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
-<li>使用生命周期事件钩子函数，别忘了类名后面<code>implements</code> 相应的接口，否则不生效；</li>
-<li>初始化代码，区分哪些放构造函数，哪些放 ngOnInit()；</li>
-<li>可以精简的钩子事件方法来避免性能问题；</li>
-<li>ngOnChanges()发生的非常频繁，加入复杂逻辑会影响性能；</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="cklsqyoyt000o809xmkg9z8f5" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmv9yznb0002oo9xg7ltpql8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -1149,7 +1049,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1158,7 +1058,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 15px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/面试/" style="font-size: 10px;">面试</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
     </div>
   </div>
 
@@ -1167,7 +1067,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1179,23 +1079,23 @@
       <ul>
         
           <li>
+            <a href="/2021/03/07/CSS-interview-qa/">CSS面试题汇总</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/02/mobile-ux-performance/">移动端如何做好用户体验</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/09/Angular-keyword/">Angular 词汇表</a>
+          </li>
+        
+          <li>
             <a href="/2021/02/07/js-speical/">javascript中常见的非人类（java/c#)知识</a>
           </li>
         
           <li>
             <a href="/2021/01/29/Angular-Starter-15-folder-structure/">Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/29/css3-flex-box/">CSS3 Flex Box 弹性盒子、弹性布局</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/29/Angular-Starter-14-compile-publish/">Angular入门到精通系列教程（14）- Angular 编译打包 &amp; Docker发布</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/25/Angular-Starter-13-gard-routing/">Angular入门到精通系列教程（13）- 路由守卫（Route Guards）</a>
           </li>
         
       </ul>

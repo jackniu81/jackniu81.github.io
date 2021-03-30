@@ -83,6 +83,159 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-angular-Starter-Angular-Vue-React" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/08/angular-Starter-Angular-Vue-React/" class="article-date">
+  <time datetime="2021-01-08T07:02:55.000Z" itemprop="datePublished">2021-01-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/08/angular-Starter-Angular-Vue-React/">Angular入门到精通系列教程（1） - Angular,Vue,React 选型</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-概述">1. 概述</a></li>
+<li><a href="#2-框架比较">2. 框架比较</a></li>
+<li><a href="#3-为什么国内angular不是很流行">3. 为什么国内Angular不是很流行</a></li>
+</ul>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>总的来说一句话，如果你是老大，你可以选择用什么；如果你不是，那么，老大让用什么，你就用什么。</p>
+<ul>
+<li>前端框架Angular,Vue,React三选一，没有第四种。 （当然，如果只是一两个简单的页面，纯JS、jquery足够了）。</li>
+<li>国内的话，React和vue更流行一点，国外的话React和Angular更流行。</li>
+<li>Vue 中文资料更多一些</li>
+<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
+</ul>
+<h1 id="2-框架比较"><a href="#2-框架比较" class="headerlink" title="2. 框架比较"></a>2. 框架比较</h1><p>网上比较的文章太多了，如果想了解，baidu、google一下吧，这个就不再多说了。</p>
+<h1 id="3-为什么国内Angular不是很流行"><a href="#3-为什么国内Angular不是很流行" class="headerlink" title="3. 为什么国内Angular不是很流行"></a>3. 为什么国内Angular不是很流行</h1><p>只说些个人看法，更多原因请自行搜索。</p>
+<ol>
+<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
+<li>上手难度稍大，或者说需要更多的时间培训才能开发。</li>
+<li>Angular对anuglarJS（1.0版本）不支持（虽然后期推出了兼容方案）， 伤了很多人的心。不过这个难免，一个组件、框架的升级，如果一直背负的早期债务，很难有更好的提升。</li>
+<li>TypeScript。Angular是第一个吃螃蟹的，完全抛弃了js，转入Typscript，得罪的很多js的铁杆粉丝，以及惧怕ts的人。不过现在看来，typescript才是前端的趋势。vue3也声称用typescript重写了，并打算更完美的支持typescript。</li>
+<li>大而全的框架。选择Angular的话，它自带了很多东西，路由、表单、动画、http请求等等，需要更多的时间去学习和理解。而其他框架，很多组件都是有备选方案，或者第三方提供的（如vue使用axios处理http请求），让人觉得了解框架更简单。</li>
+<li>版本升级较快。每半年一个主版本，优缺点共存吧。</li>
+<li>恶性循环：用的人少 》 聊的人少 》 资源少 》 用的人更少。</li>
+<li>vue更符合国人的习惯，考虑了一些小的常用细节。比如自带支持避免一个按钮点击多次（修饰符once，@click.prevent.once）。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/" data-id="ckmv9yzpu0013oo9xkchjemuu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Open-a-new-tab-from-Iframe" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" class="article-date">
+  <time datetime="2021-01-07T13:39:21.000Z" itemprop="datePublished">2021-01-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/07/Angular-Open-a-new-tab-from-Iframe/">嵌入在iframe中的Angular站点，如何打开一个新的tab页面</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-需求">1. 需求</a></li>
+<li><a href="#2-方案">2. 方案</a></li>
+<li><a href="#3-总结">3. 总结</a><h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1>一个angular web站点，通过一个iframe嵌套在另一个web站点中。点击一个按钮，希望能够在一个新的页面（Tab）中打开另外一个页面。</li>
+</ul>
+<h1 id="2-方案"><a href="#2-方案" class="headerlink" title="2. 方案"></a>2. 方案</h1><p>主要困难在于处理2个站点的地址不同的问题。既可以通过 html 设置href实现，又可以直接使用js代码实现。</p>
+<p>Code:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">href</span>]=<span class="string">"url"</span> <span class="attr">target</span>=<span class="string">"_blank"</span>&gt;</span>1. open New Tab - based on a.href <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> (<span class="attr">click</span>)=<span class="string">"openNewTab()"</span> &gt;</span>2. open New Tab -  by pure js/ts<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. open New Tab - based on a.href</span></span><br><span class="line">url = <span class="string">""</span>;</span><br><span class="line">ngOnInit() &#123;</span><br><span class="line"><span class="keyword">this</span>.url = <span class="built_in">window</span>.location.origin + <span class="string">"/help.html"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. open New Tab -  by pure js/ts</span></span><br><span class="line">openNewTab() &#123;</span><br><span class="line"><span class="built_in">window</span>.open(<span class="built_in">window</span>.location.origin + <span class="string">"/help.html"</span>, <span class="string">"_blank"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>主要困难在于处理2个站点的地址不同的问题（window.location.origin），和是否嵌套在其他站点（iframe）没有关系。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" data-id="ckmv9yznr000boo9xnjs10a3v" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iframe/">iframe</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" class="article-date">
+  <time datetime="2019-11-22T01:53:39.000Z" itemprop="datePublished">2019-11-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/">SQL Server: The database could not be exclusively locked to perform the operation</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Error on renaming database in SQL Server, when rename the database:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">MODIFY</span> <span class="keyword">NAME</span> = [MY_DB_bak]</span><br></pre></td></tr></table></figure>
+<p>But it shows an error when executing:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The database could <span class="keyword">not</span> be exclusively locked <span class="built_in">to</span> perform <span class="keyword">the</span> operation.</span><br></pre></td></tr></table></figure>
+<p>The solution is setting the database to single user mode.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="keyword">master</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">SET</span> SINGLE_USER <span class="keyword">WITH</span> <span class="keyword">ROLLBACK</span> <span class="keyword">IMMEDIATE</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB <span class="keyword">MODIFY</span> <span class="keyword">NAME</span> = [MY_DB_bak]</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> MY_DB_bak <span class="keyword">SET</span> MULTI_USER</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" data-id="ckmv9yzq4001ioo9x2jvc9s90" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL-Server/">SQL Server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Hello-Hexo" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/12/10/Hello-Hexo/" class="article-date">
@@ -120,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2015/12/10/Hello-Hexo/" data-id="cklsqyoz1000t809xfkrsytb3" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2015/12/10/Hello-Hexo/" data-id="ckmv9yzol000voo9xfxn31qfc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Assemble/">Assemble</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Metalsmith/">Metalsmith</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Wintersmith/">Wintersmith</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node-js/">node.js</a></li></ul>
@@ -159,7 +312,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -168,7 +321,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 15px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/面试/" style="font-size: 10px;">面试</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
     </div>
   </div>
 
@@ -177,7 +330,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -189,23 +342,23 @@
       <ul>
         
           <li>
+            <a href="/2021/03/07/CSS-interview-qa/">CSS面试题汇总</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/02/mobile-ux-performance/">移动端如何做好用户体验</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/09/Angular-keyword/">Angular 词汇表</a>
+          </li>
+        
+          <li>
             <a href="/2021/02/07/js-speical/">javascript中常见的非人类（java/c#)知识</a>
           </li>
         
           <li>
             <a href="/2021/01/29/Angular-Starter-15-folder-structure/">Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/29/css3-flex-box/">CSS3 Flex Box 弹性盒子、弹性布局</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/29/Angular-Starter-14-compile-publish/">Angular入门到精通系列教程（14）- Angular 编译打包 &amp; Docker发布</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/25/Angular-Starter-13-gard-routing/">Angular入门到精通系列教程（13）- 路由守卫（Route Guards）</a>
           </li>
         
       </ul>
