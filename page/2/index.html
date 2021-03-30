@@ -83,6 +83,114 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Angular-Starter-12-routing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/25/Angular-Starter-12-routing/" class="article-date">
+  <time datetime="2021-01-25T02:06:00.000Z" itemprop="datePublished">2021-01-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/25/Angular-Starter-12-routing/">Angular入门到精通系列教程（12）- 路由（Routing）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-路由router基本用法">2. 路由（Router）基本用法</a><ul>
+<li><a href="#21-准备">2.1. 准备</a></li>
+<li><a href="#22-注册路由">2.2. 注册路由</a></li>
+<li><a href="#23-html中的用法">2.3. html中的用法</a></li>
+<li><a href="#24-ts-代码中的用法">2.4. ts 代码中的用法</a></li>
+</ul>
+</li>
+<li><a href="#3-接收参数">3. 接收参数</a><ul>
+<li><a href="#31-路径中的参数">3.1. 路径中的参数</a></li>
+<li><a href="#32-参数queryparameter中的参数">3.2. 参数（QueryParameter）中的参数</a></li>
+</ul>
+</li>
+<li><a href="#4-url路径显示格式">4. URL路径显示格式</a></li>
+<li><a href="#5-部署中遇到的问题">5. 部署中遇到的问题</a></li>
+<li><a href="#6-总结">6. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>简单来说地址栏中，不同的地址（URL）对应不同的页面，这就是路由。同时，点击浏览器的前进和后退按钮，浏览器就会在你的浏览历史中向前或向后导航，这也是基于路由。</p>
+<p>在 Angular 里面，Router 是一个独立的模块，定义在 @angular/router 模块中，</p>
+<ol>
+<li>Router 可以配合 NgModule 进行模块的延迟加载（懒加载）、预加载操作（参考《Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块》）；</li>
+<li>Router 会管理组件的生命周期，它会负责创建、销毁组件。</li>
+</ol>
+<p>对于一个新的基于AngularCLI的项目，初始化时可以通过选项，将AppRoutingModule默认加入到app.component.ts中。</p>
+<h1 id="2-路由（Router）基本用法"><a href="#2-路由（Router）基本用法" class="headerlink" title="2. 路由（Router）基本用法"></a>2. 路由（Router）基本用法</h1><h2 id="2-1-准备"><a href="#2-1-准备" class="headerlink" title="2.1. 准备"></a>2.1. 准备</h2><p>我们首先创建2个页面，用于说明路由的使用：<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ng g <span class="keyword">c</span> page<span class="number">1</span></span><br><span class="line">ng g <span class="keyword">c</span> page<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>使用上面AnuglarCLI命令，创建Page1Component, Page2Component 2个组件。</p>
+<h2 id="2-2-注册路由"><a href="#2-2-注册路由" class="headerlink" title="2.2. 注册路由"></a>2.2. 注册路由</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//src\app\app-routing.module.ts</span></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page1'</span>,</span><br><span class="line">    component: Page1Component</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page2'</span>,</span><br><span class="line">    component: Page2Component</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  exports: [RouterModule],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppRoutingModule &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，简单的路由注册，只需要path和component2个属性，分别定义路由的相对路径，以及这个路由的响应组件。</p>
+<h2 id="2-3-html中的用法"><a href="#2-3-html中的用法" class="headerlink" title="2.3. html中的用法"></a>2.3. html中的用法</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">"page1"</span>&gt;</span>Page1<span class="tag">&lt;/<span class="name">a</span>&gt;</span> |</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">"page2"</span>&gt;</span>Page2<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在html模板中，直接使用routerLink属性，标识为angular的路由。执行代码，可以看到 Page1和Page2 两个超链接，点击可以看到地址栏地址改为<a href="http://localhost:4200/page2或http://localhost:4200/page1，" target="_blank" rel="noopener">http://localhost:4200/page2或http://localhost:4200/page1，</a> 页面内容在page1和page2中切换</p>
+<h2 id="2-4-ts-代码中的用法"><a href="#2-4-ts-代码中的用法" class="headerlink" title="2.4. ts 代码中的用法"></a>2.4. ts 代码中的用法</h2><p>有时候，需要根据ts中的业务逻辑，进行跳转。ts中，需要注入Router实例，如<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> router: Router</span>) &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>跳转代码：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到 /page1</span></span><br><span class="line"><span class="keyword">this</span>.router.navigate([<span class="string">'/page1'</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 跳转到 /page1/123</span></span><br><span class="line"><span class="keyword">this</span>.router.navigate([<span class="string">'/page1'</span>, <span class="number">123</span>]);</span><br></pre></td></tr></table></figure></p>
+<h1 id="3-接收参数"><a href="#3-接收参数" class="headerlink" title="3. 接收参数"></a>3. 接收参数</h1><h2 id="3-1-路径中的参数"><a href="#3-1-路径中的参数" class="headerlink" title="3.1. 路径中的参数"></a>3.1. 路径中的参数</h2><p>一般来说，我们把参数作为url中的一段，如/users/1, 代表查询id是1的用户，路由定义为”/users/id” 这种风格。</p>
+<p>针对我们的简单页面，比如我们的page1页面可以传id参数，那么我们需要修改我们的routing为：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page1/:id'</span>,    <span class="comment">//接收id参数</span></span><br><span class="line">    component: Page1Component,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 实现可选参数的小技巧。 这个routing处理没有参数的url</span></span><br><span class="line">    path: <span class="string">'page1'</span>,        </span><br><span class="line">    redirectTo: <span class="string">'page1/'</span>,   <span class="comment">// 跳转到'page1/:id'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'page2'</span>,</span><br><span class="line">    component: Page2Component,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>ts代码读取参数时， 首先需要注入ActivatedRoute，代码如下：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> activatedRoute: ActivatedRoute</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.activatedRoute.paramMap.subscribe(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Parameter id: '</span>, params.get(<span class="string">'id'</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/33   </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:  33</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/     </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-2-参数（QueryParameter）中的参数"><a href="#3-2-参数（QueryParameter）中的参数" class="headerlink" title="3.2. 参数（QueryParameter）中的参数"></a>3.2. 参数（QueryParameter）中的参数</h2><p>参数还有另外一种写法，如<a href="http://localhost:4200/?name=cat" target="_blank" rel="noopener">http://localhost:4200/?name=cat</a>, 即URL地址后，加一个问号’?’, 之后再加参数名和参数值（’name=cat’）。这种称为查询参数(QueryParameter)。</p>
+<p>取这查询参数时，和之前的路由参数类似，只是paramMap改为queryParamMap，代码如下：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.activatedRoute.queryParamMap.subscribe(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Query Parameter name: '</span>, params.get(<span class="string">'name'</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1?name=cat</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:  cat</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1/</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h1 id="4-URL路径显示格式"><a href="#4-URL路径显示格式" class="headerlink" title="4. URL路径显示格式"></a>4. URL路径显示格式</h1><p>不同于传统的纯静态（html）站点，angular中的url不是对应一个真实的文件（页面），因为anuglar接管的路由（Routing）处理，来决定显示那个Component给终端用户。为了针对不同的场景，angular的URL路径显示格式有2中：</p>
+<ol>
+<li><a href="http://localhost:4200/page1/123" target="_blank" rel="noopener">http://localhost:4200/page1/123</a></li>
+<li><a href="http://localhost:4200/#/page1/123" target="_blank" rel="noopener">http://localhost:4200/#/page1/123</a></li>
+</ol>
+<p>默认是第一种，不加#的。如果需要，可以在app-routing.ts中，加入<code>useHash: true</code>, 如：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-routing.ts</span></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes, &#123; useHash: <span class="literal">true</span> &#125;)],</span><br><span class="line">  exports: [RouterModule],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="5-部署中遇到的问题"><a href="#5-部署中遇到的问题" class="headerlink" title="5. 部署中遇到的问题"></a>5. 部署中遇到的问题</h1><p>同样，因为anuglar接管的路由（Routing）处理，所以部署时，部署到iis, nginx等等的服务器，都会有不同的技巧（要求），详细参考：<br><a href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode" target="_blank" rel="noopener">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode</a></p>
+<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
+<li>angular默认不支持可选路由（e.g. /user/:id?),但是我们可以定义2个路由，指向同一个Component来实现这个，达到代码复用；（或者使用redirectTo）</li>
+<li>可以使用useHash参数，实现augular路径前加一个#；</li>
+<li>读取参数时，都需要subscribe订阅一下，不能直接读取。</li>
+<li>打包后部署问题，查看官方wifi （<a href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode）" target="_blank" rel="noopener">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode）</a></li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="ckmva13ua00036g9xvrfuaoty" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Angular-Starter-10-Directive-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/13/Angular-Starter-10-Directive-1/" class="article-date">
@@ -165,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmva0jd10007pk9x0c3np9sk" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmva13u600016g9xftvp2ucl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -283,7 +391,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmva0jel000tpk9xwa7evgtr" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmva13v8000q6g9x1k81sfty" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -384,7 +492,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmva0jd10002pk9x502sgssx" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmva13uc00046g9xq8fdj0mk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -487,7 +595,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmva0jee000jpk9xprozfwh8" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmva13ux000g6g9xk79gr9v6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -587,7 +695,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmva0je6000ipk9xow7fri0r" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmva13uu000f6g9xo39bey0p" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -668,7 +776,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmva0je4000fpk9xt6xj6vl0" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmva13uq000c6g9xlr5unuwo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -768,7 +876,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmva0jdx000dpk9xikmndaop" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmva13um000a6g9x033xfbbx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -883,7 +991,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmva0jeg000mpk9xmvzg4kih" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmva13v0000j6g9xnyv380u5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -946,64 +1054,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="ckmva0jei000opk9xu593bix6" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="ckmva13v2000l6g9xjft9mkom" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Kubernetes-1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Kubernetes-1/" class="article-date">
-  <time datetime="2021-01-11T01:11:35.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Kubernetes-1/">Kubernetes 概述</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-基本概念">1. 基本概念</a></li>
-</ul>
-<h1 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h1><ol>
-<li>Kubernetes 是为生产环境而设计的<code>容器调度管理系统</code>，对于负载均衡、服务发现、高可用、滚动升级、自动伸缩等容器云平台的功能要求有原生支持。</li>
-<li>由于 Kubernetes 在 K 和 s 间有 8 个字母，因此常简称 K8s。</li>
-<li>K8s 系统最核心的两个设计理念：一个是容错性，一个是易扩展性。</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Kubernetes-1/" data-id="ckmva0jfe0011pk9x0o26fj2g" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li></ul>
 
     </footer>
   </div>
@@ -1039,7 +1093,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js-面试题/">node.js - 面试题</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-面试题/">javascript - 面试题</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js-面试题/">node.js - 面试题</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1048,7 +1102,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/node-js-面试题/" style="font-size: 10px;">node.js - 面试题</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript-面试题/" style="font-size: 10px;">javascript - 面试题</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/node-js-面试题/" style="font-size: 10px;">node.js - 面试题</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
     </div>
   </div>
 
@@ -1057,7 +1111,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1073,6 +1127,10 @@
           </li>
         
           <li>
+            <a href="/2021/03/02/javascript-interview-qa/">javascript 面试题汇总</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/02/node-js-interview-qa/">node.js 面试题总结</a>
           </li>
         
@@ -1082,10 +1140,6 @@
         
           <li>
             <a href="/2021/02/09/Angular-keyword/">Angular 词汇表</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/07/js-speical/">javascript中常见的非人类（java/c#)知识</a>
           </li>
         
       </ul>
