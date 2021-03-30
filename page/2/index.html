@@ -83,6 +83,100 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Angular-Starter-10-Directive-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/13/Angular-Starter-10-Directive-1/" class="article-date">
+  <time datetime="2021-01-13T05:11:30.000Z" itemprop="datePublished">2021-01-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/13/Angular-Starter-10-Directive-1/">Angular入门到精通系列教程（10）- 指令（Directive）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-组件与指令之间的关系">2. 组件与指令之间的关系</a><ul>
+<li><a href="#21-指令的种类">2.1. 指令的种类</a></li>
+</ul>
+</li>
+<li><a href="#3-angular-中指令的用途">3. Angular 中指令的用途</a></li>
+<li><a href="#4-指令举例">4. 指令举例</a><ul>
+<li><a href="#41-指令功能">4.1. 指令功能</a></li>
+<li><a href="#42-anuglar-cli生成基本文件">4.2. Anuglar CLI生成基本文件</a></li>
+<li><a href="#43-directive指令核心代码">4.3. Directive指令核心代码</a></li>
+<li><a href="#44-使用该指令">4.4. 使用该指令</a></li>
+</ul>
+</li>
+<li><a href="#5-总结">5. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>指令（Directive）在Angular 1.0时代（当时叫AngularJS）是很流行的，现在用到的偏少。可以简单理解为，指令（Directive）用于扩展已有Element（DOM）。</p>
+<h1 id="2-组件与指令之间的关系"><a href="#2-组件与指令之间的关系" class="headerlink" title="2. 组件与指令之间的关系"></a>2. 组件与指令之间的关系</h1><p>如果去看Angular源码，可以看到下面定义<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Supplies configuration metadata for an Angular component.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * @publicApi</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">interface</span> Component <span class="keyword">extends</span> Directive &#123;</span><br></pre></td></tr></table></figure></p>
+<p>是的，Component派生于Directive，也就是说，Component属于Directive。</p>
+<h2 id="2-1-指令的种类"><a href="#2-1-指令的种类" class="headerlink" title="2.1. 指令的种类"></a>2.1. 指令的种类</h2><ol>
+<li>Component 是 Directive 的子接口，是一种特殊的指令，Component 可以带有 HTML 模板，Directive 不能有模板。</li>
+<li>属性型指令：用来修改 DOM 元素的外观和行为，但是不会改变DOM 结构，Angular 内置指令里面典型的属性型指令有 ngClass、ngStyle，如果打算封装自己的组件库，属性型指令是必备的内容。</li>
+<li>结构型指令：可以修改 DOM 结构，内置的常用结构型指令有 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code>。由于结构型指令会修改 DOM 结构，因而同一个 HTML 标签上面不能同时使用多个结构型指令。如果要在同一个 HTML 元素上面使用多个结构性指令，可以考虑加一层空的元素来嵌套，比如在外面套一层空的（<code>div</code>) 。</li>
+</ol>
+<h1 id="3-Angular-中指令的用途"><a href="#3-Angular-中指令的用途" class="headerlink" title="3. Angular 中指令的用途"></a>3. Angular 中指令的用途</h1><p>Angualr中用指令来增强DOM的功能，包括 HTML 原生DOM和我们自己自定义的组件（Component）。举例来说，可以扩展一个Button，实现避免点击后，服务器端未响应前的二次点击；高亮某些收入内容等等。</p>
+<h1 id="4-指令举例"><a href="#4-指令举例" class="headerlink" title="4. 指令举例"></a>4. 指令举例</h1><h2 id="4-1-指令功能"><a href="#4-1-指令功能" class="headerlink" title="4.1. 指令功能"></a>4.1. 指令功能</h2><p>实现一个指令，鼠标移动到上面时， 背景显示为黄色，鼠标移开，恢复正常。</p>
+<h2 id="4-2-Anuglar-CLI生成基本文件"><a href="#4-2-Anuglar-CLI生成基本文件" class="headerlink" title="4.2. Anuglar CLI生成基本文件"></a>4.2. Anuglar CLI生成基本文件</h2><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng <span class="keyword">generate</span> directive MyHighlight</span><br></pre></td></tr></table></figure>
+<p>Anuglar CLI自动生成html、css、ut等文件。</p>
+<p>##</p>
+<h2 id="4-3-Directive指令核心代码"><a href="#4-3-Directive指令核心代码" class="headerlink" title="4.3. Directive指令核心代码"></a>4.3. Directive指令核心代码</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Directive, ElementRef &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Directive</span>(&#123;</span><br><span class="line">  selector: <span class="string">'[appHighlight]'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> HighlightDirective &#123;</span><br><span class="line">    <span class="keyword">constructor</span>(<span class="params">el: ElementRef</span>) &#123;</span><br><span class="line">       el.nativeElement.style.backgroundColor = <span class="string">'yellow'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">'mouseenter'</span>) onMouseEnter() &#123;</span><br><span class="line">        <span class="keyword">this</span>.highlight(<span class="string">'yellow'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">'mouseleave'</span>) onMouseLeave() &#123;</span><br><span class="line">        <span class="keyword">this</span>.highlight(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> highlight(color: <span class="built_in">string</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.el.nativeElement.style.backgroundColor = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-4-使用该指令"><a href="#4-4-使用该指令" class="headerlink" title="4.4. 使用该指令"></a>4.4. 使用该指令</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">my-highlight</span>&gt;</span>Highlight me!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>my-highlight</code> 即我们的元素扩展属性（指令、directive）。</p>
+</blockquote>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ul>
+<li>指令（Directive）用于扩展DOM 元素或组件的功能。</li>
+<li>Angular中的 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code> 都是Angular内置的指令。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmva0jd10007pk9x0c3np9sk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Angular-starter-7-component" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/12/Angular-starter-7-component/" class="article-date">
@@ -189,7 +283,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmv9yzp70010oo9xe0lekojr" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmva0jel000tpk9xwa7evgtr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -290,7 +384,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmv9yzmw0000oo9xlwpzjhsq" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmva0jd10002pk9x502sgssx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -393,7 +487,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmv9yznr000goo9xfvr5qb3d" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmva0jee000jpk9xprozfwh8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -493,7 +587,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmv9yznr000eoo9x3nssi0bq" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmva0je6000ipk9xow7fri0r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -574,7 +668,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmv9yzog000ooo9xofx8uyfj" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmva0je4000fpk9xt6xj6vl0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -674,7 +768,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmv9yzo7000joo9xew4ccr2g" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmva0jdx000dpk9xikmndaop" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -789,7 +883,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmv9yzq2001foo9x1uiyyr6n" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmva0jeg000mpk9xmvzg4kih" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -852,7 +946,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="ckmv9yzok000too9xg076mw43" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="ckmva0jei000opk9xu593bix6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -906,105 +1000,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Kubernetes-1/" data-id="ckmv9yzon000yoo9x579nyy52" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Kubernetes-1/" data-id="ckmva0jfe0011pk9x0o26fj2g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-angular-Starter-Basic-Concept" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/08/angular-Starter-Basic-Concept/" class="article-date">
-  <time datetime="2021-01-08T09:13:44.000Z" itemprop="datePublished">2021-01-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/08/angular-Starter-Basic-Concept/">Angular入门到精通系列教程（2） - 基本概念</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Angular入门到精通系列教程（2） - 基本概念</p>
-<ul>
-<li><a href="#1-angular-angular2vs-angularjs">1. Angular （Angular2）v.s. AngularJS</a></li>
-<li><a href="#2-检查本地环境的版本">2. 检查本地环境的版本</a></li>
-<li><a href="#3-typescript">3. TypeScript</a></li>
-<li><a href="#4-angular-cli">4. Angular CLI</a></li>
-<li><a href="#5-angular-的版本">5. Angular 的版本</a></li>
-<li><a href="#6-angular-版本如何升级">6. Angular 版本如何升级</a></li>
-<li><a href="#7-依赖注入dependency-injection">7. 依赖注入（dependency injection）</a></li>
-<li><a href="#8-编译-aot和jit的区别">8. 编译-AOT和JIT的区别</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-Angular-（Angular2）v-s-AngularJS"><a href="#1-Angular-（Angular2）v-s-AngularJS" class="headerlink" title="1. Angular （Angular2）v.s. AngularJS"></a>1. Angular （Angular2）v.s. AngularJS</h1><p>Angular最早期的版本，也叫AnugularJS，使用javascript开发；新的版本，才叫Angular，也称为Angular2，使用typescript开发，Angular和AngularJS是不兼容的（当然，官方也有2个版本的集成方案）。</p>
-<h1 id="2-检查本地环境的版本"><a href="#2-检查本地环境的版本" class="headerlink" title="2. 检查本地环境的版本"></a>2. 检查本地环境的版本</h1><p>检查npm, node 版本:</p>
-<ul>
-<li>npm 版本：<code>npm -v</code></li>
-<li>node版本： <code>node -v</code></li>
-<li>angular、angular CLI全局、本地版本 <code>ng --version</code></li>
-</ul>
-<h1 id="3-TypeScript"><a href="#3-TypeScript" class="headerlink" title="3. TypeScript"></a>3. TypeScript</h1><p>Angular要求开发语言必须为TypeScript。TypeScript有很多好处，比如引入了类、接口的概念，比如强类型，可以在写代码时（编译时）就能检查到一些错误，避免只有代码在执行时才发现异常。</p>
-<p>如果没用过TypeScript，不要害怕TypeScript这个新的概念，只要你有javascript经验，直接入手，没有任何难度。只需要用到class、interface等东西时，参考一下别人如何使用，或者查一下typescript文档即可。</p>
-<h1 id="4-Angular-CLI"><a href="#4-Angular-CLI" class="headerlink" title="4. Angular CLI"></a>4. Angular CLI</h1><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。<br>参考：<a href="https://cli.angular.io/" target="_blank" rel="noopener">https://cli.angular.io/</a></p>
-<p>ng generate: 新建component、service、pipe, class 等<br>ng new: 新建angular app<br>ng update: 升级angular自身，以及依赖<br>ng version： 显示anuglar cli全局版本、以及本地的angular cli、angular code等的版本<br>ng add: 新增第三方库。会做2件事，1）基于npm安装node_modules, 2）自动更改配置文件，保证新的依赖正常工作</p>
-<p>总结一下，Angular的开放，离不开AngularCLI。</p>
-<h1 id="5-Angular-的版本"><a href="#5-Angular-的版本" class="headerlink" title="5. Angular 的版本"></a>5. Angular 的版本</h1><p>不同于Angular2+Angular的不兼容， Angular 2.0 之后会保证向下兼容。官方的版本发布计划是：</p>
-<ul>
-<li>每 6 个月发布一个主版本（第一位版本号，主版本）</li>
-<li>每个主版本发布 1 ~ 3 个小版本（第二位版本号，Feature 版本号）</li>
-<li>每周发布一个补丁版本（第三位版本号，Hotfix 版本号）</li>
-</ul>
-<h1 id="6-Angular-版本如何升级"><a href="#6-Angular-版本如何升级" class="headerlink" title="6. Angular 版本如何升级"></a>6. Angular 版本如何升级</h1><p>Angular CLI提供了升级命令(ng update)，同时，官网（<a href="https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。" target="_blank" rel="noopener">https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。</a></p>
-<h1 id="7-依赖注入（dependency-injection）"><a href="#7-依赖注入（dependency-injection）" class="headerlink" title="7. 依赖注入（dependency injection）"></a>7. 依赖注入（dependency injection）</h1><p>依赖注入是Angular实现的一种应用程序设计模式， 是Angular的核心概念之一。</p>
-<p>依赖就是具有一系列功能的服务(service)， 应用程序中的各种组件和指令（derictives）可能需要服务的功能。 Angular提供了一种平滑的机制，通过它我们可以将这些依赖项注入我们的组件和指令中。因此，我们只是在构建依赖关系，这些依赖关系可以在应用程序的所有组件之间注入。</p>
-<p>使用依赖注入还有以下好处，</p>
-<ol>
-<li>不需要实例化，（new 实例）。不需要关心class的构造函数里需要什么参数</li>
-<li>一次注入（app module通过Providers注入），所有组件都可以使用。而且是用同一个service实例（Singleton），也就是说一个service里的数据是共分享的，可以用于组件间数据传递。</li>
-</ol>
-<h1 id="8-编译-AOT和JIT的区别"><a href="#8-编译-AOT和JIT的区别" class="headerlink" title="8. 编译-AOT和JIT的区别"></a>8. 编译-AOT和JIT的区别</h1><p>每个Angular应用程序都包含浏览器无法理解的组件和模板。 因此，在浏览器内部运行之前，需要先编译所有Angular应用程序。</p>
-<p>Angular提供两种编译类型：</p>
-<ol>
-<li>JIT(Just-in-Time) compilation</li>
-<li>AOT(Ahead-of-Time) compilation</li>
-</ol>
-<p>区别在于，在JIT编译中，应用程序在运行时在浏览器内部进行编译；而在AOT编译中，应用程序在构建期间进行编译。<br>显而易见，AOT编译好处多多，因而是Angular的默认编译方式。主要优点</p>
-<p>由于应用程序是在浏览器内部运行之前进行编译的，因此浏览器会加载可执行代码并立即呈现应用程序，从而加快了呈现速度。</p>
-<p>在AOT编译中，编译器将与应用程序一起发送外部HTML和CSS文件，从而消除了对那些源文件的单独AJAX请求，从而减少了ajax请求。</p>
-<p>开发人员可以在构建阶段检测并处理错误，这有助于最大程度地减少错误。<br>AOT编译器将HTML和模板添加到JS文件中，然后再在浏览器中运行。 因此，没有多余的HTML文件可读取，从而为应用程序提供了更好的安全性。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/" data-id="ckmv9yzq1001doo9xzinpko0n" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
 
     </footer>
   </div>
@@ -1040,7 +1039,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js-面试题/">node.js - 面试题</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1049,7 +1048,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/node-js-面试题/" style="font-size: 10px;">node.js - 面试题</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
     </div>
   </div>
 
@@ -1058,7 +1057,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1074,6 +1073,10 @@
           </li>
         
           <li>
+            <a href="/2021/03/02/node-js-interview-qa/">node.js 面试题总结</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/02/mobile-ux-performance/">移动端如何做好用户体验</a>
           </li>
         
@@ -1083,10 +1086,6 @@
         
           <li>
             <a href="/2021/02/07/js-speical/">javascript中常见的非人类（java/c#)知识</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/29/Angular-Starter-15-folder-structure/">Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐</a>
           </li>
         
       </ul>
