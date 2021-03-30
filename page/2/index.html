@@ -83,6 +83,96 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Angular-Starter-13-gard-routing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/25/Angular-Starter-13-gard-routing/" class="article-date">
+  <time datetime="2021-01-25T07:06:00.000Z" itemprop="datePublished">2021-01-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/25/Angular-Starter-13-gard-routing/">Angular入门到精通系列教程（13）- 路由守卫（Route Guards）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-路由守卫route-guards">2. 路由守卫（Route Guards）</a><ul>
+<li><a href="#21-创建路由守卫">2.1. 创建路由守卫</a></li>
+<li><a href="#22-控制路由是否可以激活">2.2. 控制路由是否可以激活</a></li>
+<li><a href="#23-控制路由是否退出离开">2.3. 控制路由是否退出（离开）</a></li>
+</ul>
+</li>
+<li><a href="#3-总结">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>在我们的实际的业务开发过程中，我们经常会遇到如下需求：</p>
+<ol>
+<li>需要限制某些 URL 的可访问性，例如，对于系统管理界面，只有那些拥有管理员权限的用户才能打开。</li>
+<li>当用户处于编辑界面时，在没有保存就离开时，需要提示用户是否放弃修改。</li>
+</ol>
+<p>针对以上场景，Angualr使用<code>路由守卫</code>（Route Guards）来实现。</p>
+<h1 id="2-路由守卫（Route-Guards）"><a href="#2-路由守卫（Route-Guards）" class="headerlink" title="2. 路由守卫（Route Guards）"></a>2. 路由守卫（Route Guards）</h1><h2 id="2-1-创建路由守卫"><a href="#2-1-创建路由守卫" class="headerlink" title="2.1. 创建路由守卫"></a>2.1. 创建路由守卫</h2><p>Angular CLI提供了命令行工具，可以快速创建路由守卫框架文件：<code>ng generate guard auth</code>。 执行后，Angular CLI会问我们需要实现哪些接口，我们直接勾选即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">? Which interfaces would you like to implement? (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">(*) CanActivate</span></span><br><span class="line"> ( ) CanActivateChild</span><br><span class="line"> ( ) CanDeactivate</span><br><span class="line"> ( ) CanLoad</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li>CanActivate: 控制路由是否可以激活</li>
+<li>CanActivateChild: 控制子路由是否可以激活</li>
+<li>CanDeactivate: 控制路由是否可以退出</li>
+<li>CanLoad: 控制模块（module）是否可以被加载</li>
+</ol>
+<p>比较经常使用的是1、3，分别控制进入和退出。 按照上面配置，AngularCLI自动生成如下代码，<code>return true;</code> 替换为我们实际的代码即可。<code>return false;</code> 表示不允许跳转，或者取消离开当前页面。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// auth.guard.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CanActivate, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Observable &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Injectable</span>(&#123;</span><br><span class="line">  providedIn: <span class="string">'root'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AuthGuard <span class="keyword">implements</span> CanActivate, CanDeactivate&lt;unknown&gt; &#123;</span><br><span class="line">  canActivate(</span><br><span class="line">    route: ActivatedRouteSnapshot,</span><br><span class="line">    state: RouterStateSnapshot): Observable&lt;<span class="built_in">boolean</span> | UrlTree&gt; | <span class="built_in">Promise</span>&lt;<span class="built_in">boolean</span> | UrlTree&gt; | <span class="built_in">boolean</span> | UrlTree &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在canActivate方法中，我们还可以使用跳转。如页面判断是否已经登录，如果没有登录，跳转到Login页面：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.router.navigate([<span class="string">'/login'</span>]);</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-2-控制路由是否可以激活"><a href="#2-2-控制路由是否可以激活" class="headerlink" title="2.2. 控制路由是否可以激活"></a>2.2. 控制路由是否可以激活</h2><p>控制路由是否可以激活，需要定义在定义路由的地方，增加canActivate属性。如果需要，还可以增加data属性， 比如告诉我们的AuthGuard进入当前路由需要验证哪些权限。data属性是可选的。<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">"page1"</span>,</span><br><span class="line">    component: Page1Component,</span><br><span class="line">    data: &#123; permissions: [<span class="string">'YourPage1Permission'</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    canActivate: [AuthGuard]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">"page2"</span>,</span><br><span class="line">    component: Page2omponent,</span><br><span class="line">    data: &#123; permissions: [<span class="string">'YourPage2Permission'</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    canActivate: [AuthGuard]</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-3-控制路由是否退出（离开）"><a href="#2-3-控制路由是否退出（离开）" class="headerlink" title="2.3. 控制路由是否退出（离开）"></a>2.3. 控制路由是否退出（离开）</h2><p>和控制路由是否可以激活类似，在路由定义出增加 <code>canDeactivate</code>，并制定相应的Guard守卫即可。这里不再举例</p>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
+<li>通过路由守卫（Route Guards）实现控制URL的进入和离开;</li>
+<li>Angular CLI可以辅助我们创建guard文件;</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/" data-id="ckmva1w7g0008bk9xu8mzl72v" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Angular-Starter-12-routing" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/25/Angular-Starter-12-routing/" class="article-date">
@@ -179,7 +269,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="ckmva13ua00036g9xvrfuaoty" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="ckmva1w7b0005bk9xwsbfmm8q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -273,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmva13u600016g9xftvp2ucl" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmva1w740002bk9xjabq2z45" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -391,7 +481,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmva13v8000q6g9x1k81sfty" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmva1w8e000tbk9x9exxw49c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -492,7 +582,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmva13uc00046g9xq8fdj0mk" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmva1w7e0007bk9xme1f6nei" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -595,7 +685,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmva13ux000g6g9xk79gr9v6" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmva1w84000jbk9xhburk3lz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -695,7 +785,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmva13uu000f6g9xo39bey0p" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmva1w82000ibk9x13f43ti3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -776,7 +866,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmva13uq000c6g9xlr5unuwo" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmva1w7z000fbk9xp383hg0i" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -876,7 +966,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmva13um000a6g9x033xfbbx" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmva1w7x000dbk9x8gj7tyom" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -991,70 +1081,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmva13v0000j6g9xnyv380u5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-tech-stack" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-tech-stack/" class="article-date">
-  <time datetime="2021-01-11T01:11:35.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-tech-stack/">Angular入门到精通系列教程（3） - Angular 技术栈 （Tech Stack）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>(Based on Angular V8.x ~ 11.x)</p>
-<ol>
-<li>Angular-CLI<br>Angular CLI is a command-line interface tool that you use to initialize, develop, scaffold, and maintain Angular applications directly from a command shell.</li>
-</ol>
-<p>It is the MUST have tool to write Angular code, so make sure you are familiar with its commands.</p>
-<ol>
-<li>IDE<br>1.1 Visual Studio Code<br>Visual Studio Code: Best and free IDE for web developing.<br>Plugins:</li>
-</ol>
-<p>Angular Language Service - This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.<br>Prettier - VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.<br>Code Spell Checker - A basic spell checker that works well with camelCase code.<br>The goal of this spell checker is to help catch common spelling errors while keeping the number of false positives low.<br>GitLens - If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.<br>1.2 Alternatives<br>Atom by GitHub<br>Sublime Text 3<br>PyCharm<br>IntelliJ IDEA<br>Webstorm<br>There are may alternatives, you can choose which you are familiar with.<br>*</p>
-<ol start="2">
-<li>UI Framework<br>2.1 Angular Material<br>Angular Material is Material Design components for Angular.<br>There are many alternatives. But Angular Material is the official one from Angular, and Angular also give detail upgrade solution on Angular plus Angular Material in <a href="https://update.angular.io/" target="_blank" rel="noopener">https://update.angular.io/</a>.</li>
-</ol>
-<p>For future upgrade reason, this is your best choice.</p>
-<ol start="3">
-<li>State Management - NgRx<br>@ngrx/store is RxJS powered global state management for Angular applications, inspired by Redux. Store is a controlled state container designed to help write performant, consistent applications on top of Angular.</li>
-</ol>
-<p>NgRx Store is mainly for managing global state across an entire application.</p>
-<ol start="4">
-<li>Code Reuse<br>4.1 Angular libraries<br>Angular libraries should what you need.</li>
-</ol>
-<p>Many applications need to solve the same general problems, such as presenting a unified user interface, presenting data, and allowing data entry. Developers can create general solutions for particular domains that can be adapted for re-use in different apps. Such a solution can be built as Angular libraries and these libraries can be published and shared as npm packages.</p>
-<p>An Angular library is an Angular project that differs from an app in that it cannot run on its own. A library must be imported and used in an app.</p>
-<p>You can easily reuse your Angular library or also submit your library into npm server.</p>
-<p>4.2 Alternatives - Angular custom elements<br>Note that libraries are intended to be used by Angular apps. To add Angular functionality to non-Angular web apps, you can use Angular custom elements.</p>
-<p>Angular elements are Angular components packaged as custom elements (also called Web Components), a web standard for defining new HTML elements in a framework-agnostic way.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="ckmva13v2000l6g9xjft9mkom" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmva1w87000mbk9x27wzv1ky" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -1093,7 +1120,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-面试题/">javascript - 面试题</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js-面试题/">node.js - 面试题</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1102,7 +1129,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 16.67px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript-面试题/" style="font-size: 10px;">javascript - 面试题</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 10px;">node.js</a> <a href="/tags/node-js-面试题/" style="font-size: 10px;">node.js - 面试题</a> <a href="/tags/面试/" style="font-size: 13.33px;">面试</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
     </div>
   </div>
 
@@ -1111,7 +1138,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1127,6 +1154,10 @@
           </li>
         
           <li>
+            <a href="/2021/03/07/web-frontend-interview-qa/">前端面试题汇总(Fontend)</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/02/javascript-interview-qa/">javascript 面试题汇总</a>
           </li>
         
@@ -1136,10 +1167,6 @@
         
           <li>
             <a href="/2021/03/02/mobile-ux-performance/">移动端如何做好用户体验</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/09/Angular-keyword/">Angular 词汇表</a>
           </li>
         
       </ul>
