@@ -83,6 +83,237 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-css3-flex-box" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/29/css3-flex-box/" class="article-date">
+  <time datetime="2021-01-29T05:06:00.000Z" itemprop="datePublished">2021-01-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/29/css3-flex-box/">CSS3 Flex Box 弹性盒子、弹性布局</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-justify-content-属性">2. justify-content 属性</a></li>
+<li><a href="#3-align-items-属性">3. align-items 属性</a></li>
+<li><a href="#4-flex-wrap-属性">4. flex-wrap 属性</a></li>
+<li><a href="#5-align-content-属性">5. align-content 属性</a></li>
+<li><a href="#6-居中">6. 居中</a></li>
+<li><a href="#7-align-self">7. align-self</a></li>
+<li><a href="#8-总结">8. 总结</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>Flexible Box翻译过来就是弹性盒子、弹性布局，是css3中新增的一种布局方式，是当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。引入弹性布局模型的目的是提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间。</p>
+<p>弹性盒子由弹性容器(Flex container)和弹性子元素(Flex item)组成。</p>
+<ul>
+<li>弹性容器通过设置 display 属性的值为 flex 或 inline-flex将其定义为弹性容器。</li>
+<li>弹性容器内包含了一个或多个弹性子元素。</li>
+</ul>
+<table><br>    <tbody><br>        <tr><br>            <th style="width:25%">属性</th><br>            <th>描述</th><br>        </tr><br>        <tr><br>            <td>display<br>            </td><br>            <td>指定 HTML 元素盒子类型。</td><br>        </tr><br>        <tr><br>            <td>flex-direction</td><br>            <td>指定了弹性容器中子元素的排列方式</td><br>        </tr><br>        <tr><br>            <td>justify-content<br>            </td><br>            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td>align-items<br>            </td><br>            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td><br>        </tr><br>        <tr><br>            <td>flex-wrap<br>            </td><br>            <td>设置弹性盒子的子元素超出父容器时是否换行。</td><br>        </tr><br>        <tr><br>            <td>align-content<br>            </td><br>            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td><br>        </tr><br>        <tr><br>            <td>flex-flow<br>            </td><br>            <td>flex-direction 和 flex-wrap 的简写</td><br>        </tr><br>        <tr><br>            <td>order<br>            </td><br>            <td>设置弹性盒子的子元素排列顺序。</td><br>        </tr><br>        <tr><br>            <td>align-self<br>            </td><br>            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td><br>        </tr><br>        <tr><br>            <td>flex<br>            </td><br>            <td>设置弹性盒子的子元素如何分配空间。</td><br>        </tr><br>    </tbody><br></table>
+
+
+<h1 id="2-justify-content-属性"><a href="#2-justify-content-属性" class="headerlink" title="2. justify-content 属性"></a>2. justify-content 属性</h1><p>内容对齐（justify-content）属性应用在弹性容器上，把弹性项沿着弹性容器的横轴（主轴线，main axis）对齐。</p>
+<p><code>·justify-content</code> 语法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">justify-content: flex-start | flex-end | center | space-between | space-around</span><br></pre></td></tr></table></figure></p>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性项目向行头紧挨着填充。这个是默认值。第一个弹性项的main-start外边距边线被放置在该行的main-start边线，而后续弹性项依次平齐摆放。</li>
+<li>flex-end：弹性项目向行尾紧挨着填充。第一个弹性项的main-end外边距边线被放置在该行的main-end边线，而后续弹性项依次平齐摆放。</li>
+<li>center：弹性项目居中紧挨着填充。（如果剩余的自由空间是负的，则弹性项目将在两个方向上同时溢出）。</li>
+<li>space-between：弹性项目平均分布在该行上。如果剩余空间为负或者只有一个弹性项，则该值等同于flex-start。否则，第1个弹性项的外边距和行的main-start边线对齐，而最后1个弹性项的外边距和行的main-end边线对齐，然后剩余的弹性项分布在该行上，相邻项目的间隔相等。</li>
+<li>space-around：弹性项目平均分布在该行上，两边留有一半的间隔空间。如果剩余空间为负或者只有一个弹性项，则该值等同于center。否则，弹性项目沿该行分布，且彼此间隔相等（比如是20px），同时首尾两边和弹性容器之间留有一半的间隔（1/2*20px=10px）。</li>
+</ul>
+<h1 id="3-align-items-属性"><a href="#3-align-items-属性" class="headerlink" title="3. align-items 属性"></a>3. align-items 属性</h1><p>align-items 设置或检索弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</p>
+<p><code>align-items</code>语法<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">align-items: flex-start | flex-end | center | baseline | stretch</span><br></pre></td></tr></table></figure></p>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min/max-width/height’属性的限制。</li>
+</ul>
+<h1 id="4-flex-wrap-属性"><a href="#4-flex-wrap-属性" class="headerlink" title="4. flex-wrap 属性"></a>4. flex-wrap 属性</h1><p>flex-wrap 属性用于指定弹性盒子的子元素换行方式。</p>
+<p>语法<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flex-wrap: nowrap|wrap|wrap-reverse|initial|inherit;</span><br></pre></td></tr></table></figure></p>
+<p>可选项:</p>
+<ul>
+<li>nowrap - 默认，弹性容器为单行。该情况下弹性子项可能会溢出容器。</li>
+<li>wrap - 弹性容器为多行。该情况下弹性子项溢出的部分会被放置到新行，子项内部会发生断行</li>
+<li>wrap-reverse -反转 wrap 排列。</li>
+</ul>
+<h1 id="5-align-content-属性"><a href="#5-align-content-属性" class="headerlink" title="5. align-content 属性"></a>5. align-content 属性</h1><p><code>align-content</code> 属性用于修改 flex-wrap 属性的行为。类似于 align-items, 但它不是设置弹性子元素的对齐，而是设置各个行的对齐。</p>
+<p>语法<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">align-content: flex-start | flex-end | center | space-between | space-around | stretch</span><br></pre></td></tr></table></figure></p>
+<p>各个值解析:</p>
+<ul>
+<li>stretch - 默认。各行将会伸展以占用剩余的空间。</li>
+<li>flex-start - 各行向弹性盒容器的起始位置堆叠。</li>
+<li>flex-end - 各行向弹性盒容器的结束位置堆叠。</li>
+<li>center -各行向弹性盒容器的中间位置堆叠。</li>
+<li>space-between -各行在弹性盒容器中平均分布。</li>
+<li>space-around - 各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。</li>
+</ul>
+<h1 id="6-居中"><a href="#6-居中" class="headerlink" title="6. 居中"></a>6. 居中</h1><p>使用弹性盒子，居中变的很简单，只想要设置 margin: auto; 可以使得弹性子元素在两上轴方向上完全居中:</p>
+<p>如<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.flex-item</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="7-align-self"><a href="#7-align-self" class="headerlink" title="7. align-self"></a>7. align-self</h1><p>align-self 属性用于设置弹性元素自身在侧轴（纵轴）方向上的对齐方式。</p>
+<p>选项：</p>
+<ul>
+<li>auto：如果’align-self’的值为’auto’，则其计算值为元素的父元素的’align-items’值，如果其没有父元素，则计算值为’stretch’。</li>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min/max-width/height’属性的限制。</li>
+</ul>
+<h1 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h1><ol>
+<li><p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/29/css3-flex-box/" data-id="cknfooq60001fks9xpq181hbu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css3/">css3</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Angular-Starter-14-compile-publish" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/29/Angular-Starter-14-compile-publish/" class="article-date">
+  <time datetime="2021-01-29T02:06:00.000Z" itemprop="datePublished">2021-01-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/29/Angular-Starter-14-compile-publish/">Angular入门到精通系列教程（14）- Angular 编译打包 &amp; Docker发布</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-编译打包">2. 编译打包</a><ul>
+<li><a href="#21-基本打包命令">2.1. 基本打包命令</a></li>
+<li><a href="#22-打包部署到二级目录">2.2. 打包部署到二级目录</a></li>
+</ul>
+</li>
+<li><a href="#3-angular站点的发布">3. Angular站点的发布</a><ul>
+<li><a href="#31-web服务器发布">3.1. web服务器发布</a></li>
+<li><a href="#32-使用docker发布">3.2. 使用docker发布</a></li>
+</ul>
+</li>
+<li><a href="#4-总结">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
+<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件<br><figure class="highlight rsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject/src/environments/</span><br><span class="line">               └──<span class="built_in">environment</span>.ts</span><br><span class="line">               └──<span class="built_in">environment</span>.prod.ts</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>environment.ts: 针对开发环境使用的环境文件</li>
+<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
+</ol>
+<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
+<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build <span class="comment">--prod</span></span><br></pre></td></tr></table></figure></p>
+<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"configurations"</span>: &#123;</span><br><span class="line">    <span class="string">"production"</span>: &#123;</span><br><span class="line">        <span class="string">"fileReplacements"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"replace"</span>: <span class="string">"src/environments/environment.ts"</span>,</span><br><span class="line">            <span class="string">"with"</span>: <span class="string">"src/environments/environment.prod.ts"</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"optimization"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"outputHashing"</span>: <span class="string">"all"</span>,</span><br><span class="line">        <span class="string">"sourceMap"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"extractCss"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"namedChunks"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"aot"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"extractLicenses"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"vendorChunk"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"buildOptimizer"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">"budgets"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"initial"</span>,</span><br><span class="line">            <span class="string">"maximumWarning"</span>: <span class="string">"5mb"</span>,</span><br><span class="line">            <span class="string">"maximumError"</span>: <span class="string">"10mb"</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
+<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a href="http://abc.com下，要求部署到" target="_blank" rel="noopener">http://abc.com下，要求部署到</a> <a href="http://abc.com/demo" target="_blank" rel="noopener">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：<br><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build <span class="params">--prod</span> <span class="params">--deploy-url</span> <span class="string">/demo/</span> <span class="params">--base-href</span> <span class="string">/demo/</span></span><br></pre></td></tr></table></figure></p>
+<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
+<blockquote>
+<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
+</blockquote>
+<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
+<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
+<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
+<p>基本步骤：</p>
+<ol>
+<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . /usr/share/nginx/html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
+</blockquote>
+<ol start="2">
+<li>编译docker。 在Dockerfile目录下，执行<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>三条命令分别为：</p>
+<ul>
+<li>生成docker image， 名字（name）为your-docker-name</li>
+<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
+<li>压缩docker image</li>
+</ul>
+<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>为生产环境编译，一定要加参数<code>--prod</code></li>
+<li>如果要部署到二级目录，编译时加参数。如部署到/demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
+<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/" data-id="cknfooq490009ks9xps1rtq08" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Angular-Starter-13-gard-routing" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/25/Angular-Starter-13-gard-routing/" class="article-date">
@@ -161,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/" data-id="ckmva1w7g0008bk9xu8mzl72v" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/" data-id="cknfooq490006ks9x8i6l7sp2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -269,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="ckmva1w7b0005bk9xwsbfmm8q" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/" data-id="cknfooq490005ks9xwwa0siq8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -363,7 +594,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="ckmva1w740002bk9xjabq2z45" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/" data-id="cknfooq490002ks9xzzcicyq7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -481,7 +712,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="ckmva1w8e000tbk9x9exxw49c" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/12/Angular-starter-7-component/" data-id="cknfooq55000sks9xqxplo9l9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -582,7 +813,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="ckmva1w7e0007bk9xme1f6nei" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/" data-id="cknfooq490007ks9xwdtohhlk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -685,7 +916,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="ckmva1w84000jbk9xhburk3lz" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/" data-id="cknfooq4p000iks9xjm9h1br6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -785,7 +1016,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="ckmva1w82000ibk9x13f43ti3" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/" data-id="cknfooq4p000lks9xet1vhu0f" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -866,222 +1097,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="ckmva1w7z000fbk9xp383hg0i" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-5-Angular-Material" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="article-date">
-  <time datetime="2021-01-11T04:11:30.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-5-Angular-Material/">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><a href="#1-第三方ui库的选择">1. 第三方UI库的选择</a></li>
-<li><a href="#2-angular-material">2. Angular Material</a><ul>
-<li><a href="#21-优缺点">2.1. 优缺点</a><ul>
-<li><a href="#211-优点">2.1.1. 优点</a></li>
-<li><a href="#212-缺点">2.1.2. 缺点</a></li>
-</ul>
-</li>
-<li><a href="#22-引入到项目">2.2. 引入到项目</a></li>
-</ul>
-</li>
-<li><a href="#3-总结">3. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-第三方UI库的选择"><a href="#1-第三方UI库的选择" class="headerlink" title="1. 第三方UI库的选择"></a>1. 第三方UI库的选择</h1><p>Angular开发，除非你只有简单一两个页面，否则引入第三方UI库就是必不可少的。而具体用哪个库，就需要考虑多方面的东西了。比如：</p>
-<ol>
-<li>流行程度</li>
-<li>版本更新情况 （是否能跟进anuglar更新，bug是否及时修复）</li>
-<li>UI风格，是否适用于项目</li>
-<li>入手难易程度</li>
-<li>文档完善程度</li>
-</ol>
-<p>市面上有很多Angular可用的类库，可用根据项目、企业情况去选择。简单列一下可选的UI库。</p>
-<ol>
-<li><code>Angular Material</code>: angular 官方UI库。<a href="https://material.angular.io/" target="_blank" rel="noopener">https://material.angular.io/</a></li>
-<li><code>clarity</code>: 国外的一套比较流行的框架， <a href="https://clarity.design/。" target="_blank" rel="noopener">https://clarity.design/。</a> </li>
-<li><code>NG-ZORRO</code>: 阿里Ant Design的Angular版本。 <a href="https://ng.ant.design/docs/introduce/en" target="_blank" rel="noopener">https://ng.ant.design/docs/introduce/en</a> </li>
-<li><code>Element Angular</code>：国内非常流行的基于Vue的Element，同样有Angular版本。 <a href="https://element-angular.faas.ele.me/" target="_blank" rel="noopener">https://element-angular.faas.ele.me/</a></li>
-<li><code>Kendo UI</code>。很多很强大，只是要收费。<a href="https://www.telerik.com/kendo-angular-ui" target="_blank" rel="noopener">https://www.telerik.com/kendo-angular-ui</a></li>
-</ol>
-<h1 id="2-Angular-Material"><a href="#2-Angular-Material" class="headerlink" title="2. Angular Material"></a>2. Angular Material</h1><h2 id="2-1-优缺点"><a href="#2-1-优缺点" class="headerlink" title="2.1. 优缺点"></a>2.1. 优缺点</h2><h3 id="2-1-1-优点"><a href="#2-1-1-优点" class="headerlink" title="2.1.1. 优点"></a>2.1.1. 优点</h3><ul>
-<li>官方UI组件</li>
-<li>最标准的Material实现</li>
-<li>紧跟Angular核心组件的更新进度</li>
-<li>官方支持与Angular的同步升级</li>
-</ul>
-<h3 id="2-1-2-缺点"><a href="#2-1-2-缺点" class="headerlink" title="2.1.2. 缺点"></a>2.1.2. 缺点</h3><ul>
-<li>组件不像其他框架那么多，但是基本够用</li>
-<li>风格不是特别像国内的框架</li>
-</ul>
-<h2 id="2-2-引入到项目"><a href="#2-2-引入到项目" class="headerlink" title="2.2. 引入到项目"></a>2.2. 引入到项目</h2><ol>
-<li><p>根目录下执行下面命令：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng add @angular/material</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>import 到页面所属的module，或者是app.module.ts中。</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import MatSliderModule</span></span><br><span class="line"><span class="keyword">import</span> &#123; MatSliderModule &#125; <span class="keyword">from</span> <span class="string">'@angular/material/slider'</span>;</span><br><span class="line"></span><br><span class="line">…</span><br><span class="line"><span class="meta">@NgModule</span> (&#123;....</span><br><span class="line">  imports: [...,</span><br><span class="line">  MatSliderModule,</span><br><span class="line">…]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
-<li>第三方组件各有优缺点</li>
-<li>根据公司、项目的需求去选择</li>
-<li>Angular Material升级更容易，官方支持。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="ckmva1w7x000dbk9x8gj7tyom" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Angular-Starter-environment-cli-vscode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/" class="article-date">
-  <time datetime="2021-01-11T03:11:35.000Z" itemprop="datePublished">2021-01-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/Angular-Starter-environment-cli-vscode/">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>@[TOC]</p>
-<ul>
-<li><a href="#1-本地开发环境搭建">1. 本地开发环境搭建</a><ul>
-<li><a href="#11-nodejs">1.1. node.js</a></li>
-<li><a href="#12-angular-cli">1.2. Angular CLI</a></li>
-</ul>
-</li>
-<li><a href="#2-开发工具---visual-studio-code">2. 开发工具 - Visual Studio Code</a></li>
-<li><a href="#第一个anuglar项目">第一个Anuglar项目</a><ul>
-<li><a href="#创建第一个anuglar项目">创建第一个anuglar项目</a></li>
-<li><a href="#angular-cli常用命令">Angular CLI常用命令</a></li>
-</ul>
-</li>
-<li><a href="#在线实战项目">在线实战项目</a><ul>
-<li><a href="#新手项目basic-angular-app">新手项目：<code>Basic Angular app</code></a></li>
-<li><a href="#入门项目tour-of-heroes">入门项目：<code>Tour of Heroes</code></a></li>
-</ul>
-</li>
-</ul>
-<p>了解了一些Angular的基本概念后，如果想进一步学习Angular，接下来让我们来搭建本地开发环境，并从一个入门项目了解Angular的基本用法。</p>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-本地开发环境搭建"><a href="#1-本地开发环境搭建" class="headerlink" title="1. 本地开发环境搭建"></a>1. 本地开发环境搭建</h1><p>本地开发环境搭建只需要node.js, 和Angular CLI。</p>
-<h2 id="1-1-node-js"><a href="#1-1-node-js" class="headerlink" title="1.1. node.js"></a>1.1. node.js</h2><p>官网（<a href="https://nodejs.org/）下载最新的LTS（Long" target="_blank" rel="noopener">https://nodejs.org/）下载最新的LTS（Long</a> Time Support)版本的node.js，安装。</p>
-<p>说明：</p>
-<ol>
-<li>LTS（Long Time Support)版本, 官方会支持更长时间，比如打补丁，改bug等。相对更稳定、靠谱。</li>
-<li>node.js 安装后，同时会安装npm</li>
-</ol>
-<p>检查本地node.js, npm环境<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js 版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="comment"># npm 版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure></p>
-<h2 id="1-2-Angular-CLI"><a href="#1-2-Angular-CLI" class="headerlink" title="1.2. Angular CLI"></a>1.2. Angular CLI</h2><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。(参考：<a href="https://cli.angular.io/" target="_blank" rel="noopener">https://cli.angular.io/</a>)</p>
-<p>npm安装最新版本@angular/cli<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @angular/cli</span><br></pre></td></tr></table></figure></p>
-<p>检查本地angular环境<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng v</span><br></pre></td></tr></table></figure></p>
-<p>说明：</p>
-<ol>
-<li>该命令如果在非angular项目下执行，返回全局的Angular CLI环境版本</li>
-<li>在angular项目下执行, 返回当前angular项目使用的angular，angular CLI，以及核心angular组件的版本。</li>
-<li>全局Angular CLI版本有何能与项目的Angular CLI版本不一致，不冲突。项目中，使用项目制定的CLI版本。</li>
-</ol>
-<h1 id="2-开发工具-Visual-Studio-Code"><a href="#2-开发工具-Visual-Studio-Code" class="headerlink" title="2. 开发工具 - Visual Studio Code"></a>2. 开发工具 - Visual Studio Code</h1><p>推荐使用，Visual Studio Code （VSCode），微软开发的，可以说是现今为止最好的免费的Angular开发工具。并且有很多非常好用的插件。</p>
-<p>推荐插件：</p>
-<ul>
-<li>Angular Language Service： Angular语法自动提示, Angular开发必备。 This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.</li>
-<li>Prettier - 代码自动格式化插件。VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.</li>
-<li>Code Spell Checker - 语法检查插件. 注释可以写中文，变量名不行吧，如果拼写不对不好看吧。所以推荐把这个语法检查插件装上。</li>
-<li>GitLens - GIT 辅助插件。If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.</li>
-<li>Markdown All in One： 如果用Markdown写东西，这个东西一定要有，增加了对MD文件的很多支持，比如生成目录(TOC)， 目录编号等。</li>
-</ul>
-<h1 id="第一个Anuglar项目"><a href="#第一个Anuglar项目" class="headerlink" title="第一个Anuglar项目"></a>第一个Anuglar项目</h1><h2 id="创建第一个anuglar项目"><a href="#创建第一个anuglar项目" class="headerlink" title="创建第一个anuglar项目"></a>创建第一个anuglar项目</h2><p>使用Anuglar CLI可以很轻松的创建angular项目。使用的Angular版本与当前环境的Anuglar CLI一致。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建angular项目，项目名 ·my-ngular-app·</span></span><br><span class="line">ng new my-ngular-app</span><br><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line"><span class="built_in">cd</span> my-ngular-app</span><br><span class="line"><span class="comment"># 启动angualar项目</span></span><br><span class="line">ng serve</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-<ol>
-<li><code>ng</code> 是angular CLI的简称</li>
-<li><code>ng serve</code>: 启动angular项目。</li>
-</ol>
-</blockquote>
-<h2 id="Angular-CLI常用命令"><a href="#Angular-CLI常用命令" class="headerlink" title="Angular CLI常用命令"></a>Angular CLI常用命令</h2><ol>
-<li><code>ng serve</code>: 启动angular项目。默认情况下，angular CLI检测代码改动，如果文件改动，自动编译更改部分代码，然后重新加载（reload）页面。</li>
-<li><code>ng build</code>: 编译代码，默认输出到根目录下的<code>dist</code>目录。</li>
-<li><code>ng test</code>： 执行单元测试（Unit Test）</li>
-</ol>
-<h1 id="在线实战项目"><a href="#在线实战项目" class="headerlink" title="在线实战项目"></a>在线实战项目</h1><p>Angular官方提供了2个新手入门项目，并且都是基于StackBlitz（针对 Web 开发者的在线 IDE），可以不使用本地环境，直接基于Web学习和练习Angular。</p>
-<h2 id="新手项目：Basic-Angular-app"><a href="#新手项目：Basic-Angular-app" class="headerlink" title="新手项目：Basic Angular app"></a>新手项目：<code>Basic Angular app</code></h2><ul>
-<li><a href="https://angular.io/start" target="_blank" rel="noopener">https://angular.io/start</a></li>
-</ul>
-<h2 id="入门项目：Tour-of-Heroes"><a href="#入门项目：Tour-of-Heroes" class="headerlink" title="入门项目：Tour of Heroes"></a>入门项目：<code>Tour of Heroes</code></h2><ul>
-<li><a href="https://angular.io/tutorial" target="_blank" rel="noopener">https://angular.io/tutorial</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="ckmva1w87000mbk9x27wzv1ky" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="cknfooq4p000cks9x0rbunw46" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -1120,7 +1136,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1129,7 +1145,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
+      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react router</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
     </div>
   </div>
 
@@ -1138,7 +1154,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1150,6 +1166,14 @@
       <ul>
         
           <li>
+            <a href="/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/">2021 Vue.js 面试题汇总及答案</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/10/React-starter-2-React-Router-Dom/">React 入门（2）- 路由 React Router</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/07/CSS-interview-qa/">CSS面试题汇总</a>
           </li>
         
@@ -1158,15 +1182,7 @@
           </li>
         
           <li>
-            <a href="/2021/03/02/javascript-interview-qa/">javascript 面试题汇总</a>
-          </li>
-        
-          <li>
             <a href="/2021/03/02/node-js-interview-qa/">node.js 面试题总结</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/02/mobile-ux-performance/">移动端如何做好用户体验</a>
           </li>
         
       </ul>
