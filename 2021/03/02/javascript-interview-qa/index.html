@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TFJ6HHB');</script>
+  <!-- End Google Tag Manager -->
+
+
+  
+  <title>javascript 面试题汇总 | Jack N @ GitHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. this 都可以是哪些内容 2. 原型链, prototype 3. new 操作符都做了什么 4. Javascript 的内存回收机制 5. 内存泄漏的主要原因 6. Javascript 性能优化 7. === VS == 8. 闭包 9. js 里的作用域是什么样子的？ 10. let 和 var 的区别 11. 对 async 和 await 的理解 12. promised 的">
+<meta name="keywords" content="javascript,面试题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript 面试题汇总">
+<meta property="og:url" content="jackniu81.github.io/2021/03/02/javascript-interview-qa/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. this 都可以是哪些内容 2. 原型链, prototype 3. new 操作符都做了什么 4. Javascript 的内存回收机制 5. 内存泄漏的主要原因 6. Javascript 性能优化 7. === VS == 8. 闭包 9. js 里的作用域是什么样子的？ 10. let 和 var 的区别 11. 对 async 和 await 的理解 12. promised 的">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-04-14T03:59:04.782Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript 面试题汇总">
+<meta name="twitter:description" content="1. this 都可以是哪些内容 2. 原型链, prototype 3. new 操作符都做了什么 4. Javascript 的内存回收机制 5. 内存泄漏的主要原因 6. Javascript 性能优化 7. === VS == 8. 闭包 9. js 里的作用域是什么样子的？ 10. let 和 var 的区别 11. 对 async 和 await 的理解 12. promised 的">
+  
+  <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
+  
+  
+  <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head></html>
+
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFJ6HHB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jack N @ GitHub</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Full stack engineer, focus on: angular/react, node.js/.Net</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="jackniu81.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-javascript-interview-qa" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/02/javascript-interview-qa/" class="article-date">
+  <time datetime="2021-03-02T06:06:00.000Z" itemprop="datePublished">2021-03-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      javascript 面试题汇总
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-this-都可以是哪些内容">1. this 都可以是哪些内容</a></li>
+<li><a href="#2-原型链-prototype">2. 原型链, prototype</a></li>
+<li><a href="#3-new-操作符都做了什么">3. new 操作符都做了什么</a></li>
+<li><a href="#4-javascript-的内存回收机制">4. Javascript 的内存回收机制</a></li>
+<li><a href="#5-内存泄漏的主要原因">5. 内存泄漏的主要原因</a></li>
+<li><a href="#6-javascript-性能优化">6. Javascript 性能优化</a></li>
+<li><a href="#7--vs-">7. === VS ==</a></li>
+<li><a href="#8-闭包">8. 闭包</a></li>
+<li><a href="#9-js-里的作用域是什么样子的">9. js 里的作用域是什么样子的？</a></li>
+<li><a href="#10-let-和-var-的区别">10. let 和 var 的区别</a></li>
+<li><a href="#11-对-async-和-await-的理解">11. 对 async 和 await 的理解</a></li>
+<li><a href="#12-promised-的三种状态">12. promised 的三种状态</a></li>
+<li><a href="#13-asyncawait-的优点">13. async/await 的优点</a></li>
+<li><a href="#14-asyncawait-的写法">14. async/await 的写法</a></li>
+<li><a href="#15-applycall-和-bind-的区别">15. apply、call 和 bind 的区别</a></li>
+<li><a href="#16-深拷贝的原理">16. 深拷贝的原理</a></li>
+<li><a href="#17-set-和-map-的区别">17. set 和 Map 的区别</a></li>
+<li><a href="#18-js-实现双向绑定-vueangular-双向绑定的原理">18. JS 实现双向绑定 （vue/angular 双向绑定的原理）</a></li>
+<li><a href="#19-var-和-let-的区别">19. var 和 let 的区别</a></li>
+<li><a href="#20-javascript-如何实现继承">20. Javascript 如何实现继承？</a></li>
+<li><a href="#21-变量提升">21. 变量提升</a></li>
+<li><a href="#22-变量提升">22. 变量提升</a></li>
+<li><a href="#23-函数提升">23. 函数提升</a></li>
+<li><a href="#24-作用域">24. 作用域</a></li>
+<li><a href="#25-实现一个随机排序的程序">25. 实现一个随机排序的程序</a></li>
+<li><a href="#26-实现一个函数传入一个字符串得到使用次数最多的字符以及数量">26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</a></li>
+<li><a href="#27-参考">27. 参考</a></li>
+</ul>
+<h1 id="1-this-都可以是哪些内容"><a href="#1-this-都可以是哪些内容" class="headerlink" title="1. this 都可以是哪些内容"></a>1. this 都可以是哪些内容</h1><p>对 C#、Java 等语言，this 就是当前对象，但是 javascript 不是，简单来说：</p>
+<ul>
+<li>全局 this 是 window;</li>
+<li>函数 this 是调用者;</li>
+<li>构造函数的 this 是 new 之后的新对象,</li>
+<li>call 和 apply bind 的 this 第一个参数</li>
+</ul>
+<h1 id="2-原型链-prototype"><a href="#2-原型链-prototype" class="headerlink" title="2. 原型链, prototype"></a>2. 原型链, prototype</h1><ul>
+<li>函数对象都包含 prototype 属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor 属性的含义就是指向该对象的构造函数</li>
+<li><code>__proto__</code>和 constructor 属性是对象所独有的；prototype 属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<code>__proto__</code>和 constructor 属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象 prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为 null。</li>
+<li>当访问一个对象的属性或方法时，js 引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为 null,这就是原型链。</li>
+<li>每个构造函数都有一个 prototype 属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="3-new-操作符都做了什么"><a href="#3-new-操作符都做了什么" class="headerlink" title="3. new 操作符都做了什么"></a>3. new 操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型指向构造函数的 prototype</li>
+<li>把构造函数里的 this 指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="4-Javascript-的内存回收机制"><a href="#4-Javascript-的内存回收机制" class="headerlink" title="4. Javascript 的内存回收机制"></a>4. Javascript 的内存回收机制</h1><p>Javascript 内嵌了垃圾收集器，用来跟踪内存的分配和使用，以便当分配的内存不再使用时，自动释放它。垃圾收集器会按照固定的时间间隔，或代码执行中预定的收集时间，周期性地执行这一操作。<br>垃圾收集器必须跟踪哪个变量有用哪个变量无用，对于不再有用的变量打上标记，以备将来收回其所占用的内存。用于标识无用变量的策略通常有标记清除和引用计数两种。不同浏览器采用的策略不完全一致。</p>
+<h1 id="5-内存泄漏的主要原因"><a href="#5-内存泄漏的主要原因" class="headerlink" title="5. 内存泄漏的主要原因"></a>5. 内存泄漏的主要原因</h1><ul>
+<li>缓存</li>
+<li>队列消费不及时</li>
+<li>作用域未释放</li>
+</ul>
+<h1 id="6-Javascript-性能优化"><a href="#6-Javascript-性能优化" class="headerlink" title="6. Javascript 性能优化"></a>6. Javascript 性能优化</h1><ol>
+<li>针对 js 方面的前端性能优化，可以 1）使用 ansyc/defer 加载；2）加载时，放到<code>&lt;/body&gt;</code>之前；3) 合并 JS 文件，并进行最小化处理；4）缓存；5）使用 CDN 网络；6）js 的 HTTP 压缩</li>
+<li>删除未使用的功能性代码以及与之相关的代码， 多余的依赖库，被滥用的 npm 包。</li>
+<li>减少作用域链上的查找次数（减少循环中的活动）。比如 for 循环，把 Array.length 赋值给一个变量，而不是每次比较都直接使用 length 属性；对页面元素进行操作时，取出复制给一个变量，每次操作都对这个变量进行操作，而不是每次操作都再重复取一下这个元素；</li>
+<li>闭包导致的内存泄露。闭包可以保证函数内的变量安全，可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，不会被自动清除。我们需要手动销毁内存中的变量。（赋值为 null）；</li>
+<li>尽量少用全局变量，尽量使用局部变量。</li>
+<li>减少不必要的变量</li>
+<li>类型转换：把数字转换成字符串使用 number + “” 。 性能对比： (“” + ) &gt; String() &gt; .toString() &gt; new String()</li>
+<li>对字符串进行循环操作，譬如替换、查找，应使用正则表达式。因为本身 JavaScript 的循环速度就比较慢，而正则表达式的操作是用 C 写成的语言的 API，性能很好。</li>
+<li>浮点数转换成整型使用 Math.floor()或者 Math.round()。parseInt()是用于将字符串转换成数字，Math 是内部对象，所以 Math.floor()其实并没有多少查询方法和调用的时间，速度是最快的。</li>
+<li>使用 classname 代替大量的内联样式修改。</li>
+<li>循环遍历，尽量少用 for in， 虽然代码易读，但性能很差。 尤其是遍历属性数量未知的情况下，少用。</li>
+</ol>
+<h1 id="7-VS"><a href="#7-VS" class="headerlink" title="7. === VS =="></a>7. === VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">"100"</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">""</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">""</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>很有意思吧， 看看这两个，是等效的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span>;</span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="8-闭包"><a href="#8-闭包" class="headerlink" title="8. 闭包"></a>8. 闭包</h1><p>在 JavaScript 中，实现外部作用域访问内部作用域中变量的方法叫做闭包（closure)。这得益于高阶函数的特性：函数可以作为参数或者者返回值；</p>
+<p><strong>当一个内部函数被调用，就会形成闭包</strong>，闭包就是能够读取其他函数内部变量的函数，就是一个函数去访问了另外一个函数的中的变量的函数。</p>
+<p><strong>闭包作用</strong>：局部变量无法共享和长久的保存，而全局变量可能造成变量污染，所以我们希望有一种机制既可以长久的保存变量又不会造成全局污染。延伸变量的作用范围。</p>
+<p><strong>闭包特点</strong>：占用更多内存；不容易被释放</p>
+<p><strong>闭包用法</strong>：变量既想反复使用，又想避免全局污染如何使用？</p>
+<ol>
+<li>定义外层函数，封装被保护的局部变量。</li>
+<li>定义内层函数，执行对外部函数变量的操作。</li>
+<li>外层函数返回内层函数的对象，并且外层函数被调用，结果保存在一个全局的变量中。</li>
+</ol>
+<p>e.g.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">"some value"</span>;</span><br><span class="line">  <span class="keyword">var</span> innerMethod = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a + <span class="string">"!"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  innerMethod();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="9-js-里的作用域是什么样子的？"><a href="#9-js-里的作用域是什么样子的？" class="headerlink" title="9. js 里的作用域是什么样子的？"></a>9. js 里的作用域是什么样子的？</h1><p>大多数语言里边都是块作作用域，以{}进行限定，js 里边不是．js 里边叫函数作用域，就是一个变量在全函数里有效．比如有个变量 p1 在函数最后一行定义，第一行也有效，但是值是 undefined.</p>
+<h1 id="10-let-和-var-的区别"><a href="#10-let-和-var-的区别" class="headerlink" title="10. let 和 var 的区别"></a>10. let 和 var 的区别</h1><ul>
+<li>var 声明变量可以重复声明，而 let 不可以重复声明，属于 TDZ 暂时性死区问题</li>
+<li>作用域不同，var 是函数作用域，而 let 是块级作用域；</li>
+<li>var 可以在声明的上面访问变量，而 let 不存在变量提升；</li>
+</ul>
+<h1 id="11-对-async-和-await-的理解"><a href="#11-对-async-和-await-的理解" class="headerlink" title="11. 对 async 和 await 的理解"></a>11. 对 async 和 await 的理解</h1><ol>
+<li>async…await 是基于 promise 的 generator 语法糖，是用来解决异步的，它用来等待 promise 的执行结果，常规函数使用 await 没有效果；</li>
+<li>async 函数返回一个 Promise 对象，可以使用 then 方法添加回调函数</li>
+<li>当函数执行的时候，一旦遇到 await 就会先返回，等到异步操作完成，再接着执行函数体内后面的语句；</li>
+</ol>
+<h1 id="12-promised-的三种状态"><a href="#12-promised-的三种状态" class="headerlink" title="12. promised 的三种状态"></a>12. promised 的三种状态</h1><p>promise 有三种状态：pending/reslove/reject 。pending 就是未决，resolve 可以理解为成功，reject 可以理解为拒绝。</p>
+<h1 id="13-async-await-的优点"><a href="#13-async-await-的优点" class="headerlink" title="13. async/await 的优点"></a>13. async/await 的优点</h1><p><strong>1）方便级联调用：</strong> 即调用依次发生的场景；</p>
+<p><strong>2）同步代码编写方式：</strong> Promise 使用 then 函数进行链式调用，一直点点点，是一种从左向右的横向写法；async/await 从上到下，顺序执行，就像写同步代码一样，更符合代码编写习惯；</p>
+<p><strong>3）多个参数传递：</strong> Promise 的 then 函数只能传递一个参数，虽然可以通过包装成对象来传递多个参数，但是会导致传递冗余信息，频繁的解析又重新组合参数，比较麻烦；async/await 没有这个限制，可以当做普通的局部变量来处理，用 let 或者 const 定义的块级变量想怎么用就怎么用，想定义几个就定义几个，完全没有限制，也没有冗余工作；</p>
+<p><strong>4）同步代码和异步代码可以一起编写：</strong> 使用 Promise 的时候最好将同步代码和异步代码放在不同的 then 节点中，这样结构更加清晰；async/await 整个书写习惯都是同步的，不需要纠结同步和异步的区别，当然，异步过程需要包装成一个 Promise 对象放在 await 关键字后面；</p>
+<p><strong>5）基于协程：</strong> Promise 是根据函数式编程的范式，对异步过程进行了一层封装，async/await 基于协程的机制，是真正的“保存上下文，控制权切换……控制权恢复，取回上下文”这种机制，是对异步过程更精确的一种描述；</p>
+<p><strong>6）async/await 是对 Promise 的优化：</strong> async/await 是基于 Promise 的，是进一步的一种优化，不过在写代码时，Promise 本身的 API 出现得很少，很接近同步代码的写法；</p>
+<h1 id="14-async-await-的写法"><a href="#14-async-await-的写法" class="headerlink" title="14. async/await 的写法"></a>14. async/await 的写法</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">testAsync</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"hello async"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用时</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">await</span> testAsync();</span><br><span class="line">  <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="15-apply、call-和-bind-的区别"><a href="#15-apply、call-和-bind-的区别" class="headerlink" title="15. apply、call 和 bind 的区别"></a>15. apply、call 和 bind 的区别</h1><p>这三者都是用来改变函数的 this 对象的指向的(也就是说要改变函数运行时的 context 即上下文),第一个参数都是 this 要指向的对象。</p>
+<p>不同之处：</p>
+<ol>
+<li>call 接受连续参数，apply 接受数组参数。</li>
+<li>bind 功能和 call apply 差不多，区别在于 bind 返回的是一个改变 this 指向的新函数，这个函数不是立即执行函数（call apply 两个立即执行！）</li>
+</ol>
+<h1 id="16-深拷贝的原理"><a href="#16-深拷贝的原理" class="headerlink" title="16. 深拷贝的原理"></a>16. 深拷贝的原理</h1><p>操作的是值，取出对象的值，放到一个新的{}，修改时不会影响到原数据；要完成对象的深拷贝需要使用递归遍历所有对象的属性进行赋值，也可以使用 JSON.stringfy 和 JSON.parse 操作。</p>
+<h1 id="17-set-和-Map-的区别"><a href="#17-set-和-Map-的区别" class="headerlink" title="17. set 和 Map 的区别"></a>17. set 和 Map 的区别</h1><ol>
+<li>Set 是一种类似数组的集合类型，它与数组不同的是，不允许存在重复数据；常用操作方法有：add,delete,has,clear 等；遍历使用 forEach；</li>
+<li>Map 是一种类似对象的集合类型，它与对象不同的是，key 可以接受对象类型，常用的操作方法有：set,get,has,delete 等；遍历使用 forEach</li>
+</ol>
+<h1 id="18-JS-实现双向绑定-（vue-angular-双向绑定的原理）"><a href="#18-JS-实现双向绑定-（vue-angular-双向绑定的原理）" class="headerlink" title="18. JS 实现双向绑定 （vue/angular 双向绑定的原理）"></a>18. JS 实现双向绑定 （vue/angular 双向绑定的原理）</h1><p><strong>vue.js</strong> 采用数据劫持（Proxy 模式）结合发布者-订阅者模式（PubSub 模式）的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。<br>Object.defineProperty( )内还包含一对儿 getter 和 setter 函数，它们被称作这个对象的访问器属性，这两个函数都不是必须的，只是在读取访问对象属性时，会调用 getter 函数，这个函数负责返回有效值，在写入对象属性时，会调用 setter 函数并传入新值，这个函数负责决定如何处理数据。</p>
+<p><strong>Angular</strong>, 采用脏检查的方式。基于 zone.js，重写 setTimeout, httpRequest 等方法，触发脏检查, 更新 dom 节点。</p>
+<h1 id="19-var-和-let-的区别"><a href="#19-var-和-let-的区别" class="headerlink" title="19. var 和 let 的区别"></a>19. var 和 let 的区别</h1><ol>
+<li>作用域不同， var 是函数作用域，let 是块作用域。</li>
+</ol>
+<ul>
+<li>在函数中声明了 var，整个函数内都是有效的，比如说在 for 循环内定义的一个 var 变量，实际上其在 for 循环以外也是可以访问的</li>
+<li>而 let 由于是块作用域，所以如果在块作用域内定义的变量，比如说在 for 循环内，在其外面是不可被访问的，所以 for 循环推荐用 let</li>
+</ul>
+<ol start="2">
+<li>let 不能在定义之前访问该变量，但是 var 可以。 （var 可以提升变量作用域）</li>
+<li>let不能被重新定义，但是var是可以的。（重新定义var，执行时会忽略）<h1 id="20-Javascript-如何实现继承？"><a href="#20-Javascript-如何实现继承？" class="headerlink" title="20. Javascript 如何实现继承？"></a>20. Javascript 如何实现继承？</h1></li>
+</ol>
+<p>1、构造继承<br>2、原型继承: Child.prototype = new Parent();<br>3、实例继承<br>4、拷贝继承</p>
+<h1 id="21-变量提升"><a href="#21-变量提升" class="headerlink" title="21. 变量提升"></a>21. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
+<ol>
+<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
+<li>执行(执行逻辑操作)</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 ReferenceError: b is not defined</span></span><br><span class="line">b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 undefined</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 2</span></span><br></pre></td></tr></table></figure>
+<h1 id="22-变量提升"><a href="#22-变量提升" class="headerlink" title="22. 变量提升"></a>22. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
+<ol>
+<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
+<li>执行(执行逻辑操作)</li>
+</ol>
+<h1 id="23-函数提升"><a href="#23-函数提升" class="headerlink" title="23. 函数提升"></a>23. 函数提升</h1><p>首先要知道函数定义有两种方式的，一种是函数定义表达式，一种是函数声明语句。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数定义表达式</span></span><br><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明语句</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提升测试</span></span><br><span class="line"><span class="comment">// 例1.</span></span><br><span class="line">f();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"test"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 test</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line">f();</span><br><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"test"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//输出 Uncaught TypeError: f is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例3</span></span><br><span class="line"><span class="built_in">console</span>.log(f);</span><br><span class="line"><span class="keyword">var</span> f = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">console</span>.log(f);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"fff"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//  输出</span></span><br><span class="line"><span class="comment">//  [Function: f]</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  a = <span class="number">10</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">// 输出：10</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 输出：1</span></span><br><span class="line"><span class="comment">//输出：</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>重点：</p>
+<ol>
+<li>函数提升针对是函数声明语句而言，其次变量提升只提升变量名而函数提升会提升整个函数体</li>
+<li>优先级，函数提升会在变量提升的上面</li>
+</ol>
+<h1 id="24-作用域"><a href="#24-作用域" class="headerlink" title="24. 作用域"></a>24. 作用域</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1 块级作用域, 不适合变量提升</span></span><br><span class="line"><span class="comment">// es6允许块级作用域的任意嵌套。外层作用域无法读取内层作用域的变量。</span></span><br><span class="line"><span class="comment">// 内层作用域可以定义外层作用域的同名变量。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">"hello"</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">"world"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 hello</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">"hello"</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">"world"</span>;</span><br><span class="line">  <span class="keyword">var</span> z = <span class="string">"!"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(v, z);</span><br><span class="line"><span class="comment">//输出 :</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"><span class="comment">// world !</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2 闭包，变量提升</span></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">"hello"</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">"world"</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">//输出 undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例 3， 块级作用域内let和const命令所声明的变量，只在命令所在的代码块内有效。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4 let， var与作用域、变量提升</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line">  <span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h1 id="25-实现一个随机排序的程序"><a href="#25-实现一个随机排序的程序" class="headerlink" title="25. 实现一个随机排序的程序"></a>25. 实现一个随机排序的程序</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSort</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.sort(randomSort);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"after random sort: "</span>, list.join(<span class="string">","</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 箭头函数写法</span></span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.sort(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"after random sort: "</span>, list.join(<span class="string">","</span>));</span><br></pre></td></tr></table></figure>
+<h1 id="26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"><a href="#26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量" class="headerlink" title="26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"></a>26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMostUsedChar</span>(<span class="params">sourceString</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> length = sourceString.length;</span><br><span class="line">  <span class="keyword">let</span> counter = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> currentChar = sourceString[i];</span><br><span class="line">    <span class="keyword">if</span> (counter[currentChar]) &#123;</span><br><span class="line">      counter[currentChar]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      counter[currentChar] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> maxCount = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> maxChar = <span class="string">""</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> counter) &#123;</span><br><span class="line">    <span class="keyword">if</span> (counter[key] &gt;= maxCount) &#123;</span><br><span class="line">      maxChar = key;</span><br><span class="line">      maxCount = counter[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`most used char: <span class="subst">$&#123;maxChar&#125;</span>, count: <span class="subst">$&#123;maxCount&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getMostUsedChar(<span class="string">"fjiwejfal33232jkj3fjfie"</span>);</span><br></pre></td></tr></table></figure>
+<h1 id="27-参考"><a href="#27-参考" class="headerlink" title="27. 参考"></a>27. 参考</h1><ul>
+<li><a href="https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md" target="_blank" rel="noopener">https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md</a></li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+<h1 id><a href="#" class="headerlink" title></a><br><br><br><br><br></h1></blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/03/02/javascript-interview-qa/" data-id="cknk2zze0001lzo9x8f2qjkqr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试题/">面试题</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/07/web-frontend-interview-qa/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          前端面试题汇总(Fontend)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/02/node-js-interview-qa/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">node.js 面试题总结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+        <aside id="sidebar">
+
+<div class="widget-wrap">
+    <h3 class="widget-title">Recommended</h3>
+    <div class="widget">
+      <ul>
+        <li><a href="/css">CSS Tips</a></li>
+        <li><a href="/javascript">javascript Tips</a></li>
+        <li><a href="/node-js">Node.js Tips</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NET/">.NET</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react router</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/04/16/dotnet-core-interview-questions-and-answers/">2021 .NET/dotnet Core/C# 面试题及参考答案</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/">2021 Vue.js 面试题汇总及答案</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/10/React-starter-2-React-Router-Dom/">React 入门（2）- 路由 React Router</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/07/CSS-interview-qa/">CSS面试题汇总</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/07/web-frontend-interview-qa/">前端面试题汇总(Fontend)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 Jack
+      |
+      <a href="https://hexo.io">HEXO</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+
+</html>

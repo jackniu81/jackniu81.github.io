@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TFJ6HHB');</script>
+  <!-- End Google Tag Manager -->
+
+
+  
+  <title>javascript中常见的非人类（java/c#)知识 | Jack N @ GitHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. 概要 2. this 3. 原型链, prototype 4. new操作符都做了什么 5. === VS == 6. 闭包 7. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javas">
+<meta name="keywords" content="面试,javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript中常见的非人类（java&#x2F;c#)知识">
+<meta property="og:url" content="jackniu81.github.io/2021/02/07/js-speical/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 概要 2. this 3. 原型链, prototype 4. new操作符都做了什么 5. === VS == 6. 闭包 7. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javas">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="/img/javascript.jpg">
+<meta property="og:updated_time" content="2021-03-02T00:21:12.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript中常见的非人类（java&#x2F;c#)知识">
+<meta name="twitter:description" content="1. 概要 2. this 3. 原型链, prototype 4. new操作符都做了什么 5. === VS == 6. 闭包 7. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javas">
+<meta name="twitter:image" content="/img/javascript.jpg">
+  
+  <link rel="alternative" href="/atom.xml" title="Jack N @ GitHub" type="application/atom+xml">
+  
+  
+  <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head></html>
+
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFJ6HHB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jack N @ GitHub</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Full stack engineer, focus on: angular/react, node.js/.Net</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="jackniu81.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-js-speical" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/07/js-speical/" class="article-date">
+  <time datetime="2021-02-07T05:06:00.000Z" itemprop="datePublished">2021-02-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      javascript中常见的非人类（java/c#)知识
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/img/javascript.jpg" alt></p>
+<ul>
+<li><a href="#1-概要">1. 概要</a></li>
+<li><a href="#2-this">2. this</a></li>
+<li><a href="#3-原型链-prototype">3. 原型链, prototype</a></li>
+<li><a href="#4-new操作符都做了什么">4. new操作符都做了什么</a></li>
+<li><a href="#5--vs-">5. === VS ==</a></li>
+<li><a href="#6-闭包">6. 闭包</a></li>
+<li><a href="#7-总结">7. 总结</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javascript。对于广大程序员来说，随着web流行度越来越高，那么为了同时支持大多数浏览器，那么使用标准的javascript成为趋势。而第三方（coffeescript, typescript, dart等)也都是选择将代码编译为JavaScript，然后在浏览器端执行。</p>
+<p>作为从C#、java等语言转到javascript的同学来说，会发现不少C#、java的“我觉得应该是这样”的东西，JavaScript中却是不一样的。下面总结一下</p>
+<h1 id="2-this"><a href="#2-this" class="headerlink" title="2. this"></a>2. this</h1><p>对C#、Java等语言，this就是当前对象，但是javascript不是，简单来说：</p>
+<ul>
+<li>全局this 是window;</li>
+<li>函数this 是调用者;</li>
+<li>构造函数的this 是new 之后的新对象,</li>
+<li>call 和 apply bind的this第一个参数</li>
+</ul>
+<h1 id="3-原型链-prototype"><a href="#3-原型链-prototype" class="headerlink" title="3. 原型链, prototype"></a>3. 原型链, prototype</h1><ul>
+<li>函数对象都包含prototype属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor属性的含义就是指向该对象的构造函数</li>
+<li>①<strong>proto</strong>和constructor属性是对象所独有的；② prototype属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<strong>proto</strong>和constructor属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为null。</li>
+<li>当访问一个对象的属性或方法时，js引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为null,这就是原型链。</li>
+<li>每个构造函数都有一个prototype属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="4-new操作符都做了什么"><a href="#4-new操作符都做了什么" class="headerlink" title="4. new操作符都做了什么"></a>4. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型指向构造函数的prototype</li>
+<li>把构造函数里的this指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="5-VS"><a href="#5-VS" class="headerlink" title="5. === VS =="></a>5. === VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">'100'</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">''</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">''</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>很有意思吧， 看看这两个，是等效的：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span></span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="6-闭包"><a href="#6-闭包" class="headerlink" title="6. 闭包"></a>6. 闭包</h1><p>在JavaScript中的一大特点就是闭包，很多高级应用(早期的jquery，现在的angular、vue)都要依靠闭包来实现。由于闭包会使得函数中的变量都被保存在内存中，会消耗很大的内存，导致页面的性能问题，甚至导致内存泄漏。建议不要或者少用闭包。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> a = <span class="string">"some value"</span>;</span><br><span class="line"> <span class="keyword">var</span> innerMethod = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">console</span>.log( a + <span class="string">"!"</span>) ;&#125;</span><br><span class="line"> innerMethod(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><ol>
+<li>Javascipt 中有些内容和其他编程语言不一致，需要牢记</li>
+<li>JavaScript中拿不准的东西，可以简单测试一下，免得代码写好后出错。</li>
+<li>简单测试，可以打开浏览器，直接F12（进入Dev Tools），再选择Console(控制台)， 直接输入要测试的内容，查看返回结果</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/02/07/js-speical/" data-id="cknk2zze1001nzo9x150xu4sx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/02/09/Angular-keyword/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Angular 词汇表
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/01/29/Angular-Starter-15-folder-structure/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+        <aside id="sidebar">
+
+<div class="widget-wrap">
+    <h3 class="widget-title">Recommended</h3>
+    <div class="widget">
+      <ul>
+        <li><a href="/css">CSS Tips</a></li>
+        <li><a href="/javascript">javascript Tips</a></li>
+        <li><a href="/node-js">Node.js Tips</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NET/">.NET</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react router</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/04/16/dotnet-core-interview-questions-and-answers/">2021 .NET/dotnet Core/C# 面试题及参考答案</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/">2021 Vue.js 面试题汇总及答案</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/10/React-starter-2-React-Router-Dom/">React 入门（2）- 路由 React Router</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/07/CSS-interview-qa/">CSS面试题汇总</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/07/web-frontend-interview-qa/">前端面试题汇总(Fontend)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 Jack
+      |
+      <a href="https://hexo.io">HEXO</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+
+</html>
