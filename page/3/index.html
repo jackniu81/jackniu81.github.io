@@ -83,6 +83,87 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Angular-Starter-6-update" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/11/Angular-Starter-6-update/" class="article-date">
+  <time datetime="2021-01-11T06:11:30.000Z" itemprop="datePublished">2021-01-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/11/Angular-Starter-6-update/">Angular入门到精通系列教程（6）- Angular的升级</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#1-摘要">1. 摘要</a></li>
+<li><a href="#2-httpsupdateangulario">2. https://update.angular.io/</a></li>
+<li><a href="#3-总结">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容的升级。笔者之前维护的一个6年项目，是用jQueryMobile开发的，估计入门web开发比较短的同学都没有听说过吧。另外，就拿Angular来说，从2.0开始，使用ts开发，不再兼容1.0 版本。从2.0开始，命名为Angular，1.0的叫angularJS, 2个版本彻底切割。而这也是angular流失很多用户的其中一个原因。</p>
+<p>针对这些问题，Angular专门提供了版本升级的指导方案，非常详细、准确（Angular每半年发布一个主版本，这个也是必须的）。</p>
+<h1 id="2-https-update-angular-io"><a href="#2-https-update-angular-io" class="headerlink" title="2. https://update.angular.io/"></a>2. <a href="https://update.angular.io/" target="_blank" rel="noopener">https://update.angular.io/</a></h1><p><a href="https://update.angular.io/" target="_blank" rel="noopener">https://update.angular.io/</a> 是官方的angular升级指导页面，你可以选择你的项目的版本，以及要升级到的版本；同时可以选择项目使用的技术，比如是否使用了Angular Material （这也是之前推荐这个UI框架的原因–升级方便），是否和AngualrJS同时使用等等。之后，自动提示升级步骤。</p>
+<p>升级主要通过 <code>ng update xxx</code> 来实现， <code>ng update</code> 命令不同于npm命令，<code>npm update</code>相当于 npm+更改配置（代码），也就是说，再更新完node-modules之后，<code>ng update</code>会自动更新配置文件，甚至是代码中的基本的import的代码，实现自动升级、更新。</p>
+<p>举例，10.2升级到11.1，如果没有涉及到复杂的anuglar技术，大致的升级步骤是：</p>
+<ul>
+<li>Run <code>ng update @angular/core @angular/cli</code> which should bring you to version 11 of Angular.</li>
+<li>Run <code>ng update @angular/material</code>.</li>
+<li>Angular now requires TypeScript 4.0. ng update will migrate you automatically.</li>
+<li>Support for IE9, IE10, and IE mobile has been removed. This was announced * in the v10 update.</li>
+</ul>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ul>
+<li>Angular虽然更新、升级比较频繁（从某种意义上也是优点），但是升级部分确实做得最完善的</li>
+<li>UI框架，@angular/material可以实现和Angular的同步升级，其他第三方框架，都会有演示，时间不等</li>
+<li>个人不推荐使用最新的版本，不做小白鼠。可以使用之前发布的一个版本，比如现在是v11，那么我们就使用v10。更稳定，同时网上资料也多。</li>
+<li>及时更新angular版本，免得技术债欠的越来越多而导致无法升级。</li>
+<li>这个升级指导也是相对的，如果你对Angular有些特殊的用法，或者没有安装官方推荐方式使用，升级也是比较麻烦的。</li>
+<li>升级时，如果跨多版本，建议一个版本一个版本的升级，每升级一次，执行UT或者把站点跑起来试试，以防出错。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-6-update/" data-id="cknjyhjaf000fp09xmxstjuhd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Angular-Starter-5-Angular-Material" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="article-date">
@@ -171,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="cknfooq4p000hks9xb3zgum6j" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/" data-id="cknjyhjac000dp09xurytkstl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -286,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="cknfooq4p000eks9xp4um5bp4" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/" data-id="cknjyhjal000mp09xzwapvh43" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -349,7 +430,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="cknfooq55000qks9xmpmezj0g" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/" data-id="cknjyhjal000op09x5yzgbg1x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -403,7 +484,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/11/Kubernetes-1/" data-id="cknfooq5k0017ks9xob6cdzrp" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/11/Kubernetes-1/" data-id="cknjyhjal0011p09xo2k64l6t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li></ul>
@@ -498,7 +579,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/" data-id="cknfooq5k0012ks9xbzug338c" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/" data-id="cknjyhjb1001dp09xit39jg70" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -560,7 +641,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/" data-id="cknfooq5k0015ks9xu6mpil0q" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/" data-id="cknjyhjb1001bp09xku5lm1j3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular入门/">Angular入门</a></li></ul>
@@ -607,7 +688,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" data-id="cknfooq3u0000ks9xcxphqduj" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" data-id="cknjyhj9a0000p09xgk4nfeq2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Angular/">Angular</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iframe/">iframe</a></li></ul>
@@ -651,7 +732,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" data-id="cknfooq5k0010ks9x1jd04qzt" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2019/11/22/SQL-Server-The-database-could-not-be-exclusively-locked-to-perform-the-operation/" data-id="cknjyhjb10016p09x5usdbru1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL-Server/">SQL Server</a></li></ul>
@@ -700,7 +781,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="jackniu81.github.io/2015/12/10/Hello-Hexo/" data-id="cknfooq5k001aks9x7a1ol0qu" class="article-share-link">Share</a>
+      <a data-url="jackniu81.github.io/2015/12/10/Hello-Hexo/" data-id="cknjyhjal000yp09xns10fxgr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Assemble/">Assemble</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Metalsmith/">Metalsmith</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Wintersmith/">Wintersmith</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node-js/">node.js</a></li></ul>
@@ -739,7 +820,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NET/">.NET</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular/">Angular</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Angular入门/">Angular入门</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Assemble/">Assemble</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metalsmith/">Metalsmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-Server/">SQL Server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wintersmith/">Wintersmith</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css3/">css3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe/">iframe</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobile/">mobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node-js/">node.js</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试/">面试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面试题/">面试题</a><span class="tag-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -748,7 +829,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react router</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
+      <a href="/tags/NET/" style="font-size: 10px;">.NET</a> <a href="/tags/Angular/" style="font-size: 20px;">Angular</a> <a href="/tags/Angular入门/" style="font-size: 17.5px;">Angular入门</a> <a href="/tags/Assemble/" style="font-size: 10px;">Assemble</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Metalsmith/" style="font-size: 10px;">Metalsmith</a> <a href="/tags/SQL-Server/" style="font-size: 10px;">SQL Server</a> <a href="/tags/Wintersmith/" style="font-size: 10px;">Wintersmith</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css3/" style="font-size: 10px;">css3</a> <a href="/tags/iframe/" style="font-size: 10px;">iframe</a> <a href="/tags/javascript/" style="font-size: 12.5px;">javascript</a> <a href="/tags/mobile/" style="font-size: 10px;">mobile</a> <a href="/tags/node-js/" style="font-size: 12.5px;">node.js</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react router</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/web/" style="font-size: 10px;">web</a> <a href="/tags/面试/" style="font-size: 15px;">面试</a> <a href="/tags/面试题/" style="font-size: 12.5px;">面试题</a>
     </div>
   </div>
 
@@ -757,7 +838,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -767,6 +848,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/04/16/dotnet-core-interview-questions-and-answers/">2021 .NET/dotnet Core/C# 面试题及参考答案</a>
+          </li>
         
           <li>
             <a href="/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/">2021 Vue.js 面试题汇总及答案</a>
@@ -782,10 +867,6 @@
         
           <li>
             <a href="/2021/03/07/web-frontend-interview-qa/">前端面试题汇总(Fontend)</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/02/node-js-interview-qa/">node.js 面试题总结</a>
           </li>
         
       </ul>
