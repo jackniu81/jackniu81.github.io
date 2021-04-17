@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Angular入门到精通系列教程（2） - 基本概念  1. Angular （Angular2）v.s. AngularJS 2. 检查本地环境的版本 3. TypeScript 4. Angular CLI 5. Angular 的版本 6. Angular 版本如何升级 7. 依赖注入（dependency injection） 8. 编译-AOT和JIT的区别   环境:   Angula">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular入门到精通系列教程（2） - 基本概念">
+<meta property="og:url" content="https://jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="Angular入门到精通系列教程（2） - 基本概念  1. Angular （Angular2）v.s. AngularJS 2. 检查本地环境的版本 3. TypeScript 4. Angular CLI 5. Angular 的版本 6. Angular 版本如何升级 7. 依赖注入（dependency injection） 8. 编译-AOT和JIT的区别   环境:   Angula">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-08T09:13:44.000Z">
+<meta property="article:modified_time" content="2021-01-08T08:11:10.660Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="Angular">
+<meta property="article:tag" content="Angular入门">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Angular入门到精通系列教程（2） - 基本概念 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Angular入门到精通系列教程（2） - 基本概念
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-08 17:13:44 / Modified: 16:11:10" itemprop="dateCreated datePublished" datetime="2021-01-08T17:13:44+08:00">2021-01-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Angular入门到精通系列教程（2） - 基本概念</p>
+<ul>
+<li><a href="#1-angular-angular2vs-angularjs">1. Angular （Angular2）v.s. AngularJS</a></li>
+<li><a href="#2-%E6%A3%80%E6%9F%A5%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E7%9A%84%E7%89%88%E6%9C%AC">2. 检查本地环境的版本</a></li>
+<li><a href="#3-typescript">3. TypeScript</a></li>
+<li><a href="#4-angular-cli">4. Angular CLI</a></li>
+<li><a href="#5-angular-%E7%9A%84%E7%89%88%E6%9C%AC">5. Angular 的版本</a></li>
+<li><a href="#6-angular-%E7%89%88%E6%9C%AC%E5%A6%82%E4%BD%95%E5%8D%87%E7%BA%A7">6. Angular 版本如何升级</a></li>
+<li><a href="#7-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5dependency-injection">7. 依赖注入（dependency injection）</a></li>
+<li><a href="#8-%E7%BC%96%E8%AF%91-aot%E5%92%8Cjit%E7%9A%84%E5%8C%BA%E5%88%AB">8. 编译-AOT和JIT的区别</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: VSCode</li>
+</ul>
+</blockquote>
+<h1 id="1-Angular-（Angular2）v-s-AngularJS"><a href="#1-Angular-（Angular2）v-s-AngularJS" class="headerlink" title="1. Angular （Angular2）v.s. AngularJS"></a>1. Angular （Angular2）v.s. AngularJS</h1><p>Angular最早期的版本，也叫AnugularJS，使用javascript开发；新的版本，才叫Angular，也称为Angular2，使用typescript开发，Angular和AngularJS是不兼容的（当然，官方也有2个版本的集成方案）。</p>
+<h1 id="2-检查本地环境的版本"><a href="#2-检查本地环境的版本" class="headerlink" title="2. 检查本地环境的版本"></a>2. 检查本地环境的版本</h1><p>检查npm, node 版本:</p>
+<ul>
+<li>npm 版本：<code>npm -v</code></li>
+<li>node版本： <code>node -v</code></li>
+<li>angular、angular CLI全局、本地版本 <code>ng --version</code></li>
+</ul>
+<h1 id="3-TypeScript"><a href="#3-TypeScript" class="headerlink" title="3. TypeScript"></a>3. TypeScript</h1><p>Angular要求开发语言必须为TypeScript。TypeScript有很多好处，比如引入了类、接口的概念，比如强类型，可以在写代码时（编译时）就能检查到一些错误，避免只有代码在执行时才发现异常。</p>
+<p>如果没用过TypeScript，不要害怕TypeScript这个新的概念，只要你有javascript经验，直接入手，没有任何难度。只需要用到class、interface等东西时，参考一下别人如何使用，或者查一下typescript文档即可。</p>
+<h1 id="4-Angular-CLI"><a href="#4-Angular-CLI" class="headerlink" title="4. Angular CLI"></a>4. Angular CLI</h1><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。<br>参考：<a target="_blank" rel="noopener" href="https://cli.angular.io/">https://cli.angular.io/</a></p>
+<p>ng generate: 新建component、service、pipe, class 等<br>ng new: 新建angular app<br>ng update: 升级angular自身，以及依赖<br>ng version： 显示anuglar cli全局版本、以及本地的angular cli、angular code等的版本<br>ng add: 新增第三方库。会做2件事，1）基于npm安装node_modules, 2）自动更改配置文件，保证新的依赖正常工作</p>
+<p>总结一下，Angular的开放，离不开AngularCLI。</p>
+<h1 id="5-Angular-的版本"><a href="#5-Angular-的版本" class="headerlink" title="5. Angular 的版本"></a>5. Angular 的版本</h1><p>不同于Angular2+Angular的不兼容， Angular 2.0 之后会保证向下兼容。官方的版本发布计划是：</p>
+<ul>
+<li>每 6 个月发布一个主版本（第一位版本号，主版本）</li>
+<li>每个主版本发布 1 ~ 3 个小版本（第二位版本号，Feature 版本号）</li>
+<li>每周发布一个补丁版本（第三位版本号，Hotfix 版本号）</li>
+</ul>
+<h1 id="6-Angular-版本如何升级"><a href="#6-Angular-版本如何升级" class="headerlink" title="6. Angular 版本如何升级"></a>6. Angular 版本如何升级</h1><p>Angular CLI提供了升级命令(ng update)，同时，官网（<a target="_blank" rel="noopener" href="https://update.angular.io/%EF%BC%89%E4%B9%9F%E6%9C%89%E5%8D%87%E7%BA%A7%E6%8C%87%E5%8D%97%E3%80%82%E9%80%89%E6%8B%A9%E4%BB%8E%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%AC%E5%90%8E%EF%BC%8C%E4%BC%9A%E7%BB%99%E5%87%BA%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E7%9A%84%E5%8D%87%E7%BA%A7%E5%91%BD%E4%BB%A4%EF%BC%8C%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8C%E5%B0%B1%E5%A5%BD%E3%80%82">https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。</a></p>
+<h1 id="7-依赖注入（dependency-injection）"><a href="#7-依赖注入（dependency-injection）" class="headerlink" title="7. 依赖注入（dependency injection）"></a>7. 依赖注入（dependency injection）</h1><p>依赖注入是Angular实现的一种应用程序设计模式， 是Angular的核心概念之一。</p>
+<p>依赖就是具有一系列功能的服务(service)， 应用程序中的各种组件和指令（derictives）可能需要服务的功能。 Angular提供了一种平滑的机制，通过它我们可以将这些依赖项注入我们的组件和指令中。因此，我们只是在构建依赖关系，这些依赖关系可以在应用程序的所有组件之间注入。</p>
+<p>使用依赖注入还有以下好处，</p>
+<ol>
+<li>不需要实例化，（new 实例）。不需要关心class的构造函数里需要什么参数</li>
+<li>一次注入（app module通过Providers注入），所有组件都可以使用。而且是用同一个service实例（Singleton），也就是说一个service里的数据是共分享的，可以用于组件间数据传递。</li>
+</ol>
+<h1 id="8-编译-AOT和JIT的区别"><a href="#8-编译-AOT和JIT的区别" class="headerlink" title="8. 编译-AOT和JIT的区别"></a>8. 编译-AOT和JIT的区别</h1><p>每个Angular应用程序都包含浏览器无法理解的组件和模板。 因此，在浏览器内部运行之前，需要先编译所有Angular应用程序。</p>
+<p>Angular提供两种编译类型：</p>
+<ol>
+<li>JIT(Just-in-Time) compilation</li>
+<li>AOT(Ahead-of-Time) compilation</li>
+</ol>
+<p>区别在于，在JIT编译中，应用程序在运行时在浏览器内部进行编译；而在AOT编译中，应用程序在构建期间进行编译。<br>显而易见，AOT编译好处多多，因而是Angular的默认编译方式。主要优点</p>
+<p>由于应用程序是在浏览器内部运行之前进行编译的，因此浏览器会加载可执行代码并立即呈现应用程序，从而加快了呈现速度。</p>
+<p>在AOT编译中，编译器将与应用程序一起发送外部HTML和CSS文件，从而消除了对那些源文件的单独AJAX请求，从而减少了ajax请求。</p>
+<p>开发人员可以在构建阶段检测并处理错误，这有助于最大程度地减少错误。<br>AOT编译器将HTML和模板添加到JS文件中，然后再在浏览器中运行。 因此，没有多余的HTML文件可读取，从而为应用程序提供了更好的安全性。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Angular/" rel="tag"># Angular</a>
+              <a href="/tags/Angular%E5%85%A5%E9%97%A8/" rel="tag"># Angular入门</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/08/angular-Starter-Angular-Vue-React/" rel="prev" title="Angular入门到精通系列教程（1） - Angular,Vue,React 选型">
+      <i class="fa fa-chevron-left"></i> Angular入门到精通系列教程（1） - Angular,Vue,React 选型
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/11/Kubernetes-1/" rel="next" title="Kubernetes 概述">
+      Kubernetes 概述 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Angular-%EF%BC%88Angular2%EF%BC%89v-s-AngularJS"><span class="nav-number">1.</span> <span class="nav-text">1. Angular （Angular2）v.s. AngularJS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">2. 检查本地环境的版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Angular-CLI"><span class="nav-number">4.</span> <span class="nav-text">4. Angular CLI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Angular-%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">5.</span> <span class="nav-text">5. Angular 的版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-Angular-%E7%89%88%E6%9C%AC%E5%A6%82%E4%BD%95%E5%8D%87%E7%BA%A7"><span class="nav-number">6.</span> <span class="nav-text">6. Angular 版本如何升级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%EF%BC%88dependency-injection%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">7. 依赖注入（dependency injection）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-%E7%BC%96%E8%AF%91-AOT%E5%92%8CJIT%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">8.</span> <span class="nav-text">8. 编译-AOT和JIT的区别</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

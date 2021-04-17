@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 概要 2. this 3. 原型链, prototype 4. new操作符都做了什么 5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D; 6. 闭包 7. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie&#x2F;firefox&#x2F;sarfari&#x2F;chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript中常见的非人类（java&#x2F;c#)知识">
+<meta property="og:url" content="https://jackniu81.github.io/2021/02/07/js-speical/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 概要 2. this 3. 原型链, prototype 4. new操作符都做了什么 5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D; 6. 闭包 7. 总结  1. 概要众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie&#x2F;firefox&#x2F;sarfari&#x2F;chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javas">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackniu81.github.io/img/javascript.jpg">
+<meta property="article:published_time" content="2021-02-07T05:06:00.000Z">
+<meta property="article:modified_time" content="2021-03-02T00:21:12.371Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackniu81.github.io/img/javascript.jpg">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/02/07/js-speical/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>javascript中常见的非人类（java/c#)知识 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/02/07/js-speical/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          javascript中常见的非人类（java/c#)知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-02-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-02-07T13:06:00+08:00">2021-02-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-02 08:21:12" itemprop="dateModified" datetime="2021-03-02T08:21:12+08:00">2021-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/img/javascript.jpg"></p>
+<ul>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-this">2. this</a></li>
+<li><a href="#3-%E5%8E%9F%E5%9E%8B%E9%93%BE-prototype">3. 原型链, prototype</a></li>
+<li><a href="#4-new%E6%93%8D%E4%BD%9C%E7%AC%A6%E9%83%BD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88">4. new操作符都做了什么</a></li>
+<li><a href="#5--vs-">5. === VS ==</a></li>
+<li><a href="#6-%E9%97%AD%E5%8C%85">6. 闭包</a></li>
+<li><a href="#7-%E6%80%BB%E7%BB%93">7. 总结</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie/firefox/sarfari/chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javascript。对于广大程序员来说，随着web流行度越来越高，那么为了同时支持大多数浏览器，那么使用标准的javascript成为趋势。而第三方（coffeescript, typescript, dart等)也都是选择将代码编译为JavaScript，然后在浏览器端执行。</p>
+<p>作为从C#、java等语言转到javascript的同学来说，会发现不少C#、java的“我觉得应该是这样”的东西，JavaScript中却是不一样的。下面总结一下</p>
+<h1 id="2-this"><a href="#2-this" class="headerlink" title="2. this"></a>2. this</h1><p>对C#、Java等语言，this就是当前对象，但是javascript不是，简单来说：</p>
+<ul>
+<li>全局this 是window;</li>
+<li>函数this 是调用者;</li>
+<li>构造函数的this 是new 之后的新对象,</li>
+<li>call 和 apply bind的this第一个参数</li>
+</ul>
+<h1 id="3-原型链-prototype"><a href="#3-原型链-prototype" class="headerlink" title="3. 原型链, prototype"></a>3. 原型链, prototype</h1><ul>
+<li>函数对象都包含prototype属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor属性的含义就是指向该对象的构造函数</li>
+<li>①__proto__和constructor属性是对象所独有的；② prototype属性是函数所独有的，因为函数也是一种对象，所以函数也拥有__proto__和constructor属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性__proto__指向其构造函数的原型对象prototype；该原型对象也会作为实例对象有一个私有属性__proto__，层层向上直到一个对象的原型对象值为null。</li>
+<li>当访问一个对象的属性或方法时，js引擎会先查找该对象本身是否包含，如果没有，会去该对象的__proto__属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的__proto__值为null,这就是原型链。</li>
+<li>每个构造函数都有一个prototype属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="4-new操作符都做了什么"><a href="#4-new操作符都做了什么" class="headerlink" title="4. new操作符都做了什么"></a>4. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型指向构造函数的prototype</li>
+<li>把构造函数里的this指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="5-VS"><a href="#5-VS" class="headerlink" title="5. === VS =="></a>5. === VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&#x27;100&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&#x27;&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&#x27;&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>很有意思吧， 看看这两个，是等效的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span></span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="6-闭包"><a href="#6-闭包" class="headerlink" title="6. 闭包"></a>6. 闭包</h1><p>在JavaScript中的一大特点就是闭包，很多高级应用(早期的jquery，现在的angular、vue)都要依靠闭包来实现。由于闭包会使得函数中的变量都被保存在内存中，会消耗很大的内存，导致页面的性能问题，甚至导致内存泄漏。建议不要或者少用闭包。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line"> <span class="keyword">var</span> innerMethod = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="built_in">console</span>.log( a + <span class="string">&quot;!&quot;</span>) ;&#125;</span><br><span class="line"> innerMethod(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><ol>
+<li>Javascipt 中有些内容和其他编程语言不一致，需要牢记</li>
+<li>JavaScript中拿不准的东西，可以简单测试一下，免得代码写好后出错。</li>
+<li>简单测试，可以打开浏览器，直接F12（进入Dev Tools），再选择Console(控制台)， 直接输入要测试的内容，查看返回结果</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/javascript/" rel="tag"># javascript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/29/Angular-Starter-15-folder-structure/" rel="prev" title="Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐">
+      <i class="fa fa-chevron-left"></i> Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/02/09/Angular-keyword/" rel="next" title="Angular 词汇表">
+      Angular 词汇表 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">1. 概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-this"><span class="nav-number">2.</span> <span class="nav-text">2. this</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E5%8E%9F%E5%9E%8B%E9%93%BE-prototype"><span class="nav-number">3.</span> <span class="nav-text">3. 原型链, prototype</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-new%E6%93%8D%E4%BD%9C%E7%AC%A6%E9%83%BD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">4.</span> <span class="nav-text">4. new操作符都做了什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-VS"><span class="nav-number">5.</span> <span class="nav-text">5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E9%97%AD%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">6. 闭包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 摘要 2. https:&#x2F;&#x2F;update.angular.io&#x2F; 3. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: Visual Studio Code    1. 摘要近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular入门到精通系列教程（6）- Angular的升级">
+<meta property="og:url" content="https://jackniu81.github.io/2021/01/11/Angular-Starter-6-update/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 摘要 2. https:&#x2F;&#x2F;update.angular.io&#x2F; 3. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: Visual Studio Code    1. 摘要近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-11T06:11:30.000Z">
+<meta property="article:modified_time" content="2021-01-12T06:34:18.717Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="Angular">
+<meta property="article:tag" content="Angular入门">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-6-update/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Angular入门到精通系列教程（6）- Angular的升级 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-6-update/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Angular入门到精通系列教程（6）- Angular的升级
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-11 14:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T14:11:30+08:00">2021-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-12 14:34:18" itemprop="dateModified" datetime="2021-01-12T14:34:18+08:00">2021-01-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
+<li><a href="#2-httpsupdateangulario">2. https://update.angular.io/</a></li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容的升级。笔者之前维护的一个6年项目，是用jQueryMobile开发的，估计入门web开发比较短的同学都没有听说过吧。另外，就拿Angular来说，从2.0开始，使用ts开发，不再兼容1.0 版本。从2.0开始，命名为Angular，1.0的叫angularJS, 2个版本彻底切割。而这也是angular流失很多用户的其中一个原因。</p>
+<p>针对这些问题，Angular专门提供了版本升级的指导方案，非常详细、准确（Angular每半年发布一个主版本，这个也是必须的）。</p>
+<h1 id="2-https-update-angular-io"><a href="#2-https-update-angular-io" class="headerlink" title="2. https://update.angular.io/"></a>2. <a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a></h1><p><a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a> 是官方的angular升级指导页面，你可以选择你的项目的版本，以及要升级到的版本；同时可以选择项目使用的技术，比如是否使用了Angular Material （这也是之前推荐这个UI框架的原因–升级方便），是否和AngualrJS同时使用等等。之后，自动提示升级步骤。</p>
+<p>升级主要通过 <code>ng update xxx</code> 来实现， <code>ng update</code> 命令不同于npm命令，<code>npm update</code>相当于 npm+更改配置（代码），也就是说，再更新完node-modules之后，<code>ng update</code>会自动更新配置文件，甚至是代码中的基本的import的代码，实现自动升级、更新。</p>
+<p>举例，10.2升级到11.1，如果没有涉及到复杂的anuglar技术，大致的升级步骤是：</p>
+<ul>
+<li>Run <code>ng update @angular/core @angular/cli</code> which should bring you to version 11 of Angular.</li>
+<li>Run <code>ng update @angular/material</code>.</li>
+<li>Angular now requires TypeScript 4.0. ng update will migrate you automatically.</li>
+<li>Support for IE9, IE10, and IE mobile has been removed. This was announced * in the v10 update.</li>
+</ul>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ul>
+<li>Angular虽然更新、升级比较频繁（从某种意义上也是优点），但是升级部分确实做得最完善的</li>
+<li>UI框架，@angular/material可以实现和Angular的同步升级，其他第三方框架，都会有演示，时间不等</li>
+<li>个人不推荐使用最新的版本，不做小白鼠。可以使用之前发布的一个版本，比如现在是v11，那么我们就使用v10。更稳定，同时网上资料也多。</li>
+<li>及时更新angular版本，免得技术债欠的越来越多而导致无法升级。</li>
+<li>这个升级指导也是相对的，如果你对Angular有些特殊的用法，或者没有安装官方推荐方式使用，升级也是比较麻烦的。</li>
+<li>升级时，如果跨多版本，建议一个版本一个版本的升级，每升级一次，执行UT或者把站点跑起来试试，以防出错。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Angular/" rel="tag"># Angular</a>
+              <a href="/tags/Angular%E5%85%A5%E9%97%A8/" rel="tag"># Angular入门</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" rel="prev" title="Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）">
+      <i class="fa fa-chevron-left"></i> Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/11/Angular-Starter-8-component-child-parent/" rel="next" title="Angular入门到精通系列教程（8）- 父子组件（Component）之间传递数据">
+      Angular入门到精通系列教程（8）- 父子组件（Component）之间传递数据 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">1. 摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-https-update-angular-io"><span class="nav-number">2.</span> <span class="nav-text">2. https:&#x2F;&#x2F;update.angular.io&#x2F;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">3. 总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

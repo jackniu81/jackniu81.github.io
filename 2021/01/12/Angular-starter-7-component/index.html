@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 概述 2. 创建Component 2.1. 组件模板   3. 视图封装模式 3.1. 特殊的选择器 :host 3.2. inline-styles   4. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: Visual Studio Code   1. 概述组件是 Angu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular入门到精通系列教程（7）- 组件（@Component）基本知识">
+<meta property="og:url" content="https://jackniu81.github.io/2021/01/12/Angular-starter-7-component/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 概述 2. 创建Component 2.1. 组件模板   3. 视图封装模式 3.1. 特殊的选择器 :host 3.2. inline-styles   4. 总结   环境:   Angular CLI: 11.0.6 Angular: 11.0.7 Node: 12.18.3  npm : 6.14.6 IDE: Visual Studio Code   1. 概述组件是 Angu">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-12T06:11:30.000Z">
+<meta property="article:modified_time" content="2021-01-12T06:34:18.717Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="Angular">
+<meta property="article:tag" content="Angular入门">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/01/12/Angular-starter-7-component/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Angular入门到精通系列教程（7）- 组件（@Component）基本知识 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/12/Angular-starter-7-component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Angular入门到精通系列教程（7）- 组件（@Component）基本知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-12 14:11:30 / Modified: 14:34:18" itemprop="dateCreated datePublished" datetime="2021-01-12T14:11:30+08:00">2021-01-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BAcomponent">2. 创建Component</a><ul>
+<li><a href="#21-%E7%BB%84%E4%BB%B6%E6%A8%A1%E6%9D%BF">2.1. 组件模板</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%A7%86%E5%9B%BE%E5%B0%81%E8%A3%85%E6%A8%A1%E5%BC%8F">3. 视图封装模式</a><ul>
+<li><a href="#31-%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-host">3.1. 特殊的选择器 :host</a></li>
+<li><a href="#32-inline-styles">3.2. inline-styles</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>组件是 Angular 应用的主要构造块。每个组件包括如下部分：</p>
+<ul>
+<li>一个 HTML 模板，用于声明页面要渲染的内容</li>
+<li>一个用于定义行为的 Typescript 类</li>
+<li>一个 CSS 选择器，用于定义组件在模板中的使用方式</li>
+<li>（可选）要应用在模板上的 CSS 样式</li>
+</ul>
+<p>Component可以是一个页面，也可以是一个组件（控件）。总是，是一个页面元素。</p>
+<p>任何一个Component都是NgModule的一部分，这样它就可以被其他应用和其他Component所调用。为了定义Component是NgModule的一个成员之一，开发者应该在NgModule的declarations属性中，将自己开发的Component列出。</p>
+<p>另外，通过Component修饰符（也就是@Component）开发者可以配置元数据，这样通过各式各样的Life-Cycle hooks，Components就可以控制他们的运行环境。</p>
+<h1 id="2-创建Component"><a href="#2-创建Component" class="headerlink" title="2. 创建Component"></a>2. 创建Component</h1><p>基于AngularCLI，可以很方便的创建Component。在要创建Component的目录下，执行如下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate component &lt;component-name&gt; </span><br></pre></td></tr></table></figure>
+<p>e.g. <code>ng generate component MyComponent</code><br>AngularCLI会自动生成一个文件夹和4个文件：</p>
+<ul>
+<li>一个以该组件命名的文件夹（e.g my-component)</li>
+<li>一个组件文件 &lt; component-name &gt;.component.ts（e.g my-component.component.ts)</li>
+<li>一个模板文件 &lt; component-name &gt;.component.html（e.g my-component.component.html)</li>
+<li>一个 CSS 文件， &lt; component-name &gt;.component.css（e.g my-component.component.css)</li>
+<li>测试文件 &lt; component-name &gt;.component.spec.ts（e.g my-component.component.spec.ts)</li>
+</ul>
+<blockquote>
+<p>对于Component，所有文件名都会自动增加Component后缀，所以不建议&lt; component-name &gt; 中带有‘component’这个单词。</p>
+</blockquote>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是核心的ts文件，指定了selector(CSS 选择器)，template（html）文件，css文件。html/css文件如果需要可以多个component公用。尤其是css，可以看到参数是Array，所以可以制定多个css。</p>
+<h2 id="2-1-组件模板"><a href="#2-1-组件模板" class="headerlink" title="2.1. 组件模板"></a>2.1. 组件模板</h2><p>组件模板，即HTML部分，可以是一个html文件，也可以是一段html描述，是等价的。Angular 组件需要一个用 template 或 templateUrl 定义的模板。但你不能在组件中同时拥有这两个语句。</p>
+<ol>
+<li><p>html 文件方式</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./component-overview.component.html&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>html代码方式</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 3. 视图封装模式</span></span><br><span class="line"><span class="string">在 Angular 中，组件的 CSS 样式被封装进了自己的视图中，而不希望影响到应用程序的其它部分。这部分也是可以通过配置去进行控制的。</span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>ts</span><br><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  encapsulation: ViewEncapsulation.None,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>可以看到，增加了一个<code>encapsulation</code>属性 （视图封装模式）。通过在组件的元数据上设置视图封装模式，你可以分别控制每个组件的封装模式。 可选的封装模式一共有如下几种：</p>
+</li>
+<li><p>Emulated 模式（默认值）通过预处理（并改名）CSS 代码来模拟 Shadow DOM 的行为，以达到把 CSS 样式局限在组件视图中的目的。 更多信息，见附录 1。(说明：只进不出，全局样式能进来，组件样式出不去)</p>
+</li>
+<li><p>ShadowDom 模式使用浏览器原生的 Shadow DOM 实现来为组件的宿主元素附加一个 Shadow DOM。组件的视图被附加到这个 Shadow DOM 中，组件的样式也被包含在这个 Shadow DOM 中。(说明：不进不出，没有样式能进来，组件样式出不去。)</p>
+</li>
+<li><p>None 意味着 Angular 不使用视图封装。 Angular 会把 CSS 添加到全局样式中。而不会应用上前面讨论过的那些作用域规则、隔离和保护等。 从本质上来说，这跟把组件的样式直接放进 HTML 是一样的。</p>
+</li>
+</ol>
+<h2 id="3-1-特殊的选择器-host"><a href="#3-1-特殊的选择器-host" class="headerlink" title="3.1. 特殊的选择器 :host"></a>3.1. 特殊的选择器 :host</h2><p>使用 :host 伪类选择器，用来选择组件宿主元素中的元素（相对于组件模板内部的元素）。 :host 选择是是把宿主元素作为目标的唯一方式。除此之外，你将没办法指定它， 因为宿主不是组件自身模板的一部分，而是父组件模板的一部分。</p>
+<p>e.g.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:host</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-inline-styles"><a href="#3-2-inline-styles" class="headerlink" title="3.2. inline-styles"></a>3.2. inline-styles</h2><p>默认AngularCLI生成的component，css在一个单独文件中。当然，同html模板类似，如果需要，你也可以制定css样式写在ts中， 不单独放到一个文件中。命令：<code>ng generate component MyComponent --inline-style</code>。</p>
+<p>生成component如下</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">  styles: [<span class="string">&#x27;h1 &#123; font-weight: normal; &#125;&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ul>
+<li>Angular CLI辅助创建一个component所需的多个文件</li>
+<li>建议html/css/ts分开</li>
+<li>在期望目录下执行Angular CLI命令，可以生成到制定目录</li>
+<li><code>ng generate component XXX</code> 可以简写为 <code>ng g c</code></li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Angular/" rel="tag"># Angular</a>
+              <a href="/tags/Angular%E5%85%A5%E9%97%A8/" rel="tag"># Angular入门</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/11/Angular-Starter-11-ngmodule/" rel="prev" title="Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块">
+      <i class="fa fa-chevron-left"></i> Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/13/Angular-Starter-10-Directive-1/" rel="next" title="Angular入门到精通系列教程（10）- 指令（Directive）">
+      Angular入门到精通系列教程（10）- 指令（Directive） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">1. 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BAComponent"><span class="nav-number">2.</span> <span class="nav-text">2. 创建Component</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E7%BB%84%E4%BB%B6%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 组件模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-host"><span class="nav-number">2.2.</span> <span class="nav-text">3.1. 特殊的选择器 :host</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-inline-styles"><span class="nav-number">2.3.</span> <span class="nav-text">3.2. inline-styles</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">4. 总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: angular/vue, node.js/java/dotnet, Cordova</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
