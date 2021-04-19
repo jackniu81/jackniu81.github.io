@@ -20,18 +20,23 @@
     var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Full stack engineer, focus on: Angular&#x2F;React, node.js&#x2F;.Net">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jack N @ GitHub">
-<meta property="og:url" content="https://jackniu81.github.io/archives/2021/index.html">
+  <meta name="description" content="问题最近访问GitHub总是不稳定，经常连不上, 出各种错误(OpenSSL SSL_read: Connection was reset, errno 10054, Connection refused …)。 原因大概是GitHub的IP经常变化（一天可能变几次），我们本地的DNS解析有问题，解决办法就是查询github的IP，手工写到我们的hosts文件中。 查询GitHub最新IP 访问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决国内不能访问github的问题">
+<meta property="og:url" content="https://jackniu81.github.io/2021/04/19/Github-network-issue/index.html">
 <meta property="og:site_name" content="Jack N @ GitHub">
-<meta property="og:description" content="Full stack engineer, focus on: Angular&#x2F;React, node.js&#x2F;.Net">
+<meta property="og:description" content="问题最近访问GitHub总是不稳定，经常连不上, 出各种错误(OpenSSL SSL_read: Connection was reset, errno 10054, Connection refused …)。 原因大概是GitHub的IP经常变化（一天可能变几次），我们本地的DNS解析有问题，解决办法就是查询github的IP，手工写到我们的hosts文件中。 查询GitHub最新IP 访问">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackniu81.github.io/img/github_ip.png">
+<meta property="article:published_time" content="2021-04-19T08:31:37.000Z">
+<meta property="article:modified_time" content="2021-04-19T08:46:17.031Z">
 <meta property="article:author" content="Jack">
-<meta property="article:tag" content="Angular, React, node.js, .Net, C#">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="Others">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackniu81.github.io/img/github_ip.png">
 
-<link rel="canonical" href="https://jackniu81.github.io/archives/2021/">
+<link rel="canonical" href="https://jackniu81.github.io/2021/04/19/Github-network-issue/">
 
 
 <script id="page-configurations">
@@ -39,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Archive | Jack N @ GitHub</title>
+  <title>解决国内不能访问github的问题 | Jack N @ GitHub</title>
   
 
 
@@ -143,235 +148,98 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header">OK! 33 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/19/Github-network-issue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          解决国内不能访问github的问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-19 16:31:37 / Modified: 16:46:17" itemprop="dateCreated datePublished" datetime="2021-04-19T16:31:37+08:00">2021-04-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-19T16:31:37+08:00"
-              content="2021-04-19">
-          04-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/19/Github-network-issue/" itemprop="url">
-            <span itemprop="name">解决国内不能访问github的问题</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-18T15:23:09+08:00"
-              content="2021-04-18">
-          04-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/18/Algorithm-Fibonacci-numbers/" itemprop="url">
-            <span itemprop="name">(算法) - 不使用递归，实现斐波那契数列</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-16T14:49:34+08:00"
-              content="2021-04-16">
-          04-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/16/dotnet-core-interview-questions-and-answers/" itemprop="url">
-            <span itemprop="name">2021 .NET/dotnet Core/C# 面试题及参考答案</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-12T15:10:23+08:00"
-              content="2021-04-12">
-          04-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/" itemprop="url">
-            <span itemprop="name">2021 Vue.js 面试题汇总及答案</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-10T22:11:55+08:00"
-              content="2021-04-10">
-          04-10
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/10/React-starter-2-React-Router-Dom/" itemprop="url">
-            <span itemprop="name">React 入门（2）- 路由 React Router</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-30T14:48:39+08:00"
-              content="2021-03-30">
-          03-30
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/30/angular-perfromance-in-binding/" itemprop="url">
-            <span itemprop="name">angular绑定（脏检查）方面的性能优化技巧</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-07T13:06:00+08:00"
-              content="2021-03-07">
-          03-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/07/CSS-interview-qa/" itemprop="url">
-            <span itemprop="name">CSS面试题汇总</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-07T13:06:00+08:00"
-              content="2021-03-07">
-          03-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/07/web-frontend-interview-qa/" itemprop="url">
-            <span itemprop="name">前端面试题汇总(Fontend)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-02T14:06:00+08:00"
-              content="2021-03-02">
-          03-02
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/02/javascript-interview-qa/" itemprop="url">
-            <span itemprop="name">javascript 面试题汇总</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-02T14:06:00+08:00"
-              content="2021-03-02">
-          03-02
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/02/node-js-interview-qa/" itemprop="url">
-            <span itemprop="name">node.js 面试题总结</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>最近访问GitHub总是不稳定，经常连不上, 出各种错误(<code>OpenSSL SSL_read: Connection was reset, errno 10054</code>, <code>Connection refused</code> …)。</p>
+<p>原因大概是GitHub的IP经常变化（一天可能变几次），我们本地的DNS解析有问题，解决办法就是查询github的IP，手工写到我们的<code>hosts</code>文件中。</p>
+<h1 id="查询GitHub最新IP"><a href="#查询GitHub最新IP" class="headerlink" title="查询GitHub最新IP"></a>查询GitHub最新IP</h1><ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://github.com.ipaddress.com/">https://github.com.ipaddress.com/</a> </li>
+<li>IP Address 即为IP地址<br><img src="/img/github_ip.png" alt="github ip"></li>
+</ol>
+<h1 id="修改hosts文件"><a href="#修改hosts文件" class="headerlink" title="修改hosts文件"></a>修改<code>hosts</code>文件</h1><ol>
+<li>目录：C:\Windows\System32\drivers\etc</li>
+<li>打开 <code>hosts</code>文件</li>
+<li>结尾增加一行 <code>140.82.112.4    github.com</code>  (IP 用你查询到的最新的IP)</li>
+<li>搞定，测试一下</li>
+</ol>
+<blockquote>
+<p>说明，<code>hosts</code>文件， 可以给github.com添加多条IP记录，这样当我们访问github时，会一次尝试每个IP是否可以访问，如果都不行，会去Internet上做DNS解析。<br>可以这样配置</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">140.82.112.4	github.com</span><br><span class="line">140.82.113.4	github.com</span><br><span class="line">140.82.112.3	github.com</span><br><span class="line">140.82.114.4	github.com</span><br></pre></td></tr></table></figure>
 
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/github/" rel="tag"># github</a>
+              <a href="/tags/Others/" rel="tag"># Others</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/18/Algorithm-Fibonacci-numbers/" rel="prev" title="(算法) - 不使用递归，实现斐波那契数列">
+      <i class="fa fa-chevron-left"></i> (算法) - 不使用递归，实现斐波那契数列
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2021/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2021/page/4/">4</a><a class="extend next" rel="next" href="/archives/2021/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
+  
+  
 
 
 
@@ -423,6 +291,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2GitHub%E6%9C%80%E6%96%B0IP"><span class="nav-number">2.</span> <span class="nav-text">查询GitHub最新IP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9hosts%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">修改hosts文件</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
