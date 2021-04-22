@@ -149,6 +149,272 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/13/Angular-Starter-10-Directive-1/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（10）- 指令（Directive）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-13 13:11:30" itemprop="dateCreated datePublished" datetime="2021-01-13T13:11:30+08:00">2021-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-07 10:40:02" itemprop="dateModified" datetime="2021-02-07T10:40:02+08:00">2021-02-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
+<li><a href="#2-%E7%BB%84%E4%BB%B6%E4%B8%8E%E6%8C%87%E4%BB%A4%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">2. 组件与指令之间的关系</a><ul>
+<li><a href="#21-%E6%8C%87%E4%BB%A4%E7%9A%84%E7%A7%8D%E7%B1%BB">2.1. 指令的种类</a></li>
+</ul>
+</li>
+<li><a href="#3-angular-%E4%B8%AD%E6%8C%87%E4%BB%A4%E7%9A%84%E7%94%A8%E9%80%94">3. Angular 中指令的用途</a></li>
+<li><a href="#4-%E6%8C%87%E4%BB%A4%E4%B8%BE%E4%BE%8B">4. 指令举例</a><ul>
+<li><a href="#41-%E6%8C%87%E4%BB%A4%E5%8A%9F%E8%83%BD">4.1. 指令功能</a></li>
+<li><a href="#42-anuglar-cli%E7%94%9F%E6%88%90%E5%9F%BA%E6%9C%AC%E6%96%87%E4%BB%B6">4.2. Anuglar CLI生成基本文件</a></li>
+<li><a href="#43-directive%E6%8C%87%E4%BB%A4%E6%A0%B8%E5%BF%83%E4%BB%A3%E7%A0%81">4.3. Directive指令核心代码</a></li>
+<li><a href="#44-%E4%BD%BF%E7%94%A8%E8%AF%A5%E6%8C%87%E4%BB%A4">4.4. 使用该指令</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>指令（Directive）在Angular 1.0时代（当时叫AngularJS）是很流行的，现在用到的偏少。可以简单理解为，指令（Directive）用于扩展已有Element（DOM）。</p>
+<h1 id="2-组件与指令之间的关系"><a href="#2-组件与指令之间的关系" class="headerlink" title="2. 组件与指令之间的关系"></a>2. 组件与指令之间的关系</h1><p>如果去看Angular源码，可以看到下面定义</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Supplies configuration metadata for an Angular component.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@publicApi</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">interface</span> Component <span class="keyword">extends</span> Directive &#123;</span><br></pre></td></tr></table></figure>
+<p>是的，Component派生于Directive，也就是说，Component属于Directive。</p>
+<h2 id="2-1-指令的种类"><a href="#2-1-指令的种类" class="headerlink" title="2.1. 指令的种类"></a>2.1. 指令的种类</h2><ol>
+<li>Component 是 Directive 的子接口，是一种特殊的指令，Component 可以带有 HTML 模板，Directive 不能有模板。</li>
+<li>属性型指令：用来修改 DOM 元素的外观和行为，但是不会改变DOM 结构，Angular 内置指令里面典型的属性型指令有 ngClass、ngStyle，如果打算封装自己的组件库，属性型指令是必备的内容。</li>
+<li>结构型指令：可以修改 DOM 结构，内置的常用结构型指令有 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code>。由于结构型指令会修改 DOM 结构，因而同一个 HTML 标签上面不能同时使用多个结构型指令。如果要在同一个 HTML 元素上面使用多个结构性指令，可以考虑加一层空的元素来嵌套，比如在外面套一层空的（<code>div</code>) 。</li>
+</ol>
+<h1 id="3-Angular-中指令的用途"><a href="#3-Angular-中指令的用途" class="headerlink" title="3. Angular 中指令的用途"></a>3. Angular 中指令的用途</h1><p>Angualr中用指令来增强DOM的功能，包括 HTML 原生DOM和我们自己自定义的组件（Component）。举例来说，可以扩展一个Button，实现避免点击后，服务器端未响应前的二次点击；高亮某些收入内容等等。</p>
+<h1 id="4-指令举例"><a href="#4-指令举例" class="headerlink" title="4. 指令举例"></a>4. 指令举例</h1><h2 id="4-1-指令功能"><a href="#4-1-指令功能" class="headerlink" title="4.1. 指令功能"></a>4.1. 指令功能</h2><p>实现一个指令，鼠标移动到上面时， 背景显示为黄色，鼠标移开，恢复正常。</p>
+<h2 id="4-2-Anuglar-CLI生成基本文件"><a href="#4-2-Anuglar-CLI生成基本文件" class="headerlink" title="4.2. Anuglar CLI生成基本文件"></a>4.2. Anuglar CLI生成基本文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate directive MyHighlight</span><br></pre></td></tr></table></figure>
+<p>Anuglar CLI自动生成html、css、ut等文件。<br>##</p>
+<h2 id="4-3-Directive指令核心代码"><a href="#4-3-Directive指令核心代码" class="headerlink" title="4.3. Directive指令核心代码"></a>4.3. Directive指令核心代码</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Directive, ElementRef &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Directive</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;[appHighlight]&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">HighlightDirective</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">el: ElementRef</span>)</span> &#123;</span><br><span class="line">       el.nativeElement.style.backgroundColor = <span class="string">&#x27;yellow&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">&#x27;mouseenter&#x27;</span>) <span class="function"><span class="title">onMouseEnter</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.highlight(<span class="string">&#x27;yellow&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">&#x27;mouseleave&#x27;</span>) <span class="function"><span class="title">onMouseLeave</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.highlight(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="title">highlight</span>(<span class="params">color: <span class="built_in">string</span></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.el.nativeElement.style.backgroundColor = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-4-使用该指令"><a href="#4-4-使用该指令" class="headerlink" title="4.4. 使用该指令"></a>4.4. 使用该指令</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">my-highlight</span>&gt;</span>Highlight me!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>my-highlight</code> 即我们的元素扩展属性（指令、directive）。</p>
+</blockquote>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ul>
+<li>指令（Directive）用于扩展DOM 元素或组件的功能。</li>
+<li>Angular中的 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code> 都是Angular内置的指令。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/12/Angular-starter-7-component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/12/Angular-starter-7-component/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（7）- 组件（@Component）基本知识</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-12 14:11:30 / Modified: 14:34:18" itemprop="dateCreated datePublished" datetime="2021-01-12T14:11:30+08:00">2021-01-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BAcomponent">2. 创建Component</a><ul>
+<li><a href="#21-%E7%BB%84%E4%BB%B6%E6%A8%A1%E6%9D%BF">2.1. 组件模板</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%A7%86%E5%9B%BE%E5%B0%81%E8%A3%85%E6%A8%A1%E5%BC%8F">3. 视图封装模式</a><ul>
+<li><a href="#31-%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-host">3.1. 特殊的选择器 :host</a></li>
+<li><a href="#32-inline-styles">3.2. inline-styles</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>组件是 Angular 应用的主要构造块。每个组件包括如下部分：</p>
+<ul>
+<li>一个 HTML 模板，用于声明页面要渲染的内容</li>
+<li>一个用于定义行为的 Typescript 类</li>
+<li>一个 CSS 选择器，用于定义组件在模板中的使用方式</li>
+<li>（可选）要应用在模板上的 CSS 样式</li>
+</ul>
+<p>Component可以是一个页面，也可以是一个组件（控件）。总是，是一个页面元素。</p>
+<p>任何一个Component都是NgModule的一部分，这样它就可以被其他应用和其他Component所调用。为了定义Component是NgModule的一个成员之一，开发者应该在NgModule的declarations属性中，将自己开发的Component列出。</p>
+<p>另外，通过Component修饰符（也就是@Component）开发者可以配置元数据，这样通过各式各样的Life-Cycle hooks，Components就可以控制他们的运行环境。</p>
+<h1 id="2-创建Component"><a href="#2-创建Component" class="headerlink" title="2. 创建Component"></a>2. 创建Component</h1><p>基于AngularCLI，可以很方便的创建Component。在要创建Component的目录下，执行如下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate component &lt;component-name&gt; </span><br></pre></td></tr></table></figure>
+<p>e.g. <code>ng generate component MyComponent</code><br>AngularCLI会自动生成一个文件夹和4个文件：</p>
+<ul>
+<li>一个以该组件命名的文件夹（e.g my-component)</li>
+<li>一个组件文件 &lt; component-name &gt;.component.ts（e.g my-component.component.ts)</li>
+<li>一个模板文件 &lt; component-name &gt;.component.html（e.g my-component.component.html)</li>
+<li>一个 CSS 文件， &lt; component-name &gt;.component.css（e.g my-component.component.css)</li>
+<li>测试文件 &lt; component-name &gt;.component.spec.ts（e.g my-component.component.spec.ts)</li>
+</ul>
+<blockquote>
+<p>对于Component，所有文件名都会自动增加Component后缀，所以不建议&lt; component-name &gt; 中带有‘component’这个单词。</p>
+</blockquote>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是核心的ts文件，指定了selector(CSS 选择器)，template（html）文件，css文件。html/css文件如果需要可以多个component公用。尤其是css，可以看到参数是Array，所以可以制定多个css。</p>
+<h2 id="2-1-组件模板"><a href="#2-1-组件模板" class="headerlink" title="2.1. 组件模板"></a>2.1. 组件模板</h2><p>组件模板，即HTML部分，可以是一个html文件，也可以是一段html描述，是等价的。Angular 组件需要一个用 template 或 templateUrl 定义的模板。但你不能在组件中同时拥有这两个语句。</p>
+<ol>
+<li><p>html 文件方式</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./component-overview.component.html&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>html代码方式</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 3. 视图封装模式</span></span><br><span class="line"><span class="string">在 Angular 中，组件的 CSS 样式被封装进了自己的视图中，而不希望影响到应用程序的其它部分。这部分也是可以通过配置去进行控制的。</span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>ts</span><br><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  encapsulation: ViewEncapsulation.None,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>可以看到，增加了一个<code>encapsulation</code>属性 （视图封装模式）。通过在组件的元数据上设置视图封装模式，你可以分别控制每个组件的封装模式。 可选的封装模式一共有如下几种：</p>
+</li>
+<li><p>Emulated 模式（默认值）通过预处理（并改名）CSS 代码来模拟 Shadow DOM 的行为，以达到把 CSS 样式局限在组件视图中的目的。 更多信息，见附录 1。(说明：只进不出，全局样式能进来，组件样式出不去)</p>
+</li>
+<li><p>ShadowDom 模式使用浏览器原生的 Shadow DOM 实现来为组件的宿主元素附加一个 Shadow DOM。组件的视图被附加到这个 Shadow DOM 中，组件的样式也被包含在这个 Shadow DOM 中。(说明：不进不出，没有样式能进来，组件样式出不去。)</p>
+</li>
+<li><p>None 意味着 Angular 不使用视图封装。 Angular 会把 CSS 添加到全局样式中。而不会应用上前面讨论过的那些作用域规则、隔离和保护等。 从本质上来说，这跟把组件的样式直接放进 HTML 是一样的。</p>
+</li>
+</ol>
+<h2 id="3-1-特殊的选择器-host"><a href="#3-1-特殊的选择器-host" class="headerlink" title="3.1. 特殊的选择器 :host"></a>3.1. 特殊的选择器 :host</h2><p>使用 :host 伪类选择器，用来选择组件宿主元素中的元素（相对于组件模板内部的元素）。 :host 选择是是把宿主元素作为目标的唯一方式。除此之外，你将没办法指定它， 因为宿主不是组件自身模板的一部分，而是父组件模板的一部分。</p>
+<p>e.g.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:host</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-inline-styles"><a href="#3-2-inline-styles" class="headerlink" title="3.2. inline-styles"></a>3.2. inline-styles</h2><p>默认AngularCLI生成的component，css在一个单独文件中。当然，同html模板类似，如果需要，你也可以制定css样式写在ts中， 不单独放到一个文件中。命令：<code>ng generate component MyComponent --inline-style</code>。</p>
+<p>生成component如下</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">  styles: [<span class="string">&#x27;h1 &#123; font-weight: normal; &#125;&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ul>
+<li>Angular CLI辅助创建一个component所需的多个文件</li>
+<li>建议html/css/ts分开</li>
+<li>在期望目录下执行Angular CLI命令，可以生成到制定目录</li>
+<li><code>ng generate component XXX</code> 可以简写为 <code>ng g c</code></li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1085,203 +1351,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/08/angular-Starter-Basic-Concept/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（2） - 基本概念</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-01-08 17:13:44 / Modified: 16:11:10" itemprop="dateCreated datePublished" datetime="2021-01-08T17:13:44+08:00">2021-01-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Angular入门到精通系列教程（2） - 基本概念</p>
-<ul>
-<li><a href="#1-angular-angular2vs-angularjs">1. Angular （Angular2）v.s. AngularJS</a></li>
-<li><a href="#2-%E6%A3%80%E6%9F%A5%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E7%9A%84%E7%89%88%E6%9C%AC">2. 检查本地环境的版本</a></li>
-<li><a href="#3-typescript">3. TypeScript</a></li>
-<li><a href="#4-angular-cli">4. Angular CLI</a></li>
-<li><a href="#5-angular-%E7%9A%84%E7%89%88%E6%9C%AC">5. Angular 的版本</a></li>
-<li><a href="#6-angular-%E7%89%88%E6%9C%AC%E5%A6%82%E4%BD%95%E5%8D%87%E7%BA%A7">6. Angular 版本如何升级</a></li>
-<li><a href="#7-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5dependency-injection">7. 依赖注入（dependency injection）</a></li>
-<li><a href="#8-%E7%BC%96%E8%AF%91-aot%E5%92%8Cjit%E7%9A%84%E5%8C%BA%E5%88%AB">8. 编译-AOT和JIT的区别</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-Angular-（Angular2）v-s-AngularJS"><a href="#1-Angular-（Angular2）v-s-AngularJS" class="headerlink" title="1. Angular （Angular2）v.s. AngularJS"></a>1. Angular （Angular2）v.s. AngularJS</h1><p>Angular最早期的版本，也叫AnugularJS，使用javascript开发；新的版本，才叫Angular，也称为Angular2，使用typescript开发，Angular和AngularJS是不兼容的（当然，官方也有2个版本的集成方案）。</p>
-<h1 id="2-检查本地环境的版本"><a href="#2-检查本地环境的版本" class="headerlink" title="2. 检查本地环境的版本"></a>2. 检查本地环境的版本</h1><p>检查npm, node 版本:</p>
-<ul>
-<li>npm 版本：<code>npm -v</code></li>
-<li>node版本： <code>node -v</code></li>
-<li>angular、angular CLI全局、本地版本 <code>ng --version</code></li>
-</ul>
-<h1 id="3-TypeScript"><a href="#3-TypeScript" class="headerlink" title="3. TypeScript"></a>3. TypeScript</h1><p>Angular要求开发语言必须为TypeScript。TypeScript有很多好处，比如引入了类、接口的概念，比如强类型，可以在写代码时（编译时）就能检查到一些错误，避免只有代码在执行时才发现异常。</p>
-<p>如果没用过TypeScript，不要害怕TypeScript这个新的概念，只要你有javascript经验，直接入手，没有任何难度。只需要用到class、interface等东西时，参考一下别人如何使用，或者查一下typescript文档即可。</p>
-<h1 id="4-Angular-CLI"><a href="#4-Angular-CLI" class="headerlink" title="4. Angular CLI"></a>4. Angular CLI</h1><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。<br>参考：<a target="_blank" rel="noopener" href="https://cli.angular.io/">https://cli.angular.io/</a></p>
-<p>ng generate: 新建component、service、pipe, class 等<br>ng new: 新建angular app<br>ng update: 升级angular自身，以及依赖<br>ng version： 显示anuglar cli全局版本、以及本地的angular cli、angular code等的版本<br>ng add: 新增第三方库。会做2件事，1）基于npm安装node_modules, 2）自动更改配置文件，保证新的依赖正常工作</p>
-<p>总结一下，Angular的开放，离不开AngularCLI。</p>
-<h1 id="5-Angular-的版本"><a href="#5-Angular-的版本" class="headerlink" title="5. Angular 的版本"></a>5. Angular 的版本</h1><p>不同于Angular2+Angular的不兼容， Angular 2.0 之后会保证向下兼容。官方的版本发布计划是：</p>
-<ul>
-<li>每 6 个月发布一个主版本（第一位版本号，主版本）</li>
-<li>每个主版本发布 1 ~ 3 个小版本（第二位版本号，Feature 版本号）</li>
-<li>每周发布一个补丁版本（第三位版本号，Hotfix 版本号）</li>
-</ul>
-<h1 id="6-Angular-版本如何升级"><a href="#6-Angular-版本如何升级" class="headerlink" title="6. Angular 版本如何升级"></a>6. Angular 版本如何升级</h1><p>Angular CLI提供了升级命令(ng update)，同时，官网（<a target="_blank" rel="noopener" href="https://update.angular.io/%EF%BC%89%E4%B9%9F%E6%9C%89%E5%8D%87%E7%BA%A7%E6%8C%87%E5%8D%97%E3%80%82%E9%80%89%E6%8B%A9%E4%BB%8E%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%AC%E5%90%8E%EF%BC%8C%E4%BC%9A%E7%BB%99%E5%87%BA%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E7%9A%84%E5%8D%87%E7%BA%A7%E5%91%BD%E4%BB%A4%EF%BC%8C%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8C%E5%B0%B1%E5%A5%BD%E3%80%82">https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。</a></p>
-<h1 id="7-依赖注入（dependency-injection）"><a href="#7-依赖注入（dependency-injection）" class="headerlink" title="7. 依赖注入（dependency injection）"></a>7. 依赖注入（dependency injection）</h1><p>依赖注入是Angular实现的一种应用程序设计模式， 是Angular的核心概念之一。</p>
-<p>依赖就是具有一系列功能的服务(service)， 应用程序中的各种组件和指令（derictives）可能需要服务的功能。 Angular提供了一种平滑的机制，通过它我们可以将这些依赖项注入我们的组件和指令中。因此，我们只是在构建依赖关系，这些依赖关系可以在应用程序的所有组件之间注入。</p>
-<p>使用依赖注入还有以下好处，</p>
-<ol>
-<li>不需要实例化，（new 实例）。不需要关心class的构造函数里需要什么参数</li>
-<li>一次注入（app module通过Providers注入），所有组件都可以使用。而且是用同一个service实例（Singleton），也就是说一个service里的数据是共分享的，可以用于组件间数据传递。</li>
-</ol>
-<h1 id="8-编译-AOT和JIT的区别"><a href="#8-编译-AOT和JIT的区别" class="headerlink" title="8. 编译-AOT和JIT的区别"></a>8. 编译-AOT和JIT的区别</h1><p>每个Angular应用程序都包含浏览器无法理解的组件和模板。 因此，在浏览器内部运行之前，需要先编译所有Angular应用程序。</p>
-<p>Angular提供两种编译类型：</p>
-<ol>
-<li>JIT(Just-in-Time) compilation</li>
-<li>AOT(Ahead-of-Time) compilation</li>
-</ol>
-<p>区别在于，在JIT编译中，应用程序在运行时在浏览器内部进行编译；而在AOT编译中，应用程序在构建期间进行编译。<br>显而易见，AOT编译好处多多，因而是Angular的默认编译方式。主要优点</p>
-<p>由于应用程序是在浏览器内部运行之前进行编译的，因此浏览器会加载可执行代码并立即呈现应用程序，从而加快了呈现速度。</p>
-<p>在AOT编译中，编译器将与应用程序一起发送外部HTML和CSS文件，从而消除了对那些源文件的单独AJAX请求，从而减少了ajax请求。</p>
-<p>开发人员可以在构建阶段检测并处理错误，这有助于最大程度地减少错误。<br>AOT编译器将HTML和模板添加到JS文件中，然后再在浏览器中运行。 因此，没有多余的HTML文件可读取，从而为应用程序提供了更好的安全性。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/08/angular-Starter-Angular-Vue-React/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（1） - Angular,Vue,React 选型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-01-08 15:02:55 / Modified: 16:11:10" itemprop="dateCreated datePublished" datetime="2021-01-08T15:02:55+08:00">2021-01-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
-<li><a href="#2-%E6%A1%86%E6%9E%B6%E6%AF%94%E8%BE%83">2. 框架比较</a></li>
-<li><a href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%86%85angular%E4%B8%8D%E6%98%AF%E5%BE%88%E6%B5%81%E8%A1%8C">3. 为什么国内Angular不是很流行</a></li>
-</ul>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>总的来说一句话，如果你是老大，你可以选择用什么；如果你不是，那么，老大让用什么，你就用什么。</p>
-<ul>
-<li>前端框架Angular,Vue,React三选一，没有第四种。 （当然，如果只是一两个简单的页面，纯JS、jquery足够了）。</li>
-<li>国内的话，React和vue更流行一点，国外的话React和Angular更流行。</li>
-<li>Vue 中文资料更多一些</li>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-</ul>
-<h1 id="2-框架比较"><a href="#2-框架比较" class="headerlink" title="2. 框架比较"></a>2. 框架比较</h1><p>网上比较的文章太多了，如果想了解，baidu、google一下吧，这个就不再多说了。</p>
-<h1 id="3-为什么国内Angular不是很流行"><a href="#3-为什么国内Angular不是很流行" class="headerlink" title="3. 为什么国内Angular不是很流行"></a>3. 为什么国内Angular不是很流行</h1><p>只说些个人看法，更多原因请自行搜索。</p>
-<ol>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-<li>上手难度稍大，或者说需要更多的时间培训才能开发。</li>
-<li>Angular对anuglarJS（1.0版本）不支持（虽然后期推出了兼容方案）， 伤了很多人的心。不过这个难免，一个组件、框架的升级，如果一直背负的早期债务，很难有更好的提升。</li>
-<li>TypeScript。Angular是第一个吃螃蟹的，完全抛弃了js，转入Typscript，得罪的很多js的铁杆粉丝，以及惧怕ts的人。不过现在看来，typescript才是前端的趋势。vue3也声称用typescript重写了，并打算更完美的支持typescript。</li>
-<li>大而全的框架。选择Angular的话，它自带了很多东西，路由、表单、动画、http请求等等，需要更多的时间去学习和理解。而其他框架，很多组件都是有备选方案，或者第三方提供的（如vue使用axios处理http请求），让人觉得了解框架更简单。</li>
-<li>版本升级较快。每半年一个主版本，优缺点共存吧。</li>
-<li>恶性循环：用的人少 》 聊的人少 》 资源少 》 用的人更少。</li>
-<li>vue更符合国人的习惯，考虑了一些小的常用细节。比如自带支持避免一个按钮点击多次（修饰符once，@click.prevent.once）。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1351,12 +1420,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

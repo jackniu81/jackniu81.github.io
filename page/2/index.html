@@ -149,6 +149,486 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/02/javascript-interview-qa/" class="post-title-link" itemprop="url">javascript 面试题汇总</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-02 14:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T14:06:00+08:00">2021-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-14 11:59:04" itemprop="dateModified" datetime="2021-04-14T11:59:04+08:00">2021-04-14</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-this-%E9%83%BD%E5%8F%AF%E4%BB%A5%E6%98%AF%E5%93%AA%E4%BA%9B%E5%86%85%E5%AE%B9">1. this 都可以是哪些内容</a></li>
+<li><a href="#2-%E5%8E%9F%E5%9E%8B%E9%93%BE-prototype">2. 原型链, prototype</a></li>
+<li><a href="#3-new-%E6%93%8D%E4%BD%9C%E7%AC%A6%E9%83%BD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88">3. new 操作符都做了什么</a></li>
+<li><a href="#4-javascript-%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6">4. Javascript 的内存回收机制</a></li>
+<li><a href="#5-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8E%9F%E5%9B%A0">5. 内存泄漏的主要原因</a></li>
+<li><a href="#6-javascript-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96">6. Javascript 性能优化</a></li>
+<li><a href="#7--vs-">7. === VS ==</a></li>
+<li><a href="#8-%E9%97%AD%E5%8C%85">8. 闭包</a></li>
+<li><a href="#9-js-%E9%87%8C%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E5%AD%90%E7%9A%84">9. js 里的作用域是什么样子的？</a></li>
+<li><a href="#10-let-%E5%92%8C-var-%E7%9A%84%E5%8C%BA%E5%88%AB">10. let 和 var 的区别</a></li>
+<li><a href="#11-%E5%AF%B9-async-%E5%92%8C-await-%E7%9A%84%E7%90%86%E8%A7%A3">11. 对 async 和 await 的理解</a></li>
+<li><a href="#12-promised-%E7%9A%84%E4%B8%89%E7%A7%8D%E7%8A%B6%E6%80%81">12. promised 的三种状态</a></li>
+<li><a href="#13-asyncawait-%E7%9A%84%E4%BC%98%E7%82%B9">13. async/await 的优点</a></li>
+<li><a href="#14-asyncawait-%E7%9A%84%E5%86%99%E6%B3%95">14. async/await 的写法</a></li>
+<li><a href="#15-applycall-%E5%92%8C-bind-%E7%9A%84%E5%8C%BA%E5%88%AB">15. apply、call 和 bind 的区别</a></li>
+<li><a href="#16-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E7%9A%84%E5%8E%9F%E7%90%86">16. 深拷贝的原理</a></li>
+<li><a href="#17-set-%E5%92%8C-map-%E7%9A%84%E5%8C%BA%E5%88%AB">17. set 和 Map 的区别</a></li>
+<li><a href="#18-js-%E5%AE%9E%E7%8E%B0%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A-vueangular-%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A%E7%9A%84%E5%8E%9F%E7%90%86">18. JS 实现双向绑定 （vue/angular 双向绑定的原理）</a></li>
+<li><a href="#19-var-%E5%92%8C-let-%E7%9A%84%E5%8C%BA%E5%88%AB">19. var 和 let 的区别</a></li>
+<li><a href="#20-javascript-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF">20. Javascript 如何实现继承？</a></li>
+<li><a href="#21-%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87">21. 变量提升</a></li>
+<li><a href="#22-%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87">22. 变量提升</a></li>
+<li><a href="#23-%E5%87%BD%E6%95%B0%E6%8F%90%E5%8D%87">23. 函数提升</a></li>
+<li><a href="#24-%E4%BD%9C%E7%94%A8%E5%9F%9F">24. 作用域</a></li>
+<li><a href="#25-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E9%9A%8F%E6%9C%BA%E6%8E%92%E5%BA%8F%E7%9A%84%E7%A8%8B%E5%BA%8F">25. 实现一个随机排序的程序</a></li>
+<li><a href="#26-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E4%BC%A0%E5%85%A5%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%BE%97%E5%88%B0%E4%BD%BF%E7%94%A8%E6%AC%A1%E6%95%B0%E6%9C%80%E5%A4%9A%E7%9A%84%E5%AD%97%E7%AC%A6%E4%BB%A5%E5%8F%8A%E6%95%B0%E9%87%8F">26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</a></li>
+<li><a href="#27-%E5%8F%82%E8%80%83">27. 参考</a></li>
+</ul>
+<h1 id="1-this-都可以是哪些内容"><a href="#1-this-都可以是哪些内容" class="headerlink" title="1. this 都可以是哪些内容"></a>1. this 都可以是哪些内容</h1><p>对 C#、Java 等语言，this 就是当前对象，但是 javascript 不是，简单来说：</p>
+<ul>
+<li>全局 this 是 window;</li>
+<li>函数 this 是调用者;</li>
+<li>构造函数的 this 是 new 之后的新对象,</li>
+<li>call 和 apply bind 的 this 第一个参数</li>
+</ul>
+<h1 id="2-原型链-prototype"><a href="#2-原型链-prototype" class="headerlink" title="2. 原型链, prototype"></a>2. 原型链, prototype</h1><ul>
+<li>函数对象都包含 prototype 属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor 属性的含义就是指向该对象的构造函数</li>
+<li><code>__proto__</code>和 constructor 属性是对象所独有的；prototype 属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<code>__proto__</code>和 constructor 属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象 prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为 null。</li>
+<li>当访问一个对象的属性或方法时，js 引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为 null,这就是原型链。</li>
+<li>每个构造函数都有一个 prototype 属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="3-new-操作符都做了什么"><a href="#3-new-操作符都做了什么" class="headerlink" title="3. new 操作符都做了什么"></a>3. new 操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型指向构造函数的 prototype</li>
+<li>把构造函数里的 this 指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="4-Javascript-的内存回收机制"><a href="#4-Javascript-的内存回收机制" class="headerlink" title="4. Javascript 的内存回收机制"></a>4. Javascript 的内存回收机制</h1><p>Javascript 内嵌了垃圾收集器，用来跟踪内存的分配和使用，以便当分配的内存不再使用时，自动释放它。垃圾收集器会按照固定的时间间隔，或代码执行中预定的收集时间，周期性地执行这一操作。<br>垃圾收集器必须跟踪哪个变量有用哪个变量无用，对于不再有用的变量打上标记，以备将来收回其所占用的内存。用于标识无用变量的策略通常有标记清除和引用计数两种。不同浏览器采用的策略不完全一致。</p>
+<h1 id="5-内存泄漏的主要原因"><a href="#5-内存泄漏的主要原因" class="headerlink" title="5. 内存泄漏的主要原因"></a>5. 内存泄漏的主要原因</h1><ul>
+<li>缓存</li>
+<li>队列消费不及时</li>
+<li>作用域未释放</li>
+</ul>
+<h1 id="6-Javascript-性能优化"><a href="#6-Javascript-性能优化" class="headerlink" title="6. Javascript 性能优化"></a>6. Javascript 性能优化</h1><ol>
+<li>针对 js 方面的前端性能优化，可以 1）使用 ansyc/defer 加载；2）加载时，放到<code>&lt;/body&gt;</code>之前；3) 合并 JS 文件，并进行最小化处理；4）缓存；5）使用 CDN 网络；6）js 的 HTTP 压缩</li>
+<li>删除未使用的功能性代码以及与之相关的代码， 多余的依赖库，被滥用的 npm 包。</li>
+<li>减少作用域链上的查找次数（减少循环中的活动）。比如 for 循环，把 Array.length 赋值给一个变量，而不是每次比较都直接使用 length 属性；对页面元素进行操作时，取出复制给一个变量，每次操作都对这个变量进行操作，而不是每次操作都再重复取一下这个元素；</li>
+<li>闭包导致的内存泄露。闭包可以保证函数内的变量安全，可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，不会被自动清除。我们需要手动销毁内存中的变量。（赋值为 null）；</li>
+<li>尽量少用全局变量，尽量使用局部变量。</li>
+<li>减少不必要的变量</li>
+<li>类型转换：把数字转换成字符串使用 number + “” 。 性能对比： (“” + ) &gt; String() &gt; .toString() &gt; new String()</li>
+<li>对字符串进行循环操作，譬如替换、查找，应使用正则表达式。因为本身 JavaScript 的循环速度就比较慢，而正则表达式的操作是用 C 写成的语言的 API，性能很好。</li>
+<li>浮点数转换成整型使用 Math.floor()或者 Math.round()。parseInt()是用于将字符串转换成数字，Math 是内部对象，所以 Math.floor()其实并没有多少查询方法和调用的时间，速度是最快的。</li>
+<li>使用 classname 代替大量的内联样式修改。</li>
+<li>循环遍历，尽量少用 for in， 虽然代码易读，但性能很差。 尤其是遍历属性数量未知的情况下，少用。</li>
+</ol>
+<h1 id="7-VS"><a href="#7-VS" class="headerlink" title="7. === VS =="></a>7. === VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&quot;100&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>很有意思吧， 看看这两个，是等效的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span>;</span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="8-闭包"><a href="#8-闭包" class="headerlink" title="8. 闭包"></a>8. 闭包</h1><p>在 JavaScript 中，实现外部作用域访问内部作用域中变量的方法叫做闭包（closure)。这得益于高阶函数的特性：函数可以作为参数或者者返回值；</p>
+<p><strong>当一个内部函数被调用，就会形成闭包</strong>，闭包就是能够读取其他函数内部变量的函数，就是一个函数去访问了另外一个函数的中的变量的函数。</p>
+<p><strong>闭包作用</strong>：局部变量无法共享和长久的保存，而全局变量可能造成变量污染，所以我们希望有一种机制既可以长久的保存变量又不会造成全局污染。延伸变量的作用范围。</p>
+<p><strong>闭包特点</strong>：占用更多内存；不容易被释放</p>
+<p><strong>闭包用法</strong>：变量既想反复使用，又想避免全局污染如何使用？</p>
+<ol>
+<li>定义外层函数，封装被保护的局部变量。</li>
+<li>定义内层函数，执行对外部函数变量的操作。</li>
+<li>外层函数返回内层函数的对象，并且外层函数被调用，结果保存在一个全局的变量中。</li>
+</ol>
+<p>e.g.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> innerMethod = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a + <span class="string">&quot;!&quot;</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  innerMethod();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="9-js-里的作用域是什么样子的？"><a href="#9-js-里的作用域是什么样子的？" class="headerlink" title="9. js 里的作用域是什么样子的？"></a>9. js 里的作用域是什么样子的？</h1><p>大多数语言里边都是块作作用域，以{}进行限定，js 里边不是．js 里边叫函数作用域，就是一个变量在全函数里有效．比如有个变量 p1 在函数最后一行定义，第一行也有效，但是值是 undefined.</p>
+<h1 id="10-let-和-var-的区别"><a href="#10-let-和-var-的区别" class="headerlink" title="10. let 和 var 的区别"></a>10. let 和 var 的区别</h1><ul>
+<li>var 声明变量可以重复声明，而 let 不可以重复声明，属于 TDZ 暂时性死区问题</li>
+<li>作用域不同，var 是函数作用域，而 let 是块级作用域；</li>
+<li>var 可以在声明的上面访问变量，而 let 不存在变量提升；</li>
+</ul>
+<h1 id="11-对-async-和-await-的理解"><a href="#11-对-async-和-await-的理解" class="headerlink" title="11. 对 async 和 await 的理解"></a>11. 对 async 和 await 的理解</h1><ol>
+<li>async…await 是基于 promise 的 generator 语法糖，是用来解决异步的，它用来等待 promise 的执行结果，常规函数使用 await 没有效果；</li>
+<li>async 函数返回一个 Promise 对象，可以使用 then 方法添加回调函数</li>
+<li>当函数执行的时候，一旦遇到 await 就会先返回，等到异步操作完成，再接着执行函数体内后面的语句；</li>
+</ol>
+<h1 id="12-promised-的三种状态"><a href="#12-promised-的三种状态" class="headerlink" title="12. promised 的三种状态"></a>12. promised 的三种状态</h1><p>promise 有三种状态：pending/reslove/reject 。pending 就是未决，resolve 可以理解为成功，reject 可以理解为拒绝。</p>
+<h1 id="13-async-await-的优点"><a href="#13-async-await-的优点" class="headerlink" title="13. async/await 的优点"></a>13. async/await 的优点</h1><p><strong>1）方便级联调用：</strong> 即调用依次发生的场景；</p>
+<p><strong>2）同步代码编写方式：</strong> Promise 使用 then 函数进行链式调用，一直点点点，是一种从左向右的横向写法；async/await 从上到下，顺序执行，就像写同步代码一样，更符合代码编写习惯；</p>
+<p><strong>3）多个参数传递：</strong> Promise 的 then 函数只能传递一个参数，虽然可以通过包装成对象来传递多个参数，但是会导致传递冗余信息，频繁的解析又重新组合参数，比较麻烦；async/await 没有这个限制，可以当做普通的局部变量来处理，用 let 或者 const 定义的块级变量想怎么用就怎么用，想定义几个就定义几个，完全没有限制，也没有冗余工作；</p>
+<p><strong>4）同步代码和异步代码可以一起编写：</strong> 使用 Promise 的时候最好将同步代码和异步代码放在不同的 then 节点中，这样结构更加清晰；async/await 整个书写习惯都是同步的，不需要纠结同步和异步的区别，当然，异步过程需要包装成一个 Promise 对象放在 await 关键字后面；</p>
+<p><strong>5）基于协程：</strong> Promise 是根据函数式编程的范式，对异步过程进行了一层封装，async/await 基于协程的机制，是真正的“保存上下文，控制权切换……控制权恢复，取回上下文”这种机制，是对异步过程更精确的一种描述；</p>
+<p><strong>6）async/await 是对 Promise 的优化：</strong> async/await 是基于 Promise 的，是进一步的一种优化，不过在写代码时，Promise 本身的 API 出现得很少，很接近同步代码的写法；</p>
+<h1 id="14-async-await-的写法"><a href="#14-async-await-的写法" class="headerlink" title="14. async/await 的写法"></a>14. async/await 的写法</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">testAsync</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello async&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用时</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">await</span> testAsync();</span><br><span class="line">  <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="15-apply、call-和-bind-的区别"><a href="#15-apply、call-和-bind-的区别" class="headerlink" title="15. apply、call 和 bind 的区别"></a>15. apply、call 和 bind 的区别</h1><p>这三者都是用来改变函数的 this 对象的指向的(也就是说要改变函数运行时的 context 即上下文),第一个参数都是 this 要指向的对象。</p>
+<p>不同之处：</p>
+<ol>
+<li>call 接受连续参数，apply 接受数组参数。</li>
+<li>bind 功能和 call apply 差不多，区别在于 bind 返回的是一个改变 this 指向的新函数，这个函数不是立即执行函数（call apply 两个立即执行！）</li>
+</ol>
+<h1 id="16-深拷贝的原理"><a href="#16-深拷贝的原理" class="headerlink" title="16. 深拷贝的原理"></a>16. 深拷贝的原理</h1><p>操作的是值，取出对象的值，放到一个新的{}，修改时不会影响到原数据；要完成对象的深拷贝需要使用递归遍历所有对象的属性进行赋值，也可以使用 JSON.stringfy 和 JSON.parse 操作。</p>
+<h1 id="17-set-和-Map-的区别"><a href="#17-set-和-Map-的区别" class="headerlink" title="17. set 和 Map 的区别"></a>17. set 和 Map 的区别</h1><ol>
+<li>Set 是一种类似数组的集合类型，它与数组不同的是，不允许存在重复数据；常用操作方法有：add,delete,has,clear 等；遍历使用 forEach；</li>
+<li>Map 是一种类似对象的集合类型，它与对象不同的是，key 可以接受对象类型，常用的操作方法有：set,get,has,delete 等；遍历使用 forEach</li>
+</ol>
+<h1 id="18-JS-实现双向绑定-（vue-angular-双向绑定的原理）"><a href="#18-JS-实现双向绑定-（vue-angular-双向绑定的原理）" class="headerlink" title="18. JS 实现双向绑定 （vue/angular 双向绑定的原理）"></a>18. JS 实现双向绑定 （vue/angular 双向绑定的原理）</h1><p><strong>vue.js</strong> 采用数据劫持（Proxy 模式）结合发布者-订阅者模式（PubSub 模式）的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。<br>Object.defineProperty( )内还包含一对儿 getter 和 setter 函数，它们被称作这个对象的访问器属性，这两个函数都不是必须的，只是在读取访问对象属性时，会调用 getter 函数，这个函数负责返回有效值，在写入对象属性时，会调用 setter 函数并传入新值，这个函数负责决定如何处理数据。</p>
+<p><strong>Angular</strong>, 采用脏检查的方式。基于 zone.js，重写 setTimeout, httpRequest 等方法，触发脏检查, 更新 dom 节点。</p>
+<h1 id="19-var-和-let-的区别"><a href="#19-var-和-let-的区别" class="headerlink" title="19. var 和 let 的区别"></a>19. var 和 let 的区别</h1><ol>
+<li>作用域不同， var 是函数作用域，let 是块作用域。</li>
+</ol>
+<ul>
+<li>在函数中声明了 var，整个函数内都是有效的，比如说在 for 循环内定义的一个 var 变量，实际上其在 for 循环以外也是可以访问的</li>
+<li>而 let 由于是块作用域，所以如果在块作用域内定义的变量，比如说在 for 循环内，在其外面是不可被访问的，所以 for 循环推荐用 let</li>
+</ul>
+<ol start="2">
+<li>let 不能在定义之前访问该变量，但是 var 可以。 （var 可以提升变量作用域）</li>
+<li>let不能被重新定义，但是var是可以的。（重新定义var，执行时会忽略）<h1 id="20-Javascript-如何实现继承？"><a href="#20-Javascript-如何实现继承？" class="headerlink" title="20. Javascript 如何实现继承？"></a>20. Javascript 如何实现继承？</h1></li>
+</ol>
+<p>1、构造继承<br>2、原型继承: Child.prototype = new Parent();<br>3、实例继承<br>4、拷贝继承</p>
+<h1 id="21-变量提升"><a href="#21-变量提升" class="headerlink" title="21. 变量提升"></a>21. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
+<ol>
+<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
+<li>执行(执行逻辑操作)</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 ReferenceError: b is not defined</span></span><br><span class="line">b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 undefined</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 2</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="22-变量提升"><a href="#22-变量提升" class="headerlink" title="22. 变量提升"></a>22. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
+<ol>
+<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
+<li>执行(执行逻辑操作)</li>
+</ol>
+<h1 id="23-函数提升"><a href="#23-函数提升" class="headerlink" title="23. 函数提升"></a>23. 函数提升</h1><p>首先要知道函数定义有两种方式的，一种是函数定义表达式，一种是函数声明语句。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数定义表达式</span></span><br><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明语句</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提升测试</span></span><br><span class="line"><span class="comment">// 例1.</span></span><br><span class="line">f();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 test</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line">f();</span><br><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//输出 Uncaught TypeError: f is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例3</span></span><br><span class="line"><span class="built_in">console</span>.log(f);</span><br><span class="line"><span class="keyword">var</span> f = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">console</span>.log(f);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;fff&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//  输出</span></span><br><span class="line"><span class="comment">//  [Function: f]</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  a = <span class="number">10</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">// 输出：10</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 输出：1</span></span><br><span class="line"><span class="comment">//输出：</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>重点：</p>
+<ol>
+<li>函数提升针对是函数声明语句而言，其次变量提升只提升变量名而函数提升会提升整个函数体</li>
+<li>优先级，函数提升会在变量提升的上面</li>
+</ol>
+<h1 id="24-作用域"><a href="#24-作用域" class="headerlink" title="24. 作用域"></a>24. 作用域</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1 块级作用域, 不适合变量提升</span></span><br><span class="line"><span class="comment">// es6允许块级作用域的任意嵌套。外层作用域无法读取内层作用域的变量。</span></span><br><span class="line"><span class="comment">// 内层作用域可以定义外层作用域的同名变量。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 hello</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> z = <span class="string">&quot;!&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(v, z);</span><br><span class="line"><span class="comment">//输出 :</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"><span class="comment">// world !</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2 闭包，变量提升</span></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">//输出 undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例 3， 块级作用域内let和const命令所声明的变量，只在命令所在的代码块内有效。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4 let， var与作用域、变量提升</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line">  <span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="25-实现一个随机排序的程序"><a href="#25-实现一个随机排序的程序" class="headerlink" title="25. 实现一个随机排序的程序"></a>25. 实现一个随机排序的程序</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSort</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.sort(randomSort);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;after random sort: &quot;</span>, list.join(<span class="string">&quot;,&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 箭头函数写法</span></span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.sort(<span class="function">() =&gt;</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;after random sort: &quot;</span>, list.join(<span class="string">&quot;,&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h1 id="26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"><a href="#26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量" class="headerlink" title="26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"></a>26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMostUsedChar</span>(<span class="params">sourceString</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> length = sourceString.length;</span><br><span class="line">  <span class="keyword">let</span> counter = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> currentChar = sourceString[i];</span><br><span class="line">    <span class="keyword">if</span> (counter[currentChar]) &#123;</span><br><span class="line">      counter[currentChar]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      counter[currentChar] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> maxCount = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> maxChar = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> counter) &#123;</span><br><span class="line">    <span class="keyword">if</span> (counter[key] &gt;= maxCount) &#123;</span><br><span class="line">      maxChar = key;</span><br><span class="line">      maxCount = counter[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`most used char: <span class="subst">$&#123;maxChar&#125;</span>, count: <span class="subst">$&#123;maxCount&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getMostUsedChar(<span class="string">&quot;fjiwejfal33232jkj3fjfie&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="27-参考"><a href="#27-参考" class="headerlink" title="27. 参考"></a>27. 参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md">https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md</a></li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+<h1 id=""><a href="#" class="headerlink" title=""></a><br><br><br><br><br></h1></blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/node-js-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/02/node-js-interview-qa/" class="post-title-link" itemprop="url">node.js 面试题总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-02 14:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T14:06:00+08:00">2021-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-30 08:23:41" itemprop="dateModified" datetime="2021-03-30T08:23:41+08:00">2021-03-30</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-nodejs-%E6%9C%89%E5%93%AA%E4%BA%9B%E7%89%B9%E7%82%B9">1. nodejs 有哪些特点？</a></li>
+<li><a href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF-event-loop">2. 什么是事件循环 Event Loop</a></li>
+<li><a href="#3-%E5%9C%A8%E6%AF%8F%E4%B8%AA-tick-%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%9C%89%E4%BA%8B%E4%BB%B6%E9%9C%80%E8%A6%81%E5%A4%84%E7%90%86%E5%91%A2">3. 在每个 tick 的过程中，如何判断是否有事件需要处理呢？</a></li>
+<li><a href="#4-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">4. 什么是回调函数？</a></li>
+<li><a href="#5-nodejs-%E8%AE%A1%E6%97%B6%E5%99%A8-promisethenprocessnexttick-settimeoutsetimmediate-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F">5. node.js 计时器 promise.then,process.nextTick, setTimeout，setImmediate 执行顺序</a></li>
+<li><a href="#6-next-tick-%E5%92%8C-setimmediate-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88">6. next tick 和 setImmediate 的区别是什么？</a></li>
+<li><a href="#7-nodejs-%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6">7. node.js 模块加载机制</a></li>
+<li><a href="#8-%E4%BB%80%E4%B9%88%E6%98%AF-globals">8. 什么是 globals?</a></li>
+<li><a href="#9-%E4%BB%80%E4%B9%88%E6%98%AF-eventemitter">9. 什么是 EventEmitter?</a></li>
+<li><a href="#10-process-%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95">10. process 有哪些常用方法?</a></li>
+<li><a href="#11-%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B%E4%BB%80%E4%B9%88%E6%98%AF-reactor-pattern">11. 解释一下什么是 reactor pattern。</a></li>
+<li><a href="#12-%E4%BB%80%E4%B9%88%E6%98%AF%E9%94%99%E8%AF%AF%E4%BC%98%E5%85%88%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">12. 什么是错误优先的回调函数</a></li>
+<li><a href="#13-%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%9B%9E%E8%B0%83%E5%9C%B0%E7%8B%B1">13. 如何避免回调地狱</a></li>
+<li><a href="#14-%E4%BB%80%E4%B9%88%E6%98%AF-promise">14. 什么是 Promise?</a></li>
+<li><a href="#15-%E4%BD%BF%E7%94%A8-npm-%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A5%BD%E5%A4%84">15. 使用 NPM 有哪些好处？</a></li>
+<li><a href="#16-%E4%BB%80%E4%B9%88%E6%98%AF-stub">16. 什么是 Stub？</a></li>
+<li><a href="#17-%E4%BB%80%E4%B9%88%E6%98%AF%E6%B5%8B%E8%AF%95%E9%87%91%E5%AD%97%E5%A1%94">17. 什么是测试金字塔？</a></li>
+<li><a href="#18-node-%E6%A8%A1%E5%9D%97%E6%9C%BA%E5%88%B6">18. Node 模块机制</a></li>
+<li><a href="#19-nodejs-require-%E7%9A%84%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6">19. Node.js require 的模块加载机制</a></li>
+<li><a href="#20-v8-%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6">20. V8 的垃圾回收机制</a></li>
+<li><a href="#21-child-process">21. child-process</a></li>
+<li><a href="#22-%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%96%B9%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B%E7%AE%80%E5%8D%95%E8%AF%B4%E4%B8%80%E4%B8%8B%E5%AE%83%E4%BB%AC%E7%9A%84%E5%8C%BA%E5%88%AB">22. 创建子进程的方法有哪些，简单说一下它们的区别</a></li>
+<li><a href="#23-%E6%80%8E%E6%A0%B7%E5%85%85%E5%88%86%E5%88%A9%E7%94%A8%E5%A4%9A%E4%B8%AA-cpu">23. 怎样充分利用多个 CPU?</a></li>
+<li><a href="#24-%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E6%B3%95%E5%8F%AF%E4%BB%A5%E8%AE%A9-node-%E7%A8%8B%E5%BA%8F%E9%81%87%E5%88%B0%E9%94%99%E8%AF%AF%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF">24. 有哪些方法可以让 node 程序遇到错误后自动重启?</a></li>
+<li><a href="#25-%E5%85%B3%E4%BA%8E-express-%E6%A1%86%E6%9E%B6">25. 关于 Express 框架</a><ul>
+<li><a href="#251-express-%E7%94%9F%E6%88%90%E5%99%A8%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88">25.1. express 生成器的作用是什么?</a></li>
+<li><a href="#252-express-%E4%BC%98%E7%82%B9%E6%98%AF%E4%BB%80%E4%B9%88">25.2. express 优点是什么?</a></li>
+<li><a href="#253-%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%AD%E9%97%B4%E4%BB%B6">25.3. 什么是中间件</a></li>
+<li><a href="#254-express-%E7%BC%BA%E7%82%B9%E6%98%AF%E4%BB%80%E4%B9%88">25.4. express 缺点是什么?</a></li>
+<li><a href="#255-ejs-%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88">25.5. ejs 作用是什么?</a></li>
+<li><a href="#256-%E4%BB%80%E4%B9%88%E6%98%AF%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%E9%A1%B9%E7%9B%AE">25.6. 什么是后端渲染项目?</a></li>
+<li><a href="#257-session-%E5%92%8C-cookie-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E5%8C%BA%E5%88%AB">25.7. session 和 cookie 的作用和区别?</a></li>
+<li><a href="#258-%E8%B7%A8%E5%9F%9F%E6%98%AF%E4%BB%80%E4%B9%88-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F">25.8. 跨域是什么, 如何解决跨域?</a></li>
+<li><a href="#259-express4-%E4%B8%AD-app-%E5%92%8C-router-%E7%9A%84%E5%8C%BA%E5%88%AB">25.9. express4 中 app 和 router 的区别</a></li>
+<li><a href="#2510-cookies-%E5%A6%82%E4%BD%95%E9%98%B2%E8%8C%83-xss-%E6%94%BB%E5%87%BB">25.10. Cookies 如何防范 XSS 攻击？</a></li>
+<li><a href="#2511-koa-%E5%92%8C-express-%E7%9A%84%E5%AF%B9%E6%AF%94">25.11. Koa 和 Express 的对比</a></li>
+</ul>
+</li>
+<li><a href="#26-koa">26. KOA</a><ul>
+<li><a href="#261-koa-%E6%B4%8B%E8%91%B1%E6%A8%A1%E5%9E%8B">26.1. KOA 洋葱模型</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="1-nodejs-有哪些特点？"><a href="#1-nodejs-有哪些特点？" class="headerlink" title="1. nodejs 有哪些特点？"></a>1. nodejs 有哪些特点？</h1><p>是单线程的，但是有很高的可扩展性，使用 JavaScript 作为主流编程语言。使用的是<code>非阻塞IO,异步处理机制和事件驱动</code>。处理高效。</p>
+<p>擅长 IO 密集型业务业务处理，不擅长 CPU 密集型业务；</p>
+<h1 id="2-什么是事件循环-Event-Loop"><a href="#2-什么是事件循环-Event-Loop" class="headerlink" title="2. 什么是事件循环 Event Loop"></a>2. 什么是事件循环 Event Loop</h1><p>在进程启动动时，Node 会创建一个类似于 while(true)的循环，每执行一次循环的过程我们称之为 Tick。每个 Tick 的过程就是查看是否有事件等待处理，如果有，就取出时间相关的回调函数。如果存在相关联的回调函数，就执行它们。然后进入下一个循环；如果不再有事件待处理，就退出进程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   ┌───────────────────────┐</span><br><span class="line">┌─&gt;│        timers         │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     I&#x2F;O callbacks     │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     idle, prepare     │</span><br><span class="line">│  └──────────┬────────────┘      ┌───────────────┐</span><br><span class="line">│  ┌──────────┴────────────┐      │   incoming:   │</span><br><span class="line">│  │         poll          │&lt;─────┤  connections, │</span><br><span class="line">│  └──────────┬────────────┘      │   data, etc.  │</span><br><span class="line">│  ┌──────────┴────────────┐      └───────────────┘</span><br><span class="line">│  │        check          │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">└──┤    close callbacks    │</span><br><span class="line">   └───────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>timers: 这个阶段执行 setTimeout()和 setInterval()设定的回调。</li>
+<li>I/O callbacks: 执行几乎所有的回调，除了 close 回调，timer 的回调，和 setImmediate()的回调。</li>
+<li>idle, prepare: 仅内部使用。</li>
+<li>poll: 获取新的 I/O 事件；node 会在适当条件下阻塞在这里。</li>
+<li>check: 执行 setImmediate()设定的回调。</li>
+<li>close callbacks: 执行比如 socket.on(‘close’, …)的回调。</li>
+</ol>
+<p>简单理解 Event Loop 如下：</p>
+<ol>
+<li>所有任务都在主线程上执行，形成一个执行栈(Execution Context Stack)</li>
+<li>在主线程之外还存在一个任务队列(Task Queen),系统把异步任务放到任务队列中，然后主线程继续执行后续的任务</li>
+<li>一旦执行栈中所有的任务执行完毕，系统就会读取任务队列。如果这时异步任务已结束等待状态，就会从任务队列进入执行栈，恢复执行</li>
+<li>主线程不断重复上面的第三步</li>
+</ol>
+<p>在底层， Node 是通过 libuv 来实现多线程的。<code>Libuv</code>库负责 Node API 的执行。它将不同的任务分配给不同的线程，形成一个事件循环， 以异步的方式将任务的执行结果返回给 V8 引擎。可</p>
+<h1 id="3-在每个-tick-的过程中，如何判断是否有事件需要处理呢？"><a href="#3-在每个-tick-的过程中，如何判断是否有事件需要处理呢？" class="headerlink" title="3. 在每个 tick 的过程中，如何判断是否有事件需要处理呢？"></a>3. 在每个 tick 的过程中，如何判断是否有事件需要处理呢？</h1><ol>
+<li>每个事件循环中有一个或者多个观察者，而判断是否有事件需要处理的过程就是向这些观察者询问是否有要处理的事件。</li>
+<li>在 Node 中，事件主要来源于网络请求、文件的 I/O 等，这些事件对应的观察者有文件 I/O 观察者，网络 I/O 的观察者。</li>
+<li>事件循环是一个典型的生产者/消费者模型。异步 I/O，网络请求等则是事件的生产者，源源不断为 Node 提供不同类型的事件，这些事件被传递到对应的观察者那里，事件循环则从观察者那里取出事件并处理。</li>
+</ol>
+<h1 id="4-什么是回调函数？"><a href="#4-什么是回调函数？" class="headerlink" title="4. 什么是回调函数？"></a>4. 什么是回调函数？</h1><p>回调函数是指用一个函数作为参数传入另一个函数，这个函数会被在某个时机调用。</p>
+<h1 id="5-node-js-计时器-promise-then-process-nextTick-setTimeout，setImmediate-执行顺序"><a href="#5-node-js-计时器-promise-then-process-nextTick-setTimeout，setImmediate-执行顺序" class="headerlink" title="5. node.js 计时器 promise.then,process.nextTick, setTimeout，setImmediate 执行顺序"></a>5. node.js 计时器 promise.then,process.nextTick, setTimeout，setImmediate 执行顺序</h1><p>首先了解 2 个概念</p>
+<ul>
+<li>macro-task（宏任务）: script ，setTimeout, setInterval, setImmediate, I/O, UI rendering.Event Loop 在每个阶段执行的任务；</li>
+<li>micro-task （微任务）: process.nextTick, Promise，Object. fvEvent Loop 在每个阶段之间执行的任务 observe，MutationObserver</li>
+</ul>
+<p>对于 node.js, micro-task 的任务优先级高于 macro-task 的任务优先级,所以微任务普遍优先于宏任务的执行。</p>
+<p>另一种优先级顺序，是“观察者优先级”， 在每次轮训检查中，各观察者的优先级分别是：<code>idle观察者 &gt; I/O观察者 &gt; check观察者。</code></p>
+<ul>
+<li>idle 观察者：process.nextTick</li>
+<li>I/O 观察者：一般性的 I/O 回调，如网络，文件，数据库 I/O 等</li>
+<li>check 观察者：setTimeout &gt; setImmediate (setTimeout(()=&gt;{},0)优先于 setImmediate 执行）；</li>
+<li><strong>总结</strong></li>
+</ul>
+<ol>
+<li>同步代码执行顺序优先级高于异步代码执行顺序优先级；</li>
+<li>new Promise(fn)中的 fn 是同步执行；</li>
+<li>process.nextTick()&gt;Promise.then()&gt;setTimeout&gt;setImmediate。</li>
+</ol>
+<h1 id="6-next-tick-和-setImmediate-的区别是什么？"><a href="#6-next-tick-和-setImmediate-的区别是什么？" class="headerlink" title="6. next tick 和 setImmediate 的区别是什么？"></a>6. next tick 和 setImmediate 的区别是什么？</h1><ul>
+<li><p>NextTick 会等待当前的 event 执行完成或者下一轮儿事件循环到达再执行。</p>
+</li>
+<li><p>SetImmediate, 会在下一轮的事件循环中，执行回调并且返回当前的循环来做读写操作.</p>
+</li>
+</ul>
+<h1 id="7-node-js-模块加载机制"><a href="#7-node-js-模块加载机制" class="headerlink" title="7. node.js 模块加载机制"></a>7. node.js 模块加载机制</h1><p>Nodejs 遵循 commonjs 规范的模块加载机制，使用 require 加载文件，使用 exports 或 module.exports 导出文件</p>
+<h1 id="8-什么是-globals"><a href="#8-什么是-globals" class="headerlink" title="8. 什么是 globals?"></a>8. 什么是 globals?</h1><p>有三个 global 的关键字。</p>
+<ol>
+<li>Global 代表的是最上层的命名空间,用来管理所有其他的全局对象。</li>
+<li>Process 是一个全局对象，可以把异步函数转化成异步回调, 它可以在任何地方被访问，它主要是用来返回系统的应用信息和环境信息.</li>
+<li>Buffer, 是用来处理二进制数据的类.</li>
+</ol>
+<h1 id="9-什么是-EventEmitter"><a href="#9-什么是-EventEmitter" class="headerlink" title="9. 什么是 EventEmitter?"></a>9. 什么是 EventEmitter?</h1><p>EventEmitter 是 node 中一个实现观察者模式的类，主要功能是监听和发射消息，用于处理多模块交互问题.</p>
+<p>主要用于： 1) 模块间传递消息 2) 回调函数内外传递消息 3) 处理流数据，因为流是在 EventEmitter 基础上实现的. 4) 观察者模式发射触发机制相关应用</p>
+<h1 id="10-process-有哪些常用方法"><a href="#10-process-有哪些常用方法" class="headerlink" title="10. process 有哪些常用方法?"></a>10. process 有哪些常用方法?</h1><p>process.stdin, process.stdout, process.stderr, process.on, process.env, process.argv, process.arch, process.platform, process.exit</p>
+<h1 id="11-解释一下什么是-reactor-pattern。"><a href="#11-解释一下什么是-reactor-pattern。" class="headerlink" title="11. 解释一下什么是 reactor pattern。"></a>11. 解释一下什么是 reactor pattern。</h1><p>reactor 设计模式是 event-driven architecture 的一种实现方式，处理多个客户端并发的向服务端请求服务的场景。每种服务在服务端可能由多个方法组成。reactor 会解耦并发请求的服务并分发给对应的事件处理器来处理。</p>
+<p>Reactor pattern 主要是非阻滞的 i/o 操作。提供一个回调函数来关联 io 操作。io 请求完成以后会不会提交给 demultiplexer, 这是一个通知接口用来处理并发性的非阻滞的 io 操作，这个功能是通过查询一个 event loop 来实现的.</p>
+<h1 id="12-什么是错误优先的回调函数"><a href="#12-什么是错误优先的回调函数" class="headerlink" title="12. 什么是错误优先的回调函数"></a>12. 什么是错误优先的回调函数</h1><p>node.js 广泛使用异步编程，而异步中的异常很难在主程序中捕获。为此，我们将异步中的异常、错误，通过回调函数传递给主程序。</p>
+<p>错误优先的回调函数用于传递错误和数据。第一个参数始终应该是一个错误对象， 用于检查程序是否发生了错误。其余的参数用于传递数据。</p>
+<h1 id="13-如何避免回调地狱"><a href="#13-如何避免回调地狱" class="headerlink" title="13. 如何避免回调地狱"></a>13. 如何避免回调地狱</h1><ol>
+<li>模块化：将回调函数分割为独立的函数</li>
+<li>使用 Promise/ansyc (ES6)</li>
+<li>使用 yield 来计算生成器或 Promise</li>
+</ol>
+<h1 id="14-什么是-Promise"><a href="#14-什么是-Promise" class="headerlink" title="14. 什么是 Promise?"></a>14. 什么是 Promise?</h1><p>Promise 可以帮助我们更好地处理异步操作。采用类似同步结构的代码，实现异步处理，同时避免回调地狱。</p>
+<h1 id="15-使用-NPM-有哪些好处？"><a href="#15-使用-NPM-有哪些好处？" class="headerlink" title="15. 使用 NPM 有哪些好处？"></a>15. 使用 NPM 有哪些好处？</h1><p>通过 NPM，你可以安装和管理项目的依赖，并且能够指明依赖项的具体版本号。 对于 Node 应用开发而言，你可以通过 package.json 文件来管理项目信息，配置脚本， 以及指明项目依赖的具体版本。</p>
+<h1 id="16-什么是-Stub？"><a href="#16-什么是-Stub？" class="headerlink" title="16. 什么是 Stub？"></a>16. 什么是 Stub？</h1><p>Stub 是用于模拟一个组件或模块的函数或程序，在测试用例中很常用。简单的说，你可以用 Stub 去模拟一个方法，从而避免调用真实的方法， 使用 Stub 你还可以返回虚构的结果。你可以配合断言使用 Stub。</p>
+<h1 id="17-什么是测试金字塔？"><a href="#17-什么是测试金字塔？" class="headerlink" title="17. 什么是测试金字塔？"></a>17. 什么是测试金字塔？</h1><p>测试金字塔指的是： 测试用例从下到上，包括单元测试、集成测试、端到端测试；当我们在编写测试用例时，底层的单元测试应该远比上层的端到端测试要多。</p>
+<h1 id="18-Node-模块机制"><a href="#18-Node-模块机制" class="headerlink" title="18. Node 模块机制"></a>18. Node 模块机制</h1><p>Node 中，每个文件模块都是一个对象，所有的模块都是 Module 的实例。</p>
+<h1 id="19-Node-js-require-的模块加载机制"><a href="#19-Node-js-require-的模块加载机制" class="headerlink" title="19. Node.js require 的模块加载机制"></a>19. Node.js require 的模块加载机制</h1><p>1、先计算模块路径<br>2、如果模块在缓存里面，取出缓存；如果不存在生成模块实例，存入缓存<br>3、加载模块<br>4、输出模块的 exports 属性</p>
+<h1 id="20-V8-的垃圾回收机制"><a href="#20-V8-的垃圾回收机制" class="headerlink" title="20. V8 的垃圾回收机制"></a>20. V8 的垃圾回收机制</h1><p>在 V8 中，主要将内存分为新生代和老生代两代。新生代中的对象存活时间较短的对象，老生代中的对象存活时间较长，或常驻内存的对象。<br><strong>新生代</strong>中的对象主要通过 Scavenge 算法进行垃圾回收。这是一种采用复制的方式实现的垃圾回收算法。它将堆内存一份为二，分为 2 个 semispace。在这两个 semispace 空间中，只有一个处于使用中，另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间，处于闲置状态的空间称为 To 空间。</p>
+<ol>
+<li>当开始垃圾回收的时候，会检查 From 空间中的存活对象，这些存活对象将被复制到 To 空间中，而非存活对象占用的空间将会被释放。完成复制后，From 空间和 To 空间发生角色对换。</li>
+<li>应为新生代中对象的生命周期比较短，就比较适合这个算法。</li>
+<li>当一个对象经过多次复制依然存活，它将会被认为是生命周期较长的对象。这种新生代中生命周期较长的对象随后会被移到老生代中。<br><strong>老生代</strong>主要采取的是标记清除的垃圾回收算法。与 Scavenge 复制活着的对象不同，标记清除算法在标记阶段遍历堆中的所有对象，并标记活着的对象，只清理死亡对象。活对象在新生代中只占叫小部分，死对象在老生代中只占较小部分，这是为什么采用标记清除算法的原因。</li>
+</ol>
+<p><strong>标记清楚算法的问题</strong>：<br>主要问题是每一次进行标记清除回收后，内存空间会出现不连续的状态</p>
+<ol>
+<li>这种内存碎片会对后续内存分配造成问题，很可能出现需要分配一个大对象的情况，这时所有的碎片空间都无法完成此次分配，就会提前触发垃圾回收，而这次回收是不必要的。</li>
+<li>为了解决碎片问题，标记整理被提出来。就是在对象被标记死亡后，在整理的过程中，将活着的对象往一端移动，移动完成后，直接清理掉边界外的内存。</li>
+</ol>
+<h1 id="21-child-process"><a href="#21-child-process" class="headerlink" title="21. child-process"></a>21. child-process</h1><p>node 是异步非阻塞的，这对高并发非常有效．可是我们还有其它一些常用需求，比如和操作系统 shell 命令交互，调用可执行文件，创建子进程进行阻塞式访问或高 CPU 计算等，child-process 就是为满足这些需求而生的．child-process 顾名思义，就是把 node 阻塞的工作交给子进程去做．</p>
+<h1 id="22-创建子进程的方法有哪些，简单说一下它们的区别"><a href="#22-创建子进程的方法有哪些，简单说一下它们的区别" class="headerlink" title="22. 创建子进程的方法有哪些，简单说一下它们的区别"></a>22. 创建子进程的方法有哪些，简单说一下它们的区别</h1><p>创建子进程的方法大致有：</p>
+<ol>
+<li>spawn()： 启动一个子进程来执行命令</li>
+<li>exec(): 启动一个子进程来执行命令，与 spawn()不同的是其接口不同，它有一个回调函数获知子进程的状况</li>
+<li>execFlie(): 启动一个子进程来执行可执行文件</li>
+<li>fork(): 与 spawn()类似，不同电在于它创建 Node 子进程需要执行 js 文件</li>
+<li>spawn()与 exec()、execFile()不同的是，后两者创建时可以指定 timeout 属性设置超时时间，一旦创建的进程超过设定的时间就会被杀死</li>
+<li>exec()与 execFile()不同的是，exec()适合执行已有命令，execFile()适合执行文件。</li>
+</ol>
+<p>（exec 可以用操作系统原生的方式执行各种命令，如管道 cat ab.txt | grep hello; execFile 是执行一个文件; spawn 是流式和操作系统进行交互; fork 是两个 node 程序(javascript)之间时行交互.）</p>
+<h1 id="23-怎样充分利用多个-CPU"><a href="#23-怎样充分利用多个-CPU" class="headerlink" title="23. 怎样充分利用多个 CPU?"></a>23. 怎样充分利用多个 CPU?</h1><p>一个 CPU 运行一个 node 实例。 （Child_Process)</p>
+<h1 id="24-有哪些方法可以让-node-程序遇到错误后自动重启"><a href="#24-有哪些方法可以让-node-程序遇到错误后自动重启" class="headerlink" title="24. 有哪些方法可以让 node 程序遇到错误后自动重启?"></a>24. 有哪些方法可以让 node 程序遇到错误后自动重启?</h1><p>Linxu: 1) runit 2) forever 3) nohup npm start &amp;<br>Winwow: Windows service(auto restart)</p>
+<h1 id="25-关于-Express-框架"><a href="#25-关于-Express-框架" class="headerlink" title="25. 关于 Express 框架"></a>25. 关于 Express 框架</h1><h2 id="25-1-express-生成器的作用是什么"><a href="#25-1-express-生成器的作用是什么" class="headerlink" title="25.1. express 生成器的作用是什么?"></a>25.1. express 生成器的作用是什么?</h2><p>通过应用生成器工具 express-generator 可以快速创建一个应用的框架, 包含一整套配置好的服务器配置, 文件和文件夹等, 包括静态资源的暴露等, 包括路由的配置, 和模板引擎配置, 以及 404 的处理，异常处理等；</p>
+<h2 id="25-2-express-优点是什么"><a href="#25-2-express-优点是什么" class="headerlink" title="25.2. express 优点是什么?"></a>25.2. express 优点是什么?</h2><p>Express 的优点是线性逻辑：路由和中间件完美融合，通过中间件形式把业务逻辑细分，简化，一个请求进来经过一系列中间件处理后再响应给用户，再复杂的业务也是线性了，清晰明了。</p>
+<h2 id="25-3-什么是中间件"><a href="#25-3-什么是中间件" class="headerlink" title="25.3. 什么是中间件"></a>25.3. 什么是中间件</h2><ul>
+<li>中间件是可以访问请求对象，响应对象以及 next 应用程序请求-响应周期中的函数，使用 app.use()来使用/定义中间件；</li>
+<li>Express 是一个自身功能极简，完全是路由和中间件构成一个 web 开发框架；</li>
+<li>从本质上来说，一个 Express 应用就是在调用各种中间件。封装了一些或许复杂但肯定是通用的功能, 非内置的中间件需要通过安装后，require 到文件就可以运行。</li>
+</ul>
+<h2 id="25-4-express-缺点是什么"><a href="#25-4-express-缺点是什么" class="headerlink" title="25.4. express 缺点是什么?"></a>25.4. express 缺点是什么?</h2><p>Express 是基于 callback 来组合业务逻辑。Callback 有两大硬伤，一是<code>不可组合</code>，二是<code>异常不可捕获</code>。</p>
+<h2 id="25-5-ejs-作用是什么"><a href="#25-5-ejs-作用是什么" class="headerlink" title="25.5. ejs 作用是什么?"></a>25.5. ejs 作用是什么?</h2><p>EJS 是一个 Javascript 模板库, 用来从 JSON 数据中生成 HTML 文件。其他模板库（模板引擎如 jade/pug);</p>
+<h2 id="25-6-什么是后端渲染项目"><a href="#25-6-什么是后端渲染项目" class="headerlink" title="25.6. 什么是后端渲染项目?"></a>25.6. 什么是后端渲染项目?</h2><p>浏览器请求静态网页资源, 服务器端会在后端把数据渲染到 HTML 页面上, 再把 html 文件内的字符串一起返回给浏览器进行展示的一种手段, Nodejs 中体现为 ejs 和 pug 模板引擎；</p>
+<h2 id="25-7-session-和-cookie-的作用和区别"><a href="#25-7-session-和-cookie-的作用和区别" class="headerlink" title="25.7. session 和 cookie 的作用和区别?"></a>25.7. session 和 cookie 的作用和区别?</h2><p>session 是区别于数据库存在的一种服务器临时存储技术, 它主要存储一些无需持久化的数据, 比如临时的登录状态信息等</p>
+<p>cookie 是存在于浏览器上的一种浏览器本地存储的方式, 同域名下的 cookie 不同标签页可以共享, 默认过期时间是浏览器关闭时, 而且在进行 http 请求时, 会自动带上浏览器全部的 cookie 发给后台, 后台也可以获取 cookie, 设置可以在响应时, 想浏览器中设置 cookie。</p>
+<h2 id="25-8-跨域是什么-如何解决跨域"><a href="#25-8-跨域是什么-如何解决跨域" class="headerlink" title="25.8. 跨域是什么, 如何解决跨域?"></a>25.8. 跨域是什么, 如何解决跨域?</h2><p>当 ajax 请求所在域名或接口和请求目标 url 的域名或接口, 有一个不同, 即发生了跨域请求, 浏览器会阻止这次 ajax 请求.</p>
+<p>解决跨域请求的方法：</p>
+<ol>
+<li>如果能让后台改代码, 可以让后台开启跨域支持/ 使用 jsonp 方式处理跨域</li>
+<li>如果不能让后台改代码, 则需要在本地使用服务器, 进行代理转发；</li>
+</ol>
+<h2 id="25-9-express4-中-app-和-router-的区别"><a href="#25-9-express4-中-app-和-router-的区别" class="headerlink" title="25.9. express4 中 app 和 router 的区别"></a>25.9. express4 中 app 和 router 的区别</h2><p>app 可以认为是全局的，方便注入中间件；router 主要针对具体的 routing，除了注入中间件，具体处理 routing 对应的核心业务逻辑；<br>app 级路由不方便模块化封装，而且 app.js 文件没有路由代码，路由代码在 router 文件中，而且 router 方便模块化封装</p>
+<h2 id="25-10-Cookies-如何防范-XSS-攻击？"><a href="#25-10-Cookies-如何防范-XSS-攻击？" class="headerlink" title="25.10. Cookies 如何防范 XSS 攻击？"></a>25.10. Cookies 如何防范 XSS 攻击？</h2><p>XSS(Cross-Site Scripting，跨站脚本攻击)是指攻击者在返回的 HTML 中插入 JavaScript 脚本。为了减轻这些攻击，需要在 HTTP 头部配置 set-cookie:</p>
+<ul>
+<li><p>HttpOnly - 这个属性可以防止 cross-site scripting，因为它会禁止 Javascript 脚本访问 cookie。</p>
+</li>
+<li><p>secure - 这个属性告诉浏览器仅在请求为 HTTPS 时发送 cookie。</p>
+</li>
+</ul>
+<p>结果应该是这样的: Set-Cookie: sid=; HttpOnly. 使用 Express 的话，cookie-session 默认配置好了。</p>
+<h2 id="25-11-Koa-和-Express-的对比"><a href="#25-11-Koa-和-Express-的对比" class="headerlink" title="25.11. Koa 和 Express 的对比"></a>25.11. Koa 和 Express 的对比</h2><ol>
+<li>Express 是一个完整的 nodejs 应用框架。Koa 是由 Express 团队开发的，但是它有不同的关注点。Koa 致力于核心中间件功能。nodejs 中间件是访问请求对象（req）和响应对象（res）的例程。 Express 包含一个完整的应用程序框架，具有路由和模板等功能。</li>
+<li>Koa 对 Express 进行了扩展，并充分利用了 ES7 新的语法。Koa 的 Context 对象是对 Express 核心请求和应答对象的扩展，另外利用 async/await 来消除回调（callback）陷阱。</li>
+<li>Koa 的中间件的设计是洋葱模型。</li>
+<li>Koa 不是立即响应，是整个中间件处理完成在最外层进行了响应，而 Express 则是立即响应</li>
+</ol>
+<h1 id="26-KOA"><a href="#26-KOA" class="headerlink" title="26. KOA"></a>26. KOA</h1><h2 id="26-1-KOA-洋葱模型"><a href="#26-1-KOA-洋葱模型" class="headerlink" title="26.1. KOA 洋葱模型"></a>26.1. KOA 洋葱模型</h2><p>中间件执行就像洋葱一样，最早 use 的中间件，就放在最外层。处理顺序从左到右，左边接收一个 request，右边输出返回 response。<br>一般的中间件都会执行两次，调用 next 之前为第一次，调用 next 时把控制传递给下游的下一个中间件。当下游不再有中间件或者没有执行 next 函数时，就将依次恢复上游中间件的行为，让上游中间件执行 next 之后的代码。</p>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+<h1 id=""><a href="#" class="headerlink" title=""></a><br><br><br><br><br></h1></blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/mobile-ux-performance/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1188,272 +1668,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/13/Angular-Starter-10-Directive-1/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（10）- 指令（Directive）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-13 13:11:30" itemprop="dateCreated datePublished" datetime="2021-01-13T13:11:30+08:00">2021-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-07 10:40:02" itemprop="dateModified" datetime="2021-02-07T10:40:02+08:00">2021-02-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E7%BB%84%E4%BB%B6%E4%B8%8E%E6%8C%87%E4%BB%A4%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">2. 组件与指令之间的关系</a><ul>
-<li><a href="#21-%E6%8C%87%E4%BB%A4%E7%9A%84%E7%A7%8D%E7%B1%BB">2.1. 指令的种类</a></li>
-</ul>
-</li>
-<li><a href="#3-angular-%E4%B8%AD%E6%8C%87%E4%BB%A4%E7%9A%84%E7%94%A8%E9%80%94">3. Angular 中指令的用途</a></li>
-<li><a href="#4-%E6%8C%87%E4%BB%A4%E4%B8%BE%E4%BE%8B">4. 指令举例</a><ul>
-<li><a href="#41-%E6%8C%87%E4%BB%A4%E5%8A%9F%E8%83%BD">4.1. 指令功能</a></li>
-<li><a href="#42-anuglar-cli%E7%94%9F%E6%88%90%E5%9F%BA%E6%9C%AC%E6%96%87%E4%BB%B6">4.2. Anuglar CLI生成基本文件</a></li>
-<li><a href="#43-directive%E6%8C%87%E4%BB%A4%E6%A0%B8%E5%BF%83%E4%BB%A3%E7%A0%81">4.3. Directive指令核心代码</a></li>
-<li><a href="#44-%E4%BD%BF%E7%94%A8%E8%AF%A5%E6%8C%87%E4%BB%A4">4.4. 使用该指令</a></li>
-</ul>
-</li>
-<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>指令（Directive）在Angular 1.0时代（当时叫AngularJS）是很流行的，现在用到的偏少。可以简单理解为，指令（Directive）用于扩展已有Element（DOM）。</p>
-<h1 id="2-组件与指令之间的关系"><a href="#2-组件与指令之间的关系" class="headerlink" title="2. 组件与指令之间的关系"></a>2. 组件与指令之间的关系</h1><p>如果去看Angular源码，可以看到下面定义</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Supplies configuration metadata for an Angular component.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@publicApi</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">interface</span> Component <span class="keyword">extends</span> Directive &#123;</span><br></pre></td></tr></table></figure>
-<p>是的，Component派生于Directive，也就是说，Component属于Directive。</p>
-<h2 id="2-1-指令的种类"><a href="#2-1-指令的种类" class="headerlink" title="2.1. 指令的种类"></a>2.1. 指令的种类</h2><ol>
-<li>Component 是 Directive 的子接口，是一种特殊的指令，Component 可以带有 HTML 模板，Directive 不能有模板。</li>
-<li>属性型指令：用来修改 DOM 元素的外观和行为，但是不会改变DOM 结构，Angular 内置指令里面典型的属性型指令有 ngClass、ngStyle，如果打算封装自己的组件库，属性型指令是必备的内容。</li>
-<li>结构型指令：可以修改 DOM 结构，内置的常用结构型指令有 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code>。由于结构型指令会修改 DOM 结构，因而同一个 HTML 标签上面不能同时使用多个结构型指令。如果要在同一个 HTML 元素上面使用多个结构性指令，可以考虑加一层空的元素来嵌套，比如在外面套一层空的（<code>div</code>) 。</li>
-</ol>
-<h1 id="3-Angular-中指令的用途"><a href="#3-Angular-中指令的用途" class="headerlink" title="3. Angular 中指令的用途"></a>3. Angular 中指令的用途</h1><p>Angualr中用指令来增强DOM的功能，包括 HTML 原生DOM和我们自己自定义的组件（Component）。举例来说，可以扩展一个Button，实现避免点击后，服务器端未响应前的二次点击；高亮某些收入内容等等。</p>
-<h1 id="4-指令举例"><a href="#4-指令举例" class="headerlink" title="4. 指令举例"></a>4. 指令举例</h1><h2 id="4-1-指令功能"><a href="#4-1-指令功能" class="headerlink" title="4.1. 指令功能"></a>4.1. 指令功能</h2><p>实现一个指令，鼠标移动到上面时， 背景显示为黄色，鼠标移开，恢复正常。</p>
-<h2 id="4-2-Anuglar-CLI生成基本文件"><a href="#4-2-Anuglar-CLI生成基本文件" class="headerlink" title="4.2. Anuglar CLI生成基本文件"></a>4.2. Anuglar CLI生成基本文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate directive MyHighlight</span><br></pre></td></tr></table></figure>
-<p>Anuglar CLI自动生成html、css、ut等文件。<br>##</p>
-<h2 id="4-3-Directive指令核心代码"><a href="#4-3-Directive指令核心代码" class="headerlink" title="4.3. Directive指令核心代码"></a>4.3. Directive指令核心代码</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Directive, ElementRef &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Directive</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;[appHighlight]&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">HighlightDirective</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">el: ElementRef</span>)</span> &#123;</span><br><span class="line">       el.nativeElement.style.backgroundColor = <span class="string">&#x27;yellow&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">&#x27;mouseenter&#x27;</span>) <span class="function"><span class="title">onMouseEnter</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.highlight(<span class="string">&#x27;yellow&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">&#x27;mouseleave&#x27;</span>) <span class="function"><span class="title">onMouseLeave</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.highlight(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="title">highlight</span>(<span class="params">color: <span class="built_in">string</span></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.el.nativeElement.style.backgroundColor = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-4-使用该指令"><a href="#4-4-使用该指令" class="headerlink" title="4.4. 使用该指令"></a>4.4. 使用该指令</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">my-highlight</span>&gt;</span>Highlight me!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>my-highlight</code> 即我们的元素扩展属性（指令、directive）。</p>
-</blockquote>
-<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ul>
-<li>指令（Directive）用于扩展DOM 元素或组件的功能。</li>
-<li>Angular中的 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code> 都是Angular内置的指令。</li>
-</ul>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/12/Angular-starter-7-component/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/12/Angular-starter-7-component/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（7）- 组件（@Component）基本知识</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-01-12 14:11:30 / Modified: 14:34:18" itemprop="dateCreated datePublished" datetime="2021-01-12T14:11:30+08:00">2021-01-12</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
-<li><a href="#2-%E5%88%9B%E5%BB%BAcomponent">2. 创建Component</a><ul>
-<li><a href="#21-%E7%BB%84%E4%BB%B6%E6%A8%A1%E6%9D%BF">2.1. 组件模板</a></li>
-</ul>
-</li>
-<li><a href="#3-%E8%A7%86%E5%9B%BE%E5%B0%81%E8%A3%85%E6%A8%A1%E5%BC%8F">3. 视图封装模式</a><ul>
-<li><a href="#31-%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-host">3.1. 特殊的选择器 :host</a></li>
-<li><a href="#32-inline-styles">3.2. inline-styles</a></li>
-</ul>
-</li>
-<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>组件是 Angular 应用的主要构造块。每个组件包括如下部分：</p>
-<ul>
-<li>一个 HTML 模板，用于声明页面要渲染的内容</li>
-<li>一个用于定义行为的 Typescript 类</li>
-<li>一个 CSS 选择器，用于定义组件在模板中的使用方式</li>
-<li>（可选）要应用在模板上的 CSS 样式</li>
-</ul>
-<p>Component可以是一个页面，也可以是一个组件（控件）。总是，是一个页面元素。</p>
-<p>任何一个Component都是NgModule的一部分，这样它就可以被其他应用和其他Component所调用。为了定义Component是NgModule的一个成员之一，开发者应该在NgModule的declarations属性中，将自己开发的Component列出。</p>
-<p>另外，通过Component修饰符（也就是@Component）开发者可以配置元数据，这样通过各式各样的Life-Cycle hooks，Components就可以控制他们的运行环境。</p>
-<h1 id="2-创建Component"><a href="#2-创建Component" class="headerlink" title="2. 创建Component"></a>2. 创建Component</h1><p>基于AngularCLI，可以很方便的创建Component。在要创建Component的目录下，执行如下命令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate component &lt;component-name&gt; </span><br></pre></td></tr></table></figure>
-<p>e.g. <code>ng generate component MyComponent</code><br>AngularCLI会自动生成一个文件夹和4个文件：</p>
-<ul>
-<li>一个以该组件命名的文件夹（e.g my-component)</li>
-<li>一个组件文件 &lt; component-name &gt;.component.ts（e.g my-component.component.ts)</li>
-<li>一个模板文件 &lt; component-name &gt;.component.html（e.g my-component.component.html)</li>
-<li>一个 CSS 文件， &lt; component-name &gt;.component.css（e.g my-component.component.css)</li>
-<li>测试文件 &lt; component-name &gt;.component.spec.ts（e.g my-component.component.spec.ts)</li>
-</ul>
-<blockquote>
-<p>对于Component，所有文件名都会自动增加Component后缀，所以不建议&lt; component-name &gt; 中带有‘component’这个单词。</p>
-</blockquote>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上是核心的ts文件，指定了selector(CSS 选择器)，template（html）文件，css文件。html/css文件如果需要可以多个component公用。尤其是css，可以看到参数是Array，所以可以制定多个css。</p>
-<h2 id="2-1-组件模板"><a href="#2-1-组件模板" class="headerlink" title="2.1. 组件模板"></a>2.1. 组件模板</h2><p>组件模板，即HTML部分，可以是一个html文件，也可以是一段html描述，是等价的。Angular 组件需要一个用 template 或 templateUrl 定义的模板。但你不能在组件中同时拥有这两个语句。</p>
-<ol>
-<li><p>html 文件方式</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./component-overview.component.html&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
-<li><p>html代码方式</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 3. 视图封装模式</span></span><br><span class="line"><span class="string">在 Angular 中，组件的 CSS 样式被封装进了自己的视图中，而不希望影响到应用程序的其它部分。这部分也是可以通过配置去进行控制的。</span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>ts</span><br><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  encapsulation: ViewEncapsulation.None,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>可以看到，增加了一个<code>encapsulation</code>属性 （视图封装模式）。通过在组件的元数据上设置视图封装模式，你可以分别控制每个组件的封装模式。 可选的封装模式一共有如下几种：</p>
-</li>
-<li><p>Emulated 模式（默认值）通过预处理（并改名）CSS 代码来模拟 Shadow DOM 的行为，以达到把 CSS 样式局限在组件视图中的目的。 更多信息，见附录 1。(说明：只进不出，全局样式能进来，组件样式出不去)</p>
-</li>
-<li><p>ShadowDom 模式使用浏览器原生的 Shadow DOM 实现来为组件的宿主元素附加一个 Shadow DOM。组件的视图被附加到这个 Shadow DOM 中，组件的样式也被包含在这个 Shadow DOM 中。(说明：不进不出，没有样式能进来，组件样式出不去。)</p>
-</li>
-<li><p>None 意味着 Angular 不使用视图封装。 Angular 会把 CSS 添加到全局样式中。而不会应用上前面讨论过的那些作用域规则、隔离和保护等。 从本质上来说，这跟把组件的样式直接放进 HTML 是一样的。</p>
-</li>
-</ol>
-<h2 id="3-1-特殊的选择器-host"><a href="#3-1-特殊的选择器-host" class="headerlink" title="3.1. 特殊的选择器 :host"></a>3.1. 特殊的选择器 :host</h2><p>使用 :host 伪类选择器，用来选择组件宿主元素中的元素（相对于组件模板内部的元素）。 :host 选择是是把宿主元素作为目标的唯一方式。除此之外，你将没办法指定它， 因为宿主不是组件自身模板的一部分，而是父组件模板的一部分。</p>
-<p>e.g.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:host</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-inline-styles"><a href="#3-2-inline-styles" class="headerlink" title="3.2. inline-styles"></a>3.2. inline-styles</h2><p>默认AngularCLI生成的component，css在一个单独文件中。当然，同html模板类似，如果需要，你也可以制定css样式写在ts中， 不单独放到一个文件中。命令：<code>ng generate component MyComponent --inline-style</code>。</p>
-<p>生成component如下</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">  styles: [<span class="string">&#x27;h1 &#123; font-weight: normal; &#125;&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ul>
-<li>Angular CLI辅助创建一个component所需的多个文件</li>
-<li>建议html/css/ts分开</li>
-<li>在期望目录下执行Angular CLI命令，可以生成到制定目录</li>
-<li><code>ng generate component XXX</code> 可以简写为 <code>ng g c</code></li>
-</ul>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1523,12 +1737,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
