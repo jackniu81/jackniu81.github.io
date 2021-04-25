@@ -149,6 +149,83 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/" class="post-title-link" itemprop="url">前端进阶（2）使用fetch/axios时， 如何取消http请求</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-25 14:19:27 / Modified: 15:22:55" itemprop="dateCreated datePublished" datetime="2021-04-25T14:19:27+08:00">2021-04-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1><p>现在前端都是SPA，我们什么时候需要取消HTTP请求呢？</p>
+<ol>
+<li>当我们从一个页面跳转到另外一个页面时，如果前一个页面的请求还没有返回，那么我们希望取消前一个页面的请求</li>
+<li>某些操作耗时比较长（不能是保存等操作哦），如果用户不想等待呢，取消了操作，对应我们也需要取消HTTP请求</li>
+</ol>
+<p>对于原生的<code>XMLHttpRequest</code>,是支持取消http请求(<code>abort</code>)操作的: XMLHttpRequest.abort()<br>那么，当我们使用ES6的fetch，或者使用axios库，如何实现呢？</p>
+<h1 id="2-Fetch-取消http请求"><a href="#2-Fetch-取消http请求" class="headerlink" title="2. Fetch 取消http请求"></a>2. Fetch 取消http请求</h1><p>fetch与XMLHttpRequest(XHR)类似，是ES6之后浏览器（除IE之外）默认支持的http操作函数。可惜不是默认支持abort操作。但我们可以通过<code>AbortController</code>来实现， 直接上代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明AbortController</span></span><br><span class="line"><span class="keyword">const</span> controller = <span class="keyword">new</span> AbortController();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正常的http调用</span></span><br><span class="line">fetch(<span class="string">&#x27;https://jackniu81.github.io&#x27;</span>, &#123; <span class="attr">signal</span>: controller.signal &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">r</span> =&gt;</span> r.json())</span><br><span class="line">    .then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(response);</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (err.name === <span class="string">&#x27;AbortError&#x27;</span>) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;Fetch was aborted&#x27;</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;Error&#x27;</span>, err)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要取消请求时，调用：</span></span><br><span class="line">controller.abort()</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-axios取消http请求"><a href="#3-axios取消http请求" class="headerlink" title="3. axios取消http请求"></a>3. axios取消http请求</h1><p>axios 已经实现了abort操作，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> source = axios.CancelToken.source();</span><br><span class="line"></span><br><span class="line">axios.get(<span class="string">&#x27;https://jackniu81.github.io&#x27;</span>, &#123;</span><br><span class="line">  cancelToken: source.token</span><br><span class="line">&#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (axios.isCancel(err)) &#123;</span><br><span class="line">    <span class="comment">// handle our cancel operation</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Request canceled&#x27;</span>, err.message);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// handle real error here</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要取消请求时，调用：</span></span><br><span class="line">source.cancel(<span class="string">&#x27;Abort Request&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-jquery-取消http请求"><a href="#4-jquery-取消http请求" class="headerlink" title="4. jquery 取消http请求"></a>4. jquery 取消http请求</h1><p>$.ajax内部已经实现了abort功能。直接调用<code>.abort()</code>即可。</p>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
+<li><code>fetch</code>与<code>AbortController</code>集成：我们将<code>signal</code>属性作为可选参数（option）进行传递，之后 fetch 会监听它，因此它能够中止 fetch.</li>
+<li>AbortController 是可伸缩的，可以用于<code>一次性终止多个请求</code>；</li>
+<li>参考fetch的实现，我们自己的代码也完善一下，实现基于AbortController操作取消操作；</li>
+<li>axios 默认支持Abort操作；</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/23/Web-Advanced-1-Web-Performance/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1589,128 +1666,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/CSS-interview-qa/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/07/CSS-interview-qa/" class="post-title-link" itemprop="url">CSS面试题汇总</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-09 16:43:47" itemprop="dateModified" datetime="2021-03-09T16:43:47+08:00">2021-03-09</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="CSS实现水平垂直居中"><a href="#CSS实现水平垂直居中" class="headerlink" title="CSS实现水平垂直居中"></a>CSS实现水平垂直居中</h1><ol>
-<li>margin: auto;实现绝对定位元素的居中</li>
-</ol>
-<pre><code class="css">    .center-vertical&#123;
-        width: 100px;
-        height: 100px;
-        background: orange;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-    &#125;
-</code></pre>
-<ol start="2">
-<li>CSS3.0弹性布局<pre><code class="css">   html,
-   body &#123;
-     width: 100%;
-     height: 100%;
-   &#125;
-   body &#123;
-     display: flex;
-     align-items: center;
-     justify-content: center; /* 定义body的元素水平居中 */
-   &#125;
-   .content &#123;
-     width: 300px;
-     height: 300px;
-     background: orange;
-   &#125;
-</code></pre>
-</li>
-</ol>
-<h1 id="行内元素有哪些？块级元素有哪些？"><a href="#行内元素有哪些？块级元素有哪些？" class="headerlink" title="行内元素有哪些？块级元素有哪些？"></a>行内元素有哪些？块级元素有哪些？</h1><ol>
-<li>行内元素有：<code>a b span img input select strong</code></li>
-<li>块级元素有：<code>div ul ol li dl dt dd h1 h2 h3 h4…p</code></li>
-<li>常见的空元素：    <code>&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt; &lt;link&gt; &lt;meta&gt;</code></li>
-</ol>
-<h1 id="CSS3有哪些新特性？"><a href="#CSS3有哪些新特性？" class="headerlink" title="CSS3有哪些新特性？"></a>CSS3有哪些新特性？</h1><ol>
-<li>新增各种CSS选择器  （: not(.input)：）</li>
-<li>圆角            （border-radius:8px）</li>
-<li>多列布局      （multi-column layout）</li>
-<li>阴影和反射   （Shadow\Reflect）</li>
-<li>文字特效      （text-shadow）</li>
-<li>文字渲染      （Text-decoration）</li>
-<li>线性渐变      （gradient）</li>
-<li>旋转            （transform）</li>
-<li>缩放,定位,倾斜,动画,多背景</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1780,12 +1735,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 需求现在前端都是SPA，我们什么时候需要取消HTTP请求呢？  当我们从一个页面跳转到另外一个页面时，如果前一个页面的请求还没有返回，那么我们希望取消前一个页面的请求 某些操作耗时比较长（不能是保存等操作哦），如果用户不想等待呢，取消了操作，对应我们也需要取消HTTP请求  对于原生的XMLHttpRequest,是支持取消http请求(abort)操作的: XMLHttpRequest.a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端进阶（2）使用fetch&#x2F;axios时， 如何取消http请求">
+<meta property="og:url" content="https://jackniu81.github.io/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 需求现在前端都是SPA，我们什么时候需要取消HTTP请求呢？  当我们从一个页面跳转到另外一个页面时，如果前一个页面的请求还没有返回，那么我们希望取消前一个页面的请求 某些操作耗时比较长（不能是保存等操作哦），如果用户不想等待呢，取消了操作，对应我们也需要取消HTTP请求  对于原生的XMLHttpRequest,是支持取消http请求(abort)操作的: XMLHttpRequest.a">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-25T06:19:27.000Z">
+<meta property="article:modified_time" content="2021-04-25T07:22:55.581Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="前端进阶">
+<meta property="article:tag" content="axios">
+<meta property="article:tag" content="fetch">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>前端进阶（2）使用fetch/axios时， 如何取消http请求 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端进阶（2）使用fetch/axios时， 如何取消http请求
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-25 14:19:27 / Modified: 15:22:55" itemprop="dateCreated datePublished" datetime="2021-04-25T14:19:27+08:00">2021-04-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1><p>现在前端都是SPA，我们什么时候需要取消HTTP请求呢？</p>
+<ol>
+<li>当我们从一个页面跳转到另外一个页面时，如果前一个页面的请求还没有返回，那么我们希望取消前一个页面的请求</li>
+<li>某些操作耗时比较长（不能是保存等操作哦），如果用户不想等待呢，取消了操作，对应我们也需要取消HTTP请求</li>
+</ol>
+<p>对于原生的<code>XMLHttpRequest</code>,是支持取消http请求(<code>abort</code>)操作的: XMLHttpRequest.abort()<br>那么，当我们使用ES6的fetch，或者使用axios库，如何实现呢？</p>
+<h1 id="2-Fetch-取消http请求"><a href="#2-Fetch-取消http请求" class="headerlink" title="2. Fetch 取消http请求"></a>2. Fetch 取消http请求</h1><p>fetch与XMLHttpRequest(XHR)类似，是ES6之后浏览器（除IE之外）默认支持的http操作函数。可惜不是默认支持abort操作。但我们可以通过<code>AbortController</code>来实现， 直接上代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明AbortController</span></span><br><span class="line"><span class="keyword">const</span> controller = <span class="keyword">new</span> AbortController();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正常的http调用</span></span><br><span class="line">fetch(<span class="string">&#x27;https://jackniu81.github.io&#x27;</span>, &#123; <span class="attr">signal</span>: controller.signal &#125;)</span><br><span class="line">    .then(<span class="function"><span class="params">r</span> =&gt;</span> r.json())</span><br><span class="line">    .then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(response);</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (err.name === <span class="string">&#x27;AbortError&#x27;</span>) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;Fetch was aborted&#x27;</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;Error&#x27;</span>, err)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要取消请求时，调用：</span></span><br><span class="line">controller.abort()</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-axios取消http请求"><a href="#3-axios取消http请求" class="headerlink" title="3. axios取消http请求"></a>3. axios取消http请求</h1><p>axios 已经实现了abort操作，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> source = axios.CancelToken.source();</span><br><span class="line"></span><br><span class="line">axios.get(<span class="string">&#x27;https://jackniu81.github.io&#x27;</span>, &#123;</span><br><span class="line">  cancelToken: source.token</span><br><span class="line">&#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (axios.isCancel(err)) &#123;</span><br><span class="line">    <span class="comment">// handle our cancel operation</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Request canceled&#x27;</span>, err.message);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// handle real error here</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要取消请求时，调用：</span></span><br><span class="line">source.cancel(<span class="string">&#x27;Abort Request&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-jquery-取消http请求"><a href="#4-jquery-取消http请求" class="headerlink" title="4. jquery 取消http请求"></a>4. jquery 取消http请求</h1><p>$.ajax内部已经实现了abort功能。直接调用<code>.abort()</code>即可。</p>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
+<li><code>fetch</code>与<code>AbortController</code>集成：我们将<code>signal</code>属性作为可选参数（option）进行传递，之后 fetch 会监听它，因此它能够中止 fetch.</li>
+<li>AbortController 是可伸缩的，可以用于<code>一次性终止多个请求</code>；</li>
+<li>参考fetch的实现，我们自己的代码也完善一下，实现基于AbortController操作取消操作；</li>
+<li>axios 默认支持Abort操作；</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Web/" rel="tag"># Web</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E8%BF%9B%E9%98%B6/" rel="tag"># 前端进阶</a>
+              <a href="/tags/axios/" rel="tag"># axios</a>
+              <a href="/tags/fetch/" rel="tag"># fetch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/23/Web-Advanced-1-Web-Performance/" rel="prev" title="前端进阶（1）Web前端性能优化">
+      <i class="fa fa-chevron-left"></i> 前端进阶（1）Web前端性能优化
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%9C%80%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">1. 需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Fetch-%E5%8F%96%E6%B6%88http%E8%AF%B7%E6%B1%82"><span class="nav-number">2.</span> <span class="nav-text">2. Fetch 取消http请求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-axios%E5%8F%96%E6%B6%88http%E8%AF%B7%E6%B1%82"><span class="nav-number">3.</span> <span class="nav-text">3. axios取消http请求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-jquery-%E5%8F%96%E6%B6%88http%E8%AF%B7%E6%B1%82"><span class="nav-number">4.</span> <span class="nav-text">4. jquery 取消http请求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5. 总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

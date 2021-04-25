@@ -149,6 +149,130 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/25/Angular-Starter-13-gard-routing/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（13）- 路由守卫（Route Guards）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-25 15:06:00" itemprop="dateCreated datePublished" datetime="2021-01-25T15:06:00+08:00">2021-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-07 10:40:10" itemprop="dateModified" datetime="2021-02-07T10:40:10+08:00">2021-02-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
+<li><a href="#2-%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%ABroute-guards">2. 路由守卫（Route Guards）</a><ul>
+<li><a href="#21-%E5%88%9B%E5%BB%BA%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%AB">2.1. 创建路由守卫</a></li>
+<li><a href="#22-%E6%8E%A7%E5%88%B6%E8%B7%AF%E7%94%B1%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E6%BF%80%E6%B4%BB">2.2. 控制路由是否可以激活</a></li>
+<li><a href="#23-%E6%8E%A7%E5%88%B6%E8%B7%AF%E7%94%B1%E6%98%AF%E5%90%A6%E9%80%80%E5%87%BA%E7%A6%BB%E5%BC%80">2.3. 控制路由是否退出（离开）</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>在我们的实际的业务开发过程中，我们经常会遇到如下需求：</p>
+<ol>
+<li>需要限制某些 URL 的可访问性，例如，对于系统管理界面，只有那些拥有管理员权限的用户才能打开。</li>
+<li>当用户处于编辑界面时，在没有保存就离开时，需要提示用户是否放弃修改。</li>
+</ol>
+<p>针对以上场景，Angualr使用<code>路由守卫</code>（Route Guards）来实现。</p>
+<h1 id="2-路由守卫（Route-Guards）"><a href="#2-路由守卫（Route-Guards）" class="headerlink" title="2. 路由守卫（Route Guards）"></a>2. 路由守卫（Route Guards）</h1><h2 id="2-1-创建路由守卫"><a href="#2-1-创建路由守卫" class="headerlink" title="2.1. 创建路由守卫"></a>2.1. 创建路由守卫</h2><p>Angular CLI提供了命令行工具，可以快速创建路由守卫框架文件：<code>ng generate guard auth</code>。 执行后，Angular CLI会问我们需要实现哪些接口，我们直接勾选即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">? Which interfaces would you like to implement? (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">(*) CanActivate</span></span><br><span class="line"> ( ) CanActivateChild</span><br><span class="line"> ( ) CanDeactivate</span><br><span class="line"> ( ) CanLoad</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ol>
+<li>CanActivate: 控制路由是否可以激活</li>
+<li>CanActivateChild: 控制子路由是否可以激活</li>
+<li>CanDeactivate: 控制路由是否可以退出</li>
+<li>CanLoad: 控制模块（module）是否可以被加载</li>
+</ol>
+<p>比较经常使用的是1、3，分别控制进入和退出。 按照上面配置，AngularCLI自动生成如下代码，<code>return true;</code> 替换为我们实际的代码即可。<code>return false;</code> 表示不允许跳转，或者取消离开当前页面。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// auth.guard.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CanActivate, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/router&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Observable &#125; <span class="keyword">from</span> <span class="string">&#x27;rxjs&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Injectable</span>(&#123;</span><br><span class="line">  providedIn: <span class="string">&#x27;root&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthGuard</span> <span class="title">implements</span> <span class="title">CanActivate</span>, <span class="title">CanDeactivate</span>&lt;<span class="title">unknown</span>&gt; </span>&#123;</span><br><span class="line">  canActivate(</span><br><span class="line">    route: ActivatedRouteSnapshot,</span><br><span class="line">    state: RouterStateSnapshot): Observable&lt;<span class="built_in">boolean</span> | UrlTree&gt; | <span class="built_in">Promise</span>&lt;<span class="built_in">boolean</span> | UrlTree&gt; | <span class="built_in">boolean</span> | UrlTree &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在canActivate方法中，我们还可以使用跳转。如页面判断是否已经登录，如果没有登录，跳转到Login页面：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.router.navigate([<span class="string">&#x27;/login&#x27;</span>]);</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-2-控制路由是否可以激活"><a href="#2-2-控制路由是否可以激活" class="headerlink" title="2.2. 控制路由是否可以激活"></a>2.2. 控制路由是否可以激活</h2><p>控制路由是否可以激活，需要定义在定义路由的地方，增加canActivate属性。如果需要，还可以增加data属性， 比如告诉我们的AuthGuard进入当前路由需要验证哪些权限。data属性是可选的。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&quot;page1&quot;</span>,</span><br><span class="line">    component: Page1Component,</span><br><span class="line">    data: &#123; <span class="attr">permissions</span>: [<span class="string">&#x27;YourPage1Permission&#x27;</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    canActivate: [AuthGuard]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&quot;page2&quot;</span>,</span><br><span class="line">    component: Page2omponent,</span><br><span class="line">    data: &#123; <span class="attr">permissions</span>: [<span class="string">&#x27;YourPage2Permission&#x27;</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    canActivate: [AuthGuard]</span><br><span class="line">  &#125;</span><br><span class="line">]  </span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-控制路由是否退出（离开）"><a href="#2-3-控制路由是否退出（离开）" class="headerlink" title="2.3. 控制路由是否退出（离开）"></a>2.3. 控制路由是否退出（离开）</h2><p>和控制路由是否可以激活类似，在路由定义出增加 <code>canDeactivate</code>，并制定相应的Guard守卫即可。这里不再举例</p>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
+<li>通过路由守卫（Route Guards）实现控制URL的进入和离开;</li>
+<li>Angular CLI可以辅助我们创建guard文件;</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1325,98 +1449,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/11/Angular-Starter-tech-stack/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（3） - Angular 技术栈 （Tech Stack）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-11 09:11:35" itemprop="dateCreated datePublished" datetime="2021-01-11T09:11:35+08:00">2021-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-01-12 14:34:18" itemprop="dateModified" datetime="2021-01-12T14:34:18+08:00">2021-01-12</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>(Based on Angular V8.x ~ 11.x)</p>
-<ol>
-<li>Angular-CLI<br>Angular CLI is a command-line interface tool that you use to initialize, develop, scaffold, and maintain Angular applications directly from a command shell.</li>
-</ol>
-<p>It is the MUST have tool to write Angular code, so make sure you are familiar with its commands.</p>
-<ol>
-<li>IDE</li>
-<li>1 Visual Studio Code<br>Visual Studio Code: Best and free IDE for web developing.<br>Plugins:</li>
-</ol>
-<p>Angular Language Service - This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.<br>Prettier - VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.<br>Code Spell Checker - A basic spell checker that works well with camelCase code.<br>The goal of this spell checker is to help catch common spelling errors while keeping the number of false positives low.<br>GitLens - If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.<br>1.2 Alternatives<br>Atom by GitHub<br>Sublime Text 3<br>PyCharm<br>IntelliJ IDEA<br>Webstorm<br>There are may alternatives, you can choose which you are familiar with.<br>*</p>
-<ol start="2">
-<li>UI Framework</li>
-<li>1 Angular Material<br>Angular Material is Material Design components for Angular.<br>There are many alternatives. But Angular Material is the official one from Angular, and Angular also give detail upgrade solution on Angular plus Angular Material in <a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a>.</li>
-</ol>
-<p>For future upgrade reason, this is your best choice.</p>
-<ol start="3">
-<li>State Management - NgRx<br>@ngrx/store is RxJS powered global state management for Angular applications, inspired by Redux. Store is a controlled state container designed to help write performant, consistent applications on top of Angular.</li>
-</ol>
-<p>NgRx Store is mainly for managing global state across an entire application.</p>
-<ol start="4">
-<li>Code Reuse</li>
-<li>1 Angular libraries<br>Angular libraries should what you need.</li>
-</ol>
-<p>Many applications need to solve the same general problems, such as presenting a unified user interface, presenting data, and allowing data entry. Developers can create general solutions for particular domains that can be adapted for re-use in different apps. Such a solution can be built as Angular libraries and these libraries can be published and shared as npm packages.</p>
-<p>An Angular library is an Angular project that differs from an app in that it cannot run on its own. A library must be imported and used in an app.</p>
-<p>You can easily reuse your Angular library or also submit your library into npm server.</p>
-<p>4.2 Alternatives - Angular custom elements<br>Note that libraries are intended to be used by Angular apps. To add Angular functionality to non-Angular web apps, you can use Angular custom elements.</p>
-<p>Angular elements are Angular components packaged as custom elements (also called Web Components), a web standard for defining new HTML elements in a framework-agnostic way.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1486,12 +1518,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
