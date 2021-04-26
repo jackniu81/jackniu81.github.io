@@ -172,10 +172,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-04-25 14:19:27 / Modified: 15:22:55" itemprop="dateCreated datePublished" datetime="2021-04-25T14:19:27+08:00">2021-04-25</time>
+              <time title="Created: 2021-04-25 14:19:27" itemprop="dateCreated datePublished" datetime="2021-04-25T14:19:27+08:00">2021-04-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-27 01:01:04" itemprop="dateModified" datetime="2021-04-27T01:01:04+08:00">2021-04-27</time>
+              </span>
 
           
 
@@ -188,7 +194,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1><p>现在前端都是SPA，我们什么时候需要取消HTTP请求呢？</p>
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/">前端进阶（2）使用fetch/axios时， 如何取消http请求</a></p>
+</blockquote>
+<h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1><p>现在前端都是SPA，我们什么时候需要取消HTTP请求呢？</p>
 <ol>
 <li>当我们从一个页面跳转到另外一个页面时，如果前一个页面的请求还没有返回，那么我们希望取消前一个页面的请求</li>
 <li>某些操作耗时比较长（不能是保存等操作哦），如果用户不想等待呢，取消了操作，对应我们也需要取消HTTP请求</li>
