@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. React 基本问题 1.1. React有什么特点 1.2. React的主要优点。 1.3. React有哪些限制 1.4. Virtual DOM 的工作原理。 1.5. react diff 原理 1.6. React 项目用过什么脚手架 1.7. 如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗 1.8. 调用 setState 之后发生了什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2021 React 面试题汇总">
+<meta property="og:url" content="https://jackniu81.github.io/2021/05/06/React-Interview-Questions-and-Answers/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. React 基本问题 1.1. React有什么特点 1.2. React的主要优点。 1.3. React有哪些限制 1.4. Virtual DOM 的工作原理。 1.5. react diff 原理 1.6. React 项目用过什么脚手架 1.7. 如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗 1.8. 调用 setState 之后发生了什么">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackniu81.github.io/img/react-life-cycle.png">
+<meta property="article:published_time" content="2021-05-06T03:19:44.000Z">
+<meta property="article:modified_time" content="2021-05-07T01:56:56.630Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackniu81.github.io/img/react-life-cycle.png">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/05/06/React-Interview-Questions-and-Answers/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>2021 React 面试题汇总 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/06/React-Interview-Questions-and-Answers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2021 React 面试题汇总
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-06 11:19:44" itemprop="dateCreated datePublished" datetime="2021-05-06T11:19:44+08:00">2021-05-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-07 09:56:56" itemprop="dateModified" datetime="2021-05-07T09:56:56+08:00">2021-05-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#1-react-%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98">1. React 基本问题</a><ul>
+<li><a href="#11-react%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9">1.1. React有什么特点</a></li>
+<li><a href="#12-react%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">1.2. React的主要优点。</a></li>
+<li><a href="#13-react%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%90%E5%88%B6">1.3. React有哪些限制</a></li>
+<li><a href="#14-virtual-dom-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86">1.4. Virtual DOM 的工作原理。</a></li>
+<li><a href="#15-react-diff-%E5%8E%9F%E7%90%86">1.5. react diff 原理</a></li>
+<li><a href="#16-react-%E9%A1%B9%E7%9B%AE%E7%94%A8%E8%BF%87%E4%BB%80%E4%B9%88%E8%84%9A%E6%89%8B%E6%9E%B6">1.6. React 项目用过什么脚手架</a></li>
+<li><a href="#17-%E5%A6%82%E6%9E%9C%E8%BF%9B%E8%A1%8C%E4%B8%89%E6%AC%A1setstate%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%E5%BE%AA%E7%8E%AF%E6%89%A7%E8%A1%8Csetstate%E7%BB%84%E4%BB%B6%E4%BC%9A%E4%B8%80%E7%9B%B4%E9%87%8D%E6%96%B0%E6%B8%B2%E6%9F%93%E5%90%97">1.7. 如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗</a></li>
+<li><a href="#18-%E8%B0%83%E7%94%A8-setstate-%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88">1.8. 调用 setState 之后发生了什么？</a></li>
+<li><a href="#19-%E4%BB%80%E4%B9%88%E6%98%AFjsx">1.9. 什么是JSX</a></li>
+<li><a href="#110-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%AF%BB%E5%8F%96%E8%AF%BB%E5%8F%96jsx">1.10. 浏览器是否可以直接读取读取JSX？</a></li>
+<li><a href="#111-vue%E5%92%8Creact%E9%80%82%E7%94%A8%E7%9A%84%E5%9C%BA%E6%99%AF">1.11. vue和react适用的场景</a></li>
+</ul>
+</li>
+<li><a href="#2-react-%E7%BB%84%E4%BB%B6">2. React 组件</a><ul>
+<li><a href="#21-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%B4%E5%9C%A8react%E4%B8%AD%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E7%BB%84%E4%BB%B6">2.1. 为什么说在React中，一切都是组件</a></li>
+<li><a href="#22-react-%E4%B8%AD-render-%E7%9A%84%E7%9B%AE%E7%9A%84">2.2. React 中 render() 的目的。</a></li>
+<li><a href="#23-react%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E9%98%B6%E6%AE%B5%E6%98%AF%E4%BB%80%E4%B9%88">2.3. React组件生命周期的阶段是什么？</a></li>
+<li><a href="#24-react-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0">2.4. react 生命周期函数</a></li>
+<li><a href="#25-%E5%9C%A8%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%AD%E7%9A%84%E5%93%AA%E4%B8%80%E6%AD%A5%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%8F%91%E8%B5%B7-ajax-%E8%AF%B7%E6%B1%82">2.5. 在生命周期中的哪一步你应该发起 AJAX 请求？</a></li>
+<li><a href="#26-%E5%B1%95%E7%A4%BA%E7%BB%84%E4%BB%B6presentational-component%E5%92%8C%E5%AE%B9%E5%99%A8%E7%BB%84%E4%BB%B6container-component%E4%B9%8B%E9%97%B4%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C">2.6. 展示组件(Presentational component)和容器组件(Container component)之间有何不同</a></li>
+<li><a href="#27-%E8%B0%83%E7%94%A8-superprops-%E7%9A%84%E7%9B%AE%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88">2.7. 调用 super(props) 的目的是什么</a></li>
+<li><a href="#28-%E9%99%A4%E4%BA%86%E5%9C%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%AD%E7%BB%91%E5%AE%9A-this%E8%BF%98%E6%9C%89%E5%85%B6%E5%AE%83%E6%96%B9%E5%BC%8F%E5%90%97">2.8. 除了在构造函数中绑定 this，还有其它方式吗</a></li>
+<li><a href="#29-%E4%BB%80%E4%B9%88%E6%98%AF-props">2.9. 什么是 Props?</a></li>
+<li><a href="#210-%E4%BB%80%E4%B9%88%E6%98%AF%E7%8A%B6%E6%80%81state">2.10. 什么是状态（State)？</a></li>
+<li><a href="#211-%E7%B1%BB%E7%BB%84%E4%BB%B6class-component%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6functional-component%E4%B9%8B%E9%97%B4%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C">2.11. 类组件(Class component)和函数式组件(Functional component)之间有何不同</a></li>
+<li><a href="#212-%E5%A6%82%E4%BD%95%E6%9B%B4%E6%96%B0%E7%BB%84%E4%BB%B6%E7%9A%84%E7%8A%B6%E6%80%81">2.12. 如何更新组件的状态？</a></li>
+<li><a href="#213-react%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88">2.13. React中的事件是什么？</a></li>
+<li><a href="#214-react%E4%B8%AD%E7%9A%84%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88">2.14. React中的合成事件是什么？</a></li>
+<li><a href="#215-%E4%BD%95%E4%B8%BA%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6controlled-component">2.15. 何为受控组件(controlled component)</a></li>
+<li><a href="#216-react-%E7%9A%84-refs-%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8">2.16. React 的 refs 有什么作用？</a></li>
+<li><a href="#217-%E5%88%97%E5%87%BA%E4%B8%80%E4%BA%9B%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8-refs-%E7%9A%84%E6%83%85%E5%86%B5">2.17. 列出一些应该使用 Refs 的情况</a></li>
+<li><a href="#218-shouldcomponentupdate-%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84react-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%98%AF%E5%93%AA%E4%B8%AA%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0">2.18. shouldComponentUpdate 是做什么的，（react 性能优化是哪个周期函数？）</a></li>
+<li><a href="#219-%E4%BB%80%E4%B9%88%E6%98%AF%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6hoc---higher-order-component">2.19. 什么是高阶组件（HOC - higher order component）？</a></li>
+<li><a href="#220-%E4%BD%A0%E8%83%BD%E7%94%A8hoc%E5%81%9A%E4%BB%80%E4%B9%88">2.20. 你能用HOC做什么？</a></li>
+<li><a href="#221-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%AF%E7%BB%84%E4%BB%B6pure-component">2.21. 什么是纯组件（Pure Component）？</a></li>
+<li><a href="#222-react-%E4%B8%AD-key-%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E6%98%AF%E4%BB%80%E4%B9%88">2.22. React 中 key 的重要性是什么？</a></li>
+</ul>
+</li>
+<li><a href="#3-redux">3. Redux</a><ul>
+<li><a href="#31-%E4%BB%80%E4%B9%88%E6%98%AFflux">3.1. 什么是Flux</a></li>
+<li><a href="#32-%E4%BB%80%E4%B9%88%E6%98%AFredux">3.2. 什么是Redux？</a></li>
+<li><a href="#33-redux%E9%81%B5%E5%BE%AA%E7%9A%84%E4%B8%89%E4%B8%AA%E5%8E%9F%E5%88%99%E6%98%AF%E4%BB%80%E4%B9%88">3.3. Redux遵循的三个原则是什么？</a></li>
+<li><a href="#34-%E5%8D%95%E4%B8%80%E4%BA%8B%E5%AE%9E%E6%9D%A5%E6%BA%90%E6%9C%89%E4%BB%80%E4%B9%88%E7%90%86%E8%A7%A3">3.4. “单一事实来源”有什么理解？</a></li>
+<li><a href="#35-%E5%88%97%E5%87%BA-redux-%E7%9A%84%E7%BB%84%E4%BB%B6">3.5. 列出 Redux 的组件</a></li>
+<li><a href="#36-redux%E4%B8%8Eflux%E7%9A%84%E5%8C%BA%E5%88%AB">3.6. Redux与Flux的区别</a></li>
+<li><a href="#37-redux-%E6%9C%89%E5%93%AA%E4%BA%9B%E4%BC%98%E7%82%B9">3.7. Redux 有哪些优点？</a></li>
+</ul>
+</li>
+<li><a href="#4-react-router">4. React Router</a><ul>
+<li><a href="#41-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-react-%E4%B8%AD%E7%9A%84%E8%B7%AF%E7%94%B1">4.1. 为什么需要 React 中的路由？</a></li>
+<li><a href="#42-%E4%BB%80%E4%B9%88%E6%98%AFreact-%E8%B7%AF%E7%94%B1">4.2. 什么是React 路由？</a></li>
+<li><a href="#43-react-router-%E7%9A%84%E4%BC%98%E7%82%B9">4.3. React Router 的优点。</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="1-React-基本问题"><a href="#1-React-基本问题" class="headerlink" title="1. React 基本问题"></a>1. React 基本问题</h1><h2 id="1-1-React有什么特点"><a href="#1-1-React有什么特点" class="headerlink" title="1.1. React有什么特点"></a>1.1. React有什么特点</h2><ol>
+<li>它使用<code>虚拟DOM</code>而不是真正的DOM。</li>
+<li>它可以用服务器端渲染。</li>
+<li>它遵循单向数据流或数据绑定。</li>
+</ol>
+<h2 id="1-2-React的主要优点。"><a href="#1-2-React的主要优点。" class="headerlink" title="1.2. React的主要优点。"></a>1.2. React的主要优点。</h2><ol>
+<li>它提高了应用的性能</li>
+<li>可以方便地在客户端和服务器端使用</li>
+<li>由于 JSX，代码的可读性很好</li>
+<li>React 很容易与 Meteor，Angular 等其他框架集成</li>
+<li>使用React，编写UI测试用例变得非常容易</li>
+</ol>
+<h2 id="1-3-React有哪些限制"><a href="#1-3-React有哪些限制" class="headerlink" title="1.3. React有哪些限制"></a>1.3. React有哪些限制</h2><ol>
+<li>React 只是一个库，而不是一个完整的框架</li>
+<li>它的库非常庞大，需要时间来理解</li>
+<li>新手程序员可能很难理解</li>
+<li>编码变得复杂，因为它使用内联模板和 JSX</li>
+</ol>
+<h2 id="1-4-Virtual-DOM-的工作原理。"><a href="#1-4-Virtual-DOM-的工作原理。" class="headerlink" title="1.4. Virtual DOM 的工作原理。"></a>1.4. Virtual DOM 的工作原理。</h2><p>Virtual DOM 是一个轻量级的 JavaScript 对象，它最初只是 real DOM 的副本。它是一个节点树，它将元素、它们的属性和内容作为对象及其属性。 React 的渲染函数从 React 组件中创建一个节点树。然后它响应数据模型中的变化来更新该树，该变化是由用户或系统完成的各种动作引起的。</p>
+<p>Virtual DOM 工作过程有三个简单的步骤。</p>
+<ol>
+<li>每当底层数据发生改变时，整个 UI 都将在 Virtual DOM 描述中重新渲染。</li>
+<li>然后计算之前 DOM 表示与新表示的之间的差异。</li>
+<li>完成计算后，将只用实际更改的内容更新 real DOM。</li>
+</ol>
+<h2 id="1-5-react-diff-原理"><a href="#1-5-react-diff-原理" class="headerlink" title="1.5. react diff 原理"></a>1.5. react diff 原理</h2><ol>
+<li>把树形结构按照层级分解，只比较同级元素。</li>
+<li>给列表结构的每个单元添加唯一的 key 属性，方便比较。</li>
+<li>React 只会匹配相同 class 的 component（这里面的 class 指的是组件的名字）<br>合并操作，调用 component 的 setState 方法的时候, React 将其标记为 dirty.到每一个事件循环结束, React 检查所有标记 dirty 的 component 重新绘制.</li>
+<li>选择性子树渲染。开发人员可以重写 shouldComponentUpdate 提高 diff 的性能。</li>
+</ol>
+<h2 id="1-6-React-项目用过什么脚手架"><a href="#1-6-React-项目用过什么脚手架" class="headerlink" title="1.6. React 项目用过什么脚手架"></a>1.6. React 项目用过什么脚手架</h2><p>creat-react-app， Yeoman， umi 等</p>
+<h2 id="1-7-如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗"><a href="#1-7-如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗" class="headerlink" title="1.7. 如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗"></a>1.7. 如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗</h2><p>setState这个方法是用来告诉react组件数据有更新，有可能需要重新渲染。它是异步的，react通常会集齐一批需要更新的组件，然后一次性更新来保证渲染的性能，所以进行三次只有一次的效果，并不会导致多次渲染。</p>
+<p>此外再使用setState改变状态之后，立刻使用this.state去拿最新的状态往往是拿不到的，如果需要最新的state做业务的话，可以在componentDidUpdate或者setState的回调函数里获取。</p>
+<h2 id="1-8-调用-setState-之后发生了什么？"><a href="#1-8-调用-setState-之后发生了什么？" class="headerlink" title="1.8. 调用 setState 之后发生了什么？"></a>1.8. 调用 setState 之后发生了什么？</h2><p>在代码中调用setState函数之后，React 会将传入的参数对象与组件当前的状态合并，然后触发所谓的调和过程（Reconciliation）。经过调和过程，React 会以相对高效的方式根据新的状态构建 React 元素树并且着手重新渲染整个UI界面。在 React 得到元素树之后，React 会自动计算出新的树与老树的节点差异，然后根据差异对界面进行最小化重渲染。在差异计算算法中，React 能够相对精确地知道哪些位置发生了改变以及应该如何改变，这就保证了按需更新，而不是全部重新渲染。</p>
+<h2 id="1-9-什么是JSX"><a href="#1-9-什么是JSX" class="headerlink" title="1.9. 什么是JSX"></a>1.9. 什么是JSX</h2><p>JSX 是<code>JavaScript XML</code> 的简写。是 React 使用的一种文件，它利用 JavaScript 的表现力和类似 HTML 的模板语法。这使得 HTML 文件非常容易理解。此文件能使应用非常可靠，并能够提高其性能。</p>
+<h2 id="1-10-浏览器是否可以直接读取读取JSX？"><a href="#1-10-浏览器是否可以直接读取读取JSX？" class="headerlink" title="1.10. 浏览器是否可以直接读取读取JSX？"></a>1.10. 浏览器是否可以直接读取读取JSX？</h2><p>浏览器只能处理 JavaScript 对象，而不能读取常规 JavaScript 对象中的 JSX。所以为了使浏览器能够读取 JSX，首先，需要用像 Babel 这样的 JSX 转换器将 JSX 文件转换为 JavaScript 对象，然后再将其传给浏览器。</p>
+<h2 id="1-11-vue和react适用的场景"><a href="#1-11-vue和react适用的场景" class="headerlink" title="1.11. vue和react适用的场景"></a>1.11. vue和react适用的场景</h2><ul>
+<li>vue适合webapp，适合做用户交互多，各种动态效果变化丰富的应用。特别是PC、手机的网页版，商城等页面。因为vue实现逻辑复杂的功能比较简单。</li>
+<li>react适合oa系统，适合大批量的数据展示、适合做大型应用。特别适合公司的后台管理系统。因为react对那种比较复杂的交互，实现起来比较麻烦，没有vue方便。同时react的渲染原理是渲染整个组件树，所以，一方面是费性能，而且代码写起来逻辑复杂。但是react对批量数据操作很厉害。</li>
+<li>总而言之，项目要求比较高的适合使用react，因为react的社区更活跃一些，尤其是各种UI框架比较稳定、系统，可以信赖。Vue的社区也很活跃，但相对而言各种组件五花八门，大多数不够完善，缺乏系统性和迭代性，对于项目的后期维护和新手入手都不太友好。</li>
+<li>从应用上来看，react打出来的包会大一些，相对来说，vue的包小一些，如果项目场景对加载速度由要求，建议使用vue。</li>
+</ul>
+<h1 id="2-React-组件"><a href="#2-React-组件" class="headerlink" title="2. React 组件"></a>2. React 组件</h1><h2 id="2-1-为什么说在React中，一切都是组件"><a href="#2-1-为什么说在React中，一切都是组件" class="headerlink" title="2.1. 为什么说在React中，一切都是组件"></a>2.1. 为什么说在React中，一切都是组件</h2><p>组件是 React 应用 UI 的构建块。这些组件将整个 UI 分成小的独立并可重用的部分。每个组件彼此独立，而不会影响 UI 的其余部分。</p>
+<h2 id="2-2-React-中-render-的目的。"><a href="#2-2-React-中-render-的目的。" class="headerlink" title="2.2. React 中 render() 的目的。"></a>2.2. React 中 render() 的目的。</h2><p>每个React组件强制要求必须有一个 render()。它返回一个 React 元素，是原生 DOM 组件的表示。如果需要渲染多个 HTML 元素，则必须将它们组合在一个封闭标记内，例如 <code>&lt;form&gt;、&lt;group&gt;、&lt;div&gt;</code> 等。此函数必须保持纯净，即必须每次调用时都返回相同的结果。</p>
+<h2 id="2-3-React组件生命周期的阶段是什么？"><a href="#2-3-React组件生命周期的阶段是什么？" class="headerlink" title="2.3. React组件生命周期的阶段是什么？"></a>2.3. React组件生命周期的阶段是什么？</h2><p>React 组件的生命周期有三个不同的阶段：</p>
+<ol>
+<li><code>初始渲染阶段：</code>这是组件即将开始其生命之旅并进入 DOM 的阶段。</li>
+<li><code>更新阶段：</code>一旦组件被添加到 DOM，它只有在 prop 或状态发生变化时才可能更新和重新渲染。这些只发生在这个阶段。</li>
+<li><code>卸载阶段：</code>这是组件生命周期的最后阶段，组件被销毁并从 DOM 中删除。</li>
+</ol>
+<h2 id="2-4-react-生命周期函数"><a href="#2-4-react-生命周期函数" class="headerlink" title="2.4. react 生命周期函数"></a>2.4. react 生命周期函数</h2><p><img src="/img/react-life-cycle.png"></p>
+<ol>
+<li>挂载<br>当组件实例被创建并插入 DOM 中时，其生命周期调用顺序如下：</li>
+</ol>
+<ul>
+<li>constructor()</li>
+<li>getDerivedStateFromProps(): 当从父类接收到 props 并且在调用另一个渲染器之前调用。</li>
+<li>render()</li>
+<li>componentDidMount(): 仅在第一次渲染后在客户端执行。</li>
+</ul>
+<ol start="2">
+<li>更新<br>当组件的 props 或 state 发生变化时会触发更新。组件更新的生命周期调用顺序如下：</li>
+</ol>
+<ul>
+<li>getDerivedStateFromProps(): 当从父类接收到 props 并且在调用另一个渲染器之前调用。</li>
+<li>shouldComponentUpdate(): 根据特定条件返回 true 或 false。如果你希望更新组件，请返回true 否则返回 false。默认情况下，它返回 false。</li>
+<li>render()</li>
+<li>getSnapshotBeforeUpdate()</li>
+<li>componentDidUpdate(): 在渲染发生后立即调用</li>
+</ul>
+<ol start="3">
+<li>卸载<br>当组件从 DOM 中移除时会调用如下方法：</li>
+</ol>
+<ul>
+<li>componentWillUnmount(): 从 DOM 卸载组件后调用。用于清理内存空间。</li>
+</ul>
+<h2 id="2-5-在生命周期中的哪一步你应该发起-AJAX-请求？"><a href="#2-5-在生命周期中的哪一步你应该发起-AJAX-请求？" class="headerlink" title="2.5. 在生命周期中的哪一步你应该发起 AJAX 请求？"></a>2.5. 在生命周期中的哪一步你应该发起 AJAX 请求？</h2><p>我们应当将AJAX 请求放到 componentDidMount 函数中执行，主要原因有下：</p>
+<p>React 下一代调和算法 Fiber 会通过开始或停止渲染的方式优化应用性能，其会影响到 componentWillMount 的触发次数。对于 componentWillMount 这个生命周期函数的调用次数会变得不确定，React 可能会多次频繁调用 componentWillMount。如果我们将 AJAX 请求放到 componentWillMount 函数中，那么显而易见其会被触发多次，自然也就不是好的选择。 (新版本的React，已经拿掉了)</p>
+<p>如果我们将 AJAX 请求放置在生命周期的其他函数中，我们并不能保证请求仅在组件挂载完毕后才会要求响应。如果我们的数据请求在组件挂载之前就完成，并且调用了setState函数将数据添加到组件状态中，对于未挂载的组件则会报错。而在 componentDidMount 函数中进行 AJAX 请求则能有效避免这个问题。</p>
+<h2 id="2-6-展示组件-Presentational-component-和容器组件-Container-component-之间有何不同"><a href="#2-6-展示组件-Presentational-component-和容器组件-Container-component-之间有何不同" class="headerlink" title="2.6. 展示组件(Presentational component)和容器组件(Container component)之间有何不同"></a>2.6. 展示组件(Presentational component)和容器组件(Container component)之间有何不同</h2><ul>
+<li>展示组件关心组件看起来是什么。展示专门通过 props 接受数据和回调，并且几乎不会有自身的状态，但当展示组件拥有自身的状态时，通常也只关心 UI 状态而不是数据的状态。</li>
+<li>容器组件则更关心组件是如何运作的。容器组件会为展示组件或者其它容器组件提供数据和行为(behavior)，它们会调用 Flux actions，并将其作为回调提供给展示组件。容器组件经常是有状态的，因为它们是(其它组件的)数据源。</li>
+</ul>
+<h2 id="2-7-调用-super-props-的目的是什么"><a href="#2-7-调用-super-props-的目的是什么" class="headerlink" title="2.7. 调用 super(props) 的目的是什么"></a>2.7. 调用 super(props) 的目的是什么</h2><p>在 super() 被调用之前，子类是不能使用 this 的，在 ES2015 中，子类必须在 constructor 中调用 super()。</p>
+<p>传递 props 给 super() 的原因则是便于(在子类中)能在 constructor 访问 this.props。</p>
+<h2 id="2-8-除了在构造函数中绑定-this，还有其它方式吗"><a href="#2-8-除了在构造函数中绑定-this，还有其它方式吗" class="headerlink" title="2.8. 除了在构造函数中绑定 this，还有其它方式吗"></a>2.8. 除了在构造函数中绑定 this，还有其它方式吗</h2><p>你可以使用属性初始值设定项(property initializers)来正确绑定回调，create-react-app 也是默认支持的。</p>
+<p>在回调中你可以使用箭头函数，但问题是每次组件渲染时都会创建一个新的回调。</p>
+<h2 id="2-9-什么是-Props"><a href="#2-9-什么是-Props" class="headerlink" title="2.9. 什么是 Props?"></a>2.9. 什么是 Props?</h2><p>Props 是 React 中属性的简写。它们是只读组件，必须保持纯，即不可变。它们总是在整个应用中从父组件传递到子组件。子组件永远不能将 prop 送回父组件。这有助于维护单向数据流，通常用于呈现动态生成的数据。</p>
+<h2 id="2-10-什么是状态（State-？"><a href="#2-10-什么是状态（State-？" class="headerlink" title="2.10. 什么是状态（State)？"></a>2.10. 什么是状态（State)？</h2><p>状态是 React 组件的核心，是数据的来源，必须尽可能简单。基本上状态是确定组件呈现和行为的对象。与props 不同，它们是可变的，并创建动态和交互式组件。可以通过 <code>this.state</code> 访问它们。</p>
+<h2 id="2-11-类组件-Class-component-和函数式组件-Functional-component-之间有何不同"><a href="#2-11-类组件-Class-component-和函数式组件-Functional-component-之间有何不同" class="headerlink" title="2.11. 类组件(Class component)和函数式组件(Functional component)之间有何不同"></a>2.11. 类组件(Class component)和函数式组件(Functional component)之间有何不同</h2><ul>
+<li>类组件不仅允许你使用更多额外的功能，如组件自身的状态和生命周期钩子，也能使组件直接访问 store 并维持状态 (React v16.8以后，可以使用hook使用state和部分生命周期钩子函数)</li>
+<li>当组件仅是接收 props，并将组件自身渲染到页面时，该组件就是一个 ‘无状态组件(stateless component)’，可以使用一个纯函数来创建这样的组件。这种组件也被称为哑组件(dumb components)或展示组件</li>
+</ul>
+<h2 id="2-12-如何更新组件的状态？"><a href="#2-12-如何更新组件的状态？" class="headerlink" title="2.12. 如何更新组件的状态？"></a>2.12. 如何更新组件的状态？</h2><ol>
+<li>可以用 this.setState()更新组件的状态</li>
+<li>更新时，可以只更新部分属性，保留其他属性值</li>
+</ol>
+<p>##React 中的箭头函数有什么作用<br>箭头函数（=&gt;）是用于编写函数表达式的简短语法。这些函数允许正确绑定组件的上下文（不改变this），因为在 ES6 中默认下不能使用自动绑定。使用高阶函数时，箭头函数非常有用。</p>
+<h2 id="2-13-React中的事件是什么？"><a href="#2-13-React中的事件是什么？" class="headerlink" title="2.13. React中的事件是什么？"></a>2.13. React中的事件是什么？</h2><p>在 React 中，事件是对鼠标悬停、鼠标单击、按键等特定操作的触发反应。处理这些事件类似于处理 DOM 元素中的事件。但是有一些语法差异，如：</p>
+<ol>
+<li>用驼峰命名法对事件命名而不是仅使用小写字母。</li>
+<li>事件作为函数而不是字符串传递。</li>
+</ol>
+<p>事件参数重包含一组特定于事件的属性。每个事件类型都包含自己的属性和行为，只能通过其事件处理程序访问。</p>
+<h2 id="2-14-React中的合成事件是什么？"><a href="#2-14-React中的合成事件是什么？" class="headerlink" title="2.14. React中的合成事件是什么？"></a>2.14. React中的合成事件是什么？</h2><p>合成事件是围绕浏览器原生事件充当跨浏览器包装器的对象。它们将不同浏览器的行为合并为一个 API。这样做是为了确保事件在不同浏览器中显示一致的属性。</p>
+<h2 id="2-15-何为受控组件-controlled-component"><a href="#2-15-何为受控组件-controlled-component" class="headerlink" title="2.15. 何为受控组件(controlled component)"></a>2.15. 何为受控组件(controlled component)</h2><p>在 HTML 中，类似 <code>&lt;input&gt;, &lt;textarea&gt; 和 &lt;select&gt;</code> 这样的表单元素会维护自身的状态，并基于用户的输入来更新。当用户提交表单时，前面提到的元素的值将随表单一起被发送。但在 React 中会有些不同，包含表单元素的组件将会在 state 中追踪输入的值，并且每次调用回调函数时，如 onChange 会更新 state，重新渲染组件。一个输入表单元素，它的值通过 React 的这种方式来控制，这样的元素就被称为”受控元素”。</p>
+<h2 id="2-16-React-的-refs-有什么作用？"><a href="#2-16-React-的-refs-有什么作用？" class="headerlink" title="2.16. React 的 refs 有什么作用？"></a>2.16. React 的 refs 有什么作用？</h2><p>Refs 是 React 中引用的简写。它是一个有助于存储对特定的 React 元素或组件的引用的属性，它将由组件渲染配置函数返回。用于对 render() 返回的特定元素或组件的引用。当需要进行 DOM 测量或向组件添加方法时，它们会派上用场。</p>
+<h2 id="2-17-列出一些应该使用-Refs-的情况"><a href="#2-17-列出一些应该使用-Refs-的情况" class="headerlink" title="2.17. 列出一些应该使用 Refs 的情况"></a>2.17. 列出一些应该使用 Refs 的情况</h2><ul>
+<li>需要管理焦点、选择文本或媒体播放时</li>
+<li>触发式动画</li>
+<li>与第三方 DOM 库集成</li>
+</ul>
+<h2 id="2-18-shouldComponentUpdate-是做什么的，（react-性能优化是哪个周期函数？）"><a href="#2-18-shouldComponentUpdate-是做什么的，（react-性能优化是哪个周期函数？）" class="headerlink" title="2.18. shouldComponentUpdate 是做什么的，（react 性能优化是哪个周期函数？）"></a>2.18. shouldComponentUpdate 是做什么的，（react 性能优化是哪个周期函数？）</h2><p>shouldComponentUpdate 这个方法用来判断是否需要调用 render 方法重新描绘 dom。因为 dom 的描绘非常消耗性能，如果我们能在 shouldComponentUpdate 方法中能够写出更优化的 dom diff 算法，可以极大的提高性能。</p>
+<h2 id="2-19-什么是高阶组件（HOC-higher-order-component）？"><a href="#2-19-什么是高阶组件（HOC-higher-order-component）？" class="headerlink" title="2.19. 什么是高阶组件（HOC - higher order component）？"></a>2.19. 什么是高阶组件（HOC - higher order component）？</h2><p>高阶组件是重用组件逻辑的高级方法，是一种源于 React 的组件模式。 HOC 是自定义组件，在它之内包含另一个组件。它们可以接受子组件提供的任何动态，但不会修改或复制其输入组件中的任何行为。你可以认为 HOC 是“纯（Pure）”组件。</p>
+<h2 id="2-20-你能用HOC做什么？"><a href="#2-20-你能用HOC做什么？" class="headerlink" title="2.20. 你能用HOC做什么？"></a>2.20. 你能用HOC做什么？</h2><ul>
+<li>代码重用，逻辑和引导抽象</li>
+<li>渲染劫持</li>
+<li>状态抽象和控制</li>
+<li>Props 控制</li>
+</ul>
+<h2 id="2-21-什么是纯组件（Pure-Component）？"><a href="#2-21-什么是纯组件（Pure-Component）？" class="headerlink" title="2.21. 什么是纯组件（Pure Component）？"></a>2.21. 什么是纯组件（Pure Component）？</h2><p>纯（Pure） 组件是可以编写的最简单、最快的组件。它们可以替换任何只有 render() 的组件。这些组件增强了代码的简单性和应用的性能。</p>
+<h2 id="2-22-React-中-key-的重要性是什么？"><a href="#2-22-React-中-key-的重要性是什么？" class="headerlink" title="2.22. React 中 key 的重要性是什么？"></a>2.22. React 中 key 的重要性是什么？</h2><p>key 用于识别唯一的 Virtual DOM 元素及其驱动 UI 的相应数据。它们通过回收 DOM 中当前所有的元素来帮助 React 优化渲染。这些 key 必须是唯一的数字或字符串，React 只是重新排序元素而不是重新渲染它们。这可以提高应用程序的性能。</p>
+<h1 id="3-Redux"><a href="#3-Redux" class="headerlink" title="3. Redux"></a>3. Redux</h1><h2 id="3-1-什么是Flux"><a href="#3-1-什么是Flux" class="headerlink" title="3.1. 什么是Flux"></a>3.1. 什么是Flux</h2><p>Flux 是一种强制单向数据流的架构模式。它控制派生数据，并使用具有所有数据权限的中心 store 实现多个组件之间的通信。整个应用中的数据更新必须只能在此处进行。 Flux 为应用提供稳定性并减少运行时的错误。</p>
+<h2 id="3-2-什么是Redux？"><a href="#3-2-什么是Redux？" class="headerlink" title="3.2. 什么是Redux？"></a>3.2. 什么是Redux？</h2><p>Redux 是当今最热门的前端开发库之一。它是 JavaScript 程序的可预测状态容器，用于整个应用的状态管理。使用 Redux 开发的应用易于测试，可以在不同环境中运行，并显示一致的行为。</p>
+<h2 id="3-3-Redux遵循的三个原则是什么？"><a href="#3-3-Redux遵循的三个原则是什么？" class="headerlink" title="3.3. Redux遵循的三个原则是什么？"></a>3.3. Redux遵循的三个原则是什么？</h2><ol>
+<li><code>单一事实来源：</code>整个应用的状态存储在单个 store 中的对象/状态树里。单一状态树可以更容易地跟踪随时间的变化，并调试或检查应用程序。</li>
+<li><code>状态是只读的：</code>改变状态的唯一方法是去触发一个动作。动作是描述变化的普通 JS 对象。就像 state 是数据的最小表示一样，该操作是对数据更改的最小表示。</li>
+<li><code>使用纯函数进行更改：</code>为了指定状态树如何通过操作进行转换，你需要纯函数。纯函数是那些返回值仅取决于其参数值的函数。</li>
+</ol>
+<h2 id="3-4-“单一事实来源”有什么理解？"><a href="#3-4-“单一事实来源”有什么理解？" class="headerlink" title="3.4. “单一事实来源”有什么理解？"></a>3.4. “单一事实来源”有什么理解？</h2><p>Redux 使用 “Store” 将程序的整个状态存储在同一个地方。因此所有组件的状态都存储在 Store 中，并且它们从 Store 本身接收更新。单一状态树可以更容易地跟踪随时间的变化，并调试或检查程序。</p>
+<h2 id="3-5-列出-Redux-的组件"><a href="#3-5-列出-Redux-的组件" class="headerlink" title="3.5. 列出 Redux 的组件"></a>3.5. 列出 Redux 的组件</h2><ul>
+<li>Action – 这是一个用来描述发生了什么事情的对象。React 中的 Action 必须具有 type 属性，该属性指示正在执行的 ACTION 的类型。必须将它们定义为字符串常量，并且还可以向其添加更多的属性。在 Redux 中，action 被名为 Action Creators 的函数所创建。</li>
+<li>Reducer – 这是一个确定状态将如何变化的地方。Reducers 是纯函数，它规定应用程序的状态怎样因响应 ACTION 而改变。Reducers 通过接受先前的状态和 action 来工作，然后它返回一个新的状态。它根据操作的类型确定需要执行哪种更新，然后返回新的值。如果不需要完成任务，它会返回原来的状态。</li>
+<li>Store – 整个程序的状态/对象树保存在Store中。 Store 是一个 JavaScript 对象，它可以保存程序的状态，并提供一些方法来访问状态、调度操作和注册侦听器。</li>
+<li>View – 只显示 Store 提供的数据。</li>
+</ul>
+<h2 id="3-6-Redux与Flux的区别"><a href="#3-6-Redux与Flux的区别" class="headerlink" title="3.6. Redux与Flux的区别"></a>3.6. Redux与Flux的区别</h2><table>
+<thead>
+<tr>
+<th align="left">Flex</th>
+<th align="left">Redux</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Store 包含状态和更改逻辑</td>
+<td align="left">Store 和更改逻辑是分开的</td>
+</tr>
+<tr>
+<td align="left">有多个 Store</td>
+<td align="left">只有一个 Store</td>
+</tr>
+<tr>
+<td align="left">所有 Store 都互不影响且是平级的</td>
+<td align="left">带有分层 reducer 的单一 Store</td>
+</tr>
+<tr>
+<td align="left">有单一调度器</td>
+<td align="left">没有调度器的概念</td>
+</tr>
+<tr>
+<td align="left">React 组件订阅 store</td>
+<td align="left">容器组件是有联系的</td>
+</tr>
+<tr>
+<td align="left">状态是可变的</td>
+<td align="left">状态是不可改变的</td>
+</tr>
+</tbody></table>
+<h2 id="3-7-Redux-有哪些优点？"><a href="#3-7-Redux-有哪些优点？" class="headerlink" title="3.7. Redux 有哪些优点？"></a>3.7. Redux 有哪些优点？</h2><ul>
+<li>结果的可预测性 - 由于总是存在一个真实来源，即 store ，因此不存在如何将当前状态与动作和应用的其他部分同步的问题。</li>
+<li>可维护性 - 代码变得更容易维护，具有可预测的结果和严格的结构。</li>
+<li>服务器端渲染 - 你只需将服务器上创建的 store 传到客户端即可。这对初始渲染非常有用，并且可以优化应用性能，从而提供更好的用户体验。</li>
+<li>开发人员工具 - 从操作到状态更改，开发人员可以实时跟踪应用中发生的所有事情。</li>
+<li>社区和生态系统 - Redux 背后有一个巨大的社区，这使得它更加迷人。一个由才华横溢的人组成的大型社区为库的改进做出了贡献，并开发了各种应用。</li>
+<li>易于测试 - Redux 的代码主要是小巧、纯粹和独立的功能。这使代码可测试且独立。</li>
+<li>组织 - Redux 准确地说明了代码的组织方式，这使得代码在团队使用时更加一致和简单。</li>
+</ul>
+<h1 id="4-React-Router"><a href="#4-React-Router" class="headerlink" title="4. React Router"></a>4. React Router</h1><h2 id="4-1-为什么需要-React-中的路由？"><a href="#4-1-为什么需要-React-中的路由？" class="headerlink" title="4.1. 为什么需要 React 中的路由？"></a>4.1. 为什么需要 React 中的路由？</h2><p>Router 用于定义多个路由，当用户定义特定的 URL 时，如果此 URL 与 Router 内定义的任何 “路由” 的路径匹配，则用户将重定向到该特定路由。所以基本上我们需要在自己的应用中添加一个 Router 库，允许创建多个路由，每个路由都会向我们提供一个独特的视图。</p>
+<h2 id="4-2-什么是React-路由？"><a href="#4-2-什么是React-路由？" class="headerlink" title="4.2. 什么是React 路由？"></a>4.2. 什么是React 路由？</h2><p>React 路由是一个构建在 React 之上的强大的路由库，它有助于向应用程序添加新的屏幕和流。这使 URL 与网页上显示的数据保持同步。它负责维护标准化的结构和行为，并用于开发单页 Web 应用。 React 路由有一个简单的API。</p>
+<h2 id="4-3-React-Router-的优点。"><a href="#4-3-React-Router-的优点。" class="headerlink" title="4.3. React Router 的优点。"></a>4.3. React Router 的优点。</h2><ul>
+<li>就像 React 基于组件一样，在 React Router v4 中，API 是 ‘All About Components’。可以将 Router 可视化为单个根组件（<BrowserRouter>），其中我们将特定的子路由（<route>）包起来。</li>
+<li>无需手动设置历史值：在 React Router v4 中，我们要做的就是将路由包装在 <BrowserRouter> 组件中。</li>
+<li>包是分开的：共有三个包，分别用于 Web、Native 和 Core。这使我们应用更加紧凑。基于类似的编码风格很容易进行切换</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/react/" rel="tag"># react</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/25/Web-Advanced-2-Cancel-HTTP-Request-in-fetch-axios/" rel="prev" title="前端进阶（2）使用fetch/axios时， 如何取消http请求">
+      <i class="fa fa-chevron-left"></i> 前端进阶（2）使用fetch/axios时， 如何取消http请求
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-React-%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">1. React 基本问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-React%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">1.1. React有什么特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-React%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9%E3%80%82"><span class="nav-number">1.2.</span> <span class="nav-text">1.2. React的主要优点。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-React%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%90%E5%88%B6"><span class="nav-number">1.3.</span> <span class="nav-text">1.3. React有哪些限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-Virtual-DOM-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E3%80%82"><span class="nav-number">1.4.</span> <span class="nav-text">1.4. Virtual DOM 的工作原理。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-react-diff-%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">1.5. react diff 原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-6-React-%E9%A1%B9%E7%9B%AE%E7%94%A8%E8%BF%87%E4%BB%80%E4%B9%88%E8%84%9A%E6%89%8B%E6%9E%B6"><span class="nav-number">1.6.</span> <span class="nav-text">1.6. React 项目用过什么脚手架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-7-%E5%A6%82%E6%9E%9C%E8%BF%9B%E8%A1%8C%E4%B8%89%E6%AC%A1setState%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%8C%E5%BE%AA%E7%8E%AF%E6%89%A7%E8%A1%8CsetState%E7%BB%84%E4%BB%B6%E4%BC%9A%E4%B8%80%E7%9B%B4%E9%87%8D%E6%96%B0%E6%B8%B2%E6%9F%93%E5%90%97"><span class="nav-number">1.7.</span> <span class="nav-text">1.7. 如果进行三次setState会发生什么，循环执行setState组件会一直重新渲染吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-8-%E8%B0%83%E7%94%A8-setState-%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.8.</span> <span class="nav-text">1.8. 调用 setState 之后发生了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-9-%E4%BB%80%E4%B9%88%E6%98%AFJSX"><span class="nav-number">1.9.</span> <span class="nav-text">1.9. 什么是JSX</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-10-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%AF%BB%E5%8F%96%E8%AF%BB%E5%8F%96JSX%EF%BC%9F"><span class="nav-number">1.10.</span> <span class="nav-text">1.10. 浏览器是否可以直接读取读取JSX？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-11-vue%E5%92%8Creact%E9%80%82%E7%94%A8%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.11.</span> <span class="nav-text">1.11. vue和react适用的场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-React-%E7%BB%84%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">2. React 组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%B4%E5%9C%A8React%E4%B8%AD%EF%BC%8C%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E7%BB%84%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 为什么说在React中，一切都是组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-React-%E4%B8%AD-render-%E7%9A%84%E7%9B%AE%E7%9A%84%E3%80%82"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. React 中 render() 的目的。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-React%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E9%98%B6%E6%AE%B5%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">2.3. React组件生命周期的阶段是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-react-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">2.4. react 生命周期函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-%E5%9C%A8%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%AD%E7%9A%84%E5%93%AA%E4%B8%80%E6%AD%A5%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%8F%91%E8%B5%B7-AJAX-%E8%AF%B7%E6%B1%82%EF%BC%9F"><span class="nav-number">2.5.</span> <span class="nav-text">2.5. 在生命周期中的哪一步你应该发起 AJAX 请求？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-%E5%B1%95%E7%A4%BA%E7%BB%84%E4%BB%B6-Presentational-component-%E5%92%8C%E5%AE%B9%E5%99%A8%E7%BB%84%E4%BB%B6-Container-component-%E4%B9%8B%E9%97%B4%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C"><span class="nav-number">2.6.</span> <span class="nav-text">2.6. 展示组件(Presentational component)和容器组件(Container component)之间有何不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-%E8%B0%83%E7%94%A8-super-props-%E7%9A%84%E7%9B%AE%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.7.</span> <span class="nav-text">2.7. 调用 super(props) 的目的是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-8-%E9%99%A4%E4%BA%86%E5%9C%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%AD%E7%BB%91%E5%AE%9A-this%EF%BC%8C%E8%BF%98%E6%9C%89%E5%85%B6%E5%AE%83%E6%96%B9%E5%BC%8F%E5%90%97"><span class="nav-number">2.8.</span> <span class="nav-text">2.8. 除了在构造函数中绑定 this，还有其它方式吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-9-%E4%BB%80%E4%B9%88%E6%98%AF-Props"><span class="nav-number">2.9.</span> <span class="nav-text">2.9. 什么是 Props?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-10-%E4%BB%80%E4%B9%88%E6%98%AF%E7%8A%B6%E6%80%81%EF%BC%88State-%EF%BC%9F"><span class="nav-number">2.10.</span> <span class="nav-text">2.10. 什么是状态（State)？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-11-%E7%B1%BB%E7%BB%84%E4%BB%B6-Class-component-%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6-Functional-component-%E4%B9%8B%E9%97%B4%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C"><span class="nav-number">2.11.</span> <span class="nav-text">2.11. 类组件(Class component)和函数式组件(Functional component)之间有何不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-12-%E5%A6%82%E4%BD%95%E6%9B%B4%E6%96%B0%E7%BB%84%E4%BB%B6%E7%9A%84%E7%8A%B6%E6%80%81%EF%BC%9F"><span class="nav-number">2.12.</span> <span class="nav-text">2.12. 如何更新组件的状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-13-React%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.13.</span> <span class="nav-text">2.13. React中的事件是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-14-React%E4%B8%AD%E7%9A%84%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.14.</span> <span class="nav-text">2.14. React中的合成事件是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-15-%E4%BD%95%E4%B8%BA%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6-controlled-component"><span class="nav-number">2.15.</span> <span class="nav-text">2.15. 何为受控组件(controlled component)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-16-React-%E7%9A%84-refs-%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-number">2.16.</span> <span class="nav-text">2.16. React 的 refs 有什么作用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-17-%E5%88%97%E5%87%BA%E4%B8%80%E4%BA%9B%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8-Refs-%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">2.17.</span> <span class="nav-text">2.17. 列出一些应该使用 Refs 的情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-18-shouldComponentUpdate-%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84%EF%BC%8C%EF%BC%88react-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%98%AF%E5%93%AA%E4%B8%AA%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0%EF%BC%9F%EF%BC%89"><span class="nav-number">2.18.</span> <span class="nav-text">2.18. shouldComponentUpdate 是做什么的，（react 性能优化是哪个周期函数？）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-19-%E4%BB%80%E4%B9%88%E6%98%AF%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6%EF%BC%88HOC-higher-order-component%EF%BC%89%EF%BC%9F"><span class="nav-number">2.19.</span> <span class="nav-text">2.19. 什么是高阶组件（HOC - higher order component）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-20-%E4%BD%A0%E8%83%BD%E7%94%A8HOC%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.20.</span> <span class="nav-text">2.20. 你能用HOC做什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-21-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%AF%E7%BB%84%E4%BB%B6%EF%BC%88Pure-Component%EF%BC%89%EF%BC%9F"><span class="nav-number">2.21.</span> <span class="nav-text">2.21. 什么是纯组件（Pure Component）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-22-React-%E4%B8%AD-key-%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.22.</span> <span class="nav-text">2.22. React 中 key 的重要性是什么？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Redux"><span class="nav-number">3.</span> <span class="nav-text">3. Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E4%BB%80%E4%B9%88%E6%98%AFFlux"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. 什么是Flux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E4%BB%80%E4%B9%88%E6%98%AFRedux%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. 什么是Redux？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Redux%E9%81%B5%E5%BE%AA%E7%9A%84%E4%B8%89%E4%B8%AA%E5%8E%9F%E5%88%99%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.3.</span> <span class="nav-text">3.3. Redux遵循的三个原则是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-%E2%80%9C%E5%8D%95%E4%B8%80%E4%BA%8B%E5%AE%9E%E6%9D%A5%E6%BA%90%E2%80%9D%E6%9C%89%E4%BB%80%E4%B9%88%E7%90%86%E8%A7%A3%EF%BC%9F"><span class="nav-number">3.4.</span> <span class="nav-text">3.4. “单一事实来源”有什么理解？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-%E5%88%97%E5%87%BA-Redux-%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="nav-number">3.5.</span> <span class="nav-text">3.5. 列出 Redux 的组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-Redux%E4%B8%8EFlux%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.6.</span> <span class="nav-text">3.6. Redux与Flux的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-7-Redux-%E6%9C%89%E5%93%AA%E4%BA%9B%E4%BC%98%E7%82%B9%EF%BC%9F"><span class="nav-number">3.7.</span> <span class="nav-text">3.7. Redux 有哪些优点？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-React-Router"><span class="nav-number">4.</span> <span class="nav-text">4. React Router</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-React-%E4%B8%AD%E7%9A%84%E8%B7%AF%E7%94%B1%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">4.1. 为什么需要 React 中的路由？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-%E4%BB%80%E4%B9%88%E6%98%AFReact-%E8%B7%AF%E7%94%B1%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">4.2. 什么是React 路由？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-React-Router-%E7%9A%84%E4%BC%98%E7%82%B9%E3%80%82"><span class="nav-number">4.3.</span> <span class="nav-text">4.3. React Router 的优点。</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -149,6 +149,119 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/30/angular-perfromance-in-binding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/30/angular-perfromance-in-binding/" class="post-title-link" itemprop="url">angular绑定（脏检查）方面的性能优化技巧</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-30 14:48:39" itemprop="dateCreated datePublished" datetime="2021-03-30T14:48:39+08:00">2021-03-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-17 16:52:54" itemprop="dateModified" datetime="2021-04-17T16:52:54+08:00">2021-04-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BC%98%E5%8C%96">1. 为什么要优化</a></li>
+<li><a href="#2-%E7%BC%96%E7%A8%8B%E4%B9%A0%E6%83%AF%E6%96%B9%E9%9D%A2">2. 编程习惯方面</a><ul>
+<li><a href="#21-ngforof%E5%8A%A0%E5%85%A5trackby%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD">2.1. NgForOf，加入trackBy提升性能</a></li>
+<li><a href="#22-angular%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F">2.2. Angular数据绑定的三种方式</a></li>
+<li><a href="#23-%E9%99%A4%E9%9D%9E%E9%9C%80%E8%A6%81%E9%83%BD%E6%98%AF%E7%94%A8%E5%8D%95%E5%90%91%E7%BB%91%E5%AE%9A%E5%87%8F%E5%B0%91%E7%9B%91%E6%8E%A7%E5%80%BC%E7%9A%84%E4%B8%AA%E6%95%B0">2.3. 除非需要，都是用单向绑定，减少监控值的个数</a></li>
+</ul>
+</li>
+<li><a href="#3-changedetectionstrategyonpush-%E8%BF%9B%E8%A1%8C%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87">3. ChangeDetectionStrategy.OnPush 进行性能提升</a></li>
+<li><a href="#4-%E5%88%A9%E7%94%A8ngzone-runoutsideangular%E4%BC%98%E5%8C%96">4. 利用ngzone-runOutsideAngular优化</a></li>
+<li><a href="#5-%E6%89%8B%E5%8A%A8%E6%8E%A7%E5%88%B6%E8%84%8F%E6%A3%80%E6%9F%A5-changedetectorref">5. 手动控制脏检查 ChangeDetectorRef</a></li>
+<li><a href="#6-%E6%80%BB%E7%BB%93">6. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular: 8+</li>
+</ul>
+</blockquote>
+<h1 id="1-为什么要优化"><a href="#1-为什么要优化" class="headerlink" title="1. 为什么要优化"></a>1. 为什么要优化</h1><p>双向绑定是一柄双刃剑，提高开发效率的同时，也牺牲了性能。当然，随着硬件性能的提升，Angular自身性能的提升，对于一般（中小）复杂度的应用，性能问题可以忽略不计。但是对于特殊场景，或复杂页面来说，我们就需要单独的处理数据绑定问题，否则就会有卡顿的现象，影响用户体验。</p>
+<h1 id="2-编程习惯方面"><a href="#2-编程习惯方面" class="headerlink" title="2. 编程习惯方面"></a>2. 编程习惯方面</h1><p>平时的一些小技巧，小习惯，都可以改善Angular绑定方面的性能。</p>
+<h2 id="2-1-NgForOf，加入trackBy提升性能"><a href="#2-1-NgForOf，加入trackBy提升性能" class="headerlink" title="2.1. NgForOf，加入trackBy提升性能"></a>2.1. NgForOf，加入trackBy提升性能</h2><p>trackBy定义如何跟踪可迭代项的更改的函数。在迭代器中添加、移动或删除条目时，指令必须重新渲染适当的 DOM 节点。为了最大程度地减少 DOM 中的搅动，仅重新渲染已更改的节点。</p>
+<p>默认情况下，变更检测器假定对象实例标识可迭代对象。提供此函数后，指令将使用调用此函数的结果来标识项节点，而不是对象本身的标识。</p>
+<h2 id="2-2-Angular数据绑定的三种方式"><a href="#2-2-Angular数据绑定的三种方式" class="headerlink" title="2.2. Angular数据绑定的三种方式"></a>2.2. Angular数据绑定的三种方式</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>Name &#123;&#123;item.name&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>  <span class="comment">&lt;!-- 1. 直接绑定 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>Classes &#123;&#123;item | classPipe&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="comment">&lt;!-- 2. pipe方式--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>Classes &#123;&#123;classes(item)&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="comment">&lt;!-- 3.绑定方法调用的结果 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>直接绑定： 大多数情况下，这都是性能最好的方式。</li>
+<li>绑定方法调用的结果：在每个脏值检测过程中，classes方程都要被调用一遍。如果没有特殊需求，应尽量避免这种使用方式。</li>
+<li>pipe方式： 它和绑定function类似，每次脏值检测classPipe都会被调用。不过Angular给pipe做了优化，加了缓存，如果item和上次相等，则直接返回结果。</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> *<span class="attr">ngFor</span>=<span class="string">&quot;let item of items; index as i; trackBy: trackByFn&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-除非需要，都是用单向绑定，减少监控值的个数"><a href="#2-3-除非需要，都是用单向绑定，减少监控值的个数" class="headerlink" title="2.3. 除非需要，都是用单向绑定，减少监控值的个数"></a>2.3. 除非需要，都是用单向绑定，减少监控值的个数</h2><p>对于一般数据来说，都是只需要展示给用户，不需要修改。那么对于这部分数据，使用单向绑定即可(ts-&gt;html).<br>如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 也称插值绑定 --&gt;</span><br><span class="line"> &lt;span&gt;&#123;&#123;yourMessage&#125;&#125;&lt;&#x2F;span&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-ChangeDetectionStrategy-OnPush-进行性能提升"><a href="#3-ChangeDetectionStrategy-OnPush-进行性能提升" class="headerlink" title="3. ChangeDetectionStrategy.OnPush 进行性能提升"></a>3. ChangeDetectionStrategy.OnPush 进行性能提升</h1><p>对于一些很复杂的页面，上面的小技巧就不够用了，不过Angular也是考虑到这些了，提供了不少方法。<br>Angular 对比 AngularJS 在变化检测上由原来的双向检测(父-&gt;子，子-&gt;父)变为了单向(父-&gt;子)。所以每一次变化检测都会确定性地收敛。<br>Angular定义一个组件时，可以传入一个变化检测配置项为</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">changeDetection: ChangeDetectionStrategy.OnPush | ChangeDetectionStrategy.Default;</span><br></pre></td></tr></table></figure>
+
+<p>onpush策略只判断输入的引用(如果是object)是否改变，来判断是否进行脏检查。因此，我们可以使用onpush策略来减少变化检测的开销。</p>
+<h1 id="4-利用ngzone-runOutsideAngular优化"><a href="#4-利用ngzone-runOutsideAngular优化" class="headerlink" title="4. 利用ngzone-runOutsideAngular优化"></a>4. 利用ngzone-runOutsideAngular优化</h1><p>Angular依赖NgZone来监听异步操作，并从根部执行变化检测。换句话说，我们代码中的每一个 addEventListener都会触发脏检查。但是如果我们非常明确，有些addEventListener要执行的东西，不会（或者说可以忽略）影响数据结果，不想然他触发脏检查。比如监测scroll，监测鼠标事件等。</p>
+<p>针对这种情况， 我们可以使用zone提供的runOutsideAngular，让这些事件不触发脏检查。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.zone.runOutsideAngular(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">window</span>.document.addEventListener(<span class="string">&#x27;mousemove&#x27;</span>, <span class="built_in">this</span>.bindMouse);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-手动控制脏检查-ChangeDetectorRef"><a href="#5-手动控制脏检查-ChangeDetectorRef" class="headerlink" title="5. 手动控制脏检查 ChangeDetectorRef"></a>5. 手动控制脏检查 ChangeDetectorRef</h1><p>Angular的ChangeDetectorRef实例上提供了可以绑定或解绑某个组件脏检查的方法。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChangeDetectorRef</span> </span>&#123;</span><br><span class="line">  markForCheck() : <span class="built_in">void</span>     <span class="comment">// 通知框架进行变化检查/Change Detection</span></span><br><span class="line">  detach() : <span class="built_in">void</span>           <span class="comment">// 禁止脏检查</span></span><br><span class="line">  detectChanges() : <span class="built_in">void</span>    <span class="comment">// 手工触发脏检查， 从该组件到各个子组件执行一次变化检测</span></span><br><span class="line">  checkNoChanges() : <span class="built_in">void</span></span><br><span class="line">  reattach() : <span class="built_in">void</span>         <span class="comment">// detach逆操作，启用脏检查</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
+<li>平时的一些小习惯，都可以提高angular的性能；</li>
+<li>针对复杂应用，或者当出现卡顿时，我们也是有办法的！</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/CSS-interview-qa/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1477,149 +1590,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/29/Angular-Starter-14-compile-publish/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（14）- Angular 编译打包 & Docker发布</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-29 10:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T10:06:00+08:00">2021-01-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-07 10:40:13" itemprop="dateModified" datetime="2021-02-07T10:40:13+08:00">2021-02-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
-<li><a href="#2-%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85">2. 编译打包</a><ul>
-<li><a href="#21-%E5%9F%BA%E6%9C%AC%E6%89%93%E5%8C%85%E5%91%BD%E4%BB%A4">2.1. 基本打包命令</a></li>
-<li><a href="#22-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0%E4%BA%8C%E7%BA%A7%E7%9B%AE%E5%BD%95">2.2. 打包部署到二级目录</a></li>
-</ul>
-</li>
-<li><a href="#3-angular%E7%AB%99%E7%82%B9%E7%9A%84%E5%8F%91%E5%B8%83">3. Angular站点的发布</a><ul>
-<li><a href="#31-web%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83">3.1. web服务器发布</a></li>
-<li><a href="#32-%E4%BD%BF%E7%94%A8docker%E5%8F%91%E5%B8%83">3.2. 使用docker发布</a></li>
-</ul>
-</li>
-<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
-<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject&#x2F;src&#x2F;environments&#x2F;</span><br><span class="line">               └──environment.ts</span><br><span class="line">               └──environment.prod.ts</span><br></pre></td></tr></table></figure>
-<ol>
-<li>environment.ts: 针对开发环境使用的环境文件</li>
-<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
-</ol>
-<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
-<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod</span><br></pre></td></tr></table></figure>
-
-<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;configurations&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;production&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;fileReplacements&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;replace&quot;</span>: <span class="string">&quot;src/environments/environment.ts&quot;</span>,</span><br><span class="line">            <span class="string">&quot;with&quot;</span>: <span class="string">&quot;src/environments/environment.prod.ts&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&quot;optimization&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;outputHashing&quot;</span>: <span class="string">&quot;all&quot;</span>,</span><br><span class="line">        <span class="string">&quot;sourceMap&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractCss&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;namedChunks&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;aot&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractLicenses&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;vendorChunk&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;buildOptimizer&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;budgets&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;initial&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumWarning&quot;</span>: <span class="string">&quot;5mb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumError&quot;</span>: <span class="string">&quot;10mb&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
-<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a target="_blank" rel="noopener" href="http://abc.com下,要求部署到/">http://abc.com下，要求部署到</a> <a target="_blank" rel="noopener" href="http://abc.com/demo">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod --deploy-url &#x2F;demo&#x2F; --base-href &#x2F;demo&#x2F;</span><br></pre></td></tr></table></figure>
-<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
-<blockquote>
-<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
-</blockquote>
-<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
-<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
-<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
-<p>基本步骤：</p>
-<ol>
-<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . /usr/share/nginx/html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
-</blockquote>
-<ol start="2">
-<li>编译docker。 在Dockerfile目录下，执行<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>三条命令分别为：</p>
-<ul>
-<li>生成docker image， 名字（name）为your-docker-name</li>
-<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
-<li>压缩docker image</li>
-</ul>
-<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
-<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
-<li>为生产环境编译，一定要加参数<code>--prod</code></li>
-<li>如果要部署到二级目录，编译时加参数。如部署到/demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
-<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1689,7 +1659,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

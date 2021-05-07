@@ -149,6 +149,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/29/Angular-Starter-14-compile-publish/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（14）- Angular 编译打包 & Docker发布</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-29 10:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T10:06:00+08:00">2021-01-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-07 10:40:13" itemprop="dateModified" datetime="2021-02-07T10:40:13+08:00">2021-02-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85">2. 编译打包</a><ul>
+<li><a href="#21-%E5%9F%BA%E6%9C%AC%E6%89%93%E5%8C%85%E5%91%BD%E4%BB%A4">2.1. 基本打包命令</a></li>
+<li><a href="#22-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0%E4%BA%8C%E7%BA%A7%E7%9B%AE%E5%BD%95">2.2. 打包部署到二级目录</a></li>
+</ul>
+</li>
+<li><a href="#3-angular%E7%AB%99%E7%82%B9%E7%9A%84%E5%8F%91%E5%B8%83">3. Angular站点的发布</a><ul>
+<li><a href="#31-web%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83">3.1. web服务器发布</a></li>
+<li><a href="#32-%E4%BD%BF%E7%94%A8docker%E5%8F%91%E5%B8%83">3.2. 使用docker发布</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
+<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject&#x2F;src&#x2F;environments&#x2F;</span><br><span class="line">               └──environment.ts</span><br><span class="line">               └──environment.prod.ts</span><br></pre></td></tr></table></figure>
+<ol>
+<li>environment.ts: 针对开发环境使用的环境文件</li>
+<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
+</ol>
+<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
+<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod</span><br></pre></td></tr></table></figure>
+
+<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;configurations&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;production&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;fileReplacements&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;replace&quot;</span>: <span class="string">&quot;src/environments/environment.ts&quot;</span>,</span><br><span class="line">            <span class="string">&quot;with&quot;</span>: <span class="string">&quot;src/environments/environment.prod.ts&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&quot;optimization&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;outputHashing&quot;</span>: <span class="string">&quot;all&quot;</span>,</span><br><span class="line">        <span class="string">&quot;sourceMap&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractCss&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;namedChunks&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;aot&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractLicenses&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;vendorChunk&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;buildOptimizer&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;budgets&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;initial&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumWarning&quot;</span>: <span class="string">&quot;5mb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumError&quot;</span>: <span class="string">&quot;10mb&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
+<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a target="_blank" rel="noopener" href="http://abc.com下,要求部署到/">http://abc.com下，要求部署到</a> <a target="_blank" rel="noopener" href="http://abc.com/demo">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod --deploy-url &#x2F;demo&#x2F; --base-href &#x2F;demo&#x2F;</span><br></pre></td></tr></table></figure>
+<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
+<blockquote>
+<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
+</blockquote>
+<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
+<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
+<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
+<p>基本步骤：</p>
+<ol>
+<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . /usr/share/nginx/html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
+</blockquote>
+<ol start="2">
+<li>编译docker。 在Dockerfile目录下，执行<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>三条命令分别为：</p>
+<ul>
+<li>生成docker image， 名字（name）为your-docker-name</li>
+<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
+<li>压缩docker image</li>
+</ul>
+<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>为生产环境编译，一定要加参数<code>--prod</code></li>
+<li>如果要部署到二级目录，编译时加参数。如部署到/demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
+<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1301,154 +1444,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-11 11:11:35" itemprop="dateCreated datePublished" datetime="2021-01-11T11:11:35+08:00">2021-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-01-12 14:34:18" itemprop="dateModified" datetime="2021-01-12T14:34:18+08:00">2021-01-12</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>@[TOC]</p>
-<ul>
-<li><a href="#1-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">1. 本地开发环境搭建</a><ul>
-<li><a href="#11-nodejs">1.1. node.js</a></li>
-<li><a href="#12-angular-cli">1.2. Angular CLI</a></li>
-</ul>
-</li>
-<li><a href="#2-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7---visual-studio-code">2. 开发工具 - Visual Studio Code</a></li>
-<li><a href="#%E7%AC%AC%E4%B8%80%E4%B8%AAanuglar%E9%A1%B9%E7%9B%AE">第一个Anuglar项目</a><ul>
-<li><a href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AAanuglar%E9%A1%B9%E7%9B%AE">创建第一个anuglar项目</a></li>
-<li><a href="#angular-cli%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Angular CLI常用命令</a></li>
-</ul>
-</li>
-<li><a href="#%E5%9C%A8%E7%BA%BF%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE">在线实战项目</a><ul>
-<li><a href="#%E6%96%B0%E6%89%8B%E9%A1%B9%E7%9B%AEbasic-angular-app">新手项目：<code>Basic Angular app</code></a></li>
-<li><a href="#%E5%85%A5%E9%97%A8%E9%A1%B9%E7%9B%AEtour-of-heroes">入门项目：<code>Tour of Heroes</code></a></li>
-</ul>
-</li>
-</ul>
-<p>了解了一些Angular的基本概念后，如果想进一步学习Angular，接下来让我们来搭建本地开发环境，并从一个入门项目了解Angular的基本用法。</p>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-本地开发环境搭建"><a href="#1-本地开发环境搭建" class="headerlink" title="1. 本地开发环境搭建"></a>1. 本地开发环境搭建</h1><p>本地开发环境搭建只需要node.js, 和Angular CLI。</p>
-<h2 id="1-1-node-js"><a href="#1-1-node-js" class="headerlink" title="1.1. node.js"></a>1.1. node.js</h2><p>官网（<a target="_blank" rel="noopener" href="https://nodejs.org/%EF%BC%89%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%9A%84LTS%EF%BC%88Long">https://nodejs.org/）下载最新的LTS（Long</a> Time Support)版本的node.js，安装。</p>
-<p>说明：</p>
-<ol>
-<li>LTS（Long Time Support)版本, 官方会支持更长时间，比如打补丁，改bug等。相对更稳定、靠谱。</li>
-<li>node.js 安装后，同时会安装npm</li>
-</ol>
-<p>检查本地node.js, npm环境</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js 版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="comment"># npm 版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-2-Angular-CLI"><a href="#1-2-Angular-CLI" class="headerlink" title="1.2. Angular CLI"></a>1.2. Angular CLI</h2><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。(参考：<a target="_blank" rel="noopener" href="https://cli.angular.io/">https://cli.angular.io/</a>)</p>
-<p>npm安装最新版本@angular/cli</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @angular/cli</span><br></pre></td></tr></table></figure>
-
-<p>检查本地angular环境</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng v</span><br></pre></td></tr></table></figure>
-
-<p>说明：</p>
-<ol>
-<li>该命令如果在非angular项目下执行，返回全局的Angular CLI环境版本</li>
-<li>在angular项目下执行, 返回当前angular项目使用的angular，angular CLI，以及核心angular组件的版本。</li>
-<li>全局Angular CLI版本有何能与项目的Angular CLI版本不一致，不冲突。项目中，使用项目制定的CLI版本。</li>
-</ol>
-<h1 id="2-开发工具-Visual-Studio-Code"><a href="#2-开发工具-Visual-Studio-Code" class="headerlink" title="2. 开发工具 - Visual Studio Code"></a>2. 开发工具 - Visual Studio Code</h1><p>推荐使用，Visual Studio Code （VSCode），微软开发的，可以说是现今为止最好的免费的Angular开发工具。并且有很多非常好用的插件。</p>
-<p>推荐插件：</p>
-<ul>
-<li>Angular Language Service： Angular语法自动提示, Angular开发必备。 This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.</li>
-<li>Prettier - 代码自动格式化插件。VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.</li>
-<li>Code Spell Checker - 语法检查插件. 注释可以写中文，变量名不行吧，如果拼写不对不好看吧。所以推荐把这个语法检查插件装上。</li>
-<li>GitLens - GIT 辅助插件。If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.</li>
-<li>Markdown All in One： 如果用Markdown写东西，这个东西一定要有，增加了对MD文件的很多支持，比如生成目录(TOC)， 目录编号等。</li>
-</ul>
-<h1 id="第一个Anuglar项目"><a href="#第一个Anuglar项目" class="headerlink" title="第一个Anuglar项目"></a>第一个Anuglar项目</h1><h2 id="创建第一个anuglar项目"><a href="#创建第一个anuglar项目" class="headerlink" title="创建第一个anuglar项目"></a>创建第一个anuglar项目</h2><p>使用Anuglar CLI可以很轻松的创建angular项目。使用的Angular版本与当前环境的Anuglar CLI一致。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建angular项目，项目名 ·my-ngular-app·</span></span><br><span class="line">ng new my-ngular-app</span><br><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line"><span class="built_in">cd</span> my-ngular-app</span><br><span class="line"><span class="comment"># 启动angualar项目</span></span><br><span class="line">ng serve</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>说明</p>
-</blockquote>
-<ol>
-<li><code>ng</code> 是angular CLI的简称</li>
-<li><code>ng serve</code>: 启动angular项目。</li>
-</ol>
-<h2 id="Angular-CLI常用命令"><a href="#Angular-CLI常用命令" class="headerlink" title="Angular CLI常用命令"></a>Angular CLI常用命令</h2><ol>
-<li><code>ng serve</code>: 启动angular项目。默认情况下，angular CLI检测代码改动，如果文件改动，自动编译更改部分代码，然后重新加载（reload）页面。</li>
-<li><code>ng build</code>: 编译代码，默认输出到根目录下的<code>dist</code>目录。</li>
-<li><code>ng test</code>： 执行单元测试（Unit Test）</li>
-</ol>
-<h1 id="在线实战项目"><a href="#在线实战项目" class="headerlink" title="在线实战项目"></a>在线实战项目</h1><p>Angular官方提供了2个新手入门项目，并且都是基于StackBlitz（针对 Web 开发者的在线 IDE），可以不使用本地环境，直接基于Web学习和练习Angular。</p>
-<h2 id="新手项目：Basic-Angular-app"><a href="#新手项目：Basic-Angular-app" class="headerlink" title="新手项目：Basic Angular app"></a>新手项目：<code>Basic Angular app</code></h2><ul>
-<li><a target="_blank" rel="noopener" href="https://angular.io/start">https://angular.io/start</a></li>
-</ul>
-<h2 id="入门项目：Tour-of-Heroes"><a href="#入门项目：Tour-of-Heroes" class="headerlink" title="入门项目：Tour of Heroes"></a>入门项目：<code>Tour of Heroes</code></h2><ul>
-<li><a target="_blank" rel="noopener" href="https://angular.io/tutorial">https://angular.io/tutorial</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1518,7 +1513,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

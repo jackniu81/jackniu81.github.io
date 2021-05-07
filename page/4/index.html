@@ -149,6 +149,154 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-11 11:11:35" itemprop="dateCreated datePublished" datetime="2021-01-11T11:11:35+08:00">2021-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-12 14:34:18" itemprop="dateModified" datetime="2021-01-12T14:34:18+08:00">2021-01-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>@[TOC]</p>
+<ul>
+<li><a href="#1-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">1. 本地开发环境搭建</a><ul>
+<li><a href="#11-nodejs">1.1. node.js</a></li>
+<li><a href="#12-angular-cli">1.2. Angular CLI</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7---visual-studio-code">2. 开发工具 - Visual Studio Code</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%80%E4%B8%AAanuglar%E9%A1%B9%E7%9B%AE">第一个Anuglar项目</a><ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AAanuglar%E9%A1%B9%E7%9B%AE">创建第一个anuglar项目</a></li>
+<li><a href="#angular-cli%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Angular CLI常用命令</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%A8%E7%BA%BF%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE">在线实战项目</a><ul>
+<li><a href="#%E6%96%B0%E6%89%8B%E9%A1%B9%E7%9B%AEbasic-angular-app">新手项目：<code>Basic Angular app</code></a></li>
+<li><a href="#%E5%85%A5%E9%97%A8%E9%A1%B9%E7%9B%AEtour-of-heroes">入门项目：<code>Tour of Heroes</code></a></li>
+</ul>
+</li>
+</ul>
+<p>了解了一些Angular的基本概念后，如果想进一步学习Angular，接下来让我们来搭建本地开发环境，并从一个入门项目了解Angular的基本用法。</p>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: VSCode</li>
+</ul>
+</blockquote>
+<h1 id="1-本地开发环境搭建"><a href="#1-本地开发环境搭建" class="headerlink" title="1. 本地开发环境搭建"></a>1. 本地开发环境搭建</h1><p>本地开发环境搭建只需要node.js, 和Angular CLI。</p>
+<h2 id="1-1-node-js"><a href="#1-1-node-js" class="headerlink" title="1.1. node.js"></a>1.1. node.js</h2><p>官网（<a target="_blank" rel="noopener" href="https://nodejs.org/%EF%BC%89%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%9A%84LTS%EF%BC%88Long">https://nodejs.org/）下载最新的LTS（Long</a> Time Support)版本的node.js，安装。</p>
+<p>说明：</p>
+<ol>
+<li>LTS（Long Time Support)版本, 官方会支持更长时间，比如打补丁，改bug等。相对更稳定、靠谱。</li>
+<li>node.js 安装后，同时会安装npm</li>
+</ol>
+<p>检查本地node.js, npm环境</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js 版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="comment"># npm 版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-Angular-CLI"><a href="#1-2-Angular-CLI" class="headerlink" title="1.2. Angular CLI"></a>1.2. Angular CLI</h2><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。(参考：<a target="_blank" rel="noopener" href="https://cli.angular.io/">https://cli.angular.io/</a>)</p>
+<p>npm安装最新版本@angular/cli</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @angular/cli</span><br></pre></td></tr></table></figure>
+
+<p>检查本地angular环境</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng v</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ol>
+<li>该命令如果在非angular项目下执行，返回全局的Angular CLI环境版本</li>
+<li>在angular项目下执行, 返回当前angular项目使用的angular，angular CLI，以及核心angular组件的版本。</li>
+<li>全局Angular CLI版本有何能与项目的Angular CLI版本不一致，不冲突。项目中，使用项目制定的CLI版本。</li>
+</ol>
+<h1 id="2-开发工具-Visual-Studio-Code"><a href="#2-开发工具-Visual-Studio-Code" class="headerlink" title="2. 开发工具 - Visual Studio Code"></a>2. 开发工具 - Visual Studio Code</h1><p>推荐使用，Visual Studio Code （VSCode），微软开发的，可以说是现今为止最好的免费的Angular开发工具。并且有很多非常好用的插件。</p>
+<p>推荐插件：</p>
+<ul>
+<li>Angular Language Service： Angular语法自动提示, Angular开发必备。 This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.</li>
+<li>Prettier - 代码自动格式化插件。VS Code plugin for prettier/prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.</li>
+<li>Code Spell Checker - 语法检查插件. 注释可以写中文，变量名不行吧，如果拼写不对不好看吧。所以推荐把这个语法检查插件装上。</li>
+<li>GitLens - GIT 辅助插件。If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.</li>
+<li>Markdown All in One： 如果用Markdown写东西，这个东西一定要有，增加了对MD文件的很多支持，比如生成目录(TOC)， 目录编号等。</li>
+</ul>
+<h1 id="第一个Anuglar项目"><a href="#第一个Anuglar项目" class="headerlink" title="第一个Anuglar项目"></a>第一个Anuglar项目</h1><h2 id="创建第一个anuglar项目"><a href="#创建第一个anuglar项目" class="headerlink" title="创建第一个anuglar项目"></a>创建第一个anuglar项目</h2><p>使用Anuglar CLI可以很轻松的创建angular项目。使用的Angular版本与当前环境的Anuglar CLI一致。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建angular项目，项目名 ·my-ngular-app·</span></span><br><span class="line">ng new my-ngular-app</span><br><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line"><span class="built_in">cd</span> my-ngular-app</span><br><span class="line"><span class="comment"># 启动angualar项目</span></span><br><span class="line">ng serve</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>说明</p>
+</blockquote>
+<ol>
+<li><code>ng</code> 是angular CLI的简称</li>
+<li><code>ng serve</code>: 启动angular项目。</li>
+</ol>
+<h2 id="Angular-CLI常用命令"><a href="#Angular-CLI常用命令" class="headerlink" title="Angular CLI常用命令"></a>Angular CLI常用命令</h2><ol>
+<li><code>ng serve</code>: 启动angular项目。默认情况下，angular CLI检测代码改动，如果文件改动，自动编译更改部分代码，然后重新加载（reload）页面。</li>
+<li><code>ng build</code>: 编译代码，默认输出到根目录下的<code>dist</code>目录。</li>
+<li><code>ng test</code>： 执行单元测试（Unit Test）</li>
+</ol>
+<h1 id="在线实战项目"><a href="#在线实战项目" class="headerlink" title="在线实战项目"></a>在线实战项目</h1><p>Angular官方提供了2个新手入门项目，并且都是基于StackBlitz（针对 Web 开发者的在线 IDE），可以不使用本地环境，直接基于Web学习和练习Angular。</p>
+<h2 id="新手项目：Basic-Angular-app"><a href="#新手项目：Basic-Angular-app" class="headerlink" title="新手项目：Basic Angular app"></a>新手项目：<code>Basic Angular app</code></h2><ul>
+<li><a target="_blank" rel="noopener" href="https://angular.io/start">https://angular.io/start</a></li>
+</ul>
+<h2 id="入门项目：Tour-of-Heroes"><a href="#入门项目：Tour-of-Heroes" class="headerlink" title="入门项目：Tour of Heroes"></a>入门项目：<code>Tour of Heroes</code></h2><ul>
+<li><a target="_blank" rel="noopener" href="https://angular.io/tutorial">https://angular.io/tutorial</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -806,7 +954,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
