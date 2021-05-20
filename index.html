@@ -149,6 +149,218 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/20/Web-Cache-etag/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/20/Web-Cache-etag/" class="post-title-link" itemprop="url">浏览器（Cache）的缓存逻辑（HTTP条件请求）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-05-20 13:29:30 / Modified: 14:08:05" itemprop="dateCreated datePublished" datetime="2021-05-20T13:29:30+08:00">2021-05-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-浏览器缓存"><a href="#1-浏览器缓存" class="headerlink" title="1. 浏览器缓存"></a>1. 浏览器缓存</h1><p>一般来说，一个GET请求在目标资源存在的情况下会返回一个状态码为“200 OK”的响应，目标资源的内容将直接存放在响应报文的主体部分。如果资源的内容不会轻易改变，那么我们希望客户端（如浏览器）在本地缓存获取的资源。对于针对同一资源的后续请求来说，如果资源内容不曾改变，那么资源内容就无须再次作为网络荷载予以响应。</p>
+<p>确定资源是否发生变化可以采用两种策略。第一种就是让资源的提供者记录最后一次更新资源的时间，资源的荷载内容（Payload）和这个时间戳将一并作为响应提供给作为请求发送者的客户端。客户端在缓存资源内容时也会保存这个时间戳。等到下次需要针对同一资源发送请求时，它会将这个时间戳一并发送出去，此时服务端就可以根据这个时间戳判断目标资源在上次响应之后是否被修改过，然后做出针对性的响应。第二种是针对资源的内容生成一个“标签”，标签的一致性体现了资源内容的一致性，在HTTP规范中将这个标签称为ETag（Entity Tag）。</p>
+<h1 id="2-If-Modified-Since与If-None-Match"><a href="#2-If-Modified-Since与If-None-Match" class="headerlink" title="2. If-Modified-Since与If-None-Match"></a>2. If-Modified-Since与If-None-Match</h1><p>对于HTTP请求来说，缓存资源携带的最后修改时间戳和ETag分别保存在名为If-Modified-Since与If-None-Match的报头中。报头名称体现的含义如下：只有目标资源在指定的时间之后被修改（If-Modified-Since）或者目前资源的状态与提供的ETag不匹配（If-None-Match）的情况下才会返回资源的荷载内容。</p>
+<p>以Chrome为例， 当服务端接收到针对某个资源的GET请求时，如果请求不具有上述这两个报头或者根据这两个报头携带的信息判断资源已经发生改变，那么它返回一个状态码为“<code>200 OK</code>”的响应。除了将资源内容作为响应主体，如果能够获取到该资源最后一次修改的时间（一般精确到秒），那么格式化的时间戳还会通过一个名为<code>Last-Modified</code>的响应报头提供给客户端。针对资源自身内容生成的标签，则会以ETag响应报头的形式提供给客户端。反之，如果做出相反的判断，服务端就会返回一个状态码为“<code>304 Not Modified</code>”的响应，这个响应不包含主体内容。一般来说，这样的响应也会携带<code>Last-Modified</code>报头和ETag报头。</p>
+<h1 id="3-Chrome"><a href="#3-Chrome" class="headerlink" title="3. Chrome"></a>3. Chrome</h1><p><img src="https://jackniu81.github.io/img/chrome_cache.png" alt="Network in Chroem"><br>从Chrome的Network请求中可以看到，</p>
+<ol>
+<li>发送的请求的Header中包含了<code>If-Modified-Since</code>与<code>If-None-Match</code>；</li>
+<li>返回的内容，同样会包含<code>Modified-Since</code>与<code>ETag</code>；</li>
+<li>对于没有内容更改的请求，Status Code为<code>304 - Not Modified</code></li>
+<li>对于304返回，<code>Modified-Since</code>与<code>ETag</code> 必然与请求的<code>If-Modified-Since</code>与<code>If-None-Match</code>分别一致；</li>
+</ol>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>客户端（浏览器）如果有缓存内容，发送请求时会在Header中包含<code>If-Modified-Since</code>与<code>If-None-Match</code></li>
+<li>当服务器内容没有修改时，服务器端会发送304给客户端，这是body内容可能为空；</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/20/algorithm-Merge-Two-Sorted-Lists/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/20/algorithm-Merge-Two-Sorted-Lists/" class="post-title-link" itemprop="url">算法： 合并两个有序链表</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-05-20 08:38:43 / Modified: 14:08:05" itemprop="dateCreated datePublished" datetime="2021-05-20T08:38:43+08:00">2021-05-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-题目：-将两个升序链表合并为一个新的-升序-链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。"><a href="#1-题目：-将两个升序链表合并为一个新的-升序-链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。" class="headerlink" title="1. 题目： 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。"></a>1. 题目： 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。</h1><p>e.g<br>输入：l1 = [1,2,5], l2 = [1,3,4]<br>输出：[1,1,2,3,4,5]</p>
+<h1 id="2-思路-（迭代）"><a href="#2-思路-（迭代）" class="headerlink" title="2. 思路 （迭代）"></a>2. 思路 （迭代）</h1><p>我们可以用迭代的方法来实现上述算法。当 l1 和 l2 都不是空链表时，判断 l1 和 l2 哪一个链表的头节点的值更小，将较小值的节点添加到结果里，当一个节点被添加到结果里之后，将对应链表中的节点向后移一位。</p>
+<h1 id="3-代码"><a href="#3-代码" class="headerlink" title="3. 代码"></a>3. 代码</h1><h2 id="3-1-C"><a href="#3-1-C" class="headerlink" title="3.1. C#"></a>3.1. C#</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     public int val;</span></span><br><span class="line"><span class="comment"> *     public ListNode next;</span></span><br><span class="line"><span class="comment"> *     public ListNode(int val=0, ListNode next=null) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.next = next;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">MergeTwoLists</span>(<span class="params">ListNode l1, ListNode l2</span>)</span> &#123;</span><br><span class="line">    ListNode preHead = <span class="keyword">new</span> ListNode(<span class="number">-1</span>);</span><br><span class="line">    ListNode pre = preHead;</span><br><span class="line">    <span class="keyword">while</span> (l1 != <span class="literal">null</span> &amp;&amp; l2 != <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(l1.val &gt; l2.val)&#123;</span><br><span class="line">            pre.next = l2;</span><br><span class="line">            l2 = l2.next;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            pre.next = l1;</span><br><span class="line">            l1 = l1.next;</span><br><span class="line">        &#125;</span><br><span class="line">        pre = pre.next;</span><br><span class="line">    &#125;</span><br><span class="line">    pre.next = l1==<span class="literal">null</span>? l2:l1;</span><br><span class="line">    <span class="keyword">return</span> preHead.next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-Javascript"><a href="#3-2-Javascript" class="headerlink" title="3.2. Javascript"></a>3.2. Javascript</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * function ListNode(val, next) &#123;</span></span><br><span class="line"><span class="comment"> *     this.val = (val===undefined ? 0 : val)</span></span><br><span class="line"><span class="comment"> *     this.next = (next===undefined ? null : next)</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> mergeTwoLists = <span class="function"><span class="keyword">function</span>(<span class="params">l1, l2</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(l1 === <span class="literal">null</span>) <span class="keyword">return</span> l2;</span><br><span class="line">    <span class="keyword">if</span>(l2 === <span class="literal">null</span>) <span class="keyword">return</span> l1;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> preHead = <span class="keyword">new</span> ListNode();</span><br><span class="line">    <span class="keyword">let</span> last = preHead;</span><br><span class="line">    <span class="keyword">let</span> cur ;</span><br><span class="line">    <span class="keyword">while</span>(l1 !=<span class="literal">null</span> &amp;&amp; l2!= <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(l1.val &gt; l2.val)&#123;</span><br><span class="line">            cur = l2;</span><br><span class="line">            l2 = l2.next;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            cur = l1;</span><br><span class="line">            l1 = l1.next;</span><br><span class="line">        &#125;</span><br><span class="line">        last.next = cur;</span><br><span class="line">        last = cur;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    last.next = l1 === <span class="literal">null</span>? l2:l1;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> preHead.next;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/17/DotNet-Keyword/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/17/DotNet-Keyword/" class="post-title-link" itemprop="url">.NET 词汇表</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-17 08:04:22" itemprop="dateCreated datePublished" datetime="2021-05-17T08:04:22+08:00">2021-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-20 14:08:05" itemprop="dateModified" datetime="2021-05-20T14:08:05+08:00">2021-05-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>CLR：公共语言运行库(Common Language Runtime)</li>
+<li>CIL：通用中间语言（Common Intermediate Language，简称CIL，亦称IL）</li>
+<li>CTS：通用类型系统(Common Type System)</li>
+<li>CLS：公共语言规范 (Common Language Specification)</li>
+<li>FCL：框架类库（Framework Class Library）</li>
+<li>BCL：基础类库（Base Class Library）</li>
+<li>DLL：Dynamic Link Library，动态链接库，也称为元件，CLR与BCL都是由元件构成。</li>
+<li>Assembly： 程序集，由编译器得到，供CLR进一步编译执行中间产物MSIL，一般表现为.DLL,或者.EXE格式，必须依靠CLR才能顺利执行。</li>
+<li>CoreFX： 是经过完全重写的BCL，除了自身就具有跨平台执行的能力之外，其提供的API也不再是统一定义在少数几个单一的程序集中，而是经过有效分组之后被定义在各自独立的模块中。</li>
+<li>PCL: 可移植类库 Portable Class Library (PCL)</li>
+<li>.NET Standard: 我们可以将.NET Standard称为新一代的PCL，PCL提供的可移植能力仅仅限于创建时就确定下来的几种目标平台，但是.NET Standard做得更加彻底，因为它在设计的时候就已经考虑针对三大分支的复用。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/06/React-Interview-Questions-and-Answers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1295,589 +1507,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/16/dotnet-core-interview-questions-and-answers/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/16/dotnet-core-interview-questions-and-answers/" class="post-title-link" itemprop="url">2021 .NET/dotnet Core/C# 面试题及参考答案</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-16 14:49:34" itemprop="dateCreated datePublished" datetime="2021-04-16T14:49:34+08:00">2021-04-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-18 15:06:30" itemprop="dateModified" datetime="2021-04-18T15:06:30+08:00">2021-04-18</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-NET-dotnet-core-NET-framework-的关系"><a href="#1-NET-dotnet-core-NET-framework-的关系" class="headerlink" title="1. NET/dotnet core/.NET framework 的关系?"></a>1. NET/dotnet core/.NET framework 的关系?</h1><p>先看 2 张图<br>最新的.NET 5 的示意图<br><img src="https://img-blog.csdnimg.cn/20210415135448910.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI4ODcxNA==,size_16,color_FFFFFF,t_70#pic_center" alt=".NET 5"><br>之前的（dotnet core3.x 时代）的示意图<br><img src="https://img-blog.csdnimg.cn/20210415135513293.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI4ODcxNA==,size_16,color_FFFFFF,t_70#pic_center" alt="dotnet core .3.1 "><br>总结如下：</p>
-<ol>
-<li>2016 年开始，分开了.NET Framework 和.NET Core，后者开源、面向跨平台应用；</li>
-<li>2019 年，.NET Framework 和.NET Core 被.NET5 完成了统一。未来只会有一个.NET，可以支持 Windows、Linux、macOS、iOS、Android、tvOS、watchOS 和 WebAssembly，等等</li>
-<li>.Net standard library 是之前.NET Framework 和.NET Core 公共的部分；</li>
-</ol>
-<h1 id="2-corefx-coreclr-都是什么？"><a href="#2-corefx-coreclr-都是什么？" class="headerlink" title="2. corefx, coreclr 都是什么？"></a>2. corefx, coreclr 都是什么？</h1><p>dotnet 组织包含了.NET Core 的核心代码, 包括 coreclr 和 corefx 等.</p>
-<ol>
-<li>coreclr 是运行时代码,</li>
-<li>corefx 是各种基础类库的代码. CoreFX 主要包含数个公共库，例如 System.Collections, System.IO, System.Xml 等。</li>
-</ol>
-<h1 id="3-asp-net-core"><a href="#3-asp-net-core" class="headerlink" title="3. asp.net core"></a>3. asp.net core</h1><h2 id="3-1-Kestrel"><a href="#3-1-Kestrel" class="headerlink" title="3.1. Kestrel"></a>3.1. Kestrel</h2><p>Kestrel 是 asp.net core 引入的跨平台的网络服务器，是默认配置。可以没有 iis, apache 和 nginx 就可以单独运行。<br>Kestrel 基于 libuv 实现；（node.js 也是基于 libuv）</p>
-<h2 id="3-2-asp-net-core-主要的特性"><a href="#3-2-asp-net-core-主要的特性" class="headerlink" title="3.2. asp.net core 主要的特性"></a>3.2. asp.net core 主要的特性</h2><ol>
-<li>依赖注入。</li>
-<li>日志系统架构。</li>
-<li>引入了一个跨平台的网络服务器，kestrel。可以没有 iis, apache 和 nginx 就可以单独运行。</li>
-<li>可以使用命令行创建应用。</li>
-<li>使用 AppSettings.json 来配置工程。</li>
-<li>使用 start up 来注册服务。</li>
-<li>更好的支持异步编程。</li>
-<li>支持 web socket 和 signal IR。</li>
-<li>对于跨网站的请求的预防和保护机制。</li>
-</ol>
-<h2 id="3-3-startup-class-的作用？"><a href="#3-3-startup-class-的作用？" class="headerlink" title="3.3. startup class 的作用？"></a>3.3. startup class 的作用？</h2><p>Startup class 是 dot net core 应用的入口。所有的 dot net core 应用必须有这个 class。这个类用来配置应用。这个类的调用是在 program main 函数里面进行配置的。类的名字可以自己定义。</p>
-<h2 id="3-4-Startup-class-的-config-service-方法有什么作用"><a href="#3-4-Startup-class-的-config-service-方法有什么作用" class="headerlink" title="3.4. Startup class 的 config service 方法有什么作用?"></a>3.4. Startup class 的 config service 方法有什么作用?</h2><p>在这个方法里我们可以添加一些 service 进入依赖注入容器。</p>
-<h2 id="3-5-startup-class-的-configure-方法有什么作用？"><a href="#3-5-startup-class-的-configure-方法有什么作用？" class="headerlink" title="3.5. startup class 的 configure 方法有什么作用？"></a>3.5. startup class 的 configure 方法有什么作用？</h2><p>这个方法来定义整个应用如何响应 HTTP 请求。它有几个比较重要的参数，application builder，Hosting environment, logo factory， 在这里我们可以配置一些中间件用来处理路径，验证和 session 等等。</p>
-<h2 id="3-6-什么是-meta-packages？"><a href="#3-6-什么是-meta-packages？" class="headerlink" title="3.6. 什么是 meta packages？"></a>3.6. 什么是 meta packages？</h2><p>Meta packages 是指包含所有 ASP dot net code 依赖的一个包。叫做 Microsoft.AspNetCore.All</p>
-<h2 id="3-7-什么是中间件？"><a href="#3-7-什么是中间件？" class="headerlink" title="3.7. 什么是中间件？"></a>3.7. 什么是中间件？</h2><p>中间件在这里是指注入到应用中处理请求和响应的组件。asp.net core 的中间件模型也是洋葱模型（和 node.js d Koa 一样）</p>
-<h2 id="3-8-application-builder-的-use-和-run-方法有什么区别？"><a href="#3-8-application-builder-的-use-和-run-方法有什么区别？" class="headerlink" title="3.8. application builder 的 use 和 run 方法有什么区别？"></a>3.8. application builder 的 use 和 run 方法有什么区别？</h2><p>这两个方法都在 start up class 的 configure 方法里面调用。都是用来向应用请求管道里面添加中间件的。Use 方法可以调用下一个中间件的添加，而 run 不会。</p>
-<h2 id="3-9-dot-net-core-管道（pipeline）里面的-map-拓展有什么作用"><a href="#3-9-dot-net-core-管道（pipeline）里面的-map-拓展有什么作用" class="headerlink" title="3.9. dot net core 管道（pipeline）里面的 map 拓展有什么作用?"></a>3.9. dot net core 管道（pipeline）里面的 map 拓展有什么作用?</h2><p>可以针对不同的路径添加不同的中间件。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span><span class="params">(IApplicationBuilder app)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  app.Map(<span class="string">&quot;/path1&quot;</span>, Middleware1);</span><br><span class="line">  app.Map(<span class="string">&quot;/path2&quot;</span>, Middleware2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-10-如何在-dot-net-core-中激活-session-功能"><a href="#3-10-如何在-dot-net-core-中激活-session-功能" class="headerlink" title="3.10. 如何在 dot net core 中激活 session 功能?"></a>3.10. 如何在 dot net core 中激活 session 功能?</h2><ol>
-<li>首先要添加 session 包.</li>
-<li>其次要在 config service 方法里面添加 session。</li>
-<li>然后又在 configure 方法里面调用 usesession。</li>
-</ol>
-<h2 id="3-11-如何在-controller-中注入-service"><a href="#3-11-如何在-controller-中注入-service" class="headerlink" title="3.11. 如何在 controller 中注入 service?"></a>3.11. 如何在 controller 中注入 service?</h2><p>依赖注入的思想：</p>
-<ol>
-<li>在 config services 方法中配置这个 service。</li>
-<li>在 controller 的构造函数中，添加这个依赖注入。</li>
-</ol>
-<h2 id="3-12-dot-net-core-里面的路径是如何处理的？"><a href="#3-12-dot-net-core-里面的路径是如何处理的？" class="headerlink" title="3.12. dot net core 里面的路径是如何处理的？"></a>3.12. dot net core 里面的路径是如何处理的？</h2><p>路径处理是用来为进入的请求寻找处理函数的机制。所有的路径在函数运行开始时进行注册。</p>
-<p>主要有两种路径处理方式:</p>
-<ol>
-<li>常规路径处理就是用 MapRoute 的方式设定调用路径</li>
-<li>属性路径处理是指在调用函数的上方设定一个路径属性。</li>
-</ol>
-<h2 id="3-13-application-builder-的-use-和-run-方法有什么区别？"><a href="#3-13-application-builder-的-use-和-run-方法有什么区别？" class="headerlink" title="3.13. application builder 的 use 和 run 方法有什么区别？"></a>3.13. application builder 的 use 和 run 方法有什么区别？</h2><p>这两个方法都在 start up class 的 configure 方法里面调用。都是用来向应用请求管道里面添加中间件的。Use 方法可以调用下一个中间件的添加，而 run 不会。</p>
-<h2 id="3-14-依赖注入后的服务生命周期"><a href="#3-14-依赖注入后的服务生命周期" class="headerlink" title="3.14. 依赖注入后的服务生命周期?"></a>3.14. 依赖注入后的服务生命周期?</h2><p>在 dot net core 中，我们不需要关心如何释放这些服务, 因为系统会帮我们释放掉。有三种服务的生命周期。</p>
-<ol>
-<li>单实例服务， 通过 add singleton 方法来添加。在注册时即创建服务, 在随后的请求中都使用这一个服务。</li>
-<li>短暂服务, 通过 add transient 方法来添加。是一种轻量级的服务，用于无状态服务的操作。</li>
-<li>作用域服务，一个新的请求会创建一个服务实例。使用 add scoped 方法来添加。</li>
-</ol>
-<h2 id="3-15-什么么是-Razor-页面"><a href="#3-15-什么么是-Razor-页面" class="headerlink" title="3.15. 什么么是 Razor 页面?"></a>3.15. 什么么是 Razor 页面?</h2><p>是 dot net core 中支持 ASP 网页表格的一种开发模型。@page 作为页面的起始标志。可以看做是 asp.net core 使用的模板引擎。</p>
-<h2 id="3-16-如何在-Razor-页面中实现数据模型绑定"><a href="#3-16-如何在-Razor-页面中实现数据模型绑定" class="headerlink" title="3.16. 如何在 Razor 页面中实现数据模型绑定?"></a>3.16. 如何在 Razor 页面中实现数据模型绑定?</h2><p>使用 bindproperty 属性。</p>
-<h2 id="3-17-Server-Transfer-和-Response-Redirect-的区别是什么"><a href="#3-17-Server-Transfer-和-Response-Redirect-的区别是什么" class="headerlink" title="3.17. Server.Transfer 和 Response.Redirect 的区别是什么"></a>3.17. Server.Transfer 和 Response.Redirect 的区别是什么</h2><ol>
-<li>Server.Transfer 仅是服务器中控制权的转向，在客户端浏览器地址栏中不会显示出转向后的地址；</li>
-<li>Response.Redirect 则是完全的跳转，浏览器将会得到跳转的地址，并重新发送请求链接。这样，从浏览器的地址栏中可以看到跳转后的链接地址。</li>
-</ol>
-<h2 id="3-18-API，什么时候用-Get-Post-Put-Delete"><a href="#3-18-API，什么时候用-Get-Post-Put-Delete" class="headerlink" title="3.18. API，什么时候用 Get/Post/Put/Delete"></a>3.18. API，什么时候用 Get/Post/Put/Delete</h2><ol>
-<li>GET： 查询</li>
-<li>POST ：创建对象</li>
-<li>PUT： 修改对象</li>
-<li>DELETE：删除</li>
-</ol>
-<h1 id="4-C"><a href="#4-C" class="headerlink" title="4. C#"></a>4. C#</h1><h2 id="4-1-一个单例（Singleton）类"><a href="#4-1-一个单例（Singleton）类" class="headerlink" title="4.1. 一个单例（Singleton）类"></a>4.1. 一个单例（Singleton）类</h2><p>单线程下的简单实现：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> MySingleton</span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">MySingleton</span><span class="params">()</span></span>&#123;&#125;	<span class="comment">// 禁止被实例化</span></span><br><span class="line">  <span class="keyword">public</span> readonly <span class="keyword">static</span> MySingletonInstance = <span class="keyword">new</span> MySingleton();	<span class="comment">// 程序加载时就会初始化</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>线程安全的加锁双检查</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MySingleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> MySingleton _instance = null;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> readonly object SynObject = <span class="keyword">new</span> object();</span><br><span class="line"></span><br><span class="line">    MySingleton() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> MySingleton Instance</span><br><span class="line">    &#123;</span><br><span class="line">        get</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (null == _instance)</span><br><span class="line">            &#123;</span><br><span class="line">                lock (SynObject)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (null == _instance)</span><br><span class="line">                    &#123;</span><br><span class="line">                        _instance = <span class="keyword">new</span> MySingleton();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> _instance;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-2-abstract-class-和-interface-有什么区别"><a href="#4-2-abstract-class-和-interface-有什么区别" class="headerlink" title="4.2. abstract class 和 interface 有什么区别?"></a>4.2. abstract class 和 interface 有什么区别?</h2><p>相同点：都不能被直接实例化，都可以通过继承实现其抽象方法。</p>
-<p>不同点：</p>
-<ol>
-<li>接口支持多继承；抽象类不能实现多继承。</li>
-<li>接口只能定义行为；抽象类既可以定义行为，还可能提供实现。</li>
-<li>接口只包含方法(Method)、属性(Property)、索引器(Index)、事件(Event)的签名，但不能定义字段和包含实现的方法；</li>
-<li>抽象类可以定义字段、属性、包含有实现的方法。</li>
-</ol>
-<h2 id="4-3-是否可以继承-String-类"><a href="#4-3-是否可以继承-String-类" class="headerlink" title="4.3. 是否可以继承 String 类?"></a>4.3. 是否可以继承 String 类?</h2><p>String 类是 sealed 类故不可以继承。</p>
-<h2 id="4-4-StringBuilder-和-String-的区别？"><a href="#4-4-StringBuilder-和-String-的区别？" class="headerlink" title="4.4. StringBuilder 和 String 的区别？"></a>4.4. StringBuilder 和 String 的区别？</h2><p>String 在进行运算时（如赋值、拼接等）会产生一个新的实例，而 StringBuilder 则不会。所以在大量字符串拼接或频繁对某一字符串进行操作时最好使用 StringBuilder，不要使用 String。<br>但是简单的字符拼接，String 还是首选。（100？次以内用 String，以上用 StringBuilder）</p>
-<h2 id="4-5-什么情况下会用到虚方法？它与接口有什么不同？"><a href="#4-5-什么情况下会用到虚方法？它与接口有什么不同？" class="headerlink" title="4.5. 什么情况下会用到虚方法？它与接口有什么不同？"></a>4.5. 什么情况下会用到虚方法？它与接口有什么不同？</h2><ol>
-<li>子类重新定义父类的某一个方法时，必须把父类的方法定义为 virtual</li>
-<li>在定义接口中不能有方法体，虚方法可以。</li>
-<li>实现时,子类可以不重新定义虚方法，但如果一个类继承接口，那必须实现这个接口。</li>
-</ol>
-<h2 id="4-6-string、String；int、Int32；Boolean、bool-的区别"><a href="#4-6-string、String；int、Int32；Boolean、bool-的区别" class="headerlink" title="4.6. string、String；int、Int32；Boolean、bool 的区别"></a>4.6. string、String；int、Int32；Boolean、bool 的区别</h2><p>String、Int32、Boolean 等都属于.Net 中定义的类，而 string、int、bool 相当于 C#中对这些类定义的别名。CTS。</p>
-<h2 id="4-7-private、-protected、-public、-internal-修饰符的访问权限。"><a href="#4-7-private、-protected、-public、-internal-修饰符的访问权限。" class="headerlink" title="4.7. private、 protected、 public、 internal 修饰符的访问权限。"></a>4.7. private、 protected、 public、 internal 修饰符的访问权限。</h2><ol>
-<li>private : 私有成员, 在类的内部才可以访问。</li>
-<li>protected : 保护成员，该类内部和继承类中可以访问。</li>
-<li>public : 公共成员，完全公开，没有访问限制。</li>
-<li>internal: 当前程序集内可以访问。</li>
-</ol>
-<h2 id="4-8-C-中的委托是什么？事件是不是一种委托？事件和委托的关系。"><a href="#4-8-C-中的委托是什么？事件是不是一种委托？事件和委托的关系。" class="headerlink" title="4.8. C#中的委托是什么？事件是不是一种委托？事件和委托的关系。"></a>4.8. C#中的委托是什么？事件是不是一种委托？事件和委托的关系。</h2><p>委托可以把一个方法作为参数代入另一个方法，可以理解为指向一个函数的指针。<br>换个说法来解释，委托就是函数指针，事件就是保存多个函数指针的数组。</p>
-<p>事件和委托的区别如下：</p>
-<ol>
-<li>事件只能在方法的外部进行声明，而委在方法的外部和内部都可以声明。</li>
-<li>事件只能在类的内部触发，不能在类的外部触发。而委托在类的内部和外都都可以触发。</li>
-<li>委托一般用于回调，而事件用于外部接口。例如在观察者模式中，在被观察者中可以声明一个事件作为外部观察者注册的接口。</li>
-</ol>
-<h2 id="4-9-override-与重载（overload）的区别"><a href="#4-9-override-与重载（overload）的区别" class="headerlink" title="4.9. override 与重载（overload）的区别"></a>4.9. override 与重载（overload）的区别</h2><ol>
-<li>重载是方法的名称相同。参数或参数类型不同，进行多次重载以适应不同的需要。重载（overload）是面向过程的概念。</li>
-<li>Override 是进行基类中函数的重写。Override 是面向对象的概念</li>
-</ol>
-<h2 id="4-10-什么是装箱-boxing-和拆箱-unboxing"><a href="#4-10-什么是装箱-boxing-和拆箱-unboxing" class="headerlink" title="4.10. 什么是装箱(boxing)和拆箱(unboxing)"></a>4.10. 什么是装箱(boxing)和拆箱(unboxing)</h2><p>装箱：从值类型接口转换到引用类型。<br>拆箱：从引用类型转换到值类型。</p>
-<p>——–END——–</p>
-<blockquote>
-<p>参考:<br><a target="_blank" rel="noopener" href="https://www.webtrainingroom.com/interview/asp-net-core-interview-questions-answers">https://www.webtrainingroom.com/interview/asp-net-core-interview-questions-answers</a> &gt; <a target="_blank" rel="noopener" href="https://www.talkingdotnet.com/asp-net-core-interview-questions/">https://www.talkingdotnet.com/asp-net-core-interview-questions/</a></p>
-</blockquote>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/12/Vue-js-Interview-Questions-and-Answers-2021/" class="post-title-link" itemprop="url">2021 Vue.js 面试题汇总及答案</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-12 15:10:23" itemprop="dateCreated datePublished" datetime="2021-04-12T15:10:23+08:00">2021-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-14 13:36:52" itemprop="dateModified" datetime="2021-04-14T13:36:52+08:00">2021-04-14</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98">1. 基本问题</a><ul>
-<li><a href="#11-vuejs-%E7%9A%84%E7%89%B9%E7%82%B9">1.1. Vue.js 的特点</a></li>
-<li><a href="#12-vuejs-%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A%E7%9A%84%E5%8E%9F%E7%90%86">1.2. Vue.js 双向绑定的原理</a></li>
-<li><a href="#13-vuejs-30-%E6%94%BE%E5%BC%83defineproperty-%E4%BD%BF%E7%94%A8proxy%E7%9A%84%E5%8E%9F%E5%9B%A0">1.3. Vue.js 3.0 放弃defineProperty, 使用Proxy的原因</a></li>
-<li><a href="#14-vue-2-%E4%B8%AD%E7%BB%99-data-%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E5%B1%9E%E6%80%A7%E6%97%B6%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3">1.4. Vue 2 中给 data 中的对象属性添加一个新的属性时会发生什么？如何解决？</a></li>
-<li><a href="#15-computed%E5%92%8Cwatch%E7%9A%84%E5%8C%BA%E5%88%AB">1.5. Computed和Watch的区别</a></li>
-<li><a href="#16-computed-%E5%92%8C-methods-%E7%9A%84%E5%8C%BA%E5%88%AB">1.6. Computed 和 Methods 的区别</a></li>
-<li><a href="#17-%E8%99%9A%E6%8B%9Fdomdiff%E7%AE%97%E6%B3%95">1.7. 虚拟DOM，diff算法</a></li>
-<li><a href="#18-%E4%B8%BA%E4%BD%95%E9%9C%80%E8%A6%81virtual-dom">1.8. 为何需要Virtual DOM？</a></li>
-<li><a href="#19-%E8%BF%87%E6%BB%A4%E5%99%A8-filter">1.9. 过滤器 (Filter)</a></li>
-<li><a href="#110-%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8">1.10. 常见的事件修饰符及其作用</a></li>
-<li><a href="#111-v-show%E6%8C%87%E4%BB%A4%E5%92%8Cv-if%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88">1.11. v-show指令和v-if指令的区别是什么？</a></li>
-<li><a href="#112-v-model-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%E8%AF%AD%E6%B3%95%E7%B3%96%E5%AE%9E%E9%99%85%E6%98%AF%E4%BB%80%E4%B9%88">1.12. v-model 是如何实现的，语法糖实际是什么</a></li>
-<li><a href="#113-data%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E8%80%8C%E4%B8%8D%E6%98%AF%E5%AF%B9%E8%B1%A1">1.13. data为什么是一个函数而不是对象</a></li>
-<li><a href="#114-vue-template-%E5%88%B0-render-%E7%9A%84%E8%BF%87%E7%A8%8B">1.14. Vue template 到 render 的过程</a></li>
-<li><a href="#115-vue-data-%E4%B8%AD%E6%9F%90%E4%B8%80%E4%B8%AA%E5%B1%9E%E6%80%A7%E7%9A%84%E5%80%BC%E5%8F%91%E7%94%9F%E6%94%B9%E5%8F%98%E5%90%8E%E8%A7%86%E5%9B%BE%E4%BC%9A%E7%AB%8B%E5%8D%B3%E5%90%8C%E6%AD%A5%E6%89%A7%E8%A1%8C%E9%87%8D%E6%96%B0%E6%B8%B2%E6%9F%93%E5%90%97">1.15. Vue data 中某一个属性的值发生改变后，视图会立即同步执行重新渲染吗？</a></li>
-<li><a href="#116-axios%E6%98%AF%E4%BB%80%E4%B9%88">1.16. axios是什么</a></li>
-<li><a href="#117-sass%E6%98%AF%E4%BB%80%E4%B9%88%E5%A6%82%E4%BD%95%E5%9C%A8vue%E4%B8%AD%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8">1.17. sass是什么？如何在vue中安装和使用？</a></li>
-<li><a href="#118-vuejs%E9%A1%B5%E9%9D%A2%E9%97%AA%E7%83%81">1.18. Vue.js页面闪烁</a></li>
-<li><a href="#119-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84%E5%A4%AA%E6%B7%B1%E7%9A%84%E9%97%AE%E9%A2%98">1.19. 如何解决数据层级结构太深的问题</a></li>
-<li><a href="#120-%E5%9C%A8-vue-js%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%B0%83%E7%94%A8api%E6%8E%A5%E5%8F%A3%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E8%B7%A8%E5%9F%9F">1.20. 在 Vue. js开发环境下调用API接口，如何避免跨域</a></li>
-<li><a href="#121-%E6%89%B9%E9%87%8F%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5">1.21. 批量异步更新策略</a></li>
-<li><a href="#122-vue-%E7%9A%84-nexttick-%E6%96%B9%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">1.22. vue 的 nextTick 方法的实现原理</a></li>
-<li><a href="#123-vue-%E7%BB%84%E4%BB%B6-data-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%85%E9%A1%BB%E6%98%AF%E5%87%BD%E6%95%B0-">1.23. Vue 组件 data 为什么必须是函数 ?</a></li>
-<li><a href="#124-v-if%E5%92%8Cv-for%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8%E7%9A%84%E5%BC%8A%E7%AB%AF%E5%8F%8A%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95">1.24. v-if和v-for一起使用的弊端及解决办法</a></li>
-<li><a href="#125-vue%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4">1.25. vue常用指令</a></li>
-<li><a href="#126-%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%80%BC%E6%96%B9%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B">1.26. 组件传值方式有哪些</a></li>
-<li><a href="#127-vue-loader%E6%98%AF%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E5%AE%83%E7%9A%84%E7%94%A8%E9%80%94%E6%9C%89%E5%93%AA%E4%BA%9B">1.27. vue-loader是什么？使用它的用途有哪些？</a></li>
-</ul>
-</li>
-<li><a href="#2-%E7%BB%84%E4%BB%B6-component">2. 组件 Component</a><ul>
-<li><a href="#21-vue%E4%B8%AD%E5%A6%82%E4%BD%95%E7%BC%96%E5%86%99%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E7%BB%84%E4%BB%B6-%E7%BC%96%E5%86%99%E7%BB%84%E4%BB%B6%E7%9A%84%E5%8E%9F%E5%88%99">2.1. vue中如何编写可复用的组件 （编写组件的原则）</a></li>
-<li><a href="#22-%E5%A6%82%E4%BD%95%E8%AE%A9css%E5%8F%AA%E5%9C%A8%E5%BD%93%E5%89%8D%E7%BB%84%E4%BB%B6%E4%B8%AD%E8%B5%B7%E4%BD%9C%E7%94%A8">2.2. 如何让CSS只在当前组件中起作用？</a></li>
-<li><a href="#23-keep-alive%E6%98%AF%E4%BB%80%E4%B9%88">2.3. keep-alive是什么？</a></li>
-<li><a href="#24-%E5%A6%82%E4%BD%95%E5%9C%A8-vue-js%E5%8A%A8%E6%80%81%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87">2.4. 如何在 Vue. js动态插入图片</a></li>
-<li><a href="#25-%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%A1%BA%E5%BA%8F">2.5. 父子组件的生命周期顺序</a></li>
-</ul>
-</li>
-<li><a href="#3-vuex">3. Vuex</a><ul>
-<li><a href="#31-vuex%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5">3.1. vuex的核心概念</a></li>
-<li><a href="#32-vuex%E6%98%AF%E4%BB%80%E4%B9%88%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E5%93%AA%E7%A7%8D%E5%8A%9F%E8%83%BD%E5%9C%BA%E6%99%AF%E4%BD%BF%E7%94%A8%E5%AE%83">3.2. vuex是什么？怎么使用？哪种功能场景使用它？</a></li>
-<li><a href="#33-%E5%A4%9A%E4%B8%AA%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E5%A6%82%E4%BD%95%E6%8B%86%E5%88%86%E5%90%84%E8%87%AA%E7%9A%84state%E6%AF%8F%E5%9D%97%E5%B0%8F%E7%9A%84%E7%BB%84%E4%BB%B6%E6%9C%89%E8%87%AA%E5%B7%B1%E7%9A%84%E7%8A%B6%E6%80%81%E5%AE%83%E4%BB%AC%E4%B9%8B%E9%97%B4%E8%BF%98%E6%9C%89%E4%B8%80%E4%BA%9B%E5%85%AC%E5%85%B1%E7%9A%84%E7%8A%B6%E6%80%81%E9%9C%80%E8%A6%81%E7%BB%B4%E6%8A%A4%E5%A6%82%E4%BD%95%E6%80%9D%E8%80%83%E8%BF%99%E5%9D%97">3.3. 多个组件之间如何拆分各自的state，每块小的组件有自己的状态，它们之间还有一些公共的状态需要维护，如何思考这块</a></li>
-</ul>
-</li>
-<li><a href="#4-router">4. Router</a><ul>
-<li><a href="#41-vue-router%E8%B7%AF%E7%94%B1%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A8%A1%E5%BC%8F">4.1. vue-router路由的两种模式</a></li>
-<li><a href="#42-vue-router%E5%A6%82%E4%BD%95%E5%AE%9A%E4%B9%89%E5%B5%8C%E5%A5%97%E8%B7%AF%E7%94%B1">4.2. vue-router如何定义嵌套路由</a></li>
-<li><a href="#43-vue-router%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%AF%BC%E8%88%AA%E9%92%A9%E5%AD%90">4.3. vue-router有哪几种导航钩子？</a></li>
-<li><a href="#44-route%E5%92%8Crouter%E7%9A%84%E5%8C%BA%E5%88%AB">4.4. $route和$router的区别</a></li>
-<li><a href="#45-%E8%B7%AF%E7%94%B1%E4%B9%8B%E9%97%B4%E8%B7%B3%E8%BD%AC%E7%9A%84%E6%96%B9%E5%BC%8F">4.5. 路由之间跳转的方式</a></li>
-<li><a href="#46-active-class%E6%98%AF%E5%93%AA%E4%B8%AA%E7%BB%84%E4%BB%B6%E7%9A%84%E5%B1%9E%E6%80%A7">4.6. active-class是哪个组件的属性</a></li>
-</ul>
-</li>
-</ul>
-<h1 id="1-基本问题"><a href="#1-基本问题" class="headerlink" title="1. 基本问题"></a>1. 基本问题</h1><h2 id="1-1-Vue-js-的特点"><a href="#1-1-Vue-js-的特点" class="headerlink" title="1.1. Vue.js 的特点"></a>1.1. Vue.js 的特点</h2><ul>
-<li>易用： 简单，易学，上手快</li>
-<li>灵活： （渐进式）不断繁荣的生态系统，可以在一个库和一套完整框架之间自如伸缩。</li>
-<li>高效： 20kB min+gzip 运行大小；超快虚拟 DOM；最省心的优化</li>
-<li>双向绑定：开发效率高</li>
-<li>基于组件的代码共享</li>
-<li>Web项目工程化，增加可读性、可维护性</li>
-</ul>
-<h2 id="1-2-Vue-js-双向绑定的原理"><a href="#1-2-Vue-js-双向绑定的原理" class="headerlink" title="1.2. Vue.js 双向绑定的原理"></a>1.2. Vue.js 双向绑定的原理</h2><p>Vue.js 2.0  采用数据劫持（Proxy 模式）结合发布者-订阅者模式（PubSub 模式）的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。</p>
-<p>每个组件实例都有相应的watcher程序实例，它会在组件渲染的过程中把属性记录为依赖，之后当依赖项的setter被调用时，会通知watcher重新计算，从而致使它关联的组件得以更新。</p>
-<blockquote>
-<p>Vue.js 3.0, 放弃了Object.defineProperty ，使用更快的ES6原生 Proxy (访问对象拦截器, 也称代理器)</p>
-</blockquote>
-<p>步骤：</p>
-<ol>
-<li><p>需要observe的数据对象进行递归遍历，包括子属性对象的属性，都加上setter和getter这样的话，给这个对象的某个值赋值，就会触发setter，那么就能监听到了数据变化</p>
-</li>
-<li><p>compile解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图</p>
-</li>
-<li><p>Watcher订阅者是Observer和Compile之间通信的桥梁，主要做的事情是: ①在自身实例化时往属性订阅器(dep)里面添加自己 ②自身必须有一个update()方法 ③待属性变动dep.notice()通知时，能调用自身的update()方法，并触发Compile中绑定的回调，则功成身退。</p>
-</li>
-<li><p>MVVM作为数据绑定的入口，整合Observer、Compile和Watcher三者，通过Observer来监听自己的model数据变化，通过Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compile之间的通信桥梁，达到数据变化 -&gt; 视图更新；视图交互变化(input) -&gt; 数据model变更的双向绑定效果。</p>
-</li>
-</ol>
-<h2 id="1-3-Vue-js-3-0-放弃defineProperty-使用Proxy的原因"><a href="#1-3-Vue-js-3-0-放弃defineProperty-使用Proxy的原因" class="headerlink" title="1.3. Vue.js 3.0 放弃defineProperty, 使用Proxy的原因"></a>1.3. Vue.js 3.0 放弃defineProperty, 使用Proxy的原因</h2><p>Object.defineProperty缺陷</p>
-<ol>
-<li>监控到数组下标的变化时，开销很大。所以Vue.js放弃了下标变化的检测；</li>
-<li>Object.defineProperty只能劫持对象的属性，而Proxy是直接代理对象。Object.defineProperty需要遍历对象的每个属性，如果属性值也是对象，则需要深度遍历。而 Proxy 直接代理对象，不需要遍历操作。</li>
-<li>Object.defineProperty对新增属性需要手动进行Observe。vue2时需要使用 vm.$set 才能保证新增的属性也是响应式</li>
-<li>Proxy支持13种拦截操作，这是defineProperty所不具有的</li>
-<li>Proxy 作为新标准，长远来看，JS引擎会继续优化 Proxy，但 getter 和 setter 基本不会再有针对性优化</li>
-</ol>
-<h2 id="1-4-Vue-2-中给-data-中的对象属性添加一个新的属性时会发生什么？如何解决？"><a href="#1-4-Vue-2-中给-data-中的对象属性添加一个新的属性时会发生什么？如何解决？" class="headerlink" title="1.4. Vue 2 中给 data 中的对象属性添加一个新的属性时会发生什么？如何解决？"></a>1.4. Vue 2 中给 data 中的对象属性添加一个新的属性时会发生什么？如何解决？</h2><p>视图并未刷新。这是因为在Vue实例创建时，新属性并未声明，因此就没有被Vue转换为响应式的属性，自然就不会触发视图的更新，这时就需要使用Vue的全局 api $set()：<code>this.$set(this.obj, &#39;new_property&#39;, &#39;new_value&#39;)</code></p>
-<h2 id="1-5-Computed和Watch的区别"><a href="#1-5-Computed和Watch的区别" class="headerlink" title="1.5. Computed和Watch的区别"></a>1.5. Computed和Watch的区别</h2><ol>
-<li>computed 计算属性 : 依赖其它属性值,并且 computed 的值有缓存,只有它依赖的 属性值发生改变,下一次获取 computed 的值时才会重新计算 computed 的值。</li>
-<li>watch 侦听器 : 更多的是观察的作用,无缓存性,类似于某些数据的监听回调,每 当监听的数据变化时都会执行回调进行后续操作。</li>
-</ol>
-<blockquote>
-<p>运用场景：</p>
-</blockquote>
-<ol>
-<li>当我们需要进行数值计算,并且依赖于其它数据时,应该使用 computed,因为可以利用 computed 的缓存特性,避免每次获取值时,都要重新计算。</li>
-<li>当我们需要在数据变化时执行异步或开销较大的操作时,应该使用 watch,使用 watch 选项允许我们执行异步操作 ( 访问一个 API ),限制我们执行该操作的频率, 并在我们得到最终结果前,设置中间状态。这些都是计算属性无法做到的。</li>
-<li>多个因素影响一个显示，用Computed；一个因素的变化影响多个其他因素、显示，用Watch;</li>
-</ol>
-<h2 id="1-6-Computed-和-Methods-的区别"><a href="#1-6-Computed-和-Methods-的区别" class="headerlink" title="1.6. Computed 和 Methods 的区别"></a>1.6. Computed 和 Methods 的区别</h2><ol>
-<li>computed: 计算属性是基于它们的依赖进行缓存的,只有在它的相关依赖发生改变时才会重新求值对于 method ，只要发生重新渲染，</li>
-<li>method 调用总会执行该函数</li>
-</ol>
-<h2 id="1-7-虚拟DOM，diff算法"><a href="#1-7-虚拟DOM，diff算法" class="headerlink" title="1.7. 虚拟DOM，diff算法"></a>1.7. 虚拟DOM，diff算法</h2><p>（1）让我们不用直接操作DOM元素，只操作数据便可以重新渲染页面<br>（2）虚拟dom是为了解决浏览器性能问题而被设计出来的<br>当操作数据时，将改变的dom元素缓存起来，都计算完后再通过比较映射到真实的dom树上<br>（3）diff算法比较新旧虚拟dom。如果节点类型相同，则比较数据，修改数据；如果节点不同，直接干掉节点及所有子节点，插入新的节点；如果给每个节点都设置了唯一的key，就可以准确的找到需要改变的内容，否则就会出现修改一个地方导致其他地方都改变的情况。比如A-B-C-D, 我要插入新节点A-B-M-C-D,实际上改变的了C和D。但是设置了key，就可以准确的找到B C并插入</p>
-<h2 id="1-8-为何需要Virtual-DOM？"><a href="#1-8-为何需要Virtual-DOM？" class="headerlink" title="1.8. 为何需要Virtual DOM？"></a>1.8. 为何需要Virtual DOM？</h2><ol>
-<li>具备跨平台的优势</li>
-<li>操作 DOM 慢，js运行效率高。我们可以将DOM对比操作放在JS层，提高效率。</li>
-<li>提升渲染性能</li>
-</ol>
-<h2 id="1-9-过滤器-Filter"><a href="#1-9-过滤器-Filter" class="headerlink" title="1.9. 过滤器 (Filter)"></a>1.9. 过滤器 (Filter)</h2><p>在Vue中使用filters来过滤(格式化)数据，filters不会修改数据，而是过滤(格式化)数据，改变用户看到的输出（计算属性 computed ，方法 methods 都是通过修改数据来处理数据格式的输出显示。<br>使用场景： 比如需要处理时间、数字等的的显示格式；</p>
-<h2 id="1-10-常见的事件修饰符及其作用"><a href="#1-10-常见的事件修饰符及其作用" class="headerlink" title="1.10. 常见的事件修饰符及其作用"></a>1.10. 常见的事件修饰符及其作用</h2><ol>
-<li><code>.stop</code>：等同于 JavaScript 中的 event.stopPropagation() ，防止事件冒泡；</li>
-<li><code>.prevent</code> ：等同于 JavaScript 中的 event.preventDefault() ，防止执行预设的行为（如果事件可取消，则取消该事件，而不停止事件的进一步传播）；</li>
-<li><code>.capture</code> ：当元素发生冒泡时，先触发带有该修饰符的元素。若有多个该修饰符，则由外而内触发。如 div1中嵌套div2中嵌套div3.capture中嵌套div4，那么执行顺序为：div3=》div4=》div2=》div1</li>
-<li><code>.self</code> ：只会触发自己范围内的事件，不包含子元素；</li>
-<li><code>.once</code> ：只会触发一次。</li>
-</ol>
-<h2 id="1-11-v-show指令和v-if指令的区别是什么？"><a href="#1-11-v-show指令和v-if指令的区别是什么？" class="headerlink" title="1.11. v-show指令和v-if指令的区别是什么？"></a>1.11. v-show指令和v-if指令的区别是什么？</h2><p>v-show 仅仅控制元素的显示方式，将 display 属性在 block 和 none 来回切换；而v-if会控制这个 DOM 节点的存在与否。当我们需要经常切换某个元素的显示/隐藏时，使用v-show会更加节省性能上的开销；当只需要一次显示或隐藏时，使用v-if更加合理。</p>
-<h2 id="1-12-v-model-是如何实现的，语法糖实际是什么"><a href="#1-12-v-model-是如何实现的，语法糖实际是什么" class="headerlink" title="1.12. v-model 是如何实现的，语法糖实际是什么"></a>1.12. v-model 是如何实现的，语法糖实际是什么</h2><ol>
-<li>作用在表单元素上<code>v-model=&quot;message&quot;</code>等同于<code>v-bind:value=&quot;message&quot;  v-on:input=&quot;message=$event.target.value&quot;</code></li>
-<li>作用在组件上, 本质是一个父子组件通信的语法糖，通过prop和$.emit实现, 等同于<code>:value=&quot;message&quot; @input=&quot; $emit(&#39;input&#39;, $event.target.value)&quot;</code></li>
-</ol>
-<h2 id="1-13-data为什么是一个函数而不是对象"><a href="#1-13-data为什么是一个函数而不是对象" class="headerlink" title="1.13. data为什么是一个函数而不是对象"></a>1.13. data为什么是一个函数而不是对象</h2><p>JavaScript中的对象是引用类型的数据，当多个实例引用同一个对象时，只要一个实例对这个对象进行操作，其他实例中的数据也会发生变化。</p>
-<p>而在Vue中，我们更多的是想要复用组件，那就需要每个组件都有自己的数据，这样组件之间才不会相互干扰。</p>
-<p>所以组件的数据不能写成对象的形式，而是要写成函数的形式。数据以函数返回值的形式定义，这样当我们每次复用组件的时候，就会返回一个新的data，也就是说每个组件都有自己的私有数据空间，它们各自维护自己的数据，不会干扰其他组件的正常运行。</p>
-<h2 id="1-14-Vue-template-到-render-的过程"><a href="#1-14-Vue-template-到-render-的过程" class="headerlink" title="1.14. Vue template 到 render 的过程"></a>1.14. Vue template 到 render 的过程</h2><ol>
-<li>调用parse方法将template转化为ast（抽象语法树, abstract syntax tree）</li>
-<li>对静态节点做优化。如果为静态节点，他们生成的DOM永远不会改变，这对运行时模板更新起到了极大的优化作用。</li>
-<li>生成渲染函数. 渲染的返回值是VNode，VNode是Vue的虚拟DOM节点，里面有（标签名，子节点，文本等等）</li>
-</ol>
-<h2 id="1-15-Vue-data-中某一个属性的值发生改变后，视图会立即同步执行重新渲染吗？"><a href="#1-15-Vue-data-中某一个属性的值发生改变后，视图会立即同步执行重新渲染吗？" class="headerlink" title="1.15. Vue data 中某一个属性的值发生改变后，视图会立即同步执行重新渲染吗？"></a>1.15. Vue data 中某一个属性的值发生改变后，视图会立即同步执行重新渲染吗？</h2><p>不会立即同步执行重新渲染。<br>Vue 实现响应式并不是数据发生变化之后 DOM 立即变化，而是按一定的策略进行 DOM 的更新。<br>Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化， Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。</p>
-<p>如果同一个watcher被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作是非常重要的。<br>然后，在下一个的事件循环”tick”中，Vue 刷新队列并执行实际（已去重的）工作。</p>
-<h2 id="1-16-axios是什么"><a href="#1-16-axios是什么" class="headerlink" title="1.16. axios是什么"></a>1.16. axios是什么</h2><p>易用、简洁且高效的http库， 支持node端和浏览器端，支持Promise，支持拦截器等高级配置。</p>
-<h2 id="1-17-sass是什么？如何在vue中安装和使用？"><a href="#1-17-sass是什么？如何在vue中安装和使用？" class="headerlink" title="1.17. sass是什么？如何在vue中安装和使用？"></a>1.17. sass是什么？如何在vue中安装和使用？</h2><p>sass是一种CSS预编译语言安装和使用步骤如下。</p>
-<ol>
-<li>用npm安装加载程序（ sass-loader、 css-loader等加载程序)。</li>
-<li>在 webpack.config.js中配置sass加载程序。</li>
-</ol>
-<h2 id="1-18-Vue-js页面闪烁"><a href="#1-18-Vue-js页面闪烁" class="headerlink" title="1.18. Vue.js页面闪烁"></a>1.18. Vue.js页面闪烁</h2><p>Vue. js提供了一个v-cloak指令，该指令一直保持在元素上，直到关联实例结束编译。当和CSS一起使用时，这个指令可以隐藏未编译的标签，直到实例编译结束。用法如下。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[v-cloak]&#123; </span><br><span class="line"> display:none; </span><br><span class="line">&#125; </span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-cloak</span>&gt;</span>&#123;&#123; title &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="1-19-如何解决数据层级结构太深的问题"><a href="#1-19-如何解决数据层级结构太深的问题" class="headerlink" title="1.19. 如何解决数据层级结构太深的问题"></a>1.19. 如何解决数据层级结构太深的问题</h2><p>在开发业务时，经常会岀现异步获取数据的情况，有时数据层次比较深，如以下代码: <code>span &#39;v-text=&quot;a.b.c.d&quot;&gt;&lt;/span&gt;</code>, 可以使用vm.$set手动定义一层数据: <code>vm.$set(&quot;demo&quot;，a.b.c.d)</code></p>
-<h2 id="1-20-在-Vue-js开发环境下调用API接口，如何避免跨域"><a href="#1-20-在-Vue-js开发环境下调用API接口，如何避免跨域" class="headerlink" title="1.20. 在 Vue. js开发环境下调用API接口，如何避免跨域"></a>1.20. 在 Vue. js开发环境下调用API接口，如何避免跨域</h2><p>config/ index.js内对 proxyTable项配置代理。</p>
-<h2 id="1-21-批量异步更新策略"><a href="#1-21-批量异步更新策略" class="headerlink" title="1.21. 批量异步更新策略"></a>1.21. 批量异步更新策略</h2><p>Vue 在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，再统一进行视图更新。<br>换句话说，只要观察到数据变化，就会自动开启一个队列，并缓冲在同一个事件循环中发生的所以数据改变。在缓冲时会去除重复数据，从而避免不必要的计算和 DOM 操作。</p>
-<h2 id="1-22-vue-的-nextTick-方法的实现原理"><a href="#1-22-vue-的-nextTick-方法的实现原理" class="headerlink" title="1.22. vue 的 nextTick 方法的实现原理"></a>1.22. vue 的 nextTick 方法的实现原理</h2><ol>
-<li>vue 用异步队列的方式来控制 DOM 更新和 nextTick 回调先后执行</li>
-<li>microtask 因为其高优先级特性，能确保队列中的微任务在一次事件循环前被执行完毕</li>
-</ol>
-<h2 id="1-23-Vue-组件-data-为什么必须是函数"><a href="#1-23-Vue-组件-data-为什么必须是函数" class="headerlink" title="1.23. Vue 组件 data 为什么必须是函数 ?"></a>1.23. Vue 组件 data 为什么必须是函数 ?</h2><p>因为组件是可以复用的,JS 里对象是引用关系,如果组件 data 是一个对象,那么子组件中的 data 属性值会互相污染。<br>所以一个组件的 data 选项必须是一个函数,因此每个实例可以维护一份被返回对象的独立的拷贝。</p>
-<h2 id="1-24-v-if和v-for一起使用的弊端及解决办法"><a href="#1-24-v-if和v-for一起使用的弊端及解决办法" class="headerlink" title="1.24. v-if和v-for一起使用的弊端及解决办法"></a>1.24. v-if和v-for一起使用的弊端及解决办法</h2><p>由于v-for的优先级比v-if高，所以导致每循环一次就会去v-if一次，而v-if是通过创建和销毁dom元素来控制元素的显示与隐藏，所以就会不停的去创建和销毁元素，造成页面卡顿，性能下降。</p>
-<p>解决办法：</p>
-<ol>
-<li>在v-for的外层或内层包裹一个元素来使用v-if</li>
-<li>用computed处理</li>
-</ol>
-<h2 id="1-25-vue常用指令"><a href="#1-25-vue常用指令" class="headerlink" title="1.25. vue常用指令"></a>1.25. vue常用指令</h2><ol>
-<li>v-model 多用于表单元素实现双向数据绑定（同angular中的ng-model）</li>
-<li>v-bind 动态绑定 作用： 及时对页面的数据进行更改</li>
-<li>v-on:click 给标签绑定函数，可以缩写为@，例如绑定一个点击函数 函数必须写在methods里面</li>
-<li>v-for 格式： v-for=”字段名 in(of) 数组json” 循环数组或json(同angular中的ng-repeat)</li>
-<li>v-show 显示内容 （同angular中的ng-show）</li>
-<li>v-hide 隐藏内容（同angular中的ng-hide）</li>
-<li>v-if 显示与隐藏 （dom元素的删除添加 同angular中的ng-if 默认值为false）</li>
-<li>v-else-if 必须和v-if连用</li>
-<li>v-else 必须和v-if连用 不能单独使用 否则报错 模板编译错误</li>
-<li>v-text 解析文本</li>
-<li>v-html 解析html标签</li>
-<li>v-bind:class 三种绑定方法 1、对象型 ‘{red:isred}’ 2、三元型 ‘isred?”red”:”blue”‘ 3、数组型 ‘[{red:”isred”},{blue:”isblue”}]’</li>
-<li>v-once 进入页面时 只渲染一次 不在进行渲染</li>
-<li>v-cloak 防止闪烁</li>
-<li>v-pre 把标签内部的元素原位输出</li>
-</ol>
-<h2 id="1-26-组件传值方式有哪些"><a href="#1-26-组件传值方式有哪些" class="headerlink" title="1.26. 组件传值方式有哪些"></a>1.26. 组件传值方式有哪些</h2><ol>
-<li>父传子：子组件通过props[‘xx’] 来接收父组件传递的属性 xx 的值</li>
-<li>子传父：子组件通过 this.$emit(‘fnName’,value) 来传递,父组件通过接收 fnName 事件方法来接收回调</li>
-<li>其他方式：通过创建一个bus，进行传值</li>
-<li>使用Vuex</li>
-</ol>
-<h2 id="1-27-vue-loader是什么？使用它的用途有哪些？"><a href="#1-27-vue-loader是什么？使用它的用途有哪些？" class="headerlink" title="1.27. vue-loader是什么？使用它的用途有哪些？"></a>1.27. vue-loader是什么？使用它的用途有哪些？</h2><h1 id="2-组件-Component"><a href="#2-组件-Component" class="headerlink" title="2. 组件 Component"></a>2. 组件 Component</h1><h2 id="2-1-vue中如何编写可复用的组件-（编写组件的原则）"><a href="#2-1-vue中如何编写可复用的组件-（编写组件的原则）" class="headerlink" title="2.1. vue中如何编写可复用的组件 （编写组件的原则）"></a>2.1. vue中如何编写可复用的组件 （编写组件的原则）</h2><ol>
-<li>以组件功能命名</li>
-<li>只负责ui的展示和交互动画，不要在组件里与服务器打交道（获取异步数据等）</li>
-<li>可复用组件不会因组件使用的位置、场景而变化。尽量减少对外部条件的依赖。</li>
-</ol>
-<h2 id="2-2-如何让CSS只在当前组件中起作用？"><a href="#2-2-如何让CSS只在当前组件中起作用？" class="headerlink" title="2.2. 如何让CSS只在当前组件中起作用？"></a>2.2. 如何让CSS只在当前组件中起作用？</h2><p>在每一个Vue.js组件中都可以定义各自的CSS、 JavaScript代码。如果希望组件内写的CSS只对当前组件起作用，只需要在Style标签添加Scoped属性，即<style scoped></style>。</p>
-<h2 id="2-3-keep-alive是什么？"><a href="#2-3-keep-alive是什么？" class="headerlink" title="2.3. keep-alive是什么？"></a>2.3. keep-alive是什么？</h2><p>如果需要在组件切换的时候，保存一些组件的状态防止多次渲染，就可以使用 keep-alive 组件包裹需要保存的组件。</p>
-<p>两个重要属性，include 缓存组件名称，exclude 不需要缓存的组件名称。</p>
-<h2 id="2-4-如何在-Vue-js动态插入图片"><a href="#2-4-如何在-Vue-js动态插入图片" class="headerlink" title="2.4. 如何在 Vue. js动态插入图片"></a>2.4. 如何在 Vue. js动态插入图片</h2><p>对“src”属性插值将导致404请求错误。应使用 v-bind:src （简写<code>:src</code>）格式代替。</p>
-<h2 id="2-5-父子组件的生命周期顺序"><a href="#2-5-父子组件的生命周期顺序" class="headerlink" title="2.5. 父子组件的生命周期顺序"></a>2.5. 父子组件的生命周期顺序</h2><ol>
-<li>加载渲染过程：<br>父beforeCreate-&gt;父created-&gt;父beforeMount-&gt;子beforeCreate-&gt;子created-&gt;子beforeMount-&gt;子mounted-&gt;父mounted</li>
-<li>子组件更新过程：父beforeUpdate-&gt;子beforeUpdate-&gt;子updated-&gt;父updated</li>
-<li>父组件更新过程：父beforeUpdate-&gt;父updated</li>
-<li>销毁过程：父beforeDestroy-&gt;子beforeDestroy-&gt;子destroyed-&gt;父destroyed</li>
-</ol>
-<h1 id="3-Vuex"><a href="#3-Vuex" class="headerlink" title="3. Vuex"></a>3. Vuex</h1><h2 id="3-1-vuex的核心概念"><a href="#3-1-vuex的核心概念" class="headerlink" title="3.1. vuex的核心概念"></a>3.1. vuex的核心概念</h2><ol>
-<li>state =&gt; 基本数据 </li>
-<li>getters =&gt; 从基本数据派生的数据 </li>
-<li>mutations =&gt; 修改数据，同步 </li>
-<li>actions =&gt; 修改数据，异步  (Action 提交的是 mutation，而不是直接变更状态)</li>
-<li>modules =&gt; 模块化Vuex</li>
-</ol>
-<h2 id="3-2-vuex是什么？怎么使用？哪种功能场景使用它？"><a href="#3-2-vuex是什么？怎么使用？哪种功能场景使用它？" class="headerlink" title="3.2. vuex是什么？怎么使用？哪种功能场景使用它？"></a>3.2. vuex是什么？怎么使用？哪种功能场景使用它？</h2><p>Vuex 是一个专为 Vue.js 应用程序开发的状态管理器，采用集中式存储管理应用的所有组件的状态，主要是为了多页面、多组件之间的通信。<br>Vuex有5个重要的属性，分别是 State、Getter、Mutation、Action、Module，由 view 层发起一个 Action 给 Mutation，在 Mutation 中修改状态，返回新的状态，通过 Getter暴露给 view层的组件或者页面，页面监测到状态改变于是更新页面。如果你的项目很简单，最好不要使用 Vuex，对于大型项目，Vuex 能够更好的帮助我们管理组件外部的状态，一般可以运用在购物车、登录状态、播放等场景中。</p>
-<h2 id="3-3-多个组件之间如何拆分各自的state，每块小的组件有自己的状态，它们之间还有一些公共的状态需要维护，如何思考这块"><a href="#3-3-多个组件之间如何拆分各自的state，每块小的组件有自己的状态，它们之间还有一些公共的状态需要维护，如何思考这块" class="headerlink" title="3.3. 多个组件之间如何拆分各自的state，每块小的组件有自己的状态，它们之间还有一些公共的状态需要维护，如何思考这块"></a>3.3. 多个组件之间如何拆分各自的state，每块小的组件有自己的状态，它们之间还有一些公共的状态需要维护，如何思考这块</h2><ol>
-<li>公共的数据部分可以提升至和他们最近的父组件，由父组件派发</li>
-<li>公共数据可以放到vuex中统一管理，各组件分别获取</li>
-</ol>
-<h1 id="4-Router"><a href="#4-Router" class="headerlink" title="4. Router"></a>4. Router</h1><h2 id="4-1-vue-router路由的两种模式"><a href="#4-1-vue-router路由的两种模式" class="headerlink" title="4.1. vue-router路由的两种模式"></a>4.1. vue-router路由的两种模式</h2><p>vue-router中默认使用的是hash模式</p>
-<ol>
-<li>hash模式, 带#。如：<a target="_blank" rel="noopener" href="http://localhost:8080/#/pageA%E3%80%82%E6%94%B9%E5%8F%98hash%EF%BC%8C%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9C%AC%E8%BA%AB%E4%B8%8D%E4%BC%9A%E6%9C%89%E4%BB%BB%E4%BD%95%E8%AF%B7%E6%B1%82%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A8%E4%BD%9C%E7%9A%84%EF%BC%8C%E4%BD%86%E6%98%AF%E9%A1%B5%E9%9D%A2%E7%8A%B6%E6%80%81%E5%92%8Curl%E5%B7%B2%E7%BB%8F%E5%85%B3%E8%81%94%E8%B5%B7%E6%9D%A5%E4%BA%86%E3%80%82">http://localhost:8080/#/pageA。改变hash，浏览器本身不会有任何请求服务器动作的，但是页面状态和url已经关联起来了。</a></li>
-<li>history模式，不带#， 如：<a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a> 正常的而路径，并没有#。基于HTML5的 pushState、replaceState实现</li>
-</ol>
-<h2 id="4-2-vue-router如何定义嵌套路由"><a href="#4-2-vue-router如何定义嵌套路由" class="headerlink" title="4.2. vue-router如何定义嵌套路由"></a>4.2. vue-router如何定义嵌套路由</h2><p>通过children 数组：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">  routes: [</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">&quot;/parentPage&quot;</span>,</span><br><span class="line">      component: testPage,</span><br><span class="line">      children: [</span><br><span class="line">        &#123;</span><br><span class="line">          path: <span class="string">&quot;/childrenA&quot;</span>,</span><br><span class="line">          component: childrenComponentA,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          path: <span class="string">&quot;/childrenB&quot;</span>,</span><br><span class="line">          component: childrenComponentB,</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// 其他和parentPage平级的路由</span></span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-3-vue-router有哪几种导航钩子？"><a href="#4-3-vue-router有哪几种导航钩子？" class="headerlink" title="4.3. vue-router有哪几种导航钩子？"></a>4.3. vue-router有哪几种导航钩子？</h2><ol>
-<li>全局导航钩子：router.beforeEach(to,from,next)</li>
-<li>组件内的钩子beforeRouteEnter (to, from, next) beforeRouteUpdate (to, from, next) beforeRouteLeave (to, from, next)</li>
-<li>单独路由独享组件 beforeEnter: (to, from, next)</li>
-</ol>
-<h2 id="4-4-route和-router的区别"><a href="#4-4-route和-router的区别" class="headerlink" title="4.4. $route和$router的区别"></a>4.4. $route和$router的区别</h2><ol>
-<li>$route是“路由信息对象”，包括path，params，hash，query，fullPath，matched，name等路由信息参数。</li>
-<li>$router是“路由实例”对象包括了路由的跳转方法，钩子函数等</li>
-</ol>
-<h2 id="4-5-路由之间跳转的方式"><a href="#4-5-路由之间跳转的方式" class="headerlink" title="4.5. 路由之间跳转的方式"></a>4.5. 路由之间跳转的方式</h2><ol>
-<li>声明式（标签跳转） </li>
-<li>编程式（ js跳转）</li>
-</ol>
-<h2 id="4-6-active-class是哪个组件的属性"><a href="#4-6-active-class是哪个组件的属性" class="headerlink" title="4.6. active-class是哪个组件的属性"></a>4.6. active-class是哪个组件的属性</h2><p>vue-router 模块 的router-link组件</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/10/React-starter-2-React-Router-Dom/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/10/React-starter-2-React-Router-Dom/" class="post-title-link" itemprop="url">React 入门（2）- 路由 React Router</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-10 22:11:55" itemprop="dateCreated datePublished" datetime="2021-04-10T22:11:55+08:00">2021-04-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-07 09:56:56" itemprop="dateModified" datetime="2021-05-07T09:56:56+08:00">2021-05-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
-<li><a href="#browserrouter%E4%B8%8Ehashrouter%E7%9A%84%E5%8C%BA%E5%88%AB">BrowserRouter与HashRouter的区别</a></li>
-<li><a href="#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8">安装和使用</a></li>
-</ul>
-<blockquote>
-<p>环境:</p>
-<ul>
-<li>React 17.x</li>
-<li>react-router-dom: 5.2</li>
-</ul>
-</blockquote>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>React 本身是一个极简的类库，并且遵循渐进式原则，所以是不带路由（Router）功能的。对于稍复杂些的应用，没有路由显然是不可以的，所以就需要引入路由（React Router）库。</p>
-<p>React Router 从5.0开始只分为Core，Web 和Native3种。 从5.0开始，彻底将原本的针对网页使用的react-router的npm package命名改为了react-router-dom。也就是说，针对web应用，用react-router-dom吧。（本文暂不涉及Native)</p>
-<blockquote>
-<p>官方文档： <a target="_blank" rel="noopener" href="https://reacttraining.com/react-router/">https://reacttraining.com/react-router/</a></p>
-</blockquote>
-<h1 id="BrowserRouter与HashRouter的区别"><a href="#BrowserRouter与HashRouter的区别" class="headerlink" title="BrowserRouter与HashRouter的区别"></a>BrowserRouter与HashRouter的区别</h1><p>React Router 有2中模式，BrowserRouter与HashRouter，下面我们来看一下区别</p>
-<ol>
-<li>url表现形式不一样，看是否包含#</li>
-</ol>
-<ul>
-<li>BrowserRouter没有，例如：<a target="_blank" rel="noopener" href="http://localhost:3000/about">http://localhost:3000/about</a></li>
-<li>HashRouter的路径包含＃，例如：<a target="_blank" rel="noopener" href="http://localhost:3000/#/about">http://localhost:3000/#/about</a></li>
-</ul>
-<ol start="2">
-<li>底层原理不一样</li>
-</ol>
-<ul>
-<li>BrowserRouter使用的是HTML5的history API(window.history.pushState, popState)</li>
-<li>HashRouter使用的是URL的哈希值。</li>
-</ul>
-<ol start="3">
-<li>刷新后对路由state参数的影响</li>
-</ol>
-<ul>
-<li>BrowserRouter没有任何影响，因为state保存在history对象中。</li>
-<li>HashRouter刷新后会导致路由state参数的丢失。</li>
-</ul>
-<h1 id="安装和使用"><a href="#安装和使用" class="headerlink" title="安装和使用"></a>安装和使用</h1><ol>
-<li><p>安装：<br><code>npm i react-router-dom</code></p>
-</li>
-<li><p>简单使用，<br>参考：<a target="_blank" rel="noopener" href="https://reactrouter.com/web/guides/quick-start">https://reactrouter.com/web/guides/quick-start</a></p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1943,12 +1576,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

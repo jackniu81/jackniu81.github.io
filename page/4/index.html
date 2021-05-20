@@ -149,6 +149,366 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/11/Angular-Starter-8-component-child-parent/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（8）- 父子组件（Component）之间传递数据</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-11 16:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T16:11:30+08:00">2021-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-07 10:39:00" itemprop="dateModified" datetime="2021-02-07T10:39:00+08:00">2021-02-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
+<li><a href="#2-%E7%88%B6%E4%BC%A0%E5%AD%90-input">2. 父传子 @Input()</a><ul>
+<li><a href="#21-%E5%AD%90%E7%BB%84%E4%BB%B6%E5%AE%9A%E4%B9%89input">2.1. 子组件定义@Input()</a></li>
+<li><a href="#22-%E7%88%B6%E7%BB%84%E4%BB%B6%E4%BC%A0%E9%80%92%E5%8F%98%E9%87%8F%E7%BB%99%E5%AD%90%E7%BB%84%E4%BB%B6">2.2. 父组件传递变量给子组件</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AD%90%E4%BC%A0%E7%88%B6-output">3. 子传父 @Output()</a><ul>
+<li><a href="#31-%E5%AD%90%E7%BB%84%E4%BB%B6%E5%AE%9A%E4%B9%89output">3.1. 子组件定义@Output</a></li>
+<li><a href="#32-%E7%88%B6%E7%BB%84%E4%BB%B6%E8%AE%A2%E9%98%85%E4%BA%8B%E4%BB%B6">3.2. 父组件订阅事件</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>组件之间传递数据，最主要的就是父子组件之间传递数据， 例如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent-component</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">child-component</span>&gt;</span><span class="tag">&lt;/<span class="name">child-component</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent-component</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>父组件传入数据给子组件，同时，子组件数据发生变化是，希望能够通知父组件。</p>
+<p>Angular 中，@Input() 和 @Output() 为子组件提供了一种与其父组件通信的方法。 @Input() 允许父组件更新子组件中的数据。相反，@Output() 允许子组件向父组件发送数据。</p>
+<h1 id="2-父传子-Input"><a href="#2-父传子-Input" class="headerlink" title="2. 父传子 @Input()"></a>2. 父传子 @Input()</h1><h2 id="2-1-子组件定义-Input"><a href="#2-1-子组件定义-Input" class="headerlink" title="2.1. 子组件定义@Input()"></a>2.1. 子组件定义@Input()</h2><p>子组件中的 @Input() 装饰器表示该属性可以从其父组件中获取值。</p>
+<p>例如：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">ChildComponent</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Input</span>() message: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>增加@Input() 装饰器的变量，除了数据可以从父组件传入后，其他逻辑和普通变量一致；</li>
+<li>子组件的html代码中，既可使用message这个变量， 例如：<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">  Parent says: &#123;&#123;message&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-2-父组件传递变量给子组件"><a href="#2-2-父组件传递变量给子组件" class="headerlink" title="2.2. 父组件传递变量给子组件"></a>2.2. 父组件传递变量给子组件</h2>当父组件调用子组件时，可以把父组件的变量（如<code>messageToChild</code>） 传递给子组件<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child-component</span> [<span class="attr">message</span>]=<span class="string">&quot;messageToChild&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">child-component</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<blockquote>
+<p>子组件中，可以更改<code>message</code>这个传入的变量，但是其作用域只在子组件中，父组件拿不到更改后的结果。（如何传给父组件，请接着看）</p>
+</blockquote>
+<h1 id="3-子传父-Output"><a href="#3-子传父-Output" class="headerlink" title="3. 子传父 @Output()"></a>3. 子传父 @Output()</h1><p>Angular通过事件（Event）来实现子组件通知父组件数据的改变，父组件需要订阅该事件。</p>
+<h2 id="3-1-子组件定义-Output"><a href="#3-1-子组件定义-Output" class="headerlink" title="3.1. 子组件定义@Output"></a>3.1. 子组件定义@Output</h2><p>子组件定义@Output</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">ChildComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// EventEmitter ，这意味着它是一个事件</span></span><br><span class="line">  <span class="comment">// new EventEmitter&lt;string&gt;() - </span></span><br><span class="line">  <span class="comment">// 使用 Angular 来创建一个新的事件发射器，它发出的数据是 string 类型的。</span></span><br><span class="line">  <span class="meta">@Output</span>() newItemEvent = <span class="keyword">new</span> EventEmitter&lt;<span class="built_in">string</span>&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">addNewItem</span>(<span class="params">value: <span class="built_in">string</span></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.newItemEvent.emit(value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>子组件当数据发生变化时，调用这个<code>addNewItem</code>方法既可。例如，html中</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">label</span>&gt;</span>Add an item: <span class="tag">&lt;<span class="name">input</span> #<span class="attr">newItem</span>&gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> (<span class="attr">click</span>)=<span class="string">&quot;addNewItem(newItem.value)&quot;</span>&gt;</span>Add to parent&#x27;s list<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-父组件订阅事件"><a href="#3-2-父组件订阅事件" class="headerlink" title="3.2. 父组件订阅事件"></a>3.2. 父组件订阅事件</h2><ol>
+<li>父组件的ts代码中，增加一个处理上面事件的方法，例如<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">addItem</span>(<span class="params">newItem: <span class="built_in">string</span></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// logic here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>父组件的html中，订阅该事件。 </li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child-component</span> (<span class="attr">newItemEvent</span>)=<span class="string">&quot;addItem($event)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">child-component</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>事件绑定 <code>(newItemEvent)=&#39;addItem($event)&#39;</code> 会把子组件中的 newItemEvent 事件连接到父组件的 addItem() 方法。</p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>使用@Input() 和 @Output() 可以很方便的实现父子组件之间的数据传递、共享。</li>
+<li>可以同时使用 @Input() 和 @Output()</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-6-update/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/11/Angular-Starter-6-update/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（6）- Angular的升级</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-11 14:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T14:11:30+08:00">2021-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-12 14:34:18" itemprop="dateModified" datetime="2021-01-12T14:34:18+08:00">2021-01-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
+<li><a href="#2-httpsupdateangulario">2. https://update.angular.io/</a></li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容的升级。笔者之前维护的一个6年项目，是用jQueryMobile开发的，估计入门web开发比较短的同学都没有听说过吧。另外，就拿Angular来说，从2.0开始，使用ts开发，不再兼容1.0 版本。从2.0开始，命名为Angular，1.0的叫angularJS, 2个版本彻底切割。而这也是angular流失很多用户的其中一个原因。</p>
+<p>针对这些问题，Angular专门提供了版本升级的指导方案，非常详细、准确（Angular每半年发布一个主版本，这个也是必须的）。</p>
+<h1 id="2-https-update-angular-io"><a href="#2-https-update-angular-io" class="headerlink" title="2. https://update.angular.io/"></a>2. <a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a></h1><p><a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a> 是官方的angular升级指导页面，你可以选择你的项目的版本，以及要升级到的版本；同时可以选择项目使用的技术，比如是否使用了Angular Material （这也是之前推荐这个UI框架的原因–升级方便），是否和AngualrJS同时使用等等。之后，自动提示升级步骤。</p>
+<p>升级主要通过 <code>ng update xxx</code> 来实现， <code>ng update</code> 命令不同于npm命令，<code>npm update</code>相当于 npm+更改配置（代码），也就是说，再更新完node-modules之后，<code>ng update</code>会自动更新配置文件，甚至是代码中的基本的import的代码，实现自动升级、更新。</p>
+<p>举例，10.2升级到11.1，如果没有涉及到复杂的anuglar技术，大致的升级步骤是：</p>
+<ul>
+<li>Run <code>ng update @angular/core @angular/cli</code> which should bring you to version 11 of Angular.</li>
+<li>Run <code>ng update @angular/material</code>.</li>
+<li>Angular now requires TypeScript 4.0. ng update will migrate you automatically.</li>
+<li>Support for IE9, IE10, and IE mobile has been removed. This was announced * in the v10 update.</li>
+</ul>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ul>
+<li>Angular虽然更新、升级比较频繁（从某种意义上也是优点），但是升级部分确实做得最完善的</li>
+<li>UI框架，@angular/material可以实现和Angular的同步升级，其他第三方框架，都会有演示，时间不等</li>
+<li>个人不推荐使用最新的版本，不做小白鼠。可以使用之前发布的一个版本，比如现在是v11，那么我们就使用v10。更稳定，同时网上资料也多。</li>
+<li>及时更新angular版本，免得技术债欠的越来越多而导致无法升级。</li>
+<li>这个升级指导也是相对的，如果你对Angular有些特殊的用法，或者没有安装官方推荐方式使用，升级也是比较麻烦的。</li>
+<li>升级时，如果跨多版本，建议一个版本一个版本的升级，每升级一次，执行UT或者把站点跑起来试试，以防出错。</li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-11 12:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T12:11:30+08:00">2021-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-12 14:34:18" itemprop="dateModified" datetime="2021-01-12T14:34:18+08:00">2021-01-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E7%AC%AC%E4%B8%89%E6%96%B9ui%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9">1. 第三方UI库的选择</a></li>
+<li><a href="#2-angular-material">2. Angular Material</a><ul>
+<li><a href="#21-%E4%BC%98%E7%BC%BA%E7%82%B9">2.1. 优缺点</a><ul>
+<li><a href="#211-%E4%BC%98%E7%82%B9">2.1.1. 优点</a></li>
+<li><a href="#212-%E7%BC%BA%E7%82%B9">2.1.2. 缺点</a></li>
+</ul>
+</li>
+<li><a href="#22-%E5%BC%95%E5%85%A5%E5%88%B0%E9%A1%B9%E7%9B%AE">2.2. 引入到项目</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: VSCode</li>
+</ul>
+</blockquote>
+<h1 id="1-第三方UI库的选择"><a href="#1-第三方UI库的选择" class="headerlink" title="1. 第三方UI库的选择"></a>1. 第三方UI库的选择</h1><p>Angular开发，除非你只有简单一两个页面，否则引入第三方UI库就是必不可少的。而具体用哪个库，就需要考虑多方面的东西了。比如：</p>
+<ol>
+<li>流行程度</li>
+<li>版本更新情况 （是否能跟进anuglar更新，bug是否及时修复）</li>
+<li>UI风格，是否适用于项目</li>
+<li>入手难易程度</li>
+<li>文档完善程度</li>
+</ol>
+<p>市面上有很多Angular可用的类库，可用根据项目、企业情况去选择。简单列一下可选的UI库。</p>
+<ol>
+<li><code>Angular Material</code>: angular 官方UI库。<a target="_blank" rel="noopener" href="https://material.angular.io/">https://material.angular.io/</a></li>
+<li><code>clarity</code>: 国外的一套比较流行的框架， <a target="_blank" rel="noopener" href="https://clarity.design/%E3%80%82">https://clarity.design/。</a> </li>
+<li><code>NG-ZORRO</code>: 阿里Ant Design的Angular版本。 <a target="_blank" rel="noopener" href="https://ng.ant.design/docs/introduce/en">https://ng.ant.design/docs/introduce/en</a> </li>
+<li><code>Element Angular</code>：国内非常流行的基于Vue的Element，同样有Angular版本。 <a target="_blank" rel="noopener" href="https://element-angular.faas.ele.me/">https://element-angular.faas.ele.me/</a></li>
+<li><code>Kendo UI</code>。很多很强大，只是要收费。<a target="_blank" rel="noopener" href="https://www.telerik.com/kendo-angular-ui">https://www.telerik.com/kendo-angular-ui</a></li>
+</ol>
+<h1 id="2-Angular-Material"><a href="#2-Angular-Material" class="headerlink" title="2. Angular Material"></a>2. Angular Material</h1><h2 id="2-1-优缺点"><a href="#2-1-优缺点" class="headerlink" title="2.1. 优缺点"></a>2.1. 优缺点</h2><h3 id="2-1-1-优点"><a href="#2-1-1-优点" class="headerlink" title="2.1.1. 优点"></a>2.1.1. 优点</h3><ul>
+<li>官方UI组件</li>
+<li>最标准的Material实现</li>
+<li>紧跟Angular核心组件的更新进度</li>
+<li>官方支持与Angular的同步升级</li>
+</ul>
+<h3 id="2-1-2-缺点"><a href="#2-1-2-缺点" class="headerlink" title="2.1.2. 缺点"></a>2.1.2. 缺点</h3><ul>
+<li>组件不像其他框架那么多，但是基本够用</li>
+<li>风格不是特别像国内的框架</li>
+</ul>
+<h2 id="2-2-引入到项目"><a href="#2-2-引入到项目" class="headerlink" title="2.2. 引入到项目"></a>2.2. 引入到项目</h2><ol>
+<li><p>根目录下执行下面命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng add @angular/material</span><br></pre></td></tr></table></figure></li>
+<li><p>import 到页面所属的module，或者是app.module.ts中。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import MatSliderModule</span></span><br><span class="line"><span class="keyword">import</span> &#123; MatSliderModule &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/material/slider&#x27;</span>;</span><br><span class="line"></span><br><span class="line">…</span><br><span class="line"><span class="meta">@NgModule</span> (&#123;....</span><br><span class="line">  imports: [...,</span><br><span class="line">  MatSliderModule,</span><br><span class="line">…]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1></li>
+<li><p>第三方组件各有优缺点</p>
+</li>
+<li><p>根据公司、项目的需求去选择</p>
+</li>
+<li><p>Angular Material升级更容易，官方支持。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -810,85 +1170,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2015/12/10/Hello-Hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2015/12/10/Hello-Hexo/" class="post-title-link" itemprop="url">Hello Hexo</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2015-12-10 10:14:59" itemprop="dateCreated datePublished" datetime="2015-12-10T10:14:59+08:00">2015-12-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-07 10:40:56" itemprop="dateModified" datetime="2021-02-07T10:40:56+08:00">2021-02-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Why-Hexo"><a href="#Why-Hexo" class="headerlink" title="Why Hexo"></a>Why Hexo</h1><p>I’m a fan of <a target="_blank" rel="noopener" href="http://nodejs.org/">Node.js</a>, and github, and I want to choose a tool written in node.js to help me write blogs.<br>And it is <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo">Hexo</a>! It is a fast, simple &amp; powerful blog framework, powered by Node.js.</p>
-<h2 id="Features-of-Hexo"><a href="#Features-of-Hexo" class="headerlink" title="Features of Hexo"></a>Features of Hexo</h2><ul>
-<li>Blazing fast generating</li>
-<li>Support for GitHub Flavored Markdown and most Octopress plugins</li>
-<li>One-command deploy to GitHub Pages, Heroku, etc.</li>
-<li>Powerful plugin system</li>
-</ul>
-<h1 id="Several-Node-js-Static-Site-Generators"><a href="#Several-Node-js-Static-Site-Generators" class="headerlink" title="Several Node.js Static Site Generators"></a>Several Node.js Static Site Generators</h1><p>I like Node.js, so I give you several choose beside the Hexo!</p>
-<h2 id="Metalsmith"><a href="#Metalsmith" class="headerlink" title="Metalsmith"></a>Metalsmith</h2><p>Metalsmith immediately caught my attention not only thanks to its beautiful and minimal design, but also because of the following tagline: An extremely simple, pluggable static site generator. The first blurb goes on to explain that all of the logic in Metalsmith is handled by plugins. You simply chain them together. This makes Metalsmith the most versatile of all the systems presented here.</p>
-<h2 id="Wintersmith"><a href="#Wintersmith" class="headerlink" title="Wintersmith"></a>Wintersmith</h2><p>Wintersmith claims to be a flexible, minimalistic, multi-platform static site generator built on top of Node.js. Certainly, minimalistic is the key word! Wintersmith isn’t suited for beginners, but it’s perfectly fine for intermediate or advanced developers looking to get up and running with little fuss. Wintersmith’s approach isn’t the only thing that’s minimal. It was coded in CoffeeScript and ships with Jade and Markdown ready to go.</p>
-<h2 id="Assemble"><a href="#Assemble" class="headerlink" title="Assemble"></a>Assemble</h2><p>Assemble is a powerful tool that integrates Grunt and Yeoman into its workflow. Like Punch and DocPad discussed later in this article, Assemble tries to get designers and developers on the same page. For example, Assemble comes pre-packaged with Handlebars, one of the most widely used and beginner-friendly templating systems available.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -954,12 +1239,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
