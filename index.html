@@ -172,10 +172,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-05-20 13:29:30 / Modified: 14:08:05" itemprop="dateCreated datePublished" datetime="2021-05-20T13:29:30+08:00">2021-05-20</time>
+              <time title="Created: 2021-05-20 13:29:30" itemprop="dateCreated datePublished" datetime="2021-05-20T13:29:30+08:00">2021-05-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-21 01:01:04" itemprop="dateModified" datetime="2021-05-21T01:01:04+08:00">2021-05-21</time>
+              </span>
 
           
 
@@ -188,7 +194,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-浏览器缓存"><a href="#1-浏览器缓存" class="headerlink" title="1. 浏览器缓存"></a>1. 浏览器缓存</h1><p>一般来说，一个GET请求在目标资源存在的情况下会返回一个状态码为“200 OK”的响应，目标资源的内容将直接存放在响应报文的主体部分。如果资源的内容不会轻易改变，那么我们希望客户端（如浏览器）在本地缓存获取的资源。对于针对同一资源的后续请求来说，如果资源内容不曾改变，那么资源内容就无须再次作为网络荷载予以响应。</p>
+          <blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43288714/article/details/117074624">浏览器（Cache）的缓存逻辑（HTTP条件请求）</a></p>
+</blockquote>
+<h1 id="1-浏览器缓存"><a href="#1-浏览器缓存" class="headerlink" title="1. 浏览器缓存"></a>1. 浏览器缓存</h1><p>一般来说，一个GET请求在目标资源存在的情况下会返回一个状态码为“200 OK”的响应，目标资源的内容将直接存放在响应报文的主体部分。如果资源的内容不会轻易改变，那么我们希望客户端（如浏览器）在本地缓存获取的资源。对于针对同一资源的后续请求来说，如果资源内容不曾改变，那么资源内容就无须再次作为网络荷载予以响应。</p>
 <p>确定资源是否发生变化可以采用两种策略。第一种就是让资源的提供者记录最后一次更新资源的时间，资源的荷载内容（Payload）和这个时间戳将一并作为响应提供给作为请求发送者的客户端。客户端在缓存资源内容时也会保存这个时间戳。等到下次需要针对同一资源发送请求时，它会将这个时间戳一并发送出去，此时服务端就可以根据这个时间戳判断目标资源在上次响应之后是否被修改过，然后做出针对性的响应。第二种是针对资源的内容生成一个“标签”，标签的一致性体现了资源内容的一致性，在HTTP规范中将这个标签称为ETag（Entity Tag）。</p>
 <h1 id="2-If-Modified-Since与If-None-Match"><a href="#2-If-Modified-Since与If-None-Match" class="headerlink" title="2. If-Modified-Since与If-None-Match"></a>2. If-Modified-Since与If-None-Match</h1><p>对于HTTP请求来说，缓存资源携带的最后修改时间戳和ETag分别保存在名为If-Modified-Since与If-None-Match的报头中。报头名称体现的含义如下：只有目标资源在指定的时间之后被修改（If-Modified-Since）或者目前资源的状态与提供的ETag不匹配（If-None-Match）的情况下才会返回资源的荷载内容。</p>
 <p>以Chrome为例， 当服务端接收到针对某个资源的GET请求时，如果请求不具有上述这两个报头或者根据这两个报头携带的信息判断资源已经发生改变，那么它返回一个状态码为“<code>200 OK</code>”的响应。除了将资源内容作为响应主体，如果能够获取到该资源最后一次修改的时间（一般精确到秒），那么格式化的时间戳还会通过一个名为<code>Last-Modified</code>的响应报头提供给客户端。针对资源自身内容生成的标签，则会以ETag响应报头的形式提供给客户端。反之，如果做出相反的判断，服务端就会返回一个状态码为“<code>304 Not Modified</code>”的响应，这个响应不包含主体内容。一般来说，这样的响应也会携带<code>Last-Modified</code>报头和ETag报头。</p>
