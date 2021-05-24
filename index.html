@@ -149,6 +149,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/24/asp-net-core-1-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/24/asp-net-core-1-basic/" class="post-title-link" itemprop="url">ASP.NET Core MVC 入门到精通 - 2. 路由</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-24 08:43:23" itemprop="dateCreated datePublished" datetime="2021-05-24T08:43:23+08:00">2021-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-25 01:01:04" itemprop="dateModified" datetime="2021-05-25T01:01:04+08:00">2021-05-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-ASP-NET-Core-MVC-概述"><a href="#1-ASP-NET-Core-MVC-概述" class="headerlink" title="1. ASP.NET Core MVC 概述"></a>1. ASP.NET Core MVC 概述</h1><p>ASP.NET Core MVC 框架是轻量级、开源、高度可测试的演示框架，并针对 ASP.NET Core 进行了优化。</p>
+<h1 id="2-ASP-NET-Core-MVC路由"><a href="#2-ASP-NET-Core-MVC路由" class="headerlink" title="2. ASP.NET Core MVC路由"></a>2. ASP.NET Core MVC路由</h1><p>ASP.NET Core MVC 建立在 ASP.NET Core 的路由之上，是一个功能强大的 URL 映射组件，可用于生成具有易于理解和可搜索 URL 的应用程序。 </p>
+<p>MVC 中的路由包含下面2中方式</p>
+<ol>
+<li>基于约定的路由</li>
+<li>属性路由</li>
+</ol>
+<h2 id="2-1-注册"><a href="#2-1-注册" class="headerlink" title="2.1. 注册"></a>2.1. 注册</h2><p>所有 ASP.NET Core 模板都包括生成的代码中的路由。 路由在 Startup.Configure 中的中间件管道中进行注册。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseRouting();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-基于约定的路由"><a href="#2-2-基于约定的路由" class="headerlink" title="2.2. 基于约定的路由"></a>2.2. 基于约定的路由</h2><p>基于约定的路由，可以全局定义应用程序接受的 URL 格式，并说明每种格式如何映射到给定控制器上的特定操作方法。 接收传入请求时，路由引擎分析 URL 并将其匹配到定义的 URL 格式之一，然后调用关联的控制器操作方法。</p>
+<p>Configre 方法中，定义约定路由：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.UseEndpoints(endpoints =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    endpoints.MapControllerRoute(</span><br><span class="line">        name: <span class="string">&quot;default&quot;</span>,</span><br><span class="line">        pattern: <span class="string">&quot;&#123;controller=Home&#125;/&#123;action=Index&#125;/&#123;id?&#125;&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>{controller=Home}/{action=Index}/{id?}, 含义是默认Controller是<code>Home</code>，默认action为Controller中的<code>Index</code>方法（Action）。</p>
+</blockquote>
+<h2 id="2-3-属性路由"><a href="#2-3-属性路由" class="headerlink" title="2.3. 属性路由"></a>2.3. 属性路由</h2><p>属性路由，可以通过用定义应用程序路由的属性修饰控制器和操作来指定路由信息。 这意味着路由定义位于与之相关联的控制器和操作旁。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Route(<span class="string">&quot;api/[controller]&quot;</span>)]</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductsController</span> :</span> Controller</span><br><span class="line">&#123;</span><br><span class="line">    [HttpGet(<span class="string">&quot;&#123;id&#125;&quot;</span>)]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetProduct</span><span class="params">(<span class="keyword">int</span> id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="comment">// url等同于 api/Products/&#123;id&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/20/Web-Cache-etag/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1438,84 +1519,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/18/Algorithm-Fibonacci-numbers/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/18/Algorithm-Fibonacci-numbers/" class="post-title-link" itemprop="url">(算法) - 不使用递归，实现斐波那契数列</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-18 15:23:09" itemprop="dateCreated datePublished" datetime="2021-04-18T15:23:09+08:00">2021-04-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-19 16:46:17" itemprop="dateModified" datetime="2021-04-19T16:46:17+08:00">2021-04-19</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p><a href="https://jackniu81.github.io/2021/04/18/Algorithm-Fibonacci-numbers/">https://jackniu81.github.io/2021/04/18/Algorithm-Fibonacci-numbers/</a></p>
-</blockquote>
-<h1 id="1-斐波那契数列"><a href="#1-斐波那契数列" class="headerlink" title="1. 斐波那契数列"></a>1. 斐波那契数列</h1><p><code>斐波那契数列</code>：0, 1, 1,  2,  3, 5, 8, 13 … …  </p>
-<p>通常用 F(n) 表示，形成的序列称为 <code>斐波那契数列</code> 。该数列由 0 和 1 开始，后面的每一项数字都是前面两项数字的和。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">F(<span class="number">0</span>) = <span class="number">0</span>，F(<span class="number">1</span>) = <span class="number">1</span></span><br><span class="line">F(n) = F(n - <span class="number">1</span>) + F(n - <span class="number">2</span>)，其中 n &gt; <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>敏捷开发时，我们估算<code>Story Point</code>，通常就是使用斐波那契数列。</p>
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-递归"><a href="#2-1-递归" class="headerlink" title="2.1. 递归"></a>2.1. 递归</h2><p>F(n) = F(n - 1) + F(n - 2)， 很简单，就不谈了。</p>
-<h2 id="2-2-动态规划"><a href="#2-2-动态规划" class="headerlink" title="2.2. 动态规划"></a>2.2. 动态规划</h2><p>动态规划的思想是，记录中间计算结果，计算后面相时，根据前面保存的结果直接计算，避免重复计算。</p>
-<h1 id="3-Javascript-实现"><a href="#3-Javascript-实现" class="headerlink" title="3. Javascript 实现"></a>3. Javascript 实现</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;number&#125;</span> <span class="variable">n</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return <span class="type">&#123;number&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> fib = <span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n===<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(n===<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> arr = [<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">2</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        arr[i] = arr[i-<span class="number">1</span>] + arr[i-<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr[n];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>还可以进一步优化，当前使用数组记录以及计算过的F(n)，由于F(n) = F(n - 1) + F(n - 2)，实际只需要记录最近的2个值即可，不需要使用数组记录全部数据。</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1585,12 +1588,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
