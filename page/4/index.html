@@ -149,6 +149,281 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/12/Angular-starter-7-component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/12/Angular-starter-7-component/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（7）- 组件（@Component）基本知识</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-12 14:11:30 / Modified: 14:34:18" itemprop="dateCreated datePublished" datetime="2021-01-12T14:11:30+08:00">2021-01-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BAcomponent">2. 创建Component</a><ul>
+<li><a href="#21-%E7%BB%84%E4%BB%B6%E6%A8%A1%E6%9D%BF">2.1. 组件模板</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%A7%86%E5%9B%BE%E5%B0%81%E8%A3%85%E6%A8%A1%E5%BC%8F">3. 视图封装模式</a><ul>
+<li><a href="#31-%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-host">3.1. 特殊的选择器 :host</a></li>
+<li><a href="#32-inline-styles">3.2. inline-styles</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>组件是 Angular 应用的主要构造块。每个组件包括如下部分：</p>
+<ul>
+<li>一个 HTML 模板，用于声明页面要渲染的内容</li>
+<li>一个用于定义行为的 Typescript 类</li>
+<li>一个 CSS 选择器，用于定义组件在模板中的使用方式</li>
+<li>（可选）要应用在模板上的 CSS 样式</li>
+</ul>
+<p>Component可以是一个页面，也可以是一个组件（控件）。总是，是一个页面元素。</p>
+<p>任何一个Component都是NgModule的一部分，这样它就可以被其他应用和其他Component所调用。为了定义Component是NgModule的一个成员之一，开发者应该在NgModule的declarations属性中，将自己开发的Component列出。</p>
+<p>另外，通过Component修饰符（也就是@Component）开发者可以配置元数据，这样通过各式各样的Life-Cycle hooks，Components就可以控制他们的运行环境。</p>
+<h1 id="2-创建Component"><a href="#2-创建Component" class="headerlink" title="2. 创建Component"></a>2. 创建Component</h1><p>基于AngularCLI，可以很方便的创建Component。在要创建Component的目录下，执行如下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate component &lt;component-name&gt; </span><br></pre></td></tr></table></figure>
+<p>e.g. <code>ng generate component MyComponent</code><br>AngularCLI会自动生成一个文件夹和4个文件：</p>
+<ul>
+<li>一个以该组件命名的文件夹（e.g my-component)</li>
+<li>一个组件文件 &lt; component-name &gt;.component.ts（e.g my-component.component.ts)</li>
+<li>一个模板文件 &lt; component-name &gt;.component.html（e.g my-component.component.html)</li>
+<li>一个 CSS 文件， &lt; component-name &gt;.component.css（e.g my-component.component.css)</li>
+<li>测试文件 &lt; component-name &gt;.component.spec.ts（e.g my-component.component.spec.ts)</li>
+</ul>
+<blockquote>
+<p>对于Component，所有文件名都会自动增加Component后缀，所以不建议&lt; component-name &gt; 中带有‘component’这个单词。</p>
+</blockquote>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">MyComponentComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是核心的ts文件，指定了selector(CSS 选择器)，template（html）文件，css文件。html/css文件如果需要可以多个component公用。尤其是css，可以看到参数是Array，所以可以制定多个css。</p>
+<h2 id="2-1-组件模板"><a href="#2-1-组件模板" class="headerlink" title="2.1. 组件模板"></a>2.1. 组件模板</h2><p>组件模板，即HTML部分，可以是一个html文件，也可以是一段html描述，是等价的。Angular 组件需要一个用 template 或 templateUrl 定义的模板。但你不能在组件中同时拥有这两个语句。</p>
+<ol>
+<li><p>html 文件方式</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./component-overview.component.html&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>html代码方式</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-component-overview&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 3. 视图封装模式</span></span><br><span class="line"><span class="string">在 Angular 中，组件的 CSS 样式被封装进了自己的视图中，而不希望影响到应用程序的其它部分。这部分也是可以通过配置去进行控制的。</span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>ts</span><br><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  templateUrl: <span class="string">&#x27;./my-component.component.html&#x27;</span>,</span><br><span class="line">  encapsulation: ViewEncapsulation.None,</span><br><span class="line">  styleUrls: [<span class="string">&#x27;./my-component.component.css&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>可以看到，增加了一个<code>encapsulation</code>属性 （视图封装模式）。通过在组件的元数据上设置视图封装模式，你可以分别控制每个组件的封装模式。 可选的封装模式一共有如下几种：</p>
+</li>
+<li><p>Emulated 模式（默认值）通过预处理（并改名）CSS 代码来模拟 Shadow DOM 的行为，以达到把 CSS 样式局限在组件视图中的目的。 更多信息，见附录 1。(说明：只进不出，全局样式能进来，组件样式出不去)</p>
+</li>
+<li><p>ShadowDom 模式使用浏览器原生的 Shadow DOM 实现来为组件的宿主元素附加一个 Shadow DOM。组件的视图被附加到这个 Shadow DOM 中，组件的样式也被包含在这个 Shadow DOM 中。(说明：不进不出，没有样式能进来，组件样式出不去。)</p>
+</li>
+<li><p>None 意味着 Angular 不使用视图封装。 Angular 会把 CSS 添加到全局样式中。而不会应用上前面讨论过的那些作用域规则、隔离和保护等。 从本质上来说，这跟把组件的样式直接放进 HTML 是一样的。</p>
+</li>
+</ol>
+<h2 id="3-1-特殊的选择器-host"><a href="#3-1-特殊的选择器-host" class="headerlink" title="3.1. 特殊的选择器 :host"></a>3.1. 特殊的选择器 :host</h2><p>使用 :host 伪类选择器，用来选择组件宿主元素中的元素（相对于组件模板内部的元素）。 :host 选择是是把宿主元素作为目标的唯一方式。除此之外，你将没办法指定它， 因为宿主不是组件自身模板的一部分，而是父组件模板的一部分。</p>
+<p>e.g.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:host</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-inline-styles"><a href="#3-2-inline-styles" class="headerlink" title="3.2. inline-styles"></a>3.2. inline-styles</h2><p>默认AngularCLI生成的component，css在一个单独文件中。当然，同html模板类似，如果需要，你也可以制定css样式写在ts中， 不单独放到一个文件中。命令：<code>ng generate component MyComponent --inline-style</code>。</p>
+<p>生成component如下</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="string">&#x27;app-my-component&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span>,</span><br><span class="line">  styles: [<span class="string">&#x27;h1 &#123; font-weight: normal; &#125;&#x27;</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ul>
+<li>Angular CLI辅助创建一个component所需的多个文件</li>
+<li>建议html/css/ts分开</li>
+<li>在期望目录下执行Angular CLI命令，可以生成到制定目录</li>
+<li><code>ng generate component XXX</code> 可以简写为 <code>ng g c</code></li>
+</ul>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/11/Angular-Starter-11-ngmodule/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-11 17:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T17:11:30+08:00">2021-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-07 10:40:05" itemprop="dateModified" datetime="2021-02-07T10:40:05+08:00">2021-02-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
+<li><a href="#2-ngmodule%E4%B8%BE%E4%BE%8B%E8%AF%B4%E6%98%8E">2. NgModule举例、说明</a></li>
+<li><a href="#3-angular-cli%E7%94%9F%E6%88%90%E6%A8%A1%E5%9D%97">3. Angular CLI生成模块</a></li>
+<li><a href="#4-%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9D%97">4. 延迟加载模块</a></li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular CLI: 11.0.6</li>
+<li>Angular: 11.0.7</li>
+<li>Node: 12.18.3 </li>
+<li>npm : 6.14.6</li>
+<li>IDE: Visual Studio Code</li>
+</ul>
+</blockquote>
+<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>模块(NgModule)是Angular的核心概念之一。模块(NgModule)用于组织业务代码，按照自己的业务场景，把组件、服务、路由打包到模块里面。</p>
+<p>模块(NgModule)的主要作用：</p>
+<ol>
+<li>NgModule 组织业务代码，开发者可以利用 NgModule 把关系比较紧密的组件组织到一起。</li>
+<li>NgModule 用来控制组件、指令、管道等的可见性，处于同一个NgModule 里面的组件默认互相可见，而对于外部的组件来说，只能看到NgModule 导出（exports）的内容。这样就实现了封装，只暴露希望暴露的组件、服务给调用者。</li>
+<li>NgModule 是 @angular/cli 打包的最小单位。打包的时候，@angular/cli 会检查所有 @NgModule 和路由配置，如果你配置了异步模块，cli 会自动把模块切分成独立的 chunk（块）。在 Angular 里面，打包和切分的动作是 @angular/cli 自动处理的，不需要你干预。当然，如果需要，你也可以修改angular的编译配置，基于Webpack 配一个环境出来，自定义打包规则。</li>
+<li>NgModule 是 Router 进行异步加载的最小单位，Router 能加载的最小单位是模块，而不是组件。当然，也可以一个模块里面只放一个组件是。</li>
+</ol>
+<h1 id="2-NgModule举例、说明"><a href="#2-NgModule举例、说明" class="headerlink" title="2. NgModule举例、说明"></a>2. NgModule举例、说明</h1><p>前文说过，Angular中任何的Component、service，都必须属于一个NgModule。所以，使用AngularCLI生成的框架程序，自动生成的组件，也是属于一个Component的，并且标记为启动模块。<br>这样，angular站点启动后，会以这个模块为入口，根据配置加载各个模块。</p>
+<p>下面以默认生成的启动模块为例，进行解释：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent,</span><br><span class="line">    MyComponentComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule,</span><br><span class="line">    AppRoutingModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppModule</span> </span>&#123; &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>declarations，用来放组件、指令、管道的声明；</li>
+<li>imports，用来导入外部模块。比如当前模块需要调用其他模块的组件，需要加入到这里。比如上面例子，导入了Browser和Routing 2个模块。</li>
+<li>providers，需要使用的第三方或者其他模块的Service 都放在这里；</li>
+<li>bootstrap，定义启动组件。 一个可以启动的Angular项目（如果只是一个Library除外），需要定义一个启动组件。</li>
+<li>exports, 声明的组件、指令和管道可以在导入了本模块的模块下任何组件的模板中使用。 导出的这些可声明对象就是该模块的公共 API。换句话说，其他模块想用本模块中定义的内容，需要在这里声明。</li>
+<li>entryComponents， 如果其他模块想要动态加载本模块中的组件到视图中， 那么，这些组件需要写入entryComponents。</li>
+</ul>
+<h1 id="3-Angular-CLI生成模块"><a href="#3-Angular-CLI生成模块" class="headerlink" title="3. Angular CLI生成模块"></a>3. Angular CLI生成模块</h1><p>AngularCLI是一个很好很强大的工具集，可以帮助我们生成很多基础代码、文件， 包括创建一个模块，并且可以制定参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate <span class="built_in">module</span> &lt;name&gt; [options]</span><br></pre></td></tr></table></figure>
+<p>详情参考<a target="_blank" rel="noopener" href="https://angular.io/cli/generate#module%E3%80%82">https://angular.io/cli/generate#module。</a></p>
+<p>几个简单的例子：</p>
+<ol>
+<li>创建feature1模块： <code>ng generate module feature1</code></li>
+<li>创建feature2模块， 并且带路由：<code>ng generate module feature2 --routing</code></li>
+<li>创建一个延迟加载的feature3模块(延迟加载模块，参考下面章节)： <code>ng generate module feature3 --route feature3  --module app.module</code></li>
+</ol>
+<blockquote>
+<p>说明： <code>ng generate module xxx</code> 可以简写为 <code>ng g m xxx</code></p>
+</blockquote>
+<h1 id="4-延迟加载模块"><a href="#4-延迟加载模块" class="headerlink" title="4. 延迟加载模块"></a>4. 延迟加载模块</h1><p>延迟加载使得应用程序在启动时不被载入，而是结合路由配置，在需要时才动态加载相应模块。这样 Angular 就不需要在第一个界面从服务器下载所有的文件，直到请求它，才下载相应的模块。这对提供性能和减少首屏的初始下载文件尺寸有巨大的帮助，而且它可以很容易设置。</p>
+<p>举例来说，上文创建了3个模块，主程序模块以及feature1、feature2会被打成一个包（js），feature3会被单独打一个包（js），当用户访问/feature3/* 的地址后，才会加载feature3这个包（js），否则永远不会请求、加载feature3的模块，从而提高性能（首页加载时间）。当一个项目大到一定程度时，最好考虑把某些模块设置为延迟加载模块。</p>
+<p>延迟加载的路由定义（angular CLI会自动生成）：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/app-routing.module.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Routes, RouterModule &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&#x27;feature3&#x27;</span>,</span><br><span class="line">    loadChildren: <span class="function">() =&gt;</span></span><br><span class="line">      <span class="keyword">import</span>(<span class="string">&#x27;./feature3/feature3.module&#x27;</span>).then(<span class="function">(<span class="params">m</span>) =&gt;</span> m.Feature3Module),</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  <span class="built_in">exports</span>: [RouterModule],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppRoutingModule</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>最后复习一下生成延迟加载模块的命令<code>ng generate module feature3 --route feature3  --module app.module</code>，或者简写为 <code>ng g m feature3 --route feature3  --module app.module</code>。</p>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
+<li>Angular项目，就是模块（NgModule）的一个集合，任组件、服务等必须包含在一个模块中。</li>
+<li>延迟加载模块用于提高首页加载性能。</li>
+<li>Angular CLI命令，生成模块。</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>======================</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1069,164 +1344,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/08/angular-Starter-Angular-Vue-React/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（1） - Angular,Vue,React 选型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-01-08 15:02:55 / Modified: 16:11:10" itemprop="dateCreated datePublished" datetime="2021-01-08T15:02:55+08:00">2021-01-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
-<li><a href="#2-%E6%A1%86%E6%9E%B6%E6%AF%94%E8%BE%83">2. 框架比较</a></li>
-<li><a href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%86%85angular%E4%B8%8D%E6%98%AF%E5%BE%88%E6%B5%81%E8%A1%8C">3. 为什么国内Angular不是很流行</a></li>
-</ul>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>总的来说一句话，如果你是老大，你可以选择用什么；如果你不是，那么，老大让用什么，你就用什么。</p>
-<ul>
-<li>前端框架Angular,Vue,React三选一，没有第四种。 （当然，如果只是一两个简单的页面，纯JS、jquery足够了）。</li>
-<li>国内的话，React和vue更流行一点，国外的话React和Angular更流行。</li>
-<li>Vue 中文资料更多一些</li>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-</ul>
-<h1 id="2-框架比较"><a href="#2-框架比较" class="headerlink" title="2. 框架比较"></a>2. 框架比较</h1><p>网上比较的文章太多了，如果想了解，baidu、google一下吧，这个就不再多说了。</p>
-<h1 id="3-为什么国内Angular不是很流行"><a href="#3-为什么国内Angular不是很流行" class="headerlink" title="3. 为什么国内Angular不是很流行"></a>3. 为什么国内Angular不是很流行</h1><p>只说些个人看法，更多原因请自行搜索。</p>
-<ol>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-<li>上手难度稍大，或者说需要更多的时间培训才能开发。</li>
-<li>Angular对anuglarJS（1.0版本）不支持（虽然后期推出了兼容方案）， 伤了很多人的心。不过这个难免，一个组件、框架的升级，如果一直背负的早期债务，很难有更好的提升。</li>
-<li>TypeScript。Angular是第一个吃螃蟹的，完全抛弃了js，转入Typscript，得罪的很多js的铁杆粉丝，以及惧怕ts的人。不过现在看来，typescript才是前端的趋势。vue3也声称用typescript重写了，并打算更完美的支持typescript。</li>
-<li>大而全的框架。选择Angular的话，它自带了很多东西，路由、表单、动画、http请求等等，需要更多的时间去学习和理解。而其他框架，很多组件都是有备选方案，或者第三方提供的（如vue使用axios处理http请求），让人觉得了解框架更简单。</li>
-<li>版本升级较快。每半年一个主版本，优缺点共存吧。</li>
-<li>恶性循环：用的人少 》 聊的人少 》 资源少 》 用的人更少。</li>
-<li>vue更符合国人的习惯，考虑了一些小的常用细节。比如自带支持避免一个按钮点击多次（修饰符once，@click.prevent.once）。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/07/Angular-Open-a-new-tab-from-Iframe/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/07/Angular-Open-a-new-tab-from-Iframe/" class="post-title-link" itemprop="url">嵌入在iframe中的Angular站点，如何打开一个新的tab页面</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-07 21:39:21" itemprop="dateCreated datePublished" datetime="2021-01-07T21:39:21+08:00">2021-01-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-01-08 15:55:52" itemprop="dateModified" datetime="2021-01-08T15:55:52+08:00">2021-01-08</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E9%9C%80%E6%B1%82">1. 需求</a></li>
-<li><a href="#2-%E6%96%B9%E6%A1%88">2. 方案</a></li>
-<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a><h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1. 需求"></a>1. 需求</h1>一个angular web站点，通过一个iframe嵌套在另一个web站点中。点击一个按钮，希望能够在一个新的页面（Tab）中打开另外一个页面。</li>
-</ul>
-<h1 id="2-方案"><a href="#2-方案" class="headerlink" title="2. 方案"></a>2. 方案</h1><p>主要困难在于处理2个站点的地址不同的问题。既可以通过 html 设置href实现，又可以直接使用js代码实现。</p>
-<p>Code:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">href</span>]=<span class="string">&quot;url&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span>1. open New Tab - based on a.href <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> (<span class="attr">click</span>)=<span class="string">&quot;openNewTab()&quot;</span> &gt;</span>2. open New Tab -  by pure js/ts<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. open New Tab - based on a.href</span></span><br><span class="line">url = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="function"><span class="title">ngOnInit</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line"><span class="built_in">this</span>.url = <span class="built_in">window</span>.location.origin + <span class="string">&quot;/help.html&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. open New Tab -  by pure js/ts</span></span><br><span class="line"><span class="function"><span class="title">openNewTab</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line"><span class="built_in">window</span>.open(<span class="built_in">window</span>.location.origin + <span class="string">&quot;/help.html&quot;</span>, <span class="string">&quot;_blank&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>主要困难在于处理2个站点的地址不同的问题（window.location.origin），和是否嵌套在其他站点（iframe）没有关系。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1296,7 +1413,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

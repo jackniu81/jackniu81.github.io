@@ -149,6 +149,150 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/27/Algorithm-Hamming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/27/Algorithm-Hamming/" class="post-title-link" itemprop="url">算法 - 计算汉明距离</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-05-27 14:01:20 / Modified: 14:10:23" itemprop="dateCreated datePublished" datetime="2021-05-27T14:01:20+08:00">2021-05-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给出两个整数 x 和 y，计算它们之间的汉明距离。</p>
+<blockquote>
+<p><code>汉明距离</code>是使用在数据传输差错控制编码里面的，汉明距离是一个概念，它表示两个（相同长度）字对应位不同的数量，我们以d（x,y）表示两个字x,y之间的汉明距离。对两个字符串进行异或运算，并统计结果为1的个数，那么这个数就是汉明距离。<br>示例:</p>
+</blockquote>
+<ul>
+<li>输入: x = 1, y = 8</li>
+<li>输出: 2</li>
+<li>解释:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1   (0 0 0 1)</span><br><span class="line">8   (1 0 0 0)</span><br><span class="line">     ↑     ↑</span><br></pre></td></tr></table></figure>
+上面的箭头指出了对应二进制位不同的位置。</li>
+</ul>
+<h1 id="2-代码"><a href="#2-代码" class="headerlink" title="2. 代码"></a>2. 代码</h1><h2 id="2-1-C"><a href="#2-1-C" class="headerlink" title="2.1. C#"></a>2.1. C#</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Solution</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">HammingDistance</span>(<span class="params"><span class="built_in">int</span> x, <span class="built_in">int</span> y</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> n = x ^ y;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算1的个数</span></span><br><span class="line">        <span class="keyword">var</span> counter = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(n&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            n = n &amp; (n<span class="number">-1</span>);</span><br><span class="line">            counter ++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> counter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-Javascript"><a href="#2-2-Javascript" class="headerlink" title="2.2. Javascript"></a>2.2. Javascript</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hammingDistance = <span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> n = x^y;</span><br><span class="line">    <span class="keyword">let</span> counter = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)&#123;</span><br><span class="line">        counter ++;</span><br><span class="line">        n = n &amp; (n-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> counter;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-另：计算二进制数字中1的个数"><a href="#3-另：计算二进制数字中1的个数" class="headerlink" title="3. 另：计算二进制数字中1的个数"></a>3. 另：计算二进制数字中1的个数</h1><p>一个整数减去1，再和原整数做与运算，会把该整数最右边一个1变成0。<br>因此，一个整数的二进制有多少个1，就可以进行多少次这样的操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> counter = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span>(n)&#123;</span><br><span class="line">    counter ++;</span><br><span class="line">    n = n &amp; (n-<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/24/C-Tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/24/C-Tips/" class="post-title-link" itemprop="url">C# 技巧</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-24 16:49:45" itemprop="dateCreated datePublished" datetime="2021-05-24T16:49:45+08:00">2021-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-27 14:10:23" itemprop="dateModified" datetime="2021-05-27T14:10:23+08:00">2021-05-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="内插字符串"><a href="#内插字符串" class="headerlink" title="内插字符串"></a>内插字符串</h1><p>类似于string.Format方法，但使用简单，方便，e.g.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> str = <span class="string">$&quot;Hello <span class="subst">&#123;name&#125;</span>, NumTimes is: <span class="subst">&#123;DateTime.Now&#125;</span>&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="NuGet"><a href="#NuGet" class="headerlink" title="NuGet"></a>NuGet</h1><h2 id="NuGet-常用命令"><a href="#NuGet-常用命令" class="headerlink" title="NuGet 常用命令"></a>NuGet 常用命令</h2><ol>
+<li>Install-Package XXXX<h2 id="常用包"><a href="#常用包" class="headerlink" title="常用包"></a>常用包</h2></li>
+<li>EF Core: Microsoft.EntityFrameworkCore.SqlServer</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/24/asp-net-core-1-basic/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -405,7 +549,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-20 14:08:05" itemprop="dateModified" datetime="2021-05-20T14:08:05+08:00">2021-05-20</time>
+                <time title="Modified: 2021-05-27 14:10:23" itemprop="dateModified" datetime="2021-05-27T14:10:23+08:00">2021-05-27</time>
               </span>
 
           
@@ -431,6 +575,7 @@
 <li>CoreFX： 是经过完全重写的BCL，除了自身就具有跨平台执行的能力之外，其提供的API也不再是统一定义在少数几个单一的程序集中，而是经过有效分组之后被定义在各自独立的模块中。</li>
 <li>PCL: 可移植类库 Portable Class Library (PCL)</li>
 <li>.NET Standard: 我们可以将.NET Standard称为新一代的PCL，PCL提供的可移植能力仅仅限于创建时就确定下来的几种目标平台，但是.NET Standard做得更加彻底，因为它在设计的时候就已经考虑针对三大分支的复用。</li>
+<li>POCO: Plain Old Class Object，也就是最基本的CLR Class</li>
 </ul>
 
       
@@ -1367,158 +1512,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/19/umi-is-not-recognized-as-an-internal-or-external-command/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/19/umi-is-not-recognized-as-an-internal-or-external-command/" class="post-title-link" itemprop="url">安装umi后，使用umi提示不是内部或者外部命令</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-19 17:00:41" itemprop="dateCreated datePublished" datetime="2021-04-19T17:00:41+08:00">2021-04-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-22 09:56:56" itemprop="dateModified" datetime="2021-04-22T09:56:56+08:00">2021-04-22</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>umi推荐使用yarn安装，安装umi后，使用umi提示不是内部或者外部命令。（’umi’ is not recognized as an internal or external command,operable program or batch file.）</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>根源在于yarn的<code>global bin</code>目录不在<code>path</code>环境变量的中，解决办法：</p>
-<ol>
-<li>执行<code>yarn global bin</code>, 得到<code>global bin</code>目录</li>
-<li>把<code>global bin</code>目录添加到环境变量<code>path</code>中</li>
-<li>测试 <code>umi -v</code></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/19/Github-network-issue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/19/Github-network-issue/" class="post-title-link" itemprop="url">解决国内不能访问github的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-19 16:31:37" itemprop="dateCreated datePublished" datetime="2021-04-19T16:31:37+08:00">2021-04-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-22 09:56:56" itemprop="dateModified" datetime="2021-04-22T09:56:56+08:00">2021-04-22</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>最近访问GitHub总是不稳定，经常连不上, 出各种错误(<code>OpenSSL SSL_read: Connection was reset, errno 10054</code>, <code>Connection refused</code> …)。</p>
-<p>原因大概是GitHub的IP经常变化（一天可能变几次），我们本地的DNS解析有问题，解决办法就是查询github的IP，手工写到我们的<code>hosts</code>文件中。</p>
-<h1 id="查询GitHub最新IP"><a href="#查询GitHub最新IP" class="headerlink" title="查询GitHub最新IP"></a>查询GitHub最新IP</h1><ol>
-<li>访问 <a target="_blank" rel="noopener" href="https://github.com.ipaddress.com/">https://github.com.ipaddress.com/</a> </li>
-<li>IP Address 即为IP地址<br><img src="https://jackniu81.github.io/img/github_ip.png" alt="github ip"></li>
-</ol>
-<h1 id="修改hosts文件"><a href="#修改hosts文件" class="headerlink" title="修改hosts文件"></a>修改<code>hosts</code>文件</h1><ol>
-<li>目录：C:\Windows\System32\drivers\etc</li>
-<li>打开 <code>hosts</code>文件</li>
-<li>结尾增加一行 <code>140.82.112.4    github.com</code>  (IP 用你查询到的最新的IP)</li>
-<li>搞定，测试一下</li>
-</ol>
-<blockquote>
-<p>说明，<code>hosts</code>文件， 可以给github.com添加多条IP记录，这样当我们访问github时，会一次尝试每个IP是否可以访问，如果都不行，会去Internet上做DNS解析。<br>可以这样配置</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">140.82.112.4	github.com</span><br><span class="line">140.82.113.4	github.com</span><br><span class="line">140.82.112.3	github.com</span><br><span class="line">140.82.114.4	github.com</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1588,7 +1581,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
