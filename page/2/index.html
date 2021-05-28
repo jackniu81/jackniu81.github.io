@@ -149,6 +149,363 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/22/2021-Top-100-C-NET-Interview-Questions-And-Answers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/22/2021-Top-100-C-NET-Interview-Questions-And-Answers/" class="post-title-link" itemprop="url">2021 Top 100 C#/.NET Interview Questions And Answers</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-22 09:01:57" itemprop="dateCreated datePublished" datetime="2021-04-22T09:01:57+08:00">2021-04-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-23 01:01:04" itemprop="dateModified" datetime="2021-04-23T01:01:04+08:00">2021-04-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/04/22/2021-Top-100-C-NET-Interview-Questions-And-Answers/">https://jackniu81.github.io/2021/04/22/2021-Top-100-C-NET-Interview-Questions-And-Answers/</a></p>
+</blockquote>
+<h1 id="1-What-is-the-difference-between-“dispose”-and-“finalize”-variables-in-C"><a href="#1-What-is-the-difference-between-“dispose”-and-“finalize”-variables-in-C" class="headerlink" title="1. What is the difference between “dispose” and “finalize” variables in C#?"></a>1. What is the difference between “dispose” and “finalize” variables in C#?</h1><ol>
+<li>Dispose - This method uses interface – “IDisposable” interface and it will free up both managed and unmanaged codes like – database connection, files etc.</li>
+<li>Finalize - This method is called internally unlike Dispose method which is called explicitly. It is called by garbage collector and can’t be called from the code.</li>
+</ol>
+<h1 id="2-What-does-“Jagged-Arrays”-mean"><a href="#2-What-does-“Jagged-Arrays”-mean" class="headerlink" title="2. What does “Jagged Arrays” mean?"></a>2. What does “Jagged Arrays” mean?</h1><p>Answer: Jagged arrays refer to the array that has an element of type array. The dimensions and the sizes of the elements are different. An array of arrays is the other name of the jagged array.</p>
+<h1 id="3-What-is-a-Class-and-an-Object"><a href="#3-What-is-a-Class-and-an-Object" class="headerlink" title="3. What is a Class and an Object?"></a>3. What is a Class and an Object?</h1><p>A ‘Class’ is an encapsulation of methods and properties that are used to represent an entity in real-time. Class brings all of the instances together in a single unit. An ‘Object’ is an instance of a Class, or a block of allocated memory that can be stored in the form of Variables, Array or a Collection.</p>
+<h1 id="4-Explain-Code-compilation-in-C"><a href="#4-Explain-Code-compilation-in-C" class="headerlink" title="4. Explain Code compilation in C#"></a>4. Explain Code compilation in C#</h1><p>Code compilation has four steps which include:</p>
+<ol>
+<li>Compiling source code to Managed code by C# compiler</li>
+<li>Executing the assembly by CLR</li>
+<li>Combining the new code into assemblies</li>
+<li>Loading the Common Language Runtime (CLR)</li>
+</ol>
+<h1 id="5-What-is-the-difference-between-Virtual-method-and-Abstract-method"><a href="#5-What-is-the-difference-between-Virtual-method-and-Abstract-method" class="headerlink" title="5. What is the difference between Virtual method and Abstract method?"></a>5. What is the difference between Virtual method and Abstract method?</h1><p>A Virtual method must always have a default implementation. An Abstract method does not have an implementation. An override keyword is not necessary here, though it can be used.</p>
+<h1 id="6-What-is-a-Hashtable-in-C"><a href="#6-What-is-a-Hashtable-in-C" class="headerlink" title="6. What is a Hashtable in C#?"></a>6. What is a Hashtable in C#?</h1><p>A Hashtable is a collection that stores (Keys, Values) pairs. Here, the Keys are used to find the storage location and is immutable and cannot have duplicate entries in a Hashtable. The .Net Framework has provided a Hash Table class that contains all the functionality required to implement a hash table without any additional development. The hash table is a general-purpose dictionary collection. Each item within the collection is a DictionaryEntry object with two properties: a key object and a value object. These are known as Key/Value. When items are added to a hash table, a hash code is generated automatically. This code is hidden from the developer. Access to the table’s values is achieved using the key object for identification. As the items in the collection are sorted according to the hidden hash code, the items should be considered to be randomly ordered.</p>
+<h1 id="7-What-is-LINQ-in-C"><a href="#7-What-is-LINQ-in-C" class="headerlink" title="7. What is LINQ in C#?"></a>7. What is LINQ in C#?</h1><p>LINQ stands for Language Integrated Query. LINQ is a data querying methodology that provides querying capabilities to .NET languages with a syntax similar to a SQL query.</p>
+<p>LINQ has a great power of querying on any source of data. The data source could be collections of objects, database or XML files. We can easily retrieve data from any object that implements the IEnumerable<T> interface.</p>
+<p>Advantages of LINQ </p>
+<ul>
+<li>LINQ offers an object-based, language-integrated way to query over data no matter where that data came from. So through LINQ, we can query a database and XML as well as collections. </li>
+<li>Compile-time syntax checking.</li>
+</ul>
+<h1 id="8-What-are-Indexers-in-C"><a href="#8-What-are-Indexers-in-C" class="headerlink" title="8. What are Indexers in C#?"></a>8. What are Indexers in C#?</h1><p>C# introduces a new concept known as Indexers which are used for treating an object as an array. The indexers are usually known as smart arrays in C#. They are not an essential part of object-oriented programming.</p>
+<p>Defining an indexer allows you to create classes that act as virtual arrays. Instances of that class can be accessed using the [] array access operator.</p>
+<h1 id="9-Difference-between-the-Equality-Operator-and-Equals-Method-in-C"><a href="#9-Difference-between-the-Equality-Operator-and-Equals-Method-in-C" class="headerlink" title="9. Difference between the Equality Operator (==) and Equals() Method in C#"></a>9. Difference between the Equality Operator (==) and Equals() Method in C#</h1><p>Both the == Operator and the Equals() method are used to compare two value type data items or reference type data items. The Equality Operator (==) is the comparison operator and the Equals() method compares the contents of a string. The == Operator compares the reference identity while the Equals() method compares only contents. </p>
+<h1 id="10-What’s-the-Difference-between-the-Is-and-As-operator-in-C"><a href="#10-What’s-the-Difference-between-the-Is-and-As-operator-in-C" class="headerlink" title="10. What’s the Difference between the Is and As operator in C#"></a>10. What’s the Difference between the Is and As operator in C#</h1><ul>
+<li><p>“is” operator: In C# language, we use the “is” operator to check the object type. If two objects are of the same type, it returns true, else it returns false.</p>
+</li>
+<li><p>“as” operator: The “as” operator behaves in a similar way as the “is” operator. The only difference is it returns the object if both are compatible with that type. Else it returns a null.</p>
+</li>
+</ul>
+<h1 id="11-What-are-Different-Ways-a-Method-can-be-Overloaded"><a href="#11-What-are-Different-Ways-a-Method-can-be-Overloaded" class="headerlink" title="11. What are Different Ways a Method can be Overloaded?"></a>11. What are Different Ways a Method can be Overloaded?</h1><p>Method overloading is a way to achieve compile-time polymorphism where we can use a method with the same name but different signatures. For example, the following code example has a method volume with three different signatures based on the number and type of parameters and return values.</p>
+<h1 id="12-What-is-Serialization"><a href="#12-What-is-Serialization" class="headerlink" title="12. What is Serialization?"></a>12. What is Serialization?</h1><p>Serialization converts a code to its binary format using a process. After it is converted to bytes, it can be easily stored and written to a disk. Serializations are useful so that the original form of the code isn’t lost and it can be retrieved later on.</p>
+<h1 id="13-What-are-the-different-types-of-Delegates"><a href="#13-What-are-the-different-types-of-Delegates" class="headerlink" title="13. What are the different types of Delegates?"></a>13. What are the different types of Delegates?</h1><p>The different types of Delegates are: Single Delegate, Multicast Delegate and Generic Delegate.</p>
+<h1 id="14-How-to-use-extension-methods"><a href="#14-How-to-use-extension-methods" class="headerlink" title="14. How to use extension methods?"></a>14. How to use extension methods?</h1><p>An extension method is a static method of a static class, where the “this” modifier is applied to the first parameter. The type of the first parameter will be the type that is extended.</p>
+<p>Extension methods are only in scope when you explicitly import the namespace into your source code with a using directive.</p>
+<h1 id="15-What-is-the-difference-between-String-and-StringBuilder-in-C"><a href="#15-What-is-the-difference-between-String-and-StringBuilder-in-C" class="headerlink" title="15. What is the difference between String and StringBuilder in C#?"></a>15. What is the difference between String and StringBuilder in C#?</h1><p>StringBuilder and string are both used to string values, but both have many differences on the bases of instance creation and also in performance.</p>
+<h1 id="16-What-are-sealed-classes-in-C"><a href="#16-What-are-sealed-classes-in-C" class="headerlink" title="16. What are sealed classes in C#?"></a>16. What are sealed classes in C#?</h1><p>Sealed classes are used to restrict the inheritance feature of object-oriented programming. Once a class is defined as a sealed class, the class cannot be inherited. </p>
+<p>In C#, the sealed modifier is used to define a class as sealed. In Visual Basic .NET the Not Inheritable keyword serves the purpose of the sealed class. If a class is derived from a sealed class then the compiler throws an error. </p>
+<p>If you have ever noticed, structs are sealed. You cannot derive a class from a struct. </p>
+<h1 id="17-What-is-a-Delegate-Explain"><a href="#17-What-is-a-Delegate-Explain" class="headerlink" title="17. What is a Delegate? Explain."></a>17. What is a Delegate? Explain.</h1><p>A Delegate is a variable that holds the reference to a method. Hence it is a function pointer or reference type. All Delegates are derived from System.Delegate namespace. Both Delegate and the method that it refers to can have the same signature.</p>
+<p>Declaring a delegate: public delegate void AddNumbers(int n);<br>After the declaration of a delegate, the object must be created by the delegate using the new keyword.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddNumbers an1 = <span class="keyword">new</span> AddNumbers(number);</span><br></pre></td></tr></table></figure>
+<p>The delegate provides a kind of encapsulation to the reference method, which will internally get called when a delegate is called.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">delegate</span> <span class="built_in">int</span> <span class="title">myDel</span>(<span class="params"><span class="built_in">int</span> number</span>)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">AddNumbers</span>(<span class="params"><span class="built_in">int</span> a</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="built_in">int</span> Sum = a + <span class="number">10</span>;</span><br><span class="line">        <span class="keyword">return</span> Sum;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        myDel DelgateExample = AddNumbers;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In the above example, we have a delegate myDel which takes an integer value as a parameter. Class Program has a method of the same signature as the delegate, called AddNumbers().</p>
+<p>If there is another method called Start() which creates an object of the delegate, then the object can be assigned to AddNumbers as it has the same signature as that of the delegate.</p>
+<h1 id="18-What-are-Events"><a href="#18-What-are-Events" class="headerlink" title="18. What are Events?"></a>18. What are Events?</h1><p>Events are user actions that generate notifications to the application to which it must respond. The user actions can be mouse movements, keypress and so on.</p>
+<p>Programmatically, a class that raises an event is called a publisher and a class which responds/receives the event is called a subscriber. Event should have at least one subscriber else that event is never raised.</p>
+<p>Delegates are used to declare Events.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Public <span class="built_in">delegate</span> <span class="keyword">void</span> <span class="title">PrintNumbers</span>(<span class="params"></span>)</span>;</span><br><span class="line">Event PrintNumbers myEvent;</span><br></pre></td></tr></table></figure>
+<h1 id="19-How-to-use-Delegates-with-Events"><a href="#19-How-to-use-Delegates-with-Events" class="headerlink" title="19. How to use Delegates with Events?"></a>19. How to use Delegates with Events?</h1><p>Delegates are used to raise events and handle them. Always a delegate needs to be declared first and then the Events are declared.</p>
+<h1 id="20-What-do-Multicast-Delegates-mean"><a href="#20-What-do-Multicast-Delegates-mean" class="headerlink" title="20. What do Multicast Delegates mean?"></a>20. What do Multicast Delegates mean?</h1><p>A Delegate that points to more than one method is called a Multicast Delegate. Multicasting is achieved by using + and += operator.</p>
+<h1 id="21-Explain-Publishers-and-Subscribers-in-Events"><a href="#21-Explain-Publishers-and-Subscribers-in-Events" class="headerlink" title="21. Explain Publishers and Subscribers in Events."></a>21. Explain Publishers and Subscribers in Events.</h1><p>Publisher is a class responsible for publishing a message of different types of other classes. The message is nothing but Event as discussed in the above questions.</p>
+<p>From the Example in Q #32, Class Patient is the Publisher class. It is generating an Event deathEvent, which is received by the other classes.</p>
+<p>Subscribers capture the message of the type that it is interested in. Again, from the Example of Q#32, Class Insurance and Bank are Subscribers. They are interested in event deathEvent of type void.</p>
+<h1 id="22-What-are-Synchronous-and-Asynchronous-operations"><a href="#22-What-are-Synchronous-and-Asynchronous-operations" class="headerlink" title="22. What are Synchronous and Asynchronous operations?"></a>22. What are Synchronous and Asynchronous operations?</h1><p>Synchronization is a way to create a thread-safe code where only one thread can access the resource at any given time. The asynchronous call waits for the method to complete before continuing with the program flow.</p>
+<p>Synchronous programming badly affects the UI operations when the user tries to perform time-consuming operations since only one thread will be used. In Asynchronous operation, the method call will immediately return so that the program can perform other operations while the called method completes its work in certain situations.</p>
+<p>In C#, Async and Await keywords are used to achieve asynchronous programming. Look at Q #43 for more details on synchronous programming.</p>
+<h1 id="23-What-is-Reflection-in-C"><a href="#23-What-is-Reflection-in-C" class="headerlink" title="23. What is Reflection in C#?"></a>23. What is Reflection in C#?</h1><p>Reflection is the ability of a code to access the metadata of the assembly during runtime. A program reflects upon itself and uses the metadata to inform the user or modify its behavior. Metadata refers to information about objects, methods.</p>
+<p>The namespace System.Reflection contains methods and classes that manage the information of all the loaded types and methods. It is mainly used for windows applications, For Example, to view the properties of a button in a windows form.</p>
+<p>The MemberInfo object of the class reflection is used to discover the attributes associated with a class.</p>
+<p>Reflection is implemented in two steps, first, we get the type of the object, and then we use the type to identify members such as methods and properties.</p>
+<p>To get type of a class, we can simply use,</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Type mytype = myClass.GetType();</span><br></pre></td></tr></table></figure>
+<p>Once we have a type of class, the other information about the class can be easily accessed.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.Reflection.MemberInfo Info = mytype.GetMethod(“AddNumbers”);</span><br></pre></td></tr></table></figure>
+<p>Above statement tries to find a method with name AddNumbers in the class myClass.</p>
+<h1 id="24-What-is-a-Generic-Class"><a href="#24-What-is-a-Generic-Class" class="headerlink" title="24. What is a Generic Class?"></a>24. What is a Generic Class?</h1><p>Generics or Generic class is used to create classes or objects which do not have any specific data type. The data type can be assigned during runtime, i.e when it is used in the program.</p>
+<p>In case of other data type parameter comparisons, instead of creating many overloaded methods, we can create a generic class and pass a substitute data type, i.e T. So, T acts as a datatype until it is used specifically in the Main() method.</p>
+<h1 id="25-What-is-a-Jagged-Array"><a href="#25-What-is-a-Jagged-Array" class="headerlink" title="25. What is a Jagged Array?"></a>25. What is a Jagged Array?</h1><p>A Jagged array is an array whose elements are arrays. It is also called as the array of arrays. It can be either single or multiple dimensions.</p>
+<p>int[] jaggedArray = new int[4][];</p>
+<p>#) Name some properties of Array.</p>
+<p>Properties of an Array include:</p>
+<ul>
+<li>Length: Gets the total number of elements in an array.</li>
+<li>IsFixedSize: Tells whether the array is fixed in size or not.</li>
+<li>IsReadOnly: Tells whether the array is read-only or not.</li>
+</ul>
+<h1 id="26-What-is-an-Array-Class"><a href="#26-What-is-an-Array-Class" class="headerlink" title="26. What is an Array Class?"></a>26. What is an Array Class?</h1><p>An Array class is the base class for all arrays. It provides many properties and methods. It is present in the namespace system.</p>
+<h1 id="27-What-is-a-String-What-are-the-properties-of-a-String-Class"><a href="#27-What-is-a-String-What-are-the-properties-of-a-String-Class" class="headerlink" title="27. What is a String? What are the properties of a String Class?"></a>27. What is a String? What are the properties of a String Class?</h1><p>A String is a collection of char objects. We can also declare string variables in c#.</p>
+<p>string name = “C# Questions”;<br>A string class in C# represents a string. The properties of the string class are:</p>
+<ul>
+<li>Chars get the Char object in the current String.</li>
+<li>Length gets the number of objects in the current String.</li>
+</ul>
+<h1 id="28-Name-some-properties-of-Thread-Class"><a href="#28-Name-some-properties-of-Thread-Class" class="headerlink" title="28. Name some properties of Thread Class."></a>28. Name some properties of Thread Class.</h1><p>Few Properties of thread class are:</p>
+<ul>
+<li>IsAlive – contains value True when a thread is Active.</li>
+<li>Name – Can return the name of the thread. Also, can set a name for the thread.</li>
+<li>Priority – returns the prioritized value of the task set by the operating system.</li>
+<li>IsBackground – gets or sets a value which indicates whether a thread should be a background process or foreground.</li>
+<li>ThreadState– describes the thread state.</li>
+</ul>
+<h1 id="29-What-are-the-different-states-of-a-Thread"><a href="#29-What-are-the-different-states-of-a-Thread" class="headerlink" title="29. What are the different states of a Thread?"></a>29. What are the different states of a Thread?</h1><p>Different states of a thread are:</p>
+<ul>
+<li>Unstarted – Thread is created.</li>
+<li>Running – Thread starts execution.</li>
+<li>WaitSleepJoin – Thread calls sleep, calls wait on another object and calls join on another thread.</li>
+<li>Suspended – Thread has been suspended.</li>
+<li>Aborted – Thread is dead but not changed to state stopped.</li>
+<li>Stopped – Thread has stopped.</li>
+</ul>
+<h1 id="30-What-are-Async-and-Await"><a href="#30-What-are-Async-and-Await" class="headerlink" title="30. What are Async and Await?"></a>30. What are Async and Await?</h1><p>Async and Await keywords are used to create asynchronous methods in C#.</p>
+<p>Asynchronous programming means that the process runs independently of main or other processes.</p>
+<h1 id="31-Async-Keyword"><a href="#31-Async-Keyword" class="headerlink" title="31. Async Keyword"></a>31. Async Keyword</h1><p>Async keyword is used for the method declaration.</p>
+<h1 id="32-What-is-a-Deadlock"><a href="#32-What-is-a-Deadlock" class="headerlink" title="32. What is a Deadlock?"></a>32. What is a Deadlock?</h1><p>A Deadlock is a situation where a process is not able to complete its execution because two or more processes are waiting for each other to finish. This usually occurs in multi-threading.</p>
+<p>Here a shared resource is being held by a process and another process is waiting for the first process to release it and the thread holding the locked item is waiting for another process to complete.</p>
+<h1 id="33-Explain-Lock-Monitors-and-Mutex-Object-in-Threading"><a href="#33-Explain-Lock-Monitors-and-Mutex-Object-in-Threading" class="headerlink" title="33. Explain Lock, Monitors, and Mutex Object in Threading."></a>33. Explain Lock, Monitors, and Mutex Object in Threading.</h1><ul>
+<li><p>Lock keyword ensures that only one thread can enter a particular section of the code at any given time. <code>lock(ObjA)</code> means the lock is placed on ObjA until this process releases it, no other thread can access ObjA.</p>
+</li>
+<li><p>Mutex is also like a lock but it can work across multiple processes at a time. WaitOne() is used to lock and ReleaseMutex() is used to release the lock. But Mutex is slower than lock as it takes time to acquire and release it.</p>
+</li>
+<li><p>Monitor.Enter and Monitor.Exit implements lock internally. a lock is a shortcut for Monitors. <code>lock(objA)</code> internally calls.</p>
+</li>
+</ul>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Monitor.Enter(ObjA);</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line">Finally &#123;</span><br><span class="line">    Monitor.Exit(ObjA));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="34-What-is-a-Race-Condition"><a href="#34-What-is-a-Race-Condition" class="headerlink" title="34. What is a Race Condition?"></a>34. What is a Race Condition?</h1><p>Race condition occurs when two threads access the same resource and are trying to change it at the same time. The thread which will be able to access the resource first cannot be predicted.</p>
+<p>If we have two threads, T1 and T2, and they are trying to access a shared resource called X. And if both the threads try to write a value to X, the last value written to X will be saved.</p>
+<h1 id="35-What-is-Thread-Pooling"><a href="#35-What-is-Thread-Pooling" class="headerlink" title="35. What is Thread Pooling?"></a>35. What is Thread Pooling?</h1><p>Thread pool is a collection of threads. These threads can be used to perform tasks without disturbing the primary thread. Once the thread completes the task, the thread returns to the pool.</p>
+<p><code>System.Threading.ThreadPool</code> namespace has classes that manage the threads in the pool and its operations.</p>
+<h1 id="36-What-is-Serialization"><a href="#36-What-is-Serialization" class="headerlink" title="36. What is Serialization?"></a>36. What is Serialization?</h1><p>Serialization is a process of converting code to its binary format. Once it is converted to bytes, it can be easily stored and written to a disk or any such storage devices. Serializations are mainly useful when we do not want to lose the original form of the code and it can be retrieved anytime in the future.</p>
+<p>Any class which is marked with the attribute <code>[Serializable]</code> will be converted to its binary form.</p>
+<p>The reverse process of getting the C# code back from the binary form is called Deserialization.</p>
+<p>To Serialize an object we need the object to be serialized, a stream that can contain the serialized object and namespace System.Runtime.Serialization can contain classes for serialization.</p>
+<h1 id="37-What-are-the-types-of-Serialization"><a href="#37-What-are-the-types-of-Serialization" class="headerlink" title="37. What are the types of Serialization?"></a>37. What are the types of Serialization?</h1><p>The different types of Serialization are: </p>
+<ul>
+<li>XML serialization – It serializes all the public properties to the XML document. Since the data is in XML format, it can be easily read and manipulated in various formats. The classes reside in System.sml.Serialization.</li>
+<li>SOAP – Classes reside in System.Runtime.Serialization. Similar to XML but produces a complete SOAP compliant envelope that can be used by any system that understands SOAP.</li>
+<li>Binary Serialization – Allows any code to be converted to its binary form. Can serialize and restore public and non-public properties. It is faster and occupies less space.</li>
+</ul>
+<h1 id="38-What-is-an-XSD-file"><a href="#38-What-is-an-XSD-file" class="headerlink" title="38. What is an XSD file?"></a>38. What is an XSD file?</h1><p>An XSD file stands for XML Schema Definition. It gives a structure for the XML file. It means it decides the elements that the XML should have and in what order and what properties should be present. Without an XSD file associated with XML, the XML can have any tags, any attributes, and any elements.</p>
+<p>Xsd.exe tool converts the files to the XSD format. During Serialization of C# code, the classes are converted to XSD compliant format by xsd.exe.</p>
+<h1 id="39-What-is-an-Object-and-a-Class"><a href="#39-What-is-an-Object-and-a-Class" class="headerlink" title="39. What is an Object and a Class?"></a>39. What is an Object and a Class?</h1><ul>
+<li><p>Class is an encapsulation of properties and methods that are used to represent a real-time entity. It is a data structure that brings all the instances together in a single unit.</p>
+</li>
+<li><p>Object is defined as an instance of a Class. Technically, it is just a block of memory allocated that can be stored in the form of variables, array or a collection.</p>
+</li>
+</ul>
+<h1 id="40-What-are-the-fundamental-OOP-concepts"><a href="#40-What-are-the-fundamental-OOP-concepts" class="headerlink" title="40. What are the fundamental OOP concepts?"></a>40. What are the fundamental OOP concepts?</h1><p>The four fundamental concepts of Object-Oriented Programming are:</p>
+<ul>
+<li>Encapsulation: Here, the internal representation of an object is hidden from the view outside the object’s definition. Only the required information can be accessed whereas the rest of the data implementation is hidden.</li>
+<li>Abstraction: It is a process of identifying the critical behavior and data of an object and eliminating the irrelevant details.</li>
+<li>Inheritance: It is the ability to create new classes from another class. It is done by accessing, modifying and extending the behavior of objects in the parent class.</li>
+<li>Polymorphism: The name means, one name, many forms. It is achieved by having multiple methods with the same name but different implementations.</li>
+</ul>
+<h1 id="41-What-is-Managed-and-Unmanaged-code"><a href="#41-What-is-Managed-and-Unmanaged-code" class="headerlink" title="41. What is Managed and Unmanaged code?"></a>41. What is Managed and Unmanaged code?</h1><p>Managed code is a code that is executed by CLR (Common Language Runtime) i.e all application code is based on .Net platform. It is considered as managed because of the .Net framework which internally uses the garbage collector to clear up the unused memory.</p>
+<p>Unmanaged code is any code that is executed by application runtime of any other framework apart from .Net. The application runtime will take care of memory, security and other performance operations.</p>
+<h1 id="42-What-is-an-Interface"><a href="#42-What-is-an-Interface" class="headerlink" title="42. What is an Interface?"></a>42. What is an Interface?</h1><p>Interface is a class with no implementation. The only thing that it contains is the declaration of methods, properties, and events.</p>
+<h1 id="43-Explain-Get-and-Set-Accessor-properties"><a href="#43-Explain-Get-and-Set-Accessor-properties" class="headerlink" title="43. Explain Get and Set Accessor properties?"></a>43. Explain Get and Set Accessor properties?</h1><p>Get and Set are called Accessors. These are made use by Properties. The property provides a mechanism to read, write the value of a private field. For accessing that private field, these accessors are used.</p>
+<ol>
+<li>Get Property is used to return the value of a property</li>
+<li>Set Property accessor is used to set the value.</li>
+</ol>
+<h1 id="44-What-is-a-Thread-What-is-Multithreading"><a href="#44-What-is-a-Thread-What-is-Multithreading" class="headerlink" title="44. What is a Thread? What is Multithreading?"></a>44. What is a Thread? What is Multithreading?</h1><p>A Thread is a set of instructions that can be executed, which will enable our program to perform concurrent processing. Concurrent processing helps us do more than one operation at a time. By default, C# has only one thread. But the other threads can be created to execute the code in parallel with the original thread.</p>
+<p>Thread has a life cycle. It starts whenever a thread class is created and is terminated after the execution. System.Threading is the namespace which needs to be included to create threads and use its members.</p>
+<p>Threads are created by extending the Thread Class. Start() method is used to begin thread execution.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//CallThread is the target method//</span></span><br><span class="line"> ThreadStart methodThread = <span class="keyword">new</span> ThreadStart(CallThread);</span><br><span class="line"> Thread childThread = <span class="keyword">new</span> Thread(methodThread);</span><br><span class="line"> childThread.Start();</span><br></pre></td></tr></table></figure>
+<p>C# can execute more than one task at a time. This is done by handling different processes by different threads. This is called MultiThreading.</p>
+<p>There are several thread methods that are used to handle multi-threaded operations: Start, Sleep, Abort, Suspend, Resume and Join.</p>
+<h1 id="45-What-is-“using”-statement-in-C"><a href="#45-What-is-“using”-statement-in-C" class="headerlink" title="45. What is “using” statement in C#?"></a>45. What is “using” statement in C#?</h1><p>“Using” keyword denotes that the particular namespace is being used by the program.</p>
+<p>For Example, using System</p>
+<p>Here, System is a namespace. The class Console is defined under System.  So, we can use the console.writeline (“….”) or readline in our program.</p>
+<h1 id="46-Explain-Abstraction"><a href="#46-Explain-Abstraction" class="headerlink" title="46. Explain Abstraction."></a>46. Explain Abstraction.</h1><p>Abstraction is one of the OOP concepts. It is used to display only the essential features of the class and hide unnecessary information.</p>
+<p>Abstraction helps in knowing what is necessary and hiding the internal details from the outside world. Hiding of the internal information can be achieved by declaring such parameters as Private using the private keyword.</p>
+<h1 id="47-What-are-C-I-O-classes-What-are-the-commonly-used-I-O-classes"><a href="#47-What-are-C-I-O-classes-What-are-the-commonly-used-I-O-classes" class="headerlink" title="47. What are C# I/O classes? What are the commonly used I/O classes?"></a>47. What are C# I/O classes? What are the commonly used I/O classes?</h1><p>C# has System.IO namespace, consisting of classes that are used to perform various operations on files like creating, deleting, opening, closing, etc.</p>
+<p>Some commonly used I/O classes are:</p>
+<ul>
+<li>File – Helps in manipulating a file.</li>
+<li>StreamWriter – Used for writing characters to a stream.</li>
+<li>StreamReader – Used for reading characters to a stream.</li>
+<li>StringWriter – Used for reading a string buffer.</li>
+<li>StringReader – Used for writing a string buffer.</li>
+<li>Path – Used for performing operations related to the path information.</li>
+</ul>
+<h1 id="48-What-is-StreamReader-StreamWriter-class"><a href="#48-What-is-StreamReader-StreamWriter-class" class="headerlink" title="48. What is StreamReader/StreamWriter class?"></a>48. What is StreamReader/StreamWriter class?</h1><p>StreamReader and StreamWriter are classes of namespace System.IO. They are used when we want to read or write charact90, Reader-based data, respectively.</p>
+<p>Some of the members of StreamReader are: Close(), Read(), Readline().</p>
+<p>Members of StreamWriter are: Close(), Write(), Writeline().</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Class Program1</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span>(StreamReader sr = <span class="keyword">new</span> StreamReader(“C:\ReadMe.txt”)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//----------------code to read-------------------//</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">using</span>(StreamWriter sw = <span class="keyword">new</span> StreamWriter(“C:\ReadMe.txt”))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//-------------code to write-------------------//</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="49-What-is-a-Destructor-in-C"><a href="#49-What-is-a-Destructor-in-C" class="headerlink" title="49. What is a Destructor in C#?"></a>49. What is a Destructor in C#?</h1><p>Destructor is used to clean up the memory and free the resources. But in C# this is done by the garbage collector on its own. System.GC.Collect() is called internally for cleaning up. But sometimes it may be necessary to implement destructors manually.</p>
+<p>For Example:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~Car()</span><br><span class="line">&#123;</span><br><span class="line">    Console.writeline(“….”);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="50-What-is-an-Abstract-Class"><a href="#50-What-is-an-Abstract-Class" class="headerlink" title="50. What is an Abstract Class?"></a>50. What is an Abstract Class?</h1><p>An Abstract class is a class which is denoted by abstract keyword and can be used only as a Base class. This class should always be inherited. An instance of the class itself cannot be created. If we do not want any program to create an object of a class, then such classes can be made abstract.</p>
+<p>Any method in the abstract class does not have implementations in the same class. But they must be implemented in the child class.</p>
+<p>For Example:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">AB1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">Public <span class="keyword">void</span> <span class="title">Add</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line">Class childClass : AB1</span><br><span class="line">&#123;</span><br><span class="line">    childClass cs = <span class="keyword">new</span> childClass ();</span><br><span class="line">    <span class="built_in">int</span> Sum = cs.Add();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>All the methods in an abstract class are implicitly virtual methods. Hence, the virtual keyword should not be used with any methods in the abstract class.</p>
+<h1 id="51-How-can-one-use-nullable-types-in-Net"><a href="#51-How-can-one-use-nullable-types-in-Net" class="headerlink" title="51. How can one use nullable types in .Net?"></a>51. How can one use nullable types in .Net?</h1><p> Nullable types are defined as the types which can either take the normal value or the null value.</p>
+<h1 id="52-How-to-use-nullable-types-in-Net"><a href="#52-How-to-use-nullable-types-in-Net" class="headerlink" title="52. How to use nullable types in .Net?"></a>52. How to use nullable types in .Net?</h1><p>Value types can take either their normal values or a null value. Such types are called nullable types.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Int? someID = <span class="literal">null</span>;</span><br><span class="line">If(someID.HasVAlue)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="53-What-is-the-difference-between-Continue-and-Break-Statement"><a href="#53-What-is-the-difference-between-Continue-and-Break-Statement" class="headerlink" title="53. What is the difference between Continue and Break Statement?"></a>53. What is the difference between Continue and Break Statement?</h1><p>Break statement breaks the loop. It makes the control of the program to exit the loop. Continue statement makes the control of the program to exit only the current iteration. It does not break the loop.</p>
+<h1 id="54-What-is-the-difference-between-finally-and-finalize-block"><a href="#54-What-is-the-difference-between-finally-and-finalize-block" class="headerlink" title="54. What is the difference between finally and finalize block?"></a>54. What is the difference between finally and finalize block?</h1><p>finally block is called after the execution of try and catch block. It is used for exception handling. Regardless of whether an exception is caught or not, this block of code will be executed. Usually, this block will have a clean-up code.</p>
+<p>finalize method is called just before garbage collection. It is used to perform clean up operations of Unmanaged code. It is automatically called when a given instance is not subsequently called.</p>
+<h1 id="55-What-is-an-Array-Give-the-syntax-for-a-single-and-multi-dimensional-array"><a href="#55-What-is-an-Array-Give-the-syntax-for-a-single-and-multi-dimensional-array" class="headerlink" title="55. What is an Array? Give the syntax for a single and multi-dimensional array?"></a>55. What is an Array? Give the syntax for a single and multi-dimensional array?</h1><p>An Array is used to store multiple variables of the same type. It is a collection of variables stored in a contiguous memory location.</p>
+<p>For Example:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">double</span> numbers = <span class="keyword">new</span> <span class="built_in">double</span>[<span class="number">10</span>];</span><br><span class="line"><span class="built_in">int</span>[] score = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">4</span>] &#123;<span class="number">25</span>,<span class="number">24</span>,<span class="number">23</span>,<span class="number">25</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>A single dimensional array is a linear array where the variables are stored in a single row. Above example is a single dimensional array.</p>
+<p>Arrays can have more than one dimension. Multidimensional arrays are also called rectangular arrays.</p>
+<p>For Example,    <code>int[,] numbers = new int[3,2] &#123; &#123;1,2&#125; ,&#123;2,3&#125;,&#123;3,4&#125; &#125;;</code></p>
+<h1 id="56-What-are-Boxing-and-Unboxing"><a href="#56-What-are-Boxing-and-Unboxing" class="headerlink" title="56. What are Boxing and Unboxing?"></a>56. What are Boxing and Unboxing?</h1><p>Converting a value type to reference type is called ‘Boxing’. Explicit conversion of the same reference type that is created by boxing back to value type is called ‘Unboxing’.</p>
+<h1 id="57-What-is-an-Array-used-for"><a href="#57-What-is-an-Array-used-for" class="headerlink" title="57. What is an Array used for?"></a>57. What is an Array used for?</h1><p>An Array is used to store multiple variables of the same type and is a collection of variables stored in a contiguous memory location.</p>
+<h1 id="58-What-is-an-Escape-Sequence-Name-the-sequences-in-C"><a href="#58-What-is-an-Escape-Sequence-Name-the-sequences-in-C" class="headerlink" title="58. What is an Escape Sequence? Name the sequences in C"></a>58. What is an Escape Sequence? Name the sequences in C</h1><p>An Escape sequence is denoted by a backslash (). The backslash indicates that the character that follows it should be interpreted literally or that it is a special character. An escape sequence is considered as a single character.</p>
+<h1 id="59-What-are-the-basic-String-Operations"><a href="#59-What-are-the-basic-String-Operations" class="headerlink" title="59. What are the basic String Operations?"></a>59. What are the basic String Operations?</h1><p>The basic String Operations are: Concatenate, Modify, Search, Compare.</p>
+<h1 id="60-What-is-an-Escape-Sequence-Name-some-String-escape-sequences-in-C"><a href="#60-What-is-an-Escape-Sequence-Name-some-String-escape-sequences-in-C" class="headerlink" title="60. What is an Escape Sequence? Name some String escape sequences in C#."></a>60. What is an Escape Sequence? Name some String escape sequences in C#.</h1><p>An Escape sequence is denoted by a backslash (). The backslash indicates that the character that follows it should be interpreted literally or it is a special character. An escape sequence is considered as a single character.</p>
+<p>String escape sequences are as follows:</p>
+<ul>
+<li>\n – Newline character</li>
+<li>\b – Backspace</li>
+<li>\ – Backslash</li>
+<li>\’ – Single quote</li>
+<li>\’’ – Double Quote<h1 id="61-In-C-Net-what-do-indexers-mean"><a href="#61-In-C-Net-what-do-indexers-mean" class="headerlink" title="61. In C#.Net, what do indexers mean?"></a>61. In C#.Net, what do indexers mean?</h1>In C#, indexers are also known as smart arrays. They allow the instances of the class that are to be indexed in a similar as that of the array.</li>
+</ul>
+<h1 id="62-What-are-Regular-expressions-Search-a-string-using-regular-expressions"><a href="#62-What-are-Regular-expressions-Search-a-string-using-regular-expressions" class="headerlink" title="62. What are Regular expressions? Search a string using regular expressions?"></a>62. What are Regular expressions? Search a string using regular expressions?</h1><p>Regular expression is a template to match a set of input. The pattern can consist of operators, constructs or character literals. Regex is used for string parsing and replacing the character string.</p>
+<p>For Example:</p>
+<ul>
+<li>matches the preceding character zero or more times. So, a*b regex is equivalent to b, ab, aab, aaab and so on.</li>
+</ul>
+<p>Searching a string using Regex:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">string</span>[] languages = &#123; <span class="string">&quot;C#&quot;</span>, <span class="string">&quot;Python&quot;</span>, <span class="string">&quot;Java&quot;</span> &#125;;</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="built_in">string</span> s <span class="keyword">in</span> languages)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(System.Text.RegularExpressions.Regex.IsMatch(s,<span class="string">&quot;Python&quot;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">&quot;Match found&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The above example searches for “Python” against the set of inputs from the languages array. It uses Regex.IsMatch which returns true in case if the pattern is found in the input. The pattern can be any regular expression representing the input that we want to match.</p>
+<h1 id="63-State-the-difference-between-direct-cast-and-ctype"><a href="#63-State-the-difference-between-direct-cast-and-ctype" class="headerlink" title="63. State the difference between direct cast and ctype."></a>63. State the difference between direct cast and ctype.</h1><p>The difference between direct cast and ctype is that direct cast is used for the conversion of type of an object that requires the run time which is similar to the specified type in the direct cast. Whereas ctype is used for converting the conversion which is defined for the expression and the type.</p>
+<h1 id="64-How-can-one-use-the-singleton-design-pattern-in-C"><a href="#64-How-can-one-use-the-singleton-design-pattern-in-C" class="headerlink" title="64. How can one use the singleton design pattern in C#?"></a>64. How can one use the singleton design pattern in C#?</h1><p> The singleton design pattern is used in C# when the class has one instance and the access is provided globally.</p>
+<h1 id="65-What-are-the-basic-String-Operations-Explain"><a href="#65-What-are-the-basic-String-Operations-Explain" class="headerlink" title="65. What are the basic String Operations? Explain."></a>65. What are the basic String Operations? Explain.</h1><p>Some of the basic string operations are:</p>
+<ul>
+<li>Concatenate: Two strings can be concatenated either by using a System.String.Concat or by using + operator.</li>
+<li>Modify: Replace(a,b) is used to replace a string with another string. Trim() is used to trim the string at the end or at the beginning.</li>
+<li>Compare: System.StringComparison() is used to compare two strings, either a case-sensitive comparison or not case sensitive. Mainly takes two parameters, original string, and string to be compared with.</li>
+<li>Search: StartWith, EndsWith methods are used to search a particular string.</li>
+</ul>
+<h1 id="66-What-is-Parsing-How-to-Parse-a-Date-Time-String"><a href="#66-What-is-Parsing-How-to-Parse-a-Date-Time-String" class="headerlink" title="66. What is Parsing? How to Parse a Date Time String?"></a>66. What is Parsing? How to Parse a Date Time String?</h1><p>Parsing converts a string into another data type.</p>
+<p>For Example:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> text = “<span class="number">500</span>”;</span><br><span class="line"><span class="built_in">int</span> num = <span class="built_in">int</span>.Parse(text);</span><br></pre></td></tr></table></figure>
+<p>500 is an integer. So, the Parse method converts the string 500 into its own base type, i.e int.</p>
+<p>Follow the same method to convert a DateTime string.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> dateTime = “Jan <span class="number">1</span>, <span class="number">2018</span>”;</span><br><span class="line">DateTime parsedValue = DateTime.Parse(dateTime);</span><br></pre></td></tr></table></figure>
+
+<h1 id="67-What-are-extension-methods-in-C"><a href="#67-What-are-extension-methods-in-C" class="headerlink" title="67. What are extension methods in C#?"></a>67. What are extension methods in C#?</h1><p>Extension methods enable you to add methods to existing types without creating a new derived type, recompiling, or otherwise modifying the original type. </p>
+<p>An extension method is a special kind of static method, but they are called as if they were instance methods on the extended type.</p>
+<h1 id="68-What-is-the-difference-between-the-Virtual-method-and-the-Abstract-method"><a href="#68-What-is-the-difference-between-the-Virtual-method-and-the-Abstract-method" class="headerlink" title="68. What is the difference between the Virtual method and the Abstract method?"></a>68. What is the difference between the Virtual method and the Abstract method?</h1><p>The Virtual method must always have a default implementation. However, it can be overridden in the derived class, although it is not mandatory. It can be overridden using the override keyword.</p>
+<p>An Abstract method does not have an implementation. It resides in the abstract class. It is mandatory that the derived class implements the abstract method. An override keyword is not necessary here though it can be used.</p>
+<h1 id="69-What-are-the-types-of-errors-in-C"><a href="#69-What-are-the-types-of-errors-in-C" class="headerlink" title="69. What are the types of errors in C#?"></a>69. What are the types of errors in C#?</h1><p>Answer: Following are the two types of error in C#:</p>
+<ol>
+<li>Compile-time error</li>
+<li>Run time error</li>
+</ol>
+<h1 id="70-What-is-the-difference-between-method-overriding-and-method-overloading"><a href="#70-What-is-the-difference-between-method-overriding-and-method-overloading" class="headerlink" title="70. What is the difference between method overriding and method overloading?"></a>70. What is the difference between method overriding and method overloading?</h1><p>In method <code>overriding</code>, we change the method definition in the derived class that changes the method behavior. </p>
+<p>Method <code>overloading</code> is creating a method with the same name within the same class having different signatures.</p>
+<h1 id="71-Why-can’t-you-specify-the-accessibility-modifier-for-methods-inside-the-interface"><a href="#71-Why-can’t-you-specify-the-accessibility-modifier-for-methods-inside-the-interface" class="headerlink" title="71. Why can’t you specify the accessibility modifier for methods inside the interface?"></a>71. Why can’t you specify the accessibility modifier for methods inside the interface?</h1><p>In an interface, we have virtual methods that do not have method definition. All the methods are there to be overridden in the derived class. That’s why they all are public.</p>
+<h1 id="72-What-is-an-object-pool-in-NET"><a href="#72-What-is-an-object-pool-in-NET" class="headerlink" title="72. What is an object pool in .NET?"></a>72. What is an object pool in .NET?</h1><p>An object pool is a container having objects ready to be used. It tracks the object that is currently in use, total number of objects in the pool. This reduces the overhead of creating and re-creating objects.</p>
+<h1 id="73-What-is-the-difference-between-read-only-and-constant"><a href="#73-What-is-the-difference-between-read-only-and-constant" class="headerlink" title="73. What is the difference between read-only and constant?"></a>73. What is the difference between read-only and constant?</h1><p>The difference between read-only and constant is that read-only is used during run time when the value has to be assigned. Constant variables are used during compilation time for declaration and initialization.</p>
+<h1 id="74-What-are-partial-classes"><a href="#74-What-are-partial-classes" class="headerlink" title="74. What are partial classes?"></a>74. What are partial classes?</h1><p>A partial class is only used to split the definition of a class in two or more classes in the same source code file or more than one source file. You can create a class definition in multiple files, but it will be compiled as one class at run time. Also, when you create an instance of this class, you can access all the methods from all source files with the same object.</p>
+<p>Partial Classes can be created in the same namespace. It isn’t possible to create a partial class in a different namespace. So use the “partial” keyword with all the class names that you want to bind together with the same name of a class in the same namespace. </p>
+<h1 id="75-Can-“this”-be-used-in-a-static-method"><a href="#75-Can-“this”-be-used-in-a-static-method" class="headerlink" title="75. Can “this” be used in a static method?"></a>75. Can “this” be used in a static method?</h1><p> No, “this” cannot be used in a static method as static methods are used for either static variables or static methods.</p>
+<h1 id="76-What-is-IEnumerable-lt-gt-in-C"><a href="#76-What-is-IEnumerable-lt-gt-in-C" class="headerlink" title="76. What is IEnumerable&lt;&gt; in C#?"></a>76. What is IEnumerable&lt;&gt; in C#?</h1><p>IEnumerable is the parent interface for all non-generic collections in System.Collections namespace like ArrayList, HastTable etc. that can be enumerated. For the generic version of this interface as IEnumerable<T> which a parent interface of all generic collections class in System.Collections.Generic namespace like List&lt;&gt; and more. </p>
+<p>In System.Collections.Generic.IEnumerable<T> have only a single method which is GetEnumerator() that returns an IEnumerator. IEnumerator provides the power to iterate through the collection by exposing a Current property and Move Next and Reset methods if we don’t have this interface as a parent so we can’t use iteration by foreach loop or can’t use that class object in our LINQ query.</p>
+<h1 id="77-What-is-the-difference-between-late-binding-and-early-binding-in-C"><a href="#77-What-is-the-difference-between-late-binding-and-early-binding-in-C" class="headerlink" title="77. What is the difference between late binding and early binding in C#?"></a>77. What is the difference between late binding and early binding in C#?</h1><p>Early Binding and Late Binding concepts belong to polymorphism in C#. Polymorphism is the feature of object-oriented programming that allows a language to use the same name in different forms. For example, a method named Add can add integers, doubles, and decimals.</p>
+<h1 id="78-What-is-the-Constructor-Chaining-in-C"><a href="#78-What-is-the-Constructor-Chaining-in-C" class="headerlink" title="78. What is the Constructor Chaining in C#?"></a>78. What is the Constructor Chaining in C#?</h1><p>Constructor chaining is a way to connect two or more classes in a relationship as Inheritance. In Constructor Chaining, every child class constructor is mapped to a parent class Constructor implicitly by base keyword, so when you create an instance of the child class, it will call the parent’s class Constructor. Without it, inheritance is not possible.</p>
+<h1 id="79-What’s-the-difference-between-the-Array-CopyTo-and-Array-Clone"><a href="#79-What’s-the-difference-between-the-Array-CopyTo-and-Array-Clone" class="headerlink" title="79. What’s the difference between the Array.CopyTo() and Array.Clone()?"></a>79. What’s the difference between the Array.CopyTo() and Array.Clone()?</h1><p>The Array.Clone() method creates a shallow copy of an array. A shallow copy of an Array copies only the elements of the Array, whether they are reference types or value types, but it does not copy the objects that the references refer to. The references in the new Array point to the same objects that the references in the original Array point to.</p>
+<p>The CopyTo() static method of the Array class copies a section of an array to another array. The CopyTo method copies all the elements of an array to another one-dimension array. The code listed in Listing 9 copies contents of an integer array to an array of object types. </p>
+<h1 id="80-Can-Multiple-Catch-Blocks-be-executed-in-C"><a href="#80-Can-Multiple-Catch-Blocks-be-executed-in-C" class="headerlink" title="80. Can Multiple Catch Blocks be executed in C#?"></a>80. Can Multiple Catch Blocks be executed in C#?</h1><p>We can use multiple catch blocks with a try statement. Each catch block can catch a different exception. The following code example shows how to implement multiple catch statements with a single try statement.</p>
+<h1 id="81-What-are-Value-types-and-Reference-types-in-C"><a href="#81-What-are-Value-types-and-Reference-types-in-C" class="headerlink" title="81. What are Value types and Reference types in C#?"></a>81. What are Value types and Reference types in C#?</h1><p>In C#, data types can be of two types, value types, and reference types. Value type variables contain their object (or data) directly. If we copy one value type variable to another then we are actually making a copy of the object for the second variable. Both of them will independently operate on their values, Value type data types are stored on a stack and reference data types are stored on a heap.</p>
+<p>In C#, basic data types include int, char, bool, and long, which are value types. Classes and collections are reference types.</p>
+<h1 id="82-How-do-you-use-the-“using”-statement-in-C"><a href="#82-How-do-you-use-the-“using”-statement-in-C" class="headerlink" title="82. How do you use the “using” statement in C#?"></a>82. How do you use the “using” statement in C#?</h1><p>There are two ways to use the using keyword in C#. One is as a directive and the other is as a statement. Let’s explain!</p>
+<ol>
+<li>using Directive<br>Generally, we use the using keyword to add namespaces in code-behind and class files. Then it makes available all the classes, interfaces and abstract classes and their methods and properties on the current page. Adding a namespace can be done in the following two ways:</li>
+<li>Using Statement<br>This is another way to use the using keyword in C#. It plays a vital role in improving performance in Garbage Collection.</li>
+</ol>
+<h1 id="83-What-are-Anonymous-Types-in-C"><a href="#83-What-are-Anonymous-Types-in-C" class="headerlink" title="83. What are Anonymous Types in C#?"></a>83. What are Anonymous Types in C#?</h1><p>Anonymous types allow us to create new types without defining them. This is a way of defining read-only properties in a single object without having to define each type explicitly. Here, Type is generated by the compiler and is accessible only for the current block of code. The type of properties is also inferred by the compiler.</p>
+<p>We can create anonymous types by using “new” keyword together with the object initializer. </p>
+<h1 id="84-Explain-“static”-keyword-in-C"><a href="#84-Explain-“static”-keyword-in-C" class="headerlink" title="84. Explain “static” keyword in C#?"></a>84. Explain “static” keyword in C#?</h1><p>“Static” keyword can be used for declaring a static member. If the class is made static then all the members of the class are also made static. If the variable is made static then it will have a single instance and the value change is updated in this instance.</p>
+<h1 id="85-What-are-the-different-types-of-classes-in-C"><a href="#85-What-are-the-different-types-of-classes-in-C" class="headerlink" title="85. What are the different types of classes in C#?"></a>85. What are the different types of classes in C#?</h1><p>The different types of class in C# are</p>
+<ol>
+<li>Partial class – Allows its members to be divided or shared with multiple .cs files. It is denoted by the keyword ‘Partial’.<br>Sealed class – It is a class that cannot be inherited. To access the members of a sealed class, we need to create the object of the class. It is denoted by the keyword ‘Sealed’.</li>
+<li>Abstract class – It is a class whose object cannot be instantiated. The class can only be inherited. It should contain at least one method. It is denoted by the keyword ‘abstract’.</li>
+<li>Static class – It is a class which does not allow inheritance. The members of the class are also static. It is denoted by the keyword ‘static’. This keyword tells the compiler to check for any accidental instances of the static class.</li>
+</ol>
+<h1 id="86-What-is-Managed-and-Unmanaged-code"><a href="#86-What-is-Managed-and-Unmanaged-code" class="headerlink" title="86. What is Managed and Unmanaged code?"></a>86. What is Managed and Unmanaged code?</h1><p>Managed code is a code that is executed by CLR (Common Language Runtime). It is called ‘managed code’ because of the .Net framework which uses the garbage collector internally to clear up unused memory. ‘__Unmanaged code’ is any code that is executed by the application runtime of any other framework apart from .Net. The application runtime will take care of security, memory and other performance operations.</p>
+<h1 id="87-Explain-Namespaces-in-C"><a href="#87-Explain-Namespaces-in-C" class="headerlink" title="87. Explain Namespaces in C#"></a>87. Explain Namespaces in C#</h1><p>Namespaces are used to organize large code projects. “System” is the most widely-used namespace in C#.</p>
+<h1 id="88-Explain-Polymorphism"><a href="#88-Explain-Polymorphism" class="headerlink" title="88. Explain Polymorphism"></a>88. Explain Polymorphism</h1><p>In programming, polymorphism means the same method but different implementations. It contains two types, Compile-time and Runtime. Compile time polymorphism is accomplished by operator overloading. Runtime polymorphism is accomplished by overriding. An example would be: a class has a method Void Add(), polymorphism is accomplished by Overloading the method, that is, void Add(int a, int b), void Add(int add) are all overloaded methods.</p>
+<h1 id="89-How-is-Exception-Handling-implemented-in-C"><a href="#89-How-is-Exception-Handling-implemented-in-C" class="headerlink" title="89. How is Exception Handling implemented in C#?"></a>89. How is Exception Handling implemented in C#?</h1><p>Exception handling is done using four keywords in C#:</p>
+<ol>
+<li>Try – contains a block of code that checks an exception.</li>
+<li>Catch – is a program that catches an exception with the help of exception handler.</li>
+<li>Finally – is a block of code written to execute even if an exception is not caught.</li>
+<li>Throw – Throws an exception when a problem occurs.</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/19/umi-is-not-recognized-as-an-internal-or-external-command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1308,262 +1665,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/02/javascript-interview-qa/" class="post-title-link" itemprop="url">2021 javascript 面试题汇总</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-02 14:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T14:06:00+08:00">2021-03-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-27 01:01:04" itemprop="dateModified" datetime="2021-04-27T01:01:04+08:00">2021-04-27</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p><a href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">2021 javascript 面试题汇总</a></p>
-</blockquote>
-<h1 id="1-this-都可以是哪些内容"><a href="#1-this-都可以是哪些内容" class="headerlink" title="1. this 都可以是哪些内容"></a>1. this 都可以是哪些内容</h1><p>对 C#、Java 等语言，this 就是当前对象，但是 javascript 不是，简单来说：</p>
-<ul>
-<li>全局 this 是 window;</li>
-<li>函数 this 是调用者;</li>
-<li>构造函数的 this 是 new 之后的新对象,</li>
-<li>call 和 apply bind 的 this 第一个参数</li>
-</ul>
-<h1 id="2-原型链-prototype"><a href="#2-原型链-prototype" class="headerlink" title="2. 原型链, prototype"></a>2. 原型链, prototype</h1><ul>
-<li>函数对象都包含 prototype 属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
-<li>constructor 属性的含义就是指向该对象的构造函数</li>
-<li><code>__proto__</code>和 constructor 属性是对象所独有的；prototype 属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<code>__proto__</code>和 constructor 属性。</li>
-<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
-<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象 prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为 null。</li>
-<li>当访问一个对象的属性或方法时，js 引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为 null,这就是原型链。</li>
-<li>每个构造函数都有一个 prototype 属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
-</ul>
-<h1 id="3-new-操作符都做了什么"><a href="#3-new-操作符都做了什么" class="headerlink" title="3. new 操作符都做了什么"></a>3. new 操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
-<p>new Object()举例:</p>
-<ol>
-<li>创建一个新对象</li>
-<li>把新对象的原型(<code>__proto__</code>)指向构造函数的 prototype</li>
-<li>把构造函数里的 this 指向新对象</li>
-<li>返回这个新对象</li>
-</ol>
-<h1 id="4-Javascript-的内存回收机制"><a href="#4-Javascript-的内存回收机制" class="headerlink" title="4. Javascript 的内存回收机制"></a>4. Javascript 的内存回收机制</h1><p>Javascript 内嵌了垃圾收集器，用来跟踪内存的分配和使用，以便当分配的内存不再使用时，自动释放它。垃圾收集器会按照固定的时间间隔，或代码执行中预定的收集时间，周期性地执行这一操作。<br>垃圾收集器必须跟踪哪个变量有用哪个变量无用，对于不再有用的变量打上标记，以备将来收回其所占用的内存。用于标识无用变量的策略通常有标记清除和引用计数两种。不同浏览器采用的策略不完全一致。</p>
-<h1 id="5-内存泄漏的主要原因"><a href="#5-内存泄漏的主要原因" class="headerlink" title="5. 内存泄漏的主要原因"></a>5. 内存泄漏的主要原因</h1><ul>
-<li>缓存</li>
-<li>队列消费不及时</li>
-<li>作用域未释放</li>
-</ul>
-<h1 id="6-Javascript-性能优化"><a href="#6-Javascript-性能优化" class="headerlink" title="6. Javascript 性能优化"></a>6. Javascript 性能优化</h1><ol>
-<li>针对 js 方面的前端性能优化，可以 1）使用 ansyc/defer 加载；2）加载时，放到<code>&lt;/body&gt;</code>之前；3) 合并 JS 文件，并进行最小化处理；4）缓存；5）使用 CDN 网络；6）js 的 HTTP 压缩</li>
-<li>删除未使用的功能性代码以及与之相关的代码， 多余的依赖库，被滥用的 npm 包。</li>
-<li>减少作用域链上的查找次数（减少循环中的活动）。比如 for 循环，把 Array.length 赋值给一个变量，而不是每次比较都直接使用 length 属性；对页面元素进行操作时，取出复制给一个变量，每次操作都对这个变量进行操作，而不是每次操作都再重复取一下这个元素；</li>
-<li>闭包导致的内存泄露。闭包可以保证函数内的变量安全，可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，不会被自动清除。我们需要手动销毁内存中的变量。（赋值为 null）；</li>
-<li>尽量少用全局变量，尽量使用局部变量。</li>
-<li>减少不必要的变量</li>
-<li>类型转换：把数字转换成字符串使用 number + “” 。 性能对比： (“” + ) &gt; String() &gt; .toString() &gt; new String()</li>
-<li>对字符串进行循环操作，譬如替换、查找，应使用正则表达式。因为本身 JavaScript 的循环速度就比较慢，而正则表达式的操作是用 C 写成的语言的 API，性能很好。</li>
-<li>浮点数转换成整型使用 Math.floor()或者 Math.round()。parseInt()是用于将字符串转换成数字，Math 是内部对象，所以 Math.floor()其实并没有多少查询方法和调用的时间，速度是最快的。</li>
-<li>使用 classname 代替大量的内联样式修改。</li>
-<li>循环遍历，尽量少用 for in， 虽然代码易读，但性能很差。 尤其是遍历属性数量未知的情况下，少用。</li>
-</ol>
-<h1 id="7-ES6-ES7-ES8-…-新增的功能"><a href="#7-ES6-ES7-ES8-…-新增的功能" class="headerlink" title="7. ES6/ES7/ES8/… 新增的功能"></a>7. ES6/ES7/ES8/… 新增的功能</h1><h2 id="7-1-ES6-（2015）"><a href="#7-1-ES6-（2015）" class="headerlink" title="7.1. ES6 （2015）"></a>7.1. ES6 （2015）</h2><ul>
-<li>类</li>
-<li>模块化</li>
-<li>箭头函数</li>
-<li>函数参数默认值</li>
-<li>模板字符串</li>
-<li>解构赋值</li>
-<li>延展操作符</li>
-<li>对象属性简写</li>
-<li>Promise</li>
-<li>Let与Const</li>
-</ul>
-<h2 id="7-2-ES7（2016）"><a href="#7-2-ES7（2016）" class="headerlink" title="7.2. ES7（2016）"></a>7.2. ES7（2016）</h2><ul>
-<li>数组includes()方法，用来判断一个数组是否包含一个指定的值，根据情况，如果包含则返回true，否则返回false。</li>
-<li>**指数运算符： a ** b指数运算符，它与 Math.pow(a, b)相同。<h2 id="7-3-ES8（2017）"><a href="#7-3-ES8（2017）" class="headerlink" title="7.3. ES8（2017）"></a>7.3. ES8（2017）</h2></li>
-<li>async/await</li>
-<li>Object.values()</li>
-<li>Object.entries()</li>
-<li>String padding: padStart()和padEnd()，填充字符串达到当前长度</li>
-<li>函数参数列表结尾允许逗号</li>
-<li>Object.getOwnPropertyDescriptors()</li>
-<li>ShareArrayBuffer和Atomics对象，用于从共享内存位置读取和写入<h2 id="7-4-ES9（2018）"><a href="#7-4-ES9（2018）" class="headerlink" title="7.4. ES9（2018）"></a>7.4. ES9（2018）</h2></li>
-<li>异步迭代</li>
-<li>Promise.finally()</li>
-<li>Rest/Spread 属性: ES2015引入了Rest参数和扩展运算符。三个点（…）仅用于数组。Rest参数语法允许我们将一个不定数量的参数表示为一个数组。</li>
-<li>正则表达式命名捕获组</li>
-<li>正则表达式反向断言</li>
-</ul>
-<h2 id="7-5-ES10新特性（2019）"><a href="#7-5-ES10新特性（2019）" class="headerlink" title="7.5. ES10新特性（2019）"></a>7.5. ES10新特性（2019）</h2><ul>
-<li>行分隔符（U + 2028）和段分隔符（U + 2029）符号现在允许在字符串文字中，与JSON匹配</li>
-<li>更加友好的 JSON.stringify</li>
-<li>新增了Array的flat()方法和flatMap()方法</li>
-<li>新增了String的trimStart()方法和trimEnd()方法</li>
-<li>Object.fromEntries()</li>
-<li>Symbol.prototype.description</li>
-<li>String.prototype.matchAll</li>
-<li>Function.prototype.toString()现在返回精确字符，包括空格和注释</li>
-<li>简化try {} catch {},修改 catch 绑定</li>
-<li>新的基本数据类型BigInt</li>
-<li>globalThis</li>
-<li>import()</li>
-<li>Legacy RegEx</li>
-<li>私有的实例方法和访问器</li>
-</ul>
-<h2 id="7-6-ES11（2020）"><a href="#7-6-ES11（2020）" class="headerlink" title="7.6. ES11（2020）"></a>7.6. ES11（2020）</h2><ul>
-<li>Nullish coalescing Operator(空值处理)</li>
-<li>import() 按需导入</li>
-</ul>
-<h2 id="7-7-ES12（2021）"><a href="#7-7-ES12（2021）" class="headerlink" title="7.7. ES12（2021）"></a>7.7. ES12（2021）</h2><ul>
-<li>string增加replaceAll</li>
-<li>Promise.any, 收一个Promise可迭代对象，只要其中的一个 promise 成功，就返回那个已经成功的 promise</li>
-<li>WeakRefs, 使用WeakRefs的Class类创建对对象的弱引用(对对象的弱引用是指当该对象应该被GC回收时不会阻止GC的回收行为)</li>
-<li>数字分隔符</li>
-<li>逻辑运算符和赋值表达式</li>
-</ul>
-<h1 id="8-VS"><a href="#8-VS" class="headerlink" title="8. === VS =="></a>8. === VS ==</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&quot;100&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>很有意思吧， 看看这两个，是等效的：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span>;</span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="9-闭包"><a href="#9-闭包" class="headerlink" title="9. 闭包"></a>9. 闭包</h1><p>在 JavaScript 中，实现外部作用域访问内部作用域中变量的方法叫做闭包（closure)。这得益于高阶函数的特性：函数可以作为参数或者者返回值；</p>
-<p><strong>当一个内部函数被调用，就会形成闭包</strong>，闭包就是能够读取其他函数内部变量的函数，就是一个函数去访问了另外一个函数的中的变量的函数。</p>
-<p><strong>闭包作用</strong>：局部变量无法共享和长久的保存，而全局变量可能造成变量污染，所以我们希望有一种机制既可以长久的保存变量又不会造成全局污染。延伸变量的作用范围。</p>
-<p><strong>闭包特点</strong>：占用更多内存；不容易被释放</p>
-<p><strong>闭包用法</strong>：变量既想反复使用，又想避免全局污染如何使用？</p>
-<ol>
-<li>定义外层函数，封装被保护的局部变量。</li>
-<li>定义内层函数，执行对外部函数变量的操作。</li>
-<li>外层函数返回内层函数的对象，并且外层函数被调用，结果保存在一个全局的变量中。</li>
-</ol>
-<p>e.g.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerMethod</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> innerMethod = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a + <span class="string">&quot;!&quot;</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  innerMethod();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="10-js-里的作用域是什么样子的？"><a href="#10-js-里的作用域是什么样子的？" class="headerlink" title="10. js 里的作用域是什么样子的？"></a>10. js 里的作用域是什么样子的？</h1><p>大多数语言里边都是块作作用域，以{}进行限定，js 里边不是．js 里边叫函数作用域，就是一个变量在全函数里有效．比如有个变量 p1 在函数最后一行定义，第一行也有效，但是值是 undefined.</p>
-<h1 id="11-let-和-var-的区别"><a href="#11-let-和-var-的区别" class="headerlink" title="11. let 和 var 的区别"></a>11. let 和 var 的区别</h1><ul>
-<li>var 声明变量可以重复声明，而 let 不可以重复声明，属于 TDZ 暂时性死区问题</li>
-<li>作用域不同，var 是函数作用域，而 let 是块级作用域；</li>
-<li>var 可以在声明的上面访问变量，而 let 不存在变量提升；</li>
-</ul>
-<h1 id="12-对-async-和-await-的理解"><a href="#12-对-async-和-await-的理解" class="headerlink" title="12. 对 async 和 await 的理解"></a>12. 对 async 和 await 的理解</h1><ol>
-<li>async…await 是基于 promise 的 generator 语法糖，是用来解决异步的，它用来等待 promise 的执行结果，常规函数使用 await 没有效果；</li>
-<li>async 函数返回一个 Promise 对象，可以使用 then 方法添加回调函数</li>
-<li>当函数执行的时候，一旦遇到 await 就会先返回，等到异步操作完成，再接着执行函数体内后面的语句；</li>
-</ol>
-<h1 id="13-promised-的三种状态"><a href="#13-promised-的三种状态" class="headerlink" title="13. promised 的三种状态"></a>13. promised 的三种状态</h1><p>promise 有三种状态：pending/reslove/reject 。pending 就是未决，resolve 可以理解为成功，reject 可以理解为拒绝。</p>
-<h1 id="14-async-await-的优点"><a href="#14-async-await-的优点" class="headerlink" title="14. async/await 的优点"></a>14. async/await 的优点</h1><p><strong>1）方便级联调用：</strong> 即调用依次发生的场景；</p>
-<p><strong>2）同步代码编写方式：</strong> Promise 使用 then 函数进行链式调用，一直点点点，是一种从左向右的横向写法；async/await 从上到下，顺序执行，就像写同步代码一样，更符合代码编写习惯；</p>
-<p><strong>3）多个参数传递：</strong> Promise 的 then 函数只能传递一个参数，虽然可以通过包装成对象来传递多个参数，但是会导致传递冗余信息，频繁的解析又重新组合参数，比较麻烦；async/await 没有这个限制，可以当做普通的局部变量来处理，用 let 或者 const 定义的块级变量想怎么用就怎么用，想定义几个就定义几个，完全没有限制，也没有冗余工作；</p>
-<p><strong>4）同步代码和异步代码可以一起编写：</strong> 使用 Promise 的时候最好将同步代码和异步代码放在不同的 then 节点中，这样结构更加清晰；async/await 整个书写习惯都是同步的，不需要纠结同步和异步的区别，当然，异步过程需要包装成一个 Promise 对象放在 await 关键字后面；</p>
-<p><strong>5）基于协程：</strong> Promise 是根据函数式编程的范式，对异步过程进行了一层封装，async/await 基于协程的机制，是真正的“保存上下文，控制权切换……控制权恢复，取回上下文”这种机制，是对异步过程更精确的一种描述；</p>
-<p><strong>6）async/await 是对 Promise 的优化：</strong> async/await 是基于 Promise 的，是进一步的一种优化，不过在写代码时，Promise 本身的 API 出现得很少，很接近同步代码的写法；</p>
-<h1 id="15-async-await-的写法"><a href="#15-async-await-的写法" class="headerlink" title="15. async/await 的写法"></a>15. async/await 的写法</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">testAsync</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello async&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用时</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">await</span> testAsync();</span><br><span class="line">  <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="16-apply、call-和-bind-的区别"><a href="#16-apply、call-和-bind-的区别" class="headerlink" title="16. apply、call 和 bind 的区别"></a>16. apply、call 和 bind 的区别</h1><p>这三者都是用来改变函数的 this 对象的指向的(也就是说要改变函数运行时的 context 即上下文),第一个参数都是 this 要指向的对象。</p>
-<p>不同之处：</p>
-<ol>
-<li>call 接受连续参数，apply 接受数组参数。</li>
-<li>bind 功能和 call apply 差不多，区别在于 bind 返回的是一个改变 this 指向的新函数，这个函数不是立即执行函数（call apply 两个立即执行！）</li>
-</ol>
-<h1 id="17-深拷贝的原理"><a href="#17-深拷贝的原理" class="headerlink" title="17. 深拷贝的原理"></a>17. 深拷贝的原理</h1><p>操作的是值，取出对象的值，放到一个新的{}，修改时不会影响到原数据；要完成对象的深拷贝需要使用递归遍历所有对象的属性进行赋值，也可以使用 JSON.stringfy 和 JSON.parse 操作。</p>
-<h1 id="18-set-和-Map-的区别"><a href="#18-set-和-Map-的区别" class="headerlink" title="18. set 和 Map 的区别"></a>18. set 和 Map 的区别</h1><ol>
-<li>Set 是一种类似数组的集合类型，它与数组不同的是，不允许存在重复数据；常用操作方法有：add,delete,has,clear 等；遍历使用 forEach；</li>
-<li>Map 是一种类似对象的集合类型，它与对象不同的是，key 可以接受对象类型，常用的操作方法有：set,get,has,delete 等；遍历使用 forEach</li>
-</ol>
-<h1 id="19-JS-实现双向绑定-（vue-angular-双向绑定的原理）"><a href="#19-JS-实现双向绑定-（vue-angular-双向绑定的原理）" class="headerlink" title="19. JS 实现双向绑定 （vue/angular 双向绑定的原理）"></a>19. JS 实现双向绑定 （vue/angular 双向绑定的原理）</h1><p><strong>vue.js</strong> 采用数据劫持（Proxy 模式）结合发布者-订阅者模式（PubSub 模式）的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。<br>Object.defineProperty( )内还包含一对儿 getter 和 setter 函数，它们被称作这个对象的访问器属性，这两个函数都不是必须的，只是在读取访问对象属性时，会调用 getter 函数，这个函数负责返回有效值，在写入对象属性时，会调用 setter 函数并传入新值，这个函数负责决定如何处理数据。</p>
-<p><strong>Angular</strong>, 采用脏检查的方式。基于 zone.js，重写 setTimeout, httpRequest 等方法，触发脏检查, 更新 dom 节点。</p>
-<h1 id="20-var-和-let-的区别"><a href="#20-var-和-let-的区别" class="headerlink" title="20. var 和 let 的区别"></a>20. var 和 let 的区别</h1><ol>
-<li>作用域不同， var 是函数作用域，let 是块作用域。</li>
-</ol>
-<ul>
-<li>在函数中声明了 var，整个函数内都是有效的，比如说在 for 循环内定义的一个 var 变量，实际上其在 for 循环以外也是可以访问的</li>
-<li>而 let 由于是块作用域，所以如果在块作用域内定义的变量，比如说在 for 循环内，在其外面是不可被访问的，所以 for 循环推荐用 let</li>
-</ul>
-<ol start="2">
-<li>let 不能在定义之前访问该变量，但是 var 可以。 （var 可以提升变量作用域）</li>
-<li>let不能被重新定义，但是var是可以的。（重新定义var，执行时会忽略）<h1 id="21-Javascript-如何实现继承？"><a href="#21-Javascript-如何实现继承？" class="headerlink" title="21. Javascript 如何实现继承？"></a>21. Javascript 如何实现继承？</h1></li>
-</ol>
-<p>1、构造继承<br>2、原型继承: Child.prototype = new Parent();<br>3、实例继承<br>4、拷贝继承</p>
-<h1 id="22-变量提升"><a href="#22-变量提升" class="headerlink" title="22. 变量提升"></a>22. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
-<ol>
-<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
-<li>执行(执行逻辑操作)</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 ReferenceError: b is not defined</span></span><br><span class="line">b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 undefined</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 输出 2</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="23-函数提升"><a href="#23-函数提升" class="headerlink" title="23. 函数提升"></a>23. 函数提升</h1><p>首先要知道函数定义有两种方式的，一种是函数定义表达式，一种是函数声明语句。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数定义表达式</span></span><br><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明语句</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提升测试</span></span><br><span class="line"><span class="comment">// 例1.</span></span><br><span class="line">f();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 test</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line">f();</span><br><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//输出 Uncaught TypeError: f is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例3</span></span><br><span class="line"><span class="built_in">console</span>.log(f);</span><br><span class="line"><span class="keyword">var</span> f = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">console</span>.log(f);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;fff&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//  输出</span></span><br><span class="line"><span class="comment">//  [Function: f]</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  a = <span class="number">10</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">// 输出：10</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>) </span>&#123;&#125; <span class="comment">// 看似无用， 实际上在foo的作用域内重新声明了&#x27;a&#x27;，和外面的a不一样了</span></span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 输出：1</span></span><br><span class="line"><span class="comment">//输出：</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-
-<p>重点：</p>
-<ol>
-<li>函数提升针对是函数声明语句而言，其次变量提升只提升变量名而函数提升会提升整个函数体</li>
-<li>优先级，函数提升会在变量提升的上面</li>
-</ol>
-<h1 id="24-作用域"><a href="#24-作用域" class="headerlink" title="24. 作用域"></a>24. 作用域</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1 块级作用域, 不适合变量提升</span></span><br><span class="line"><span class="comment">// es6允许块级作用域的任意嵌套。外层作用域无法读取内层作用域的变量。</span></span><br><span class="line"><span class="comment">// 内层作用域可以定义外层作用域的同名变量。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 hello</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> z = <span class="string">&quot;!&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(v, z);</span><br><span class="line"><span class="comment">//输出 :</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"><span class="comment">// world !</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2 闭包，变量提升</span></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">//输出 undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例 3， 块级作用域内let和const命令所声明的变量，只在命令所在的代码块内有效。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4 let， var与作用域、变量提升</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line">  <span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="25-实现一个随机排序的程序"><a href="#25-实现一个随机排序的程序" class="headerlink" title="25. 实现一个随机排序的程序"></a>25. 实现一个随机排序的程序</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomSort</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.sort(randomSort);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;after random sort: &quot;</span>, list.join(<span class="string">&quot;,&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 箭头函数写法</span></span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.sort(<span class="function">() =&gt;</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;after random sort: &quot;</span>, list.join(<span class="string">&quot;,&quot;</span>));</span><br></pre></td></tr></table></figure>
-
-<h1 id="26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"><a href="#26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量" class="headerlink" title="26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"></a>26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMostUsedChar</span>(<span class="params">sourceString</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> length = sourceString.length;</span><br><span class="line">  <span class="keyword">let</span> counter = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> currentChar = sourceString[i];</span><br><span class="line">    <span class="keyword">if</span> (counter[currentChar]) &#123;</span><br><span class="line">      counter[currentChar]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      counter[currentChar] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> maxCount = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> maxChar = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> counter) &#123;</span><br><span class="line">    <span class="keyword">if</span> (counter[key] &gt;= maxCount) &#123;</span><br><span class="line">      maxChar = key;</span><br><span class="line">      maxCount = counter[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`most used char: <span class="subst">$&#123;maxChar&#125;</span>, count: <span class="subst">$&#123;maxCount&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getMostUsedChar(<span class="string">&quot;fjiwejfal33232jkj3fjfie&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考:</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md">https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1633,12 +1734,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

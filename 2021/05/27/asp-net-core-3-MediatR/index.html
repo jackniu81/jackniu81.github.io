@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="环境：   .NET 5 ASP.NET Core MVC (project)   1. MediatRMediatR .NET中的简单中介者模式实现，一种进程内消息传递机制（无其他外部依赖）。支持以同步或异步的形式进行请求&#x2F;响应，命令，查询，通知和事件的消息传递，并通过C#泛型支持消息的智能调度。  Simple mediator implementation in .NETIn-pro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ASP.NET Core MVC 入门到精通 - 3. 使用MediatR">
+<meta property="og:url" content="https://jackniu81.github.io/2021/05/27/asp-net-core-3-MediatR/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="环境：   .NET 5 ASP.NET Core MVC (project)   1. MediatRMediatR .NET中的简单中介者模式实现，一种进程内消息传递机制（无其他外部依赖）。支持以同步或异步的形式进行请求&#x2F;响应，命令，查询，通知和事件的消息传递，并通过C#泛型支持消息的智能调度。  Simple mediator implementation in .NETIn-pro">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-05-27T08:09:26.000Z">
+<meta property="article:modified_time" content="2021-05-28T06:29:13.274Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content=".NET">
+<meta property="article:tag" content="ASP.NET Core MVC">
+<meta property="article:tag" content="ASP.NET Core">
+<meta property="article:tag" content="MediatR">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/05/27/asp-net-core-3-MediatR/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>ASP.NET Core MVC 入门到精通 - 3. 使用MediatR | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/27/asp-net-core-3-MediatR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ASP.NET Core MVC 入门到精通 - 3. 使用MediatR
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-27 16:09:26" itemprop="dateCreated datePublished" datetime="2021-05-27T16:09:26+08:00">2021-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-28 14:29:13" itemprop="dateModified" datetime="2021-05-28T14:29:13+08:00">2021-05-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><a href=""></a></p>
+</blockquote>
+<blockquote>
+<p>环境： </p>
+<ul>
+<li>.NET 5</li>
+<li>ASP.NET Core MVC (project)</li>
+</ul>
+</blockquote>
+<h1 id="1-MediatR"><a href="#1-MediatR" class="headerlink" title="1. MediatR"></a>1. MediatR</h1><p>MediatR .NET中的简单中介者模式实现，一种<code>进程内消息传递机制</code>（无其他外部依赖）。支持以同步或异步的形式进行请求/响应，命令，查询，通知和事件的消息传递，并通过C#泛型支持消息的智能调度。</p>
+<blockquote>
+<p>Simple mediator implementation in .NET<br>In-process messaging with no dependencies.<br>Supports request/response, commands, queries, notifications and events, synchronous and async with intelligent dispatching via C# generic variance.</p>
+</blockquote>
+<blockquote>
+<p>另：中介者模式 - 定义一个中介对象来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独立地改变它们之间的交互。中介者模式又叫调停模式，它是迪米特法则的典型应用。</p>
+</blockquote>
+<h1 id="2-安装-amp-配置"><a href="#2-安装-amp-配置" class="headerlink" title="2. 安装 &amp; 配置"></a>2. 安装 &amp; 配置</h1><p>对于.NET5 (.net core), 使用nuget 安装<code>MediatR.Extensions.Microsoft.DependencyInjection</code>.</p>
+<p>配置：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllersWithViews();</span><br><span class="line">    services.AddMediatR(<span class="keyword">typeof</span>(Startup));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-MediatR消息类型"><a href="#3-MediatR消息类型" class="headerlink" title="3. MediatR消息类型"></a>3. MediatR消息类型</h1><h2 id="3-1-Notifications-通知模式"><a href="#3-1-Notifications-通知模式" class="headerlink" title="3.1. Notifications 通知模式"></a>3.1. Notifications 通知模式</h2><p>Notifications 通知模式用于生产者发送通知，消费者（可以多个）接收到通知后，进行后续处理。<br>例：一个APS.NET 页面，访问时，发送Notifications通知；消费者简单记录收到通知的时间。</p>
+<h3 id="3-1-1-定义基于INotification的通知类"><a href="#3-1-1-定义基于INotification的通知类" class="headerlink" title="3.1.1. 定义基于INotification的通知类"></a>3.1.1. 定义基于INotification的通知类</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ping</span> :</span> INotification &#123; &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-1-2-定义消费者（关注通知的处理方法）"><a href="#3-1-2-定义消费者（关注通知的处理方法）" class="headerlink" title="3.1.2. 定义消费者（关注通知的处理方法）"></a>3.1.2. 定义消费者（关注通知的处理方法）</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Pong1</span> : <span class="title">INotificationHandler</span>&lt;<span class="title">Ping</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Handle</span>(<span class="params">Ping notification, CancellationToken cancellationToken</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;Pong1, <span class="subst">&#123;DateTime.Now&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Pong2</span> : <span class="title">INotificationHandler</span>&lt;<span class="title">Ping</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Handle</span>(<span class="params">Ping notification, CancellationToken cancellationToken</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;Pong2, <span class="subst">&#123;DateTime.Now&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-1-3-发送消息通知"><a href="#3-1-3-发送消息通知" class="headerlink" title="3.1.3. 发送消息通知"></a>3.1.3. 发送消息通知</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基于dotnet core的依赖注入，注入IMediator对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> IMediator _mediator;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HomeController</span>(<span class="params">ILogger&lt;HomeController&gt; logger, IMediator mediator</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    _logger = logger;</span><br><span class="line">    _mediator = mediator;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;IActionResult&gt; <span class="title">IndexAsync</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// e.g. 访问首页时，发送通知</span></span><br><span class="line">    <span class="keyword">await</span> _mediator.Publish(<span class="keyword">new</span> Ping());</span><br><span class="line">    <span class="keyword">return</span> View();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1-4-输出"><a href="#3-1-4-输出" class="headerlink" title="3.1.4. 输出"></a>3.1.4. 输出</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pong1, 5&#x2F;27&#x2F;2021 4:37:18 PM</span><br><span class="line">Pong2, 5&#x2F;27&#x2F;2021 4:37:18 PM</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="3-2-Request-Response-请求响应模式"><a href="#3-2-Request-Response-请求响应模式" class="headerlink" title="3.2. Request/Response   请求响应模式"></a>3.2. Request/Response   请求响应模式</h2><p>request/response用于命令和查询的场景。</p>
+<h3 id="3-2-1-创建请求类："><a href="#3-2-1-创建请求类：" class="headerlink" title="3.2.1. 创建请求类："></a>3.2.1. 创建请求类：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestModel</span>:</span> IRequest&lt;<span class="built_in">string</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-2-创建请求处理类"><a href="#3-2-2-创建请求处理类" class="headerlink" title="3.2.2. 创建请求处理类"></a>3.2.2. 创建请求处理类</h3><blockquote>
+<p>不同于通知模式，request/response只能有一个请求处理。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestHandeler</span> :</span> IRequestHandler&lt;RequestModel, <span class="built_in">string</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task&lt;<span class="built_in">string</span>&gt; <span class="title">Handle</span><span class="params">(RequestModel request, CancellationToken cancellationToken)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Task.FromResult($<span class="string">&quot;Pong &#123;DateTime.Now&#125;&quot;</span>); <span class="comment">// 测试，返回内容给request</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-3-页面中发送请求"><a href="#3-2-3-页面中发送请求" class="headerlink" title="3.2.3. 页面中发送请求"></a>3.2.3. 页面中发送请求</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> readonly ILogger&lt;HomeController&gt; _logger;</span><br><span class="line"><span class="keyword">private</span> readonly IMediator _mediator;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HomeController</span><span class="params">(ILogger&lt;HomeController&gt; logger, IMediator mediator)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    _logger = logger;</span><br><span class="line">    _mediator = mediator;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> async Task&lt;IActionResult&gt; <span class="title">IndexAsync</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// send request, and show Response</span></span><br><span class="line">    var response = await _mediator.Send(<span class="keyword">new</span> RequestModel());</span><br><span class="line">    Debug.WriteLine(<span class="string">&quot;Got response in controller: &quot;</span> +response);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> View();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-4-输出"><a href="#3-2-4-输出" class="headerlink" title="3.2.4. 输出"></a>3.2.4. 输出</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Got response in controller: Pong 5&#x2F;28&#x2F;2021 2:04:26 PM</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ul>
+<li>MediatR是一种<code>进程内消息传递机制</code>。 </li>
+<li>支持以同步或异步的形式进行请求/响应，命令，查询(CQRS)，通知和事件的消息传递，并通过C#泛型支持消息的智能调度。</li>
+<li>其核心是消息的解耦。</li>
+<li>应用场景: 实现CQRS、EventBus等。</li>
+</ul>
+<h1 id="5-参考："><a href="#5-参考：" class="headerlink" title="5. 参考："></a>5. 参考：</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/jbogard/MediatR">https://github.com/jbogard/MediatR</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NET/" rel="tag"># .NET</a>
+              <a href="/tags/ASP-NET-Core-MVC/" rel="tag"># ASP.NET Core MVC</a>
+              <a href="/tags/ASP-NET-Core/" rel="tag"># ASP.NET Core</a>
+              <a href="/tags/MediatR/" rel="tag"># MediatR</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/27/Algorithm-Hamming/" rel="prev" title="算法 - 计算汉明距离">
+      <i class="fa fa-chevron-left"></i> 算法 - 计算汉明距离
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-MediatR"><span class="nav-number">1.</span> <span class="nav-text">1. MediatR</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85-amp-%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">2. 安装 &amp; 配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-MediatR%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">3. MediatR消息类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Notifications-%E9%80%9A%E7%9F%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. Notifications 通知模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-1-%E5%AE%9A%E4%B9%89%E5%9F%BA%E4%BA%8EINotification%E7%9A%84%E9%80%9A%E7%9F%A5%E7%B1%BB"><span class="nav-number">3.1.1.</span> <span class="nav-text">3.1.1. 定义基于INotification的通知类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-2-%E5%AE%9A%E4%B9%89%E6%B6%88%E8%B4%B9%E8%80%85%EF%BC%88%E5%85%B3%E6%B3%A8%E9%80%9A%E7%9F%A5%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%89"><span class="nav-number">3.1.2.</span> <span class="nav-text">3.1.2. 定义消费者（关注通知的处理方法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-3-%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5"><span class="nav-number">3.1.3.</span> <span class="nav-text">3.1.3. 发送消息通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-4-%E8%BE%93%E5%87%BA"><span class="nav-number">3.1.4.</span> <span class="nav-text">3.1.4. 输出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Request-Response-%E8%AF%B7%E6%B1%82%E5%93%8D%E5%BA%94%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. Request&#x2F;Response   请求响应模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-%E5%88%9B%E5%BB%BA%E8%AF%B7%E6%B1%82%E7%B1%BB%EF%BC%9A"><span class="nav-number">3.2.1.</span> <span class="nav-text">3.2.1. 创建请求类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-%E5%88%9B%E5%BB%BA%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86%E7%B1%BB"><span class="nav-number">3.2.2.</span> <span class="nav-text">3.2.2. 创建请求处理类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3-%E9%A1%B5%E9%9D%A2%E4%B8%AD%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82"><span class="nav-number">3.2.3.</span> <span class="nav-text">3.2.3. 页面中发送请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-4-%E8%BE%93%E5%87%BA"><span class="nav-number">3.2.4.</span> <span class="nav-text">3.2.4. 输出</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">4. 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E5%8F%82%E8%80%83%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">5. 参考：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
