@@ -149,6 +149,125 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/07/web-frontend-interview-qa/" class="post-title-link" itemprop="url">前端(Fontend)面试题汇总</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-23 01:01:04" itemprop="dateModified" datetime="2021-04-23T01:01:04+08:00">2021-04-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">前端(Fontend)面试题汇总</a></p>
+</blockquote>
+<h1 id="1-http-1-1-2-0-新增加的功能"><a href="#1-http-1-1-2-0-新增加的功能" class="headerlink" title="1. http 1.1/2.0 新增加的功能"></a>1. http 1.1/2.0 新增加的功能</h1><p><strong>HTTP1.1</strong></p>
+<ol>
+<li><strong>缓存处理</strong>，在 HTTP1.0 中主要使用 header 来控制缓存策略。</li>
+<li><strong>带宽优化及网络连接的使用</strong>，HTTP1.1 则在请求头引入了 range 头域，它允许只请求资源的某个部分， 并且支持断点续传。</li>
+<li><strong>错误通知的管理</strong>，在 HTTP1.1 中新增了 24 个错误状态响应码，如 409（Conflict）表示请求的资源与资源的当前状态发生冲突；410（Gone）表示服务器上的某个资源被永久性的删除。</li>
+<li>Host 头处理，在 HTTP1.0 中认为每台服务器都绑定一个唯一的 IP 地址，因此，请求消息中的 URL 并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个 IP 地址。HTTP1.1 的请求消息和响应消息都应支持 Host 头域，且请求消息中如果没有 Host 头域会报告一个错误（400 Bad Request）。</li>
+<li>长连接，HTTP 1.1 支持长连接（PersistentConnection）和请求的流水线（Pipelining）处理，在一个 TCP 连接上可以传送多个 HTTP 请求和响应. (Connection： keep-alive)</li>
+</ol>
+<p><strong>HTTP2.0</strong> 大幅度的提高了 web 性能，进一步减少了网络的延迟。实现低延迟高吞吐量。</p>
+<ol>
+<li>二进制分帧 （二进制格式编码）</li>
+<li>首部压缩 （header）</li>
+<li>多路复用 （HTTP2.0 可以在共享 TCP 连接的基础上同时发送请求和响应，避免 HTTP 旧版本的队头阻塞问题）</li>
+<li>请求优先级</li>
+<li>服务器推送 （服务端根据客户端的请求，提前返回多个响应，推送额外的资源给客户端。）</li>
+</ol>
+<h1 id="2-用户输入-URL-到浏览器显现给用户页面经过了什么过程"><a href="#2-用户输入-URL-到浏览器显现给用户页面经过了什么过程" class="headerlink" title="2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程"></a>2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程</h1><ol>
+<li>用户输入 URL，浏览器获取到 URL</li>
+<li>检查缓存，如果有有效缓存，直接加载</li>
+<li>浏览器(应用层)进行 DNS 解析（直接输入 IP 地址既跳过该步骤）</li>
+<li>根据解析出的 IP 地址+端口，浏览器（应用层）发起 HTTP 请求</li>
+<li>请求到达传输层，tcp 协议为传输报文提供可靠的字节流传输服务，它通过三次握手等手段来保证传输过程中的安全可靠。通过对大块数据的分割成一个个报文段的方式提供给大量数据的便携传输。</li>
+<li>服务器端收到发送方的 HTTP 请求之后，进行请求文件资源（如 HTML 页面）的寻找并响应报文</li>
+<li>客户端收到返回内容后，处理 html</li>
+<li>解析 html，生成 dom 树</li>
+<li>CSS 解析，为 DOM 中元素加入样式</li>
+<li>javascript 解析处理，更改 dom 树</li>
+<li>进行页面渲染</li>
+<li>重排、重绘</li>
+</ol>
+<h1 id="3-HTML5-的新特性"><a href="#3-HTML5-的新特性" class="headerlink" title="3. HTML5 的新特性"></a>3. HTML5 的新特性</h1><ol>
+<li>新的内容标签：header nav content footer article 1. aside</li>
+<li>更好的单元格体系:</li>
+<li>音频、视频 API:video radio</li>
+<li>画布(Canvas) API</li>
+<li>地理(Geolocation) API</li>
+<li>网页存储(Web storage) 1. API:localStorage,sessionStorage</li>
+<li>拖拽释放(Drag and drop) API</li>
+</ol>
+<h1 id="4-对浏览器内核的理解"><a href="#4-对浏览器内核的理解" class="headerlink" title="4. 对浏览器内核的理解"></a>4. 对浏览器内核的理解</h1><p>主要分成两部分：渲染引擎(layout engine 或 Rendering Engine)和 JS 引擎。</p>
+<ol>
+<li>渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入 CSS 等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。</li>
+<li>JS 引擎则：解析和执行 javascript 来实现网页的动态效果。最开始渲染引擎和 JS 引擎并没有区分的很明确，后来 JS 引擎越来越独立，内核就倾向于只指渲染引擎。</li>
+</ol>
+<h1 id="5-cookies，sessionStorage-和-localStorage"><a href="#5-cookies，sessionStorage-和-localStorage" class="headerlink" title="5. cookies，sessionStorage 和 localStorage"></a>5. cookies，sessionStorage 和 localStorage</h1><p>cookie 是网站为了标示用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。<br>cookie 数据始终在同源的 http 请求中携带（即使不需要），记会在浏览器和服务器间来回传递。<br>sessionStorage 和 localStorage 不会自动把数据发给服务器，仅在本地保存。</p>
+<p>存储大小：<br>cookie 数据大小不能超过 4k。<br>sessionStorage 和 localStorage 虽然也有存储大小的限制，但比 cookie 大得多，可以达到 5M 或更大。</p>
+<p>有期时间：<br>localStorage 存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；<br>sessionStorage 数据在当前浏览器窗口关闭后自动删除。<br>cookie 设置的 cookie 过期时间之前一直有效，即使窗口或浏览器关闭</p>
+<h1 id="6-如何实现浏览器内多个标签页之间的通"><a href="#6-如何实现浏览器内多个标签页之间的通" class="headerlink" title="6. 如何实现浏览器内多个标签页之间的通"></a>6. 如何实现浏览器内多个标签页之间的通</h1><p>WebSocket、SharedWorker；也可以调用 localstorge、cookies 等本地存储方式；</p>
+<h1 id="7-script标签中的async、defer属性的作用"><a href="#7-script标签中的async、defer属性的作用" class="headerlink" title="7. script标签中的async、defer属性的作用"></a>7. script标签中的async、defer属性的作用</h1><ol>
+<li>Async: 可选属性。表示应该立即下载脚本，但不应妨碍页面中的其他操作，比如下载其他资源或等待加载其他脚本。</li>
+<li>Defer: 可选属性。标识脚本可以延迟到文档完全被解析和显示之后再执行。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1503,152 +1622,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/25/Angular-Starter-12-routing/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（12）- 路由（Routing）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-25 10:06:00" itemprop="dateCreated datePublished" datetime="2021-01-25T10:06:00+08:00">2021-01-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-07 10:40:08" itemprop="dateModified" datetime="2021-02-07T10:40:08+08:00">2021-02-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E8%B7%AF%E7%94%B1router%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95">2. 路由（Router）基本用法</a><ul>
-<li><a href="#21-%E5%87%86%E5%A4%87">2.1. 准备</a></li>
-<li><a href="#22-%E6%B3%A8%E5%86%8C%E8%B7%AF%E7%94%B1">2.2. 注册路由</a></li>
-<li><a href="#23-html%E4%B8%AD%E7%9A%84%E7%94%A8%E6%B3%95">2.3. html中的用法</a></li>
-<li><a href="#24-ts-%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E7%94%A8%E6%B3%95">2.4. ts 代码中的用法</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%8E%A5%E6%94%B6%E5%8F%82%E6%95%B0">3. 接收参数</a><ul>
-<li><a href="#31-%E8%B7%AF%E5%BE%84%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0">3.1. 路径中的参数</a></li>
-<li><a href="#32-%E5%8F%82%E6%95%B0queryparameter%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0">3.2. 参数（QueryParameter）中的参数</a></li>
-</ul>
-</li>
-<li><a href="#4-url%E8%B7%AF%E5%BE%84%E6%98%BE%E7%A4%BA%E6%A0%BC%E5%BC%8F">4. URL路径显示格式</a></li>
-<li><a href="#5-%E9%83%A8%E7%BD%B2%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98">5. 部署中遇到的问题</a></li>
-<li><a href="#6-%E6%80%BB%E7%BB%93">6. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>简单来说地址栏中，不同的地址（URL）对应不同的页面，这就是路由。同时，点击浏览器的前进和后退按钮，浏览器就会在你的浏览历史中向前或向后导航，这也是基于路由。</p>
-<p>在 Angular 里面，Router 是一个独立的模块，定义在 @angular/router 模块中，</p>
-<ol>
-<li>Router 可以配合 NgModule 进行模块的延迟加载（懒加载）、预加载操作（参考《Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块》）；</li>
-<li>Router 会管理组件的生命周期，它会负责创建、销毁组件。</li>
-</ol>
-<p>对于一个新的基于AngularCLI的项目，初始化时可以通过选项，将AppRoutingModule默认加入到app.component.ts中。</p>
-<h1 id="2-路由（Router）基本用法"><a href="#2-路由（Router）基本用法" class="headerlink" title="2. 路由（Router）基本用法"></a>2. 路由（Router）基本用法</h1><h2 id="2-1-准备"><a href="#2-1-准备" class="headerlink" title="2.1. 准备"></a>2.1. 准备</h2><p>我们首先创建2个页面，用于说明路由的使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ng g c page1</span><br><span class="line">ng g c page2</span><br></pre></td></tr></table></figure>
-<p>使用上面AnuglarCLI命令，创建Page1Component, Page2Component 2个组件。</p>
-<h2 id="2-2-注册路由"><a href="#2-2-注册路由" class="headerlink" title="2.2. 注册路由"></a>2.2. 注册路由</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//src\app\app-routing.module.ts</span></span><br><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&#x27;page1&#x27;</span>,</span><br><span class="line">    component: Page1Component</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&#x27;page2&#x27;</span>,</span><br><span class="line">    component: Page2Component</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  <span class="built_in">exports</span>: [RouterModule],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppRoutingModule</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到，简单的路由注册，只需要path和component2个属性，分别定义路由的相对路径，以及这个路由的响应组件。</p>
-<h2 id="2-3-html中的用法"><a href="#2-3-html中的用法" class="headerlink" title="2.3. html中的用法"></a>2.3. html中的用法</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">&quot;page1&quot;</span>&gt;</span>Page1<span class="tag">&lt;/<span class="name">a</span>&gt;</span> |</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">&quot;page2&quot;</span>&gt;</span>Page2<span class="tag">&lt;/<span class="name">a</span>&gt;</span> </span><br></pre></td></tr></table></figure>
-<p>在html模板中，直接使用routerLink属性，标识为angular的路由。执行代码，可以看到 Page1和Page2 两个超链接，点击可以看到地址栏地址改为<a target="_blank" rel="noopener" href="http://localhost:4200/page2%E6%88%96http://localhost:4200/page1%EF%BC%8C">http://localhost:4200/page2或http://localhost:4200/page1，</a> 页面内容在page1和page2中切换</p>
-<h2 id="2-4-ts-代码中的用法"><a href="#2-4-ts-代码中的用法" class="headerlink" title="2.4. ts 代码中的用法"></a>2.4. ts 代码中的用法</h2><p>有时候，需要根据ts中的业务逻辑，进行跳转。ts中，需要注入Router实例，如</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">constructor</span>(<span class="params"><span class="keyword">private</span> router: Router</span>)</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>跳转代码：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到 /page1</span></span><br><span class="line"><span class="built_in">this</span>.router.navigate([<span class="string">&#x27;/page1&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 跳转到 /page1/123</span></span><br><span class="line"><span class="built_in">this</span>.router.navigate([<span class="string">&#x27;/page1&#x27;</span>, <span class="number">123</span>]);</span><br></pre></td></tr></table></figure>
-
-<h1 id="3-接收参数"><a href="#3-接收参数" class="headerlink" title="3. 接收参数"></a>3. 接收参数</h1><h2 id="3-1-路径中的参数"><a href="#3-1-路径中的参数" class="headerlink" title="3.1. 路径中的参数"></a>3.1. 路径中的参数</h2><p>一般来说，我们把参数作为url中的一段，如/users/1, 代表查询id是1的用户，路由定义为”/users/id” 这种风格。</p>
-<p>针对我们的简单页面，比如我们的page1页面可以传id参数，那么我们需要修改我们的routing为：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&#x27;page1/:id&#x27;</span>,    <span class="comment">//接收id参数</span></span><br><span class="line">    component: Page1Component,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 实现可选参数的小技巧。 这个routing处理没有参数的url</span></span><br><span class="line">    path: <span class="string">&#x27;page1&#x27;</span>,        </span><br><span class="line">    redirectTo: <span class="string">&#x27;page1/&#x27;</span>,   <span class="comment">// 跳转到&#x27;page1/:id&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">&#x27;page2&#x27;</span>,</span><br><span class="line">    component: Page2Component,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<p>ts代码读取参数时， 首先需要注入ActivatedRoute，代码如下：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">constructor</span>(<span class="params"><span class="keyword">private</span> activatedRoute: ActivatedRoute</span>)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="built_in">this</span>.activatedRoute.paramMap.subscribe(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Parameter id: &#x27;</span>, params.get(<span class="string">&#x27;id&#x27;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/33   </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:  33</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/     </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-2-参数（QueryParameter）中的参数"><a href="#3-2-参数（QueryParameter）中的参数" class="headerlink" title="3.2. 参数（QueryParameter）中的参数"></a>3.2. 参数（QueryParameter）中的参数</h2><p>参数还有另外一种写法，如<a target="_blank" rel="noopener" href="http://localhost:4200/?name=cat">http://localhost:4200/?name=cat</a>, 即URL地址后，加一个问号’?’, 之后再加参数名和参数值（’name=cat’）。这种称为查询参数(QueryParameter)。</p>
-<p>取这查询参数时，和之前的路由参数类似，只是paramMap改为queryParamMap，代码如下：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.activatedRoute.queryParamMap.subscribe(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Query Parameter name: &#x27;</span>, params.get(<span class="string">&#x27;name&#x27;</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1?name=cat</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:  cat</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1/</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-URL路径显示格式"><a href="#4-URL路径显示格式" class="headerlink" title="4. URL路径显示格式"></a>4. URL路径显示格式</h1><p>不同于传统的纯静态（html）站点，angular中的url不是对应一个真实的文件（页面），因为anuglar接管的路由（Routing）处理，来决定显示那个Component给终端用户。为了针对不同的场景，angular的URL路径显示格式有2中：</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="http://localhost:4200/page1/123">http://localhost:4200/page1/123</a></li>
-<li><a target="_blank" rel="noopener" href="http://localhost:4200/#/page1/123">http://localhost:4200/#/page1/123</a></li>
-</ol>
-<p>默认是第一种，不加#的。如果需要，可以在app-routing.ts中，加入<code>useHash: true</code>, 如：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-routing.ts</span></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes, &#123; <span class="attr">useHash</span>: <span class="literal">true</span> &#125;)],</span><br><span class="line">  <span class="built_in">exports</span>: [RouterModule],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h1 id="5-部署中遇到的问题"><a href="#5-部署中遇到的问题" class="headerlink" title="5. 部署中遇到的问题"></a>5. 部署中遇到的问题</h1><p>同样，因为anuglar接管的路由（Routing）处理，所以部署时，部署到iis, nginx等等的服务器，都会有不同的技巧（要求），详细参考：<br><a target="_blank" rel="noopener" href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode</a></p>
-<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
-<li>angular默认不支持可选路由（e.g. /user/:id?),但是我们可以定义2个路由，指向同一个Component来实现这个，达到代码复用；（或者使用redirectTo）</li>
-<li>可以使用useHash参数，实现augular路径前加一个#；</li>
-<li>读取参数时，都需要subscribe订阅一下，不能直接读取。</li>
-<li>打包后部署问题，查看官方wifi （<a target="_blank" rel="noopener" href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode%EF%BC%89">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode）</a></li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1718,12 +1691,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-count">42</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

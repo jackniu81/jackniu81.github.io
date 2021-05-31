@@ -149,6 +149,177 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/23/Web-Advanced-1-Web-Performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/23/Web-Advanced-1-Web-Performance/" class="post-title-link" itemprop="url">前端进阶（1）Web前端性能优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-23 13:34:24" itemprop="dateCreated datePublished" datetime="2021-04-23T13:34:24+08:00">2021-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-24 01:01:04" itemprop="dateModified" datetime="2021-04-24T01:01:04+08:00">2021-04-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/04/23/Web-Advanced-1-Web-Performance/">前端进阶（1）Web前端性能优化</a></p>
+</blockquote>
+<p>Web前端性能优化, 不仅能够<code>改善站点的用户体验</code>，并且能够<code>节省相当的资源利用</code>。下面将从1）服务器、2）html内容、3）css、 4）javascript、 5）图片等几方面介绍具体的优化操作。</p>
+<p>目录：</p>
+<ul>
+<li><a href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BC%98%E5%8C%96">1. 服务器优化</a><ul>
+<li><a href="#11-%E4%BD%BF%E7%94%A8%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9Ccdn">1.1. 使用内容分发网络（CDN）</a></li>
+<li><a href="#12-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8http20%E5%8D%8F%E8%AE%AE">1.2. 服务器使用http2.0协议</a></li>
+<li><a href="#13-gzip%E5%8E%8B%E7%BC%A9">1.3. GZIP压缩</a></li>
+<li><a href="#14-%E4%BD%BF%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98">1.4. 使用浏览器缓存</a></li>
+<li><a href="#15-%E8%AE%BE%E7%BD%AEetag">1.5. 设置ETag</a></li>
+</ul>
+</li>
+<li><a href="#2-html%E5%86%85%E5%AE%B9%E4%BC%98%E5%8C%96">2. HTML内容优化</a><ul>
+<li><a href="#21-%E5%87%8F%E5%B0%91http%E8%AF%B7%E6%B1%82%E6%95%B0">2.1. 减少HTTP请求数</a></li>
+<li><a href="#22-%E5%87%8F%E5%B0%91dns%E6%9F%A5%E6%89%BE">2.2. 减少DNS查找</a></li>
+<li><a href="#23-%E9%81%BF%E5%85%8D%E9%87%8D%E5%AE%9A%E5%90%91-30130x">2.3. 避免重定向 301/30x</a></li>
+<li><a href="#24-%E9%81%BF%E5%85%8D%E5%9C%A8html%E6%A0%87%E7%AD%BE%E4%B8%AD%E5%86%99style%E5%B1%9E%E6%80%A7">2.4. 避免在html标签中写style属性</a></li>
+<li><a href="#25-%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E7%BB%84%E4%BB%B6%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%BB%84%E4%BB%B6-ansyc-defer">2.5. 异步加载组件,预加载组件 (ansyc, defer)</a></li>
+<li><a href="#26-%E5%BB%B6%E8%BF%9F%E5%88%86%E9%A1%B5%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87">2.6. 延迟、分页加载图片</a></li>
+<li><a href="#27-%E5%87%8F%E5%B0%91dom%E5%85%83%E7%B4%A0%E6%95%B0%E9%87%8F">2.7. 减少DOM元素数量</a></li>
+<li><a href="#28-%E6%9C%80%E5%B0%8F%E5%8C%96iframe%E7%9A%84%E6%95%B0%E9%87%8F">2.8. 最小化iframe的数量</a></li>
+<li><a href="#29-%E9%81%BF%E5%85%8D404">2.9. 避免404</a></li>
+<li><a href="#210-%E5%AF%B9ajax%E8%AF%B7%E6%B1%82%E4%BD%BF%E7%94%A8get%E6%96%B9%E6%B3%95">2.10. 对Ajax请求使用GET方法</a></li>
+<li><a href="#211-%E9%81%BF%E5%85%8D%E7%A9%BA%E7%9A%84%E5%9B%BE%E5%83%8Fsrc">2.11. 避免空的图像src</a></li>
+</ul>
+</li>
+<li><a href="#3-css%E4%BC%98%E5%8C%96">3. CSS优化</a><ul>
+<li><a href="#31-%E5%B0%86css%E4%BB%A3%E7%A0%81%E6%94%BE%E5%9C%A8html%E9%A1%B5%E9%9D%A2%E7%9A%84%E9%A1%B6%E9%83%A8">3.1. 将CSS代码放在HTML页面的顶部</a></li>
+<li><a href="#32-%E5%90%88%E5%B9%B6%E5%8E%8B%E7%BC%A9css">3.2. 合并、压缩CSS</a></li>
+<li><a href="#33-css%E9%80%89%E6%8B%A9%E7%AC%A6%E4%BC%98%E5%8C%96">3.3. CSS选择符优化</a></li>
+<li><a href="#34-%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8css%E8%A1%A8%E8%BE%BE%E5%BC%8F">3.4. 避免使用CSS表达式</a></li>
+<li><a href="#35-%E4%BD%BF%E7%94%A8link%E6%9D%A5%E4%BB%A3%E6%9B%BFimport">3.5. 使用<link>来代替@import</a></li>
+<li><a href="#36-%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8filters">3.6. 避免使用Filters</a></li>
+</ul>
+</li>
+<li><a href="#4-javascript%E4%BC%98%E5%8C%96">4. javascript优化</a><ul>
+<li><a href="#41-%E5%B0%86javascript%E8%84%9A%E6%9C%AC%E6%94%BE%E5%9C%A8%E9%A1%B5%E9%9D%A2%E7%9A%84%E5%BA%95%E9%83%A8">4.1. 将JavaScript脚本放在页面的底部</a></li>
+<li><a href="#42-%E5%B0%86javascript%E5%92%8Ccss%E4%BD%9C%E4%B8%BA%E5%A4%96%E9%83%A8%E6%96%87%E4%BB%B6%E6%9D%A5%E5%BC%95%E7%94%A8">4.2. 将JavaScript和CSS作为外部文件来引用</a></li>
+<li><a href="#43-%E5%90%88%E5%B9%B6%E5%8E%8B%E7%BC%A9javascript">4.3. 合并、压缩JavaScript</a></li>
+<li><a href="#44-%E5%88%A0%E9%99%A4%E6%97%A0%E7%94%A8%E9%87%8D%E5%A4%8D%E7%9A%84%E8%84%9A%E6%9C%AC">4.4. 删除无用、重复的脚本</a></li>
+<li><a href="#45-%E6%9C%80%E5%B0%8F%E5%8C%96dom%E7%9A%84%E8%AE%BF%E9%97%AE">4.5. 最小化DOM的访问</a></li>
+<li><a href="#46-%E5%BC%80%E5%8F%91%E6%99%BA%E8%83%BD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F">4.6. 开发智能的事件处理程序</a></li>
+<li><a href="#47-javascript%E4%BB%A3%E7%A0%81%E6%B3%A8%E6%84%8F">4.7. javascript代码注意</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%9B%BE%E5%83%8F%E4%BC%98%E5%8C%96">5. 图像优化</a><ul>
+<li><a href="#51-%E4%BC%98%E5%8C%96%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F">5.1. 优化图片大小</a></li>
+<li><a href="#52-%E9%80%9A%E8%BF%87css-sprites%E4%BC%98%E5%8C%96%E5%9B%BE%E7%89%87">5.2. 通过CSS Sprites优化图片</a></li>
+<li><a href="#53-%E4%B8%8D%E8%A6%81%E5%9C%A8html%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%BC%A9%E6%94%BE%E5%9B%BE%E7%89%87">5.3. 不要在HTML中使用缩放图片</a></li>
+<li><a href="#54-faviconico%E8%A6%81%E5%B0%8F%E8%80%8C%E4%B8%94%E5%8F%AF%E7%BC%93%E5%AD%98">5.4. favicon.ico要小而且可缓存</a></li>
+</ul>
+</li>
+<li><a href="#6-%E5%85%B6%E4%BB%96">6. 其他</a><ul>
+<li><a href="#61-%E5%87%8F%E5%B0%8Fcookie%E5%A4%A7%E5%B0%8F%E5%B0%BD%E9%87%8F%E4%B8%8D%E4%BD%BF%E7%94%A8cookie">6.1. 减小Cookie大小，尽量不使用cookie</a></li>
+<li><a href="#62-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1">6.2. 负载均衡</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="1-服务器优化"><a href="#1-服务器优化" class="headerlink" title="1. 服务器优化"></a>1. 服务器优化</h1><h2 id="1-1-使用内容分发网络（CDN）"><a href="#1-1-使用内容分发网络（CDN）" class="headerlink" title="1.1. 使用内容分发网络（CDN）"></a>1.1. 使用内容分发网络（CDN）</h2><p>把网站内容分散到多个、处于不同地域位置的服务器上可以加快下载速度。</p>
+<h2 id="1-2-服务器使用http2-0协议"><a href="#1-2-服务器使用http2-0协议" class="headerlink" title="1.2. 服务器使用http2.0协议"></a>1.2. 服务器使用http2.0协议</h2><p>Http2.0的优点</p>
+<ol>
+<li>二进制分帧</li>
+<li>首部压缩</li>
+<li>流量控制</li>
+<li>多路复用</li>
+<li>请求优先级</li>
+<li>服务器推送</li>
+</ol>
+<p>e.g 使用nginx, 要求 1)v1.9.5以上, 2)使用https；</p>
+<h2 id="1-3-GZIP压缩"><a href="#1-3-GZIP压缩" class="headerlink" title="1.3. GZIP压缩"></a>1.3. GZIP压缩</h2><h2 id="1-4-使用浏览器缓存"><a href="#1-4-使用浏览器缓存" class="headerlink" title="1.4. 使用浏览器缓存"></a>1.4. 使用浏览器缓存</h2><p>CSS、javascript、logo、图标这些静态资源文件更新的频率都比较低，而这些文件又几乎是每次http请求都需要的，如果将这些文件缓存在浏览器中，可以极好的改善性能。</p>
+<p>通过设置http头中的<code>cache-control</code>和<code>expires</code>的属性，可设定浏览器缓存，减少网络请求次数。</p>
+<h2 id="1-5-设置ETag"><a href="#1-5-设置ETag" class="headerlink" title="1.5. 设置ETag"></a>1.5. 设置ETag</h2><p>ETags（Entity tags，实体标签）是web服务器和浏览器用于判断浏览器缓存中的内容和服务器中的原始内容是否匹配的一种机制。</p>
+<h1 id="2-HTML内容优化"><a href="#2-HTML内容优化" class="headerlink" title="2. HTML内容优化"></a>2. HTML内容优化</h1><h2 id="2-1-减少HTTP请求数"><a href="#2-1-减少HTTP请求数" class="headerlink" title="2.1. 减少HTTP请求数"></a>2.1. 减少HTTP请求数</h2><p>这条策略是最重要最有效的，因为一个完整的请求要经过DNS寻址，与服务器建立连接，发送数据，等待服务器响应，接收数据这样一个消耗时间成本和资源成本的复杂的过程。 常见方法：</p>
+<ol>
+<li>合并多个CSS文件和js文件, 并进行最小化处理。</li>
+<li>利用CSS Sprites整合图像，</li>
+<li>行内图片Base64编码，使用 data：URL scheme在实际的页面嵌入图像数据</li>
+<li>合理设置HTTP缓存</li>
+</ol>
+<h2 id="2-2-减少DNS查找"><a href="#2-2-减少DNS查找" class="headerlink" title="2.2. 减少DNS查找"></a>2.2. 减少DNS查找</h2><p>为了减少DNS的询次数，最好的解决方法就是在页面中减少不同的域名请求的机会。  </p>
+<h2 id="2-3-避免重定向-301-30x"><a href="#2-3-避免重定向-301-30x" class="headerlink" title="2.3. 避免重定向 301/30x"></a>2.3. 避免重定向 301/30x</h2><p>如果重定向的话，就需要在访问过程中重复发起一连串的动作，会消耗很多时间，因此避免出现多次重定向地址或资源的访问。</p>
+<h2 id="2-4-避免在html标签中写style属性"><a href="#2-4-避免在html标签中写style属性" class="headerlink" title="2.4. 避免在html标签中写style属性"></a>2.4. 避免在html标签中写style属性</h2><p>js,css 写到单独的文件中，便于浏览器缓存。</p>
+<h2 id="2-5-异步加载组件-预加载组件-ansyc-defer"><a href="#2-5-异步加载组件-预加载组件-ansyc-defer" class="headerlink" title="2.5. 异步加载组件,预加载组件 (ansyc, defer)"></a>2.5. 异步加载组件,预加载组件 (ansyc, defer)</h2><p>ansyc, defer不会阻塞浏览器的文档解析。</p>
+<ol>
+<li>ansyc用于异步加载</li>
+<li>defer用于预加载<h2 id="2-6-延迟、分页加载图片"><a href="#2-6-延迟、分页加载图片" class="headerlink" title="2.6. 延迟、分页加载图片"></a>2.6. 延迟、分页加载图片</h2>对于图片而言，在页面刚加载的时候可以只加载第一屏，当用户继续往后滚屏的时候才加载后续的图片。这样一来，假如用户只对第一屏的内容感兴趣时，那剩余的图片请求就都节省了。</li>
+</ol>
+<h2 id="2-7-减少DOM元素数量"><a href="#2-7-减少DOM元素数量" class="headerlink" title="2.7. 减少DOM元素数量"></a>2.7. 减少DOM元素数量</h2><p>页面中存在大量DOM元素,会导致javascript遍历DOM的效率变慢。</p>
+<h2 id="2-8-最小化iframe的数量"><a href="#2-8-最小化iframe的数量" class="headerlink" title="2.8. 最小化iframe的数量"></a>2.8. 最小化iframe的数量</h2><p>iframes 提供了一个简单的方式把一个网站的内容嵌入到另一个网站中。但其创建速度比其他包括JavaScript和CSS的DOM元素的创建慢了1-2个数量级。</p>
+<h2 id="2-9-避免404"><a href="#2-9-避免404" class="headerlink" title="2.9. 避免404"></a>2.9. 避免404</h2><p>HTTP请求时间消耗是很大的，因此使用HTTP请求来获得一个没有用处的响应（例如404没有找到页面）是完全没有必要的，它只会降低用户体验而不会有一点好处。</p>
+<h2 id="2-10-对Ajax请求使用GET方法"><a href="#2-10-对Ajax请求使用GET方法" class="headerlink" title="2.10. 对Ajax请求使用GET方法"></a>2.10. 对Ajax请求使用GET方法</h2><h2 id="2-11-避免空的图像src"><a href="#2-11-避免空的图像src" class="headerlink" title="2.11. 避免空的图像src"></a>2.11. 避免空的图像src</h2><h1 id="3-CSS优化"><a href="#3-CSS优化" class="headerlink" title="3. CSS优化"></a>3. CSS优化</h1><h2 id="3-1-将CSS代码放在HTML页面的顶部"><a href="#3-1-将CSS代码放在HTML页面的顶部" class="headerlink" title="3.1. 将CSS代码放在HTML页面的顶部"></a>3.1. 将CSS代码放在HTML页面的顶部</h2><h2 id="3-2-合并、压缩CSS"><a href="#3-2-合并、压缩CSS" class="headerlink" title="3.2. 合并、压缩CSS"></a>3.2. 合并、压缩CSS</h2><h2 id="3-3-CSS选择符优化"><a href="#3-3-CSS选择符优化" class="headerlink" title="3.3. CSS选择符优化"></a>3.3. CSS选择符优化</h2><ol>
+<li>浏览器对选择符的解析是从右往左进行的</li>
+<li>按照ID查询效率最高</li>
+</ol>
+<h2 id="3-4-避免使用CSS表达式"><a href="#3-4-避免使用CSS表达式" class="headerlink" title="3.4. 避免使用CSS表达式"></a>3.4. 避免使用CSS表达式</h2><h2 id="3-5-使用来代替-import"><a href="#3-5-使用来代替-import" class="headerlink" title="3.5. 使用来代替@import"></a>3.5. 使用<link>来代替@import</h2><h2 id="3-6-避免使用Filters"><a href="#3-6-避免使用Filters" class="headerlink" title="3.6. 避免使用Filters"></a>3.6. 避免使用Filters</h2><h1 id="4-javascript优化"><a href="#4-javascript优化" class="headerlink" title="4. javascript优化"></a>4. javascript优化</h1><h2 id="4-1-将JavaScript脚本放在页面的底部"><a href="#4-1-将JavaScript脚本放在页面的底部" class="headerlink" title="4.1. 将JavaScript脚本放在页面的底部"></a>4.1. 将JavaScript脚本放在页面的底部</h2><h2 id="4-2-将JavaScript和CSS作为外部文件来引用"><a href="#4-2-将JavaScript和CSS作为外部文件来引用" class="headerlink" title="4.2. 将JavaScript和CSS作为外部文件来引用"></a>4.2. 将JavaScript和CSS作为外部文件来引用</h2><p>在实际应用中使用外部文件可以提高页面速度，因为JavaScript和CSS文件都能在浏览器中产生缓存。</p>
+<h2 id="4-3-合并、压缩JavaScript"><a href="#4-3-合并、压缩JavaScript" class="headerlink" title="4.3. 合并、压缩JavaScript"></a>4.3. 合并、压缩JavaScript</h2><h2 id="4-4-删除无用、重复的脚本"><a href="#4-4-删除无用、重复的脚本" class="headerlink" title="4.4. 删除无用、重复的脚本"></a>4.4. 删除无用、重复的脚本</h2><h2 id="4-5-最小化DOM的访问"><a href="#4-5-最小化DOM的访问" class="headerlink" title="4.5. 最小化DOM的访问"></a>4.5. 最小化DOM的访问</h2><p>使用JavaScript访问DOM元素比较慢</p>
+<h2 id="4-6-开发智能的事件处理程序"><a href="#4-6-开发智能的事件处理程序" class="headerlink" title="4.6. 开发智能的事件处理程序"></a>4.6. 开发智能的事件处理程序</h2><h2 id="4-7-javascript代码注意"><a href="#4-7-javascript代码注意" class="headerlink" title="4.7. javascript代码注意"></a>4.7. javascript代码注意</h2><ol>
+<li>减少作用域链查找（多用局部变量，少访问全局变量）</li>
+<li>减少闭包的使用，避免内存泄漏</li>
+<li>谨慎使用with</li>
+<li>避免使用eval Function函数</li>
+<li>字符串拼接， Javascript中使用”+” 号来拼接字符串效率是比较低，建议使用数组的 join方法</li>
+</ol>
+<h1 id="5-图像优化"><a href="#5-图像优化" class="headerlink" title="5. 图像优化"></a>5. 图像优化</h1><h2 id="5-1-优化图片大小"><a href="#5-1-优化图片大小" class="headerlink" title="5.1. 优化图片大小"></a>5.1. 优化图片大小</h2><h2 id="5-2-通过CSS-Sprites优化图片"><a href="#5-2-通过CSS-Sprites优化图片" class="headerlink" title="5.2. 通过CSS Sprites优化图片"></a>5.2. 通过CSS Sprites优化图片</h2><h2 id="5-3-不要在HTML中使用缩放图片"><a href="#5-3-不要在HTML中使用缩放图片" class="headerlink" title="5.3. 不要在HTML中使用缩放图片"></a>5.3. 不要在HTML中使用缩放图片</h2><h2 id="5-4-favicon-ico要小而且可缓存"><a href="#5-4-favicon-ico要小而且可缓存" class="headerlink" title="5.4. favicon.ico要小而且可缓存"></a>5.4. favicon.ico要小而且可缓存</h2><h1 id="6-其他"><a href="#6-其他" class="headerlink" title="6. 其他"></a>6. 其他</h1><h2 id="6-1-减小Cookie大小，尽量不使用cookie"><a href="#6-1-减小Cookie大小，尽量不使用cookie" class="headerlink" title="6.1. 减小Cookie大小，尽量不使用cookie"></a>6.1. 减小Cookie大小，尽量不使用cookie</h2><p>cookie包含在每次请求和响应中，太大的cookie会严重影响数据传输</p>
+<h2 id="6-2-负载均衡"><a href="#6-2-负载均衡" class="headerlink" title="6.2. 负载均衡"></a>6.2. 负载均衡</h2><p>负载均衡load balancer，降低每个站点的请求书，提高单个请求的响应时间。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/22/2021-Top-100-C-NET-Interview-Questions-And-Answers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1546,125 +1717,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/07/web-frontend-interview-qa/" class="post-title-link" itemprop="url">前端(Fontend)面试题汇总</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-23 01:01:04" itemprop="dateModified" datetime="2021-04-23T01:01:04+08:00">2021-04-23</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p><a href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">前端(Fontend)面试题汇总</a></p>
-</blockquote>
-<h1 id="1-http-1-1-2-0-新增加的功能"><a href="#1-http-1-1-2-0-新增加的功能" class="headerlink" title="1. http 1.1/2.0 新增加的功能"></a>1. http 1.1/2.0 新增加的功能</h1><p><strong>HTTP1.1</strong></p>
-<ol>
-<li><strong>缓存处理</strong>，在 HTTP1.0 中主要使用 header 来控制缓存策略。</li>
-<li><strong>带宽优化及网络连接的使用</strong>，HTTP1.1 则在请求头引入了 range 头域，它允许只请求资源的某个部分， 并且支持断点续传。</li>
-<li><strong>错误通知的管理</strong>，在 HTTP1.1 中新增了 24 个错误状态响应码，如 409（Conflict）表示请求的资源与资源的当前状态发生冲突；410（Gone）表示服务器上的某个资源被永久性的删除。</li>
-<li>Host 头处理，在 HTTP1.0 中认为每台服务器都绑定一个唯一的 IP 地址，因此，请求消息中的 URL 并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个 IP 地址。HTTP1.1 的请求消息和响应消息都应支持 Host 头域，且请求消息中如果没有 Host 头域会报告一个错误（400 Bad Request）。</li>
-<li>长连接，HTTP 1.1 支持长连接（PersistentConnection）和请求的流水线（Pipelining）处理，在一个 TCP 连接上可以传送多个 HTTP 请求和响应. (Connection： keep-alive)</li>
-</ol>
-<p><strong>HTTP2.0</strong> 大幅度的提高了 web 性能，进一步减少了网络的延迟。实现低延迟高吞吐量。</p>
-<ol>
-<li>二进制分帧 （二进制格式编码）</li>
-<li>首部压缩 （header）</li>
-<li>多路复用 （HTTP2.0 可以在共享 TCP 连接的基础上同时发送请求和响应，避免 HTTP 旧版本的队头阻塞问题）</li>
-<li>请求优先级</li>
-<li>服务器推送 （服务端根据客户端的请求，提前返回多个响应，推送额外的资源给客户端。）</li>
-</ol>
-<h1 id="2-用户输入-URL-到浏览器显现给用户页面经过了什么过程"><a href="#2-用户输入-URL-到浏览器显现给用户页面经过了什么过程" class="headerlink" title="2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程"></a>2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程</h1><ol>
-<li>用户输入 URL，浏览器获取到 URL</li>
-<li>检查缓存，如果有有效缓存，直接加载</li>
-<li>浏览器(应用层)进行 DNS 解析（直接输入 IP 地址既跳过该步骤）</li>
-<li>根据解析出的 IP 地址+端口，浏览器（应用层）发起 HTTP 请求</li>
-<li>请求到达传输层，tcp 协议为传输报文提供可靠的字节流传输服务，它通过三次握手等手段来保证传输过程中的安全可靠。通过对大块数据的分割成一个个报文段的方式提供给大量数据的便携传输。</li>
-<li>服务器端收到发送方的 HTTP 请求之后，进行请求文件资源（如 HTML 页面）的寻找并响应报文</li>
-<li>客户端收到返回内容后，处理 html</li>
-<li>解析 html，生成 dom 树</li>
-<li>CSS 解析，为 DOM 中元素加入样式</li>
-<li>javascript 解析处理，更改 dom 树</li>
-<li>进行页面渲染</li>
-<li>重排、重绘</li>
-</ol>
-<h1 id="3-HTML5-的新特性"><a href="#3-HTML5-的新特性" class="headerlink" title="3. HTML5 的新特性"></a>3. HTML5 的新特性</h1><ol>
-<li>新的内容标签：header nav content footer article 1. aside</li>
-<li>更好的单元格体系:</li>
-<li>音频、视频 API:video radio</li>
-<li>画布(Canvas) API</li>
-<li>地理(Geolocation) API</li>
-<li>网页存储(Web storage) 1. API:localStorage,sessionStorage</li>
-<li>拖拽释放(Drag and drop) API</li>
-</ol>
-<h1 id="4-对浏览器内核的理解"><a href="#4-对浏览器内核的理解" class="headerlink" title="4. 对浏览器内核的理解"></a>4. 对浏览器内核的理解</h1><p>主要分成两部分：渲染引擎(layout engine 或 Rendering Engine)和 JS 引擎。</p>
-<ol>
-<li>渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入 CSS 等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。</li>
-<li>JS 引擎则：解析和执行 javascript 来实现网页的动态效果。最开始渲染引擎和 JS 引擎并没有区分的很明确，后来 JS 引擎越来越独立，内核就倾向于只指渲染引擎。</li>
-</ol>
-<h1 id="5-cookies，sessionStorage-和-localStorage"><a href="#5-cookies，sessionStorage-和-localStorage" class="headerlink" title="5. cookies，sessionStorage 和 localStorage"></a>5. cookies，sessionStorage 和 localStorage</h1><p>cookie 是网站为了标示用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。<br>cookie 数据始终在同源的 http 请求中携带（即使不需要），记会在浏览器和服务器间来回传递。<br>sessionStorage 和 localStorage 不会自动把数据发给服务器，仅在本地保存。</p>
-<p>存储大小：<br>cookie 数据大小不能超过 4k。<br>sessionStorage 和 localStorage 虽然也有存储大小的限制，但比 cookie 大得多，可以达到 5M 或更大。</p>
-<p>有期时间：<br>localStorage 存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；<br>sessionStorage 数据在当前浏览器窗口关闭后自动删除。<br>cookie 设置的 cookie 过期时间之前一直有效，即使窗口或浏览器关闭</p>
-<h1 id="6-如何实现浏览器内多个标签页之间的通"><a href="#6-如何实现浏览器内多个标签页之间的通" class="headerlink" title="6. 如何实现浏览器内多个标签页之间的通"></a>6. 如何实现浏览器内多个标签页之间的通</h1><p>WebSocket、SharedWorker；也可以调用 localstorge、cookies 等本地存储方式；</p>
-<h1 id="7-script标签中的async、defer属性的作用"><a href="#7-script标签中的async、defer属性的作用" class="headerlink" title="7. script标签中的async、defer属性的作用"></a>7. script标签中的async、defer属性的作用</h1><ol>
-<li>Async: 可选属性。表示应该立即下载脚本，但不应妨碍页面中的其他操作，比如下载其他资源或等待加载其他脚本。</li>
-<li>Defer: 可选属性。标识脚本可以延迟到文档完全被解析和显示之后再执行。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1734,12 +1786,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-count">42</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

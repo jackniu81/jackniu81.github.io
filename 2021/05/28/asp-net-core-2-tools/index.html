@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="环境：   .NET 5 ASP.NET Core MVC   1. .NET 5作为一个资深.NET工程师，说句实话，.NET没落了，在国内更加的没落。之前做过8年node.js&#x2F;前端，现如今又转回了.NET。也希望.NET能有更好的前景吧。个人觉得.NET还是有一定的市场的（当然，国内算小众了），有几点原因：  .NET5开始，真正做到的跨平台（之前叫.NET CORE)， 而且把那个’CO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ASP.NET Core MVC 入门到精通 - 1. 开发必备工具 （2021）">
+<meta property="og:url" content="https://jackniu81.github.io/2021/05/28/asp-net-core-2-tools/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="环境：   .NET 5 ASP.NET Core MVC   1. .NET 5作为一个资深.NET工程师，说句实话，.NET没落了，在国内更加的没落。之前做过8年node.js&#x2F;前端，现如今又转回了.NET。也希望.NET能有更好的前景吧。个人觉得.NET还是有一定的市场的（当然，国内算小众了），有几点原因：  .NET5开始，真正做到的跨平台（之前叫.NET CORE)， 而且把那个’CO">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackniu81.github.io/img/dotNET-qrcode.png">
+<meta property="article:published_time" content="2021-05-28T07:38:58.000Z">
+<meta property="article:modified_time" content="2021-05-31T00:44:15.187Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content=".NET">
+<meta property="article:tag" content="ASP.NET Core MVC">
+<meta property="article:tag" content="ASP.NET Core">
+<meta property="article:tag" content="ASP.NET Core MVC 入门到精通">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackniu81.github.io/img/dotNET-qrcode.png">
+
+<link rel="canonical" href="https://jackniu81.github.io/2021/05/28/asp-net-core-2-tools/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>ASP.NET Core MVC 入门到精通 - 1. 开发必备工具 （2021） | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jack N @ GitHub</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/28/asp-net-core-2-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="Full stack engineer, focus on: Angular/React, node.js/.Net">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ASP.NET Core MVC 入门到精通 - 1. 开发必备工具 （2021）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-28 15:38:58" itemprop="dateCreated datePublished" datetime="2021-05-28T15:38:58+08:00">2021-05-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-31 08:44:15" itemprop="dateModified" datetime="2021-05-31T08:44:15+08:00">2021-05-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>环境： </p>
+<ul>
+<li>.NET 5</li>
+<li>ASP.NET Core MVC</li>
+</ul>
+</blockquote>
+<h1 id="1-NET-5"><a href="#1-NET-5" class="headerlink" title="1. .NET 5"></a>1. .NET 5</h1><p>作为一个资深.NET工程师，说句实话，.NET没落了，在国内更加的没落。之前做过8年node.js/前端，现如今又转回了.NET。也希望.NET能有更好的前景吧。个人觉得.NET还是有一定的市场的（当然，国内算小众了），有几点原因：</p>
+<ol>
+<li>.NET5开始，真正做到的跨平台（之前叫.NET CORE)， 而且把那个’CORE’字也拿掉就，就叫<code>.NET5</code>， 可见微软的宏大目标；</li>
+<li>开发效率，.NET软件开发，不管是web还是winForm，效率确实高</li>
+<li>跨平台，从.net core开始，终于跨平台了….</li>
+<li>性能大大提升。 .NET core性能大幅提升，尤其是跑在Linux上的时候；</li>
+<li>有些已有的基于.NET的产品，还需要继续维护、开发，不会换个语言重写；</li>
+<li>微软、以及和微软紧密合作的公司，也提供了不少.NET的应用场景；</li>
+</ol>
+<p>工欲善其事必先利其器，既然要接着用.NET，那么下文将列一下开发必备工具，供参考。</p>
+<h1 id="2-IDE"><a href="#2-IDE" class="headerlink" title="2. IDE"></a>2. IDE</h1><h2 id="2-1-Visual-Studio"><a href="#2-1-Visual-Studio" class="headerlink" title="2.1. Visual Studio"></a>2.1. Visual Studio</h2><p>这个没的说，而且要用最新版的VS!</p>
+<h2 id="2-2-Visual-Studio-Code"><a href="#2-2-Visual-Studio-Code" class="headerlink" title="2.2. Visual Studio Code"></a>2.2. Visual Studio Code</h2><p>微软的开源软件，同时是当前最流行的Web前端开发IDE。</p>
+<p>作为备选，支持C#开发，对于简单的代码，或者测试一些语法、看代码什么的，这个足够，而且占用资源很少。</p>
+<p>推荐插件：</p>
+<ul>
+<li>Code Spell Checker, 检查代码中单词拼写错误。声明个变量，后来发现单词拼写错了，尴尬了，使用这个插件，即时提示拼写错误</li>
+<li>C#, 安装此插件支持C#项目</li>
+<li>GitLens，如果使用git，一定要装这个，方便查询提交历史，某一行上次代码的提交人、提交备注等；</li>
+<li>Markdown All in One, markdown文件的插件，很强大，自动生成目录、编号等等。</li>
+</ul>
+<h1 id="3-代码比较"><a href="#3-代码比较" class="headerlink" title="3. 代码比较"></a>3. 代码比较</h1><h2 id="3-1-Beyond-Compare"><a href="#3-1-Beyond-Compare" class="headerlink" title="3.1. Beyond Compare"></a>3.1. Beyond Compare</h2><p>收费软件，但功能确实是强大。</p>
+<h2 id="3-2-WinDiff"><a href="#3-2-WinDiff" class="headerlink" title="3.2. WinDiff"></a>3.2. WinDiff</h2><p>免费版，将就着用；</p>
+<h1 id="4-图片处理"><a href="#4-图片处理" class="headerlink" title="4. 图片处理"></a>4. 图片处理</h1><h2 id="4-1-paint-net"><a href="#4-1-paint-net" class="headerlink" title="4.1. paint.net"></a>4.1. paint.net</h2><p>(这个也是基于.NET开发的哦，因为我们机器必然有.net framework,所以这是还是很小的)；<br>免费版，功能也很强大，占用资源很少。对于非专业的美工，足够用了！</p>
+<h1 id="5-其他Web工具"><a href="#5-其他Web工具" class="headerlink" title="5. 其他Web工具"></a>5. 其他Web工具</h1><h2 id="5-1-node-js-npm"><a href="#5-1-node-js-npm" class="headerlink" title="5.1. node.js/npm"></a>5.1. node.js/npm</h2><p>做前端web开发，不管是否用node.js，环境还是要有的；</p>
+<h2 id="5-2-API-测试-Postman"><a href="#5-2-API-测试-Postman" class="headerlink" title="5.2. API 测试 - Postman"></a>5.2. API 测试 - Postman</h2><p>方便测试API，免费版足够用了，支持账号同步，导入导出等等；</p>
+<h2 id="5-3-Color-Pick"><a href="#5-3-Color-Pick" class="headerlink" title="5.3. Color Pick"></a>5.3. Color Pick</h2><p>快速精确地从任何地方取色。</p>
+<h1 id="6-其他工具"><a href="#6-其他工具" class="headerlink" title="6. 其他工具"></a>6. 其他工具</h1><h2 id="6-1-Linux客户端：MobaXterm"><a href="#6-1-Linux客户端：MobaXterm" class="headerlink" title="6.1. Linux客户端：MobaXterm"></a>6.1. Linux客户端：MobaXterm</h2><p>还在用putty? 试试MobaXterm吧，免费版支持保存20个session（节点、机器），足够用了；</p>
+<ol>
+<li>集成了sftp，直接拖拽上传、下载文件</li>
+<li>自带windows编辑器，不用vi了</li>
+<li>多窗口模式</li>
+<li>很好很强大… … </li>
+</ol>
+<h2 id="6-2-远程连接：-Remote-Desktop-Connection-Manager"><a href="#6-2-远程连接：-Remote-Desktop-Connection-Manager" class="headerlink" title="6.2. 远程连接： Remote Desktop Connection Manager"></a>6.2. 远程连接： Remote Desktop Connection Manager</h2><p>如果有大量的虚机、PC等需要远程连接使用，那这个工具就是很必要的。<br>微软的工具，虽说没什么更新了，但是很实用：</p>
+<ol>
+<li>分组管理、保存用户、密码，支持继承用户名、密码（实验室机器一般用户名、密码都是一样的吧）</li>
+</ol>
+<p><img src="https://jackniu81.github.io/img/dotNET-qrcode.png" alt="RQ"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NET/" rel="tag"># .NET</a>
+              <a href="/tags/ASP-NET-Core-MVC/" rel="tag"># ASP.NET Core MVC</a>
+              <a href="/tags/ASP-NET-Core/" rel="tag"># ASP.NET Core</a>
+              <a href="/tags/ASP-NET-Core-MVC-%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A/" rel="tag"># ASP.NET Core MVC 入门到精通</a>
+              <a href="/tags/Tools/" rel="tag"># Tools</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/27/asp-net-core-3-MediatR/" rel="prev" title="ASP.NET Core MVC 入门到精通 - 3. 使用MediatR">
+      <i class="fa fa-chevron-left"></i> ASP.NET Core MVC 入门到精通 - 3. 使用MediatR
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NET-5"><span class="nav-number">1.</span> <span class="nav-text">1. .NET 5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-IDE"><span class="nav-number">2.</span> <span class="nav-text">2. IDE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Visual-Studio"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. Visual Studio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Visual-Studio-Code"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. Visual Studio Code</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E4%BB%A3%E7%A0%81%E6%AF%94%E8%BE%83"><span class="nav-number">3.</span> <span class="nav-text">3. 代码比较</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Beyond-Compare"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. Beyond Compare</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-WinDiff"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. WinDiff</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">4. 图片处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-paint-net"><span class="nav-number">4.1.</span> <span class="nav-text">4.1. paint.net</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E5%85%B6%E4%BB%96Web%E5%B7%A5%E5%85%B7"><span class="nav-number">5.</span> <span class="nav-text">5. 其他Web工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-node-js-npm"><span class="nav-number">5.1.</span> <span class="nav-text">5.1. node.js&#x2F;npm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-API-%E6%B5%8B%E8%AF%95-Postman"><span class="nav-number">5.2.</span> <span class="nav-text">5.2. API 测试 - Postman</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-Color-Pick"><span class="nav-number">5.3.</span> <span class="nav-text">5.3. Color Pick</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7"><span class="nav-number">6.</span> <span class="nav-text">6. 其他工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-Linux%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%9AMobaXterm"><span class="nav-number">6.1.</span> <span class="nav-text">6.1. Linux客户端：MobaXterm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%EF%BC%9A-Remote-Desktop-Connection-Manager"><span class="nav-number">6.2.</span> <span class="nav-text">6.2. 远程连接： Remote Desktop Connection Manager</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack engineer, focus on: Angular/React, node.js/.Net</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
