@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"jackniu81.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="1. 概要 1. 概要  1. 概要大多数 Angular 短语都是日常用语或计算机术语，但是在 Angular 体系中，它们有特别的含义。 1. 概要预编译 (ahead-of-time, AOT)即时编译 (just-in-time, JIT)Angular元素（element， Angular Element）注解（Annotation）: 注解也叫装饰器；装饰器（decorator |">
+  <meta name="description" content="1. 概述位操作是程序设计中对位模式按位或二进制数的一元和二元操作. 在许多古老的微处理器上, 位运算比加减运算略快, 通常位运算比乘除法运算要快很多. 在现代架构中, 情况并非如此:位运算的运算速度通常与加法运算相同（仍然快于乘法运算）。 2. 取反（NOT）~3. 按位或（OR）|4. 按位异或（XOR）^5. 按位与（AND）&amp;6. 移位 &gt;&gt;, &lt;&lt;, &amp;g">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Angular 词汇表">
-<meta property="og:url" content="https://jackniu81.github.io/2021/02/09/Angular-keyword/index.html">
+<meta property="og:title" content="算法 - 位操作">
+<meta property="og:url" content="https://jackniu81.github.io/2021/05/31/Algorithm-Bit-Manipulation/index.html">
 <meta property="og:site_name" content="Jack N @ GitHub">
-<meta property="og:description" content="1. 概要 1. 概要  1. 概要大多数 Angular 短语都是日常用语或计算机术语，但是在 Angular 体系中，它们有特别的含义。 1. 概要预编译 (ahead-of-time, AOT)即时编译 (just-in-time, JIT)Angular元素（element， Angular Element）注解（Annotation）: 注解也叫装饰器；装饰器（decorator |">
+<meta property="og:description" content="1. 概述位操作是程序设计中对位模式按位或二进制数的一元和二元操作. 在许多古老的微处理器上, 位运算比加减运算略快, 通常位运算比乘除法运算要快很多. 在现代架构中, 情况并非如此:位运算的运算速度通常与加法运算相同（仍然快于乘法运算）。 2. 取反（NOT）~3. 按位或（OR）|4. 按位异或（XOR）^5. 按位与（AND）&amp;6. 移位 &gt;&gt;, &lt;&lt;, &amp;g">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-02-09T05:06:00.000Z">
-<meta property="article:modified_time" content="2021-02-08T02:42:43.409Z">
+<meta property="article:published_time" content="2021-05-31T05:34:06.000Z">
+<meta property="article:modified_time" content="2021-06-08T17:01:23.446Z">
 <meta property="article:author" content="Jack">
-<meta property="article:tag" content="Angular">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jackniu81.github.io/2021/02/09/Angular-keyword/">
+<link rel="canonical" href="https://jackniu81.github.io/2021/05/31/Algorithm-Bit-Manipulation/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Angular 词汇表 | Jack N @ GitHub</title>
+  <title>算法 - 位操作 | Jack N @ GitHub</title>
   
 
 
@@ -152,7 +152,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/02/09/Angular-keyword/">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/31/Algorithm-Bit-Manipulation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -165,7 +165,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Angular 词汇表
+          算法 - 位操作
         </h1>
 
         <div class="post-meta">
@@ -175,14 +175,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-02-09 13:06:00" itemprop="dateCreated datePublished" datetime="2021-02-09T13:06:00+08:00">2021-02-09</time>
+              <time title="Created: 2021-05-31 13:34:06" itemprop="dateCreated datePublished" datetime="2021-05-31T13:34:06+08:00">2021-05-31</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-08 10:42:43" itemprop="dateModified" datetime="2021-02-08T10:42:43+08:00">2021-02-08</time>
+                <time title="Modified: 2021-06-09 01:01:23" itemprop="dateModified" datetime="2021-06-09T01:01:23+08:00">2021-06-09</time>
               </span>
 
           
@@ -196,20 +196,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <ul>
-<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
-<li><a href="#1-%E6%A6%82%E8%A6%81-1">1. 概要</a></li>
+        <h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>位操作是程序设计中对位模式按位或二进制数的一元和二元操作. 在许多古老的微处理器上, 位运算比加减运算略快, 通常位运算比乘除法运算要快很多. 在现代架构中, 情况并非如此:位运算的运算速度通常与加法运算相同（仍然快于乘法运算）。</p>
+<h1 id="2-取反（NOT）"><a href="#2-取反（NOT）" class="headerlink" title="2. 取反（NOT）~"></a>2. 取反（NOT）~</h1><h1 id="3-按位或（OR）"><a href="#3-按位或（OR）" class="headerlink" title="3. 按位或（OR）|"></a>3. 按位或（OR）|</h1><h1 id="4-按位异或（XOR）"><a href="#4-按位异或（XOR）" class="headerlink" title="4. 按位异或（XOR）^"></a>4. 按位异或（XOR）^</h1><h1 id="5-按位与（AND）-amp"><a href="#5-按位与（AND）-amp" class="headerlink" title="5. 按位与（AND）&amp;"></a>5. 按位与（AND）&amp;</h1><h1 id="6-移位-gt-gt-lt-lt-gt-gt-gt"><a href="#6-移位-gt-gt-lt-lt-gt-gt-gt" class="headerlink" title="6. 移位 &gt;&gt;, &lt;&lt;, &gt;&gt;&gt;"></a>6. 移位 &gt;&gt;, &lt;&lt;, &gt;&gt;&gt;</h1><ul>
+<li>移动: &gt;&gt;, &lt;&lt;</li>
+<li>无符号右移： &gt;&gt;&gt; </li>
+<li>无符号左移是不存在的，因为左右在低位补位，而低位没有正负数的概念，因此不存在无符号左移</li>
 </ul>
-<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>大多数 Angular 短语都是日常用语或计算机术语，但是在 Angular 体系中，它们有特别的含义。</p>
-<h1 id="1-概要-1"><a href="#1-概要-1" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>预编译 (ahead-of-time, AOT)<br>即时编译 (just-in-time, JIT)<br>Angular元素（element， Angular Element）<br>注解（Annotation）: 注解也叫装饰器；<br>装饰器（decorator | decoration）: 注解也叫装饰器；<br>应用外壳（app-shell）<br>架构（Architect）<br>指令 directives<br>属性型指令（attribute directives）<br>绑定 (binding)<br>启动/引导 (bootstrap)<br>构建器（Builder）<br>大小写类型（case types）<br>小驼峰形式（camelCase）：小驼峰（也叫标准驼峰）形式的第一个字母要使用小写形式。<br>大驼峰形式（UpperCamelCase）或叫帕斯卡形式（PascalCase）<br>中线形式（dash-case）或叫烤串形式（kebab-case）<br>下划线形式（underscore_case）或叫蛇形形式（snake_case）<br>大写下划线形式（UPPER_UNDERSCORE_CASE）或叫大写蛇形形式（UPPER_SNAKE_CASE）<br>变更检测（change detection）<br>类装饰器（class decorator）<br>类字段装饰器（class field decorator）<br>集合（collection）<br>命令行工具,命令行客户端（CLI， Angular CLI）<br>组件 (component)<br>配置（configuration）<br>内容投影 （content projection）<br>自定义元素（Custom element）:也叫 Web Component<br>数据绑定 (data binding)<br>可声明对象（declarable）<br>装饰器（decorator | decoration）<br>依赖注入（dependency injection）<br>DI 令牌（Token）<br>差异化加载 (differential loading)<br>指令 (directive)<br>领域特定语言（domain-specific language, DSL)<br>动态组件加载（dynamic component loading）<br>急性加载（Eager Loading）<br>惰性加载（Lazy loading）<br>元素（Element, Angular Element）<br>入口点（Entry Point）<br>表单控件（form control）<br>表单模型（form model）<br>表单验证（form validation）<br>不可变性（immutability）<br>可注入对象（injectable）<br>注入器 (injector)<br>输入属性 (input)<br>输出属性 (output)<br>插值 (interpolation)<br>常春藤引擎（Ivy）<br>惰性加载（Lazy loading）<br>库（Library）<br>生命周期钩子（Lifecycle hook）<br>模块 (module)<br>ngcc (Angular 兼容性编译器)<br>npm 包 (npm package)<br>ngc (ngc 是一个 TypeScript 到 JavaScript 的转译器)<br>可观察对象（Observable）<br>观察者（Observer）<br>管道（pipe）<br>平台（platform）<br>腻子脚本（polyfill）<br>项目（project）<br>提供者 (provider)<br>响应式表单 (reactive forms)<br>解析器（resolver）<br>路由守卫 (route guard)<br>路由器 (router)<br>路由出口（router outlet）<br>路由组件 (routing component)<br>规则（rule）<br>原理图（schematic）<br>Schematics CLI (Schematics 自带了一个命令行工具)<br>范围化包 (scoped package)<br>服务端渲染 (server-side rendering)<br>服务 (service)<br>结构型指令（Structural directives）<br>订阅者（Subscriber）<br>目标 (target)<br>模板 (template)<br>模板驱动表单（template-driven forms）<br>模板表达式（template expression）<br>模板引用变量 (template reference variable)<br>令牌（Token）<br>转译（transpile)<br>目录树（tree）<br>TypeScript 配置文件<br>单向数据流 (unidirectional data flow)<br>视图 (view)<br>视图引擎（View Engine）<br>视图树（View hierarchy）<br>Web 组件 (web component)<br>工作空间（Workspace）<br>工作空间配置（Workspace configuration）<br>区域 (zone)</p>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>======================</p>
-</blockquote>
+<h1 id="7-其他位操作技巧P"><a href="#7-其他位操作技巧P" class="headerlink" title="7. 其他位操作技巧P"></a>7. 其他位操作技巧P</h1><h2 id="7-1-n-amp-n-1"><a href="#7-1-n-amp-n-1" class="headerlink" title="7.1. n &amp; (n - 1)"></a>7.1. n &amp; (n - 1)</h2><p>该位运算技巧可以直接将 <code>n</code> 的二进制表示的最低位 1 移除。</p>
+<ol>
+<li>不停的进行 n = n &amp; (n - 1) 操作，直至n为0，可以计算二进制数的1的个数</li>
+</ol>
 
     </div>
 
@@ -219,7 +215,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Angular/" rel="tag"># Angular</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
           </div>
 
         
@@ -228,13 +224,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/07/js-speical/" rel="prev" title="javascript中常见的非人类（java/c#)知识">
-      <i class="fa fa-chevron-left"></i> javascript中常见的非人类（java/c#)知识
+    <a href="/2021/05/28/asp-net-core-2-tools/" rel="prev" title="ASP.NET Core MVC 入门到精通 - 1. 开发必备工具 （2021）">
+      <i class="fa fa-chevron-left"></i> ASP.NET Core MVC 入门到精通 - 1. 开发必备工具 （2021）
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/03/02/mobile-ux-performance/" rel="next" title="移动端如何做好用户体验">
-      移动端如何做好用户体验 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -293,7 +286,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">1. 概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A6%82%E8%A6%81-1"><span class="nav-number">2.</span> <span class="nav-text">1. 概要</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">1. 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%8F%96%E5%8F%8D%EF%BC%88NOT%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">2. 取反（NOT）~</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E6%8C%89%E4%BD%8D%E6%88%96%EF%BC%88OR%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">3. 按位或（OR）|</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%8C%89%E4%BD%8D%E5%BC%82%E6%88%96%EF%BC%88XOR%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">4. 按位异或（XOR）^</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E6%8C%89%E4%BD%8D%E4%B8%8E%EF%BC%88AND%EF%BC%89-amp"><span class="nav-number">5.</span> <span class="nav-text">5. 按位与（AND）&amp;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E7%A7%BB%E4%BD%8D-gt-gt-lt-lt-gt-gt-gt"><span class="nav-number">6.</span> <span class="nav-text">6. 移位 &gt;&gt;, &lt;&lt;, &gt;&gt;&gt;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-%E5%85%B6%E4%BB%96%E4%BD%8D%E6%93%8D%E4%BD%9C%E6%8A%80%E5%B7%A7P"><span class="nav-number">7.</span> <span class="nav-text">7. 其他位操作技巧P</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-n-amp-n-1"><span class="nav-number">7.1.</span> <span class="nav-text">7.1. n &amp; (n - 1)</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
