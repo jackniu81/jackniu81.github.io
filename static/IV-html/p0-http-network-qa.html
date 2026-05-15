@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p0 http network qa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>计算机网络 / HTTP 常见面试题（附答案）</h1>
+<h2>网络基础</h2>
+<h3>1. OSI 七层模型和 TCP/IP 四层模型分别是什么？</h3>
+<p><strong>答案：</strong>
+OSI 七层（从下到上）：物理层、数据链路层、网络层、传输层、会话层、表示层、应用层。TCP/IP 四层：网络接口层（链路层）、网络层（IP）、传输层（TCP/UDP）、应用层（HTTP/DNS/FTP）。实际应用中通常用 TCP/IP 模型，OSI 更多用于理论分析和排障分层。</p>
+<h3>2. TCP 和 UDP 的区别是什么？</h3>
+<p><strong>答案：</strong>
+TCP（传输控制协议）：面向连接、可靠传输、有序、流量/拥塞控制、全双工、速度较慢。UDP（用户数据报协议）：无连接、不可靠、无序、无拥塞控制、速度快。TCP 适合文件传输、HTTP、数据库；UDP 适合实时视频/音频、DNS 查询、游戏（延迟敏感场景）。</p>
+<h3>3. TCP 三次握手的过程是什么？</h3>
+<p><strong>答案：</strong>
+① 客户端发 SYN（seq=x），进入 SYN_SENT；② 服务端收到后发 SYN+ACK（seq=y, ack=x+1），进入 SYN_RCVD；③ 客户端发 ACK（ack=y+1），双方进入 ESTABLISHED。三次握手的原因：确认双方发送和接收能力正常，同步序列号，防止历史连接请求混淆。</p>
+<h3>4. TCP 四次挥手的过程是什么？</h3>
+<p><strong>答案：</strong>
+① 主动方发 FIN，进入 FIN_WAIT_1；② 被动方发 ACK，进入 CLOSE_WAIT，主动方进入 FIN_WAIT_2；③ 被动方发 FIN，进入 LAST_ACK；④ 主动方发 ACK，进入 TIME_WAIT（等待 2MSL），被动方收到后 CLOSED，主动方超时后 CLOSED。四次挥手原因：TCP 是全双工，两个方向关闭各需一次 FIN+ACK。</p>
+<h3>5. 为什么需要 TIME_WAIT 状态？</h3>
+<p><strong>答案：</strong>
+① 确保被动方收到最后的 ACK（若丢失，被动方重发 FIN，主动方在 TIME_WAIT 内可重发 ACK）；② 防止旧连接的延迟报文影响新连接（等待 2MSL 让网络中旧报文消散）。TIME_WAIT 过多会占用端口资源，可通过 <code>SO_REUSEADDR</code>、调整内核参数等方式缓解。</p>
+<h3>6. 什么是 DNS？解析过程是什么？</h3>
+<p><strong>答案：</strong>
+DNS（域名系统）将域名解析为 IP 地址。解析过程：① 查浏览器缓存；② 查操作系统缓存（hosts 文件）；③ 查本地 DNS 服务器（ISP/公司内网）；④ 递归查询：根域名服务器 → 顶级域名服务器（.com/.cn）→ 权威域名服务器，返回最终 IP。结果按 TTL 缓存。</p>
+<h3>7. 什么是 CDN？它的工作原理是什么？</h3>
+<p><strong>答案：</strong>
+CDN（内容分发网络）通过在全球部署边缘节点，将静态资源缓存到距用户最近的节点，减少延迟和源站压力。用户请求时 DNS 返回最近节点 IP（通过 GSLB 智能调度）；节点缓存命中直接返回，未命中则回源拉取并缓存。适合图片、CSS/JS、视频等静态资源。</p>
+<h2>HTTP 协议</h2>
+<h3>8. HTTP 和 HTTPS 的区别是什么？</h3>
+<p><strong>答案：</strong>
+HTTP 是明文传输协议，不加密，默认端口 80；HTTPS 在 HTTP 下加入 TLS/SSL 加密层，提供数据加密、身份认证和完整性校验，默认端口 443。HTTPS 会有握手开销，但现代 TLS 1.3 大幅减少握手次数，配合 HTTP/2 性能不逊色 HTTP。</p>
+<h3>9. HTTPS 的 TLS 握手过程是什么？</h3>
+<p><strong>答案：</strong>
+TLS 1.3 握手（1-RTT）：① 客户端发 ClientHello（支持的加密套件、密钥交换参数）；② 服务端发 ServerHello（选定套件、证书、密钥参数）；③ 双方根据密钥参数计算会话密钥；④ 后续通信使用对称加密。0-RTT 模式支持会话复用，首次握手后可零往返恢复。</p>
+<h3>10. HTTP/1.0、HTTP/1.1、HTTP/2、HTTP/3 的主要区别？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>HTTP/1.0</strong>：每次请求重新建立 TCP 连接，无持久连接</li>
+<li><strong>HTTP/1.1</strong>：持久连接（keep-alive），管道化（有队头阻塞），分块传输，Host 头</li>
+<li><strong>HTTP/2</strong>：二进制分帧、多路复用（解决应用层队头阻塞）、头部压缩（HPACK）、服务端推送</li>
+<li><strong>HTTP/3</strong>：基于 QUIC（UDP 上实现可靠传输），彻底解决传输层队头阻塞，连接迁移（切换 Wi-Fi 不断连），更快的握手</li>
+</ul>
+<h3>11. 什么是 HTTP 的队头阻塞（Head-of-Line Blocking）？</h3>
+<p><strong>答案：</strong>
+HTTP/1.1 管道化中，同一连接多个请求必须按序响应，前一个响应未完成会阻塞后续请求（应用层队头阻塞）。HTTP/2 多路复用在同一 TCP 连接上用帧解决了应用层阻塞，但仍有 TCP 层队头阻塞（TCP 丢包时整个连接阻塞）。HTTP/3 使用 QUIC（基于 UDP）从根本上解决了传输层的队头阻塞。</p>
+<h3>12. 常见 HTTP 状态码及含义？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>2xx 成功</strong>：200 OK、201 Created、204 No Content</li>
+<li><strong>3xx 重定向</strong>：301 永久重定向、302 临时重定向、304 Not Modified（协商缓存命中）</li>
+<li><strong>4xx 客户端错误</strong>：400 Bad Request、401 Unauthorized、403 Forbidden、404 Not Found、405 Method Not Allowed、429 Too Many Requests</li>
+<li><strong>5xx 服务端错误</strong>：500 Internal Server Error、502 Bad Gateway、503 Service Unavailable、504 Gateway Timeout</li>
+</ul>
+<h3>13. GET 和 POST 的区别是什么？</h3>
+<p><strong>答案：</strong>
+GET：语义为获取资源，参数在 URL 中（受浏览器/服务器长度限制），幂等，可缓存，不适合敏感数据。POST：语义为提交数据，数据在请求体，无长度限制，不幂等，不被默认缓存。技术上 GET 也可有请求体，POST 也可用 URL 参数，但应遵循语义约定。RESTful API 中还有 PUT（替换）、PATCH（部分更新）、DELETE（删除）。</p>
+<h3>14. HTTP 请求头/响应头有哪些常见字段？</h3>
+<p><strong>答案：</strong>
+请求头：<code>Content-Type</code>、<code>Authorization</code>、<code>Accept</code>、<code>Cookie</code>、<code>User-Agent</code>、<code>Referer</code>、<code>Origin</code>、<code>Cache-Control</code>、<code>If-None-Match</code>、<code>If-Modified-Since</code>。响应头：<code>Content-Type</code>、<code>Set-Cookie</code>、<code>ETag</code>、<code>Last-Modified</code>、<code>Cache-Control</code>、<code>Access-Control-Allow-Origin</code>、<code>Location</code>（重定向）、<code>Strict-Transport-Security</code>（HSTS）。</p>
+<h3>15. 什么是 <code>Content-Type</code>？常见值有哪些？</h3>
+<p><strong>答案：</strong>
+<code>Content-Type</code> 声明请求体或响应体的 MIME 类型。常见值：<code>application/json</code>（JSON 数据）、<code>application/x-www-form-urlencoded</code>（表单编码）、<code>multipart/form-data</code>（文件上传）、<code>text/html</code>、<code>text/plain</code>、<code>image/png</code>、<code>application/octet-stream</code>（二进制流）。前端发 POST 请求时注意 <code>Content-Type</code> 与实际数据格式一致。</p>
+<h2>HTTP 缓存</h2>
+<h3>16. 什么是强缓存？</h3>
+<p><strong>答案：</strong>
+强缓存命中时浏览器直接从本地读取资源，不发请求到服务器。控制字段：<code>Cache-Control: max-age=3600</code>（相对时间，优先）和 <code>Expires: Wed, 21 Oct 2025 07:28:00 GMT</code>（绝对时间，旧方式）。命中强缓存状态码为 200（from disk cache / from memory cache）。</p>
+<h3>17. 什么是协商缓存？</h3>
+<p><strong>答案：</strong>
+强缓存失效后，浏览器携带验证信息向服务器确认资源是否变更。验证机制：① ETag/If-None-Match（资源内容哈希，精确）；② Last-Modified/If-Modified-Since（修改时间，秒级精度）。服务器对比后若未变化返回 304 Not Modified（无响应体，节省带宽），否则返回 200 + 新资源。ETag 优先级高于 Last-Modified。</p>
+<h3>18. <code>Cache-Control</code> 常见指令有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>max-age=N</code>：N 秒内使用缓存（相对时间）</li>
+<li><code>no-cache</code>：每次需向服务器验证（走协商缓存），不是&quot;不缓存&quot;</li>
+<li><code>no-store</code>：不缓存任何内容（真正的不缓存）</li>
+<li><code>private</code>：只允许浏览器缓存，不允许 CDN/代理缓存</li>
+<li><code>public</code>：允许 CDN/代理缓存</li>
+<li><code>s-maxage</code>：CDN/代理缓存时间</li>
+<li><code>must-revalidate</code>：过期后必须向服务器验证</li>
+</ul>
+<h3>19. 如何设计一个最优的缓存策略？</h3>
+<p><strong>答案：</strong>
+① HTML 文件：<code>Cache-Control: no-cache</code>（每次验证，保证拿到最新入口）；② JS/CSS/图片（带 hash 指纹，如 <code>main.abc123.js</code>）：<code>Cache-Control: max-age=31536000, immutable</code>（一年强缓存，内容变化时文件名变化）；③ API 接口：视业务决定，一般 <code>no-store</code> 或短 <code>max-age</code>。</p>
+<h2>跨域</h2>
+<h3>20. 什么是同源策略？</h3>
+<p><strong>答案：</strong>
+同源策略规定浏览器限制非同源（协议+域名+端口均相同为同源）的脚本发起跨域请求、访问对方的 DOM 和 Cookie 等资源。这是浏览器安全的基础防线，防止恶意网站读取其他站点的敏感数据。</p>
+<h3>21. 什么是 CORS？如何配置？</h3>
+<p><strong>答案：</strong>
+CORS（跨域资源共享）通过 HTTP 头告诉浏览器允许跨域访问。关键响应头：<code>Access-Control-Allow-Origin</code>（允许的源）、<code>Access-Control-Allow-Methods</code>（允许的方法）、<code>Access-Control-Allow-Headers</code>（允许的请求头）、<code>Access-Control-Allow-Credentials</code>（是否允许携带凭证）。预检请求（OPTIONS）在实际请求前发出，检查权限。</p>
+<h3>22. 什么是简单请求和预检请求？</h3>
+<p><strong>答案：</strong>
+简单请求：方法为 GET/HEAD/POST，Content-Type 为 <code>text/plain</code>/<code>multipart/form-data</code>/<code>application/x-www-form-urlencoded</code>，无自定义请求头，浏览器直接发并在响应中检查 <code>Access-Control-Allow-Origin</code>。不满足条件则先发 OPTIONS 预检请求，服务器返回允许的配置后再发真正的请求。</p>
+<h3>23. 跨域解决方案有哪些？</h3>
+<p><strong>答案：</strong>
+① <strong>CORS</strong>（推荐，服务端配置）；② <strong>代理</strong>（开发时 Vite/webpack dev server 代理，生产时 Nginx 反向代理）；③ <strong>JSONP</strong>（只支持 GET，利用 <code>&lt;script&gt;</code> 不受同源限制，已不推荐）；④ <strong>postMessage</strong>（跨窗口通信）；⑤ <strong>WebSocket</strong>（本身不受同源策略限制）；⑥ <strong>document.domain</strong>（限同主域子域，已废弃）。</p>
+<h3>24. <code>withCredentials</code> 跨域携带 Cookie 有什么要求？</h3>
+<p><strong>答案：</strong>
+前端：<code>axios</code> 设置 <code>withCredentials: true</code>；后端：<code>Access-Control-Allow-Origin</code> 不能为 <code>*</code>，必须指定具体源；<code>Access-Control-Allow-Credentials: true</code>；<code>Access-Control-Allow-Origin</code> 必须与请求的 <code>Origin</code> 完全匹配。缺一不可，否则 Cookie 不会被携带或响应被浏览器拦截。</p>
+<h2>Cookie、Session 与 Token</h2>
+<h3>25. Cookie、Session 和 Token 分别是什么？</h3>
+<p><strong>答案：</strong>
+<strong>Cookie</strong>：浏览器端存储的小型文本，每次请求自动携带，可设置过期时间、域、路径、HttpOnly、Secure 等属性。<strong>Session</strong>：服务端存储用户状态，SessionId 存在 Cookie 中，服务端根据 ID 查找对应会话数据，有扩展性问题。<strong>Token</strong>（JWT）：服务端签发的令牌，包含用户信息，客户端存储，每次请求携带，服务端验证签名，无状态，易于横向扩展。</p>
+<h3>26. JWT 的结构和验证原理是什么？</h3>
+<p><strong>答案：</strong>
+JWT 由三部分组成（<code>.</code> 分隔）：① Header（算法+类型，Base64编码）；② Payload（声明/用户数据，Base64编码，不加密！）；③ Signature（Header + Payload + 密钥 用算法签名）。验证时重新计算签名对比，不可篡改（无私钥无法伪造签名）。注意 Payload 是明文，不能存敏感信息；Token 无法主动失效，需配合黑名单或短过期时间。</p>
+<h3>27. Cookie 的 <code>HttpOnly</code>、<code>Secure</code>、<code>SameSite</code> 属性有什么作用？</h3>
+<p><strong>答案：</strong>
+<code>HttpOnly</code>：禁止 JavaScript 读取，防止 XSS 窃取 Cookie；<code>Secure</code>：只在 HTTPS 连接中发送，防止中间人窃取；<code>SameSite</code>：控制跨站请求时是否携带 Cookie（<code>Strict</code>=完全禁止跨站、<code>Lax</code>=导航请求允许、<code>None</code>=全部允许但需 <code>Secure</code>），防止 CSRF 攻击。三者组合是 Cookie 安全的最佳实践。</p>
+<h2>安全</h2>
+<h3>28. 什么是 XSS？如何防御？</h3>
+<p><strong>答案：</strong>
+XSS（跨站脚本攻击）：攻击者将恶意脚本注入页面，在受害者浏览器执行，窃取 Cookie、伪造操作。类型：存储型（注入数据库）、反射型（URL 参数回显）、DOM 型（前端拼接 HTML）。防御：① 输出编码（转义 <code>&lt;&gt;&amp;&quot;&#39;</code>）；② CSP（Content Security Policy，限制脚本来源）；③ Cookie 设 <code>HttpOnly</code>；④ 富文本用白名单过滤（DOMPurify）；⑤ Vue/React 避免使用 <code>dangerouslySetInnerHTML</code>/<code>v-html</code>。</p>
+<h3>29. 什么是 CSRF？如何防御？</h3>
+<p><strong>答案：</strong>
+CSRF（跨站请求伪造）：攻击者诱导用户访问恶意页面，该页面自动发送携带用户 Cookie 的请求到目标站点，执行恶意操作。防御：① CSRF Token（表单/请求头中附带随机 token，服务端验证）；② <code>SameSite=Strict/Lax</code> Cookie；③ 验证 <code>Origin</code>/<code>Referer</code> 请求头；④ 敏感操作需要二次验证。</p>
+<h3>30. 什么是 CSP（内容安全策略）？</h3>
+<p><strong>答案：</strong>
+CSP 通过 HTTP 响应头 <code>Content-Security-Policy</code> 声明页面可以加载资源的白名单，限制脚本来源、样式来源、图片来源等。如 <code>script-src &#39;self&#39; cdn.example.com</code> 只允许本域和指定 CDN 的脚本。能有效缓解 XSS 攻击（禁止内联脚本、限制外部脚本源）。违规行为会被浏览器阻止并可配置上报。</p>
+<h2>WebSocket 与实时通信</h2>
+<h3>31. WebSocket 是什么？与 HTTP 有什么区别？</h3>
+<p><strong>答案：</strong>
+WebSocket 是基于 TCP 的全双工通信协议，建立一次握手（通过 HTTP 升级）后保持持久连接，服务端可主动推送数据。与 HTTP 比较：HTTP 是请求-响应模式（客户端主动），WebSocket 双向实时通信；WebSocket 更低延迟，无须每次请求携带 Header，适合聊天、实时协作、股价推送、游戏等场景。</p>
+<h3>32. 什么是 Server-Sent Events（SSE）？</h3>
+<p><strong>答案：</strong>
+SSE 是基于 HTTP 的服务端单向推送技术，服务端通过 <code>Content-Type: text/event-stream</code> 持续发送数据，客户端用 <code>EventSource</code> API 接收。优点：基于 HTTP（穿透代理/防火墙更容易）、自动重连、原生支持。适合：通知推送、新闻推流、大模型流式输出。与 WebSocket 区别：SSE 单向、只能文本，WS 双向、支持二进制。</p>
+<h3>33. 什么是长轮询（Long Polling）？</h3>
+<p><strong>答案：</strong>
+长轮询是实现服务端推送的 HTTP 方案：客户端发请求，服务端不立即响应，而是等有新数据时才返回；客户端收到响应后立即发下一次请求，形成持续连接效果。比短轮询（定时发请求）更高效，但依然有较高延迟和连接开销。现代项目优先选 WebSocket 或 SSE，长轮询已较少使用。</p>
+<h2>总结</h2>
+<p>这些题目覆盖了计算机网络基础、TCP/IP、HTTP 协议版本、缓存策略、跨域、身份认证与安全、实时通信等核心内容，是前后端面试的高频考点。</p>
+
+  </div>
+</body>
+</html>

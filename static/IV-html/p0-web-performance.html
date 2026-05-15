@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p0 web performance</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Web 网站性能优化指南</h1>
+<h2>一、性能指标体系</h2>
+<h3>核心网页指标（Core Web Vitals）</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>全称</th>
+<th>含义</th>
+<th>目标值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LCP</td>
+<td>Largest Contentful Paint</td>
+<td>最大内容绘制</td>
+<td>&lt; 2.5s</td>
+</tr>
+<tr>
+<td>INP</td>
+<td>Interaction to Next Paint</td>
+<td>交互到下次绘制</td>
+<td>&lt; 200ms</td>
+</tr>
+<tr>
+<td>CLS</td>
+<td>Cumulative Layout Shift</td>
+<td>累计布局偏移</td>
+<td>&lt; 0.1</td>
+</tr>
+</tbody></table>
+<h3>其他重要指标</h3>
+<ul>
+<li><strong>FCP</strong>（First Contentful Paint）：首次内容绘制，&lt; 1.8s 为良</li>
+<li><strong>TTFB</strong>（Time To First Byte）：首字节时间，&lt; 800ms 为良</li>
+<li><strong>TTI</strong>（Time To Interactive）：可交互时间，越短越好</li>
+<li><strong>TBT</strong>（Total Blocking Time）：总阻塞时间，&lt; 200ms 为良</li>
+</ul>
+<h3>测量工具</h3>
+<ul>
+<li><strong>Lighthouse</strong>（Chrome DevTools / CI 集成）</li>
+<li><strong>WebPageTest</strong>（真实网络多地测试）</li>
+<li><strong>Chrome DevTools Performance</strong>（运行时分析）</li>
+<li><strong>PerformanceObserver API</strong>（线上真实用户监控 / RUM）</li>
+</ul>
+<hr>
+<h2>二、网络传输优化</h2>
+<h3>1. 减少 HTTP 请求数</h3>
+<ul>
+<li>合并 CSS/JS 文件（构建工具自动处理）</li>
+<li>使用 CSS Sprite 或 SVG Symbol 合并图标</li>
+<li>内联关键 CSS（Critical CSS）</li>
+<li>HTTP/2 多路复用下适度拆包（避免过大 bundle）</li>
+</ul>
+<h3>2. 减小传输体积</h3>
+<ul>
+<li><strong>Gzip / Brotli 压缩</strong>：文本资源（HTML/CSS/JS）压缩率 70%+ ，Nginx 配置 <code>gzip on; brotli on;</code></li>
+<li><strong>JS Tree Shaking</strong>：移除未使用代码，Rollup/Vite 默认开启</li>
+<li><strong>代码压缩 Minify</strong>：Terser（JS）、cssnano（CSS）</li>
+<li><strong>图片优化</strong>：<ul>
+<li>使用现代格式：WebP（比 JPEG 小 25-35%）、AVIF（更小）</li>
+<li>合理压缩：imagemin、sharp</li>
+<li>响应式图片：<code>&lt;img srcset&gt;</code> 按屏幕分辨率加载合适尺寸</li>
+<li>SVG 替代位图（图标/简单图形）</li>
+</ul>
+</li>
+</ul>
+<h3>3. 缓存策略</h3>
+<pre><code># HTML 入口文件 - 每次验证（保证拿最新）
+Cache-Control: no-cache
+
+# 带 hash 指纹的静态资源 - 长期强缓存
+Cache-Control: max-age=31536000, immutable
+
+# API 接口 - 按业务决定
+Cache-Control: no-store  # 或 max-age=60
+</code></pre>
+<ul>
+<li><strong>Service Worker 缓存</strong>：离线可用，精细控制缓存策略</li>
+<li><strong>CDN 缓存</strong>：静态资源分发到用户最近节点</li>
+</ul>
+<h3>4. 减少 DNS 查询 / 连接建立时间</h3>
+<pre><code class="language-html">&lt;!-- DNS 预解析 --&gt;
+&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//api.example.com&quot;&gt;
+&lt;!-- 提前建立 TLS 连接 --&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://cdn.example.com&quot; crossorigin&gt;
+</code></pre>
+<h3>5. 资源预加载</h3>
+<pre><code class="language-html">&lt;!-- 关键资源提前加载（字体、首屏图、关键 CSS） --&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;/fonts/main.woff2&quot; as=&quot;font&quot; crossorigin&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;/hero.webp&quot; as=&quot;image&quot;&gt;
+&lt;!-- 预取下一页可能需要的资源 --&gt;
+&lt;link rel=&quot;prefetch&quot; href=&quot;/next-page.js&quot;&gt;
+</code></pre>
+<hr>
+<h2>三、JavaScript 优化</h2>
+<h3>1. 代码分割（Code Splitting）</h3>
+<pre><code class="language-javascript">// 路由级分割 - React
+const Dashboard = React.lazy(() =&gt; import(&#39;./Dashboard&#39;));
+
+// 条件加载
+if (user.isPremier) {
+  const { PremierFeature } = await import(&#39;./PremierFeature&#39;);
+}
+</code></pre>
+<ul>
+<li>入口分割：每个路由独立 chunk</li>
+<li>动态导入：按需加载非首屏功能</li>
+<li>第三方库分包：<code>vendor chunk</code> 单独分离，利用浏览器缓存</li>
+</ul>
+<h3>2. 减少主线程阻塞</h3>
+<ul>
+<li><strong>长任务拆分</strong>：将耗时任务拆为 &lt;50ms 的小任务<pre><code class="language-javascript">// 使用 scheduler.yield() 或 setTimeout 让出主线程
+for (const item of hugeList) {
+  processItem(item);
+  if (每处理N个) await scheduler.yield(); // 让浏览器响应交互
+}
+</code></pre>
+</li>
+<li><strong>Web Worker</strong>：CPU 密集型计算放后台线程（图像处理、数据加密）</li>
+<li><strong>避免不必要的 polyfill</strong>：<code>@babel/preset-env</code> 按 browserslist 精确 polyfill</li>
+</ul>
+<h3>3. 渲染性能优化</h3>
+<ul>
+<li><strong>防抖（debounce）</strong> 处理输入、搜索事件</li>
+<li><strong>节流（throttle）</strong> 处理 scroll、resize 事件</li>
+<li><strong>虚拟列表（Virtual Scroll）</strong>：只渲染可视区域内的列表项（<code>react-virtual</code>、<code>vue-virtual-scroller</code>）</li>
+<li><strong>避免强制同步布局</strong>：读写 DOM 属性要分离，不要在循环中交替读写</li>
+</ul>
+<h3>4. 包体积分析</h3>
+<pre><code class="language-bash"># Vite 项目
+npx vite-bundle-analyzer
+
+# webpack 项目
+npx webpack-bundle-analyzer
+</code></pre>
+<ul>
+<li>检查是否有重复依赖</li>
+<li>检查是否有体积过大的库（moment.js → dayjs，lodash → lodash-es 按需导入）</li>
+</ul>
+<hr>
+<h2>四、CSS 优化</h2>
+<h3>1. 减少回流和重绘</h3>
+<pre><code class="language-css">/* 用 transform 替代 top/left 做位移动画 */
+/* 不好 */
+.box { top: 10px; } /* 触发回流 */
+/* 好 */
+.box { transform: translateY(10px); } /* 合成层，不触发回流 */
+
+/* 用 opacity 替代 visibility/display 做淡入淡出 */
+.fade { opacity: 0; transition: opacity 0.3s; }
+</code></pre>
+<h3>2. 关键 CSS 内联</h3>
+<p>将首屏渲染所需的最小 CSS 内联到 <code>&lt;head&gt;</code> 中，非关键 CSS 异步加载：</p>
+<pre><code class="language-html">&lt;head&gt;
+  &lt;style&gt;/* 关键CSS，&lt;14KB */&lt;/style&gt;
+  &lt;link rel=&quot;preload&quot; href=&quot;/non-critical.css&quot; as=&quot;style&quot; onload=&quot;this.rel=&#39;stylesheet&#39;&quot;&gt;
+&lt;/head&gt;
+</code></pre>
+<h3>3. CSS 按需加载</h3>
+<ul>
+<li><strong>CSS Modules</strong> / <strong>Scoped CSS</strong>：避免全局样式污染</li>
+<li><strong>Tailwind CSS Purge</strong>：构建时删除未用的工具类</li>
+<li><strong><code>@layer</code></strong> 控制样式优先级，避免权重战</li>
+</ul>
+<h3>4. 减少 CSS 复杂度</h3>
+<ul>
+<li>避免深层嵌套选择器（增加计算成本）</li>
+<li>避免通配符 <code>*</code> 选择器</li>
+<li>合并相同的 <code>@media</code> 查询</li>
+</ul>
+<hr>
+<h2>五、图片与多媒体优化</h2>
+<h3>图片格式选择</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐格式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>照片</td>
+<td>AVIF / WebP（降级 JPEG）</td>
+</tr>
+<tr>
+<td>透明图片</td>
+<td>AVIF / WebP（降级 PNG）</td>
+</tr>
+<tr>
+<td>图标/线条图</td>
+<td>SVG</td>
+</tr>
+<tr>
+<td>动图</td>
+<td>WebP / AVIF（降级 GIF）</td>
+</tr>
+</tbody></table>
+<pre><code class="language-html">&lt;!-- 使用 &lt;picture&gt; 按格式降级 --&gt;
+&lt;picture&gt;
+  &lt;source srcset=&quot;image.avif&quot; type=&quot;image/avif&quot;&gt;
+  &lt;source srcset=&quot;image.webp&quot; type=&quot;image/webp&quot;&gt;
+  &lt;img src=&quot;image.jpg&quot; alt=&quot;描述&quot; width=&quot;800&quot; height=&quot;450&quot;&gt;
+&lt;/picture&gt;
+</code></pre>
+<h3>懒加载</h3>
+<pre><code class="language-html">&lt;!-- 原生懒加载（浏览器支持 &gt;95%） --&gt;
+&lt;img src=&quot;large.jpg&quot; loading=&quot;lazy&quot; alt=&quot;...&quot;&gt;
+
+&lt;!-- 视频懒加载 --&gt;
+&lt;video loading=&quot;lazy&quot; preload=&quot;none&quot;&gt;&lt;/video&gt;
+</code></pre>
+<h3>图片尺寸优化</h3>
+<ul>
+<li>始终指定 <code>width</code> 和 <code>height</code> 属性，防止 CLS</li>
+<li>用 <code>object-fit: cover</code> 配合固定容器，避免图片撑开布局</li>
+<li>Next.js <code>&lt;Image&gt;</code> / Nuxt <code>&lt;NuxtImg&gt;</code> 自动优化（格式转换、懒加载、占位符）</li>
+</ul>
+<hr>
+<h2>六、字体优化</h2>
+<h3>1. 使用 <code>font-display: swap</code></h3>
+<pre><code class="language-css">@font-face {
+  font-family: &#39;MyFont&#39;;
+  src: url(&#39;font.woff2&#39;) format(&#39;woff2&#39;);
+  font-display: swap; /* 先用系统字体，加载完再切换，避免 FOIT */
+}
+</code></pre>
+<h3>2. 只加载需要的字符集</h3>
+<ul>
+<li>中文字体体积巨大，使用字体子集化工具（<code>pyftsubset</code>）只打包用到的字符</li>
+<li>Google Fonts 添加 <code>text=</code> 参数指定需要的字符</li>
+</ul>
+<h3>3. 预加载关键字体</h3>
+<pre><code class="language-html">&lt;link rel=&quot;preload&quot; href=&quot;/fonts/main.woff2&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin&gt;
+</code></pre>
+<hr>
+<h2>七、服务端与网络层优化</h2>
+<h3>1. 服务端渲染（SSR）</h3>
+<ul>
+<li><strong>Next.js / Nuxt</strong>：服务端直接返回完整 HTML，显著提升 FCP 和 LCP</li>
+<li><strong>流式渲染（Streaming SSR）</strong>：边渲染边传输，React 18 / Next.js App Router 支持</li>
+<li><strong>静态生成（SSG / ISR）</strong>：预生成 HTML，CDN 分发，TTFB 最低</li>
+</ul>
+<h3>2. HTTP/2 / HTTP/3</h3>
+<ul>
+<li>确保服务器开启 HTTP/2（Nginx <code>listen 443 ssl http2</code>）</li>
+<li>HTTP/3 / QUIC 对弱网环境效果显著</li>
+</ul>
+<h3>3. 服务端压缩</h3>
+<pre><code class="language-nginx"># Nginx 配置
+gzip on;
+gzip_types text/plain text/css application/json application/javascript;
+gzip_min_length 1024;
+
+# Brotli（需额外模块）
+brotli on;
+brotli_comp_level 6;
+</code></pre>
+<h3>4. 资源 Preload / Push</h3>
+<ul>
+<li>HTTP/2 Server Push（已逐渐被 103 Early Hints 替代）</li>
+<li><code>103 Early Hints</code>：在主响应前预先推送资源预加载指令</li>
+</ul>
+<hr>
+<h2>八、React / Vue 框架层优化</h2>
+<h3>React 优化</h3>
+<pre><code class="language-jsx">// 1. memo 防止不必要的子组件渲染
+const Child = React.memo(({ data }) =&gt; &lt;div&gt;{data}&lt;/div&gt;);
+
+// 2. useMemo 缓存计算结果
+const sorted = useMemo(() =&gt; items.sort(compareFn), [items]);
+
+// 3. useCallback 缓存函数引用（给子组件传函数时）
+const handleClick = useCallback(() =&gt; { ... }, [dep]);
+
+// 4. 列表必须有稳定的 key
+{list.map(item =&gt; &lt;Item key={item.id} {...item} /&gt;)}
+
+// 5. 动态导入路由
+const Page = lazy(() =&gt; import(&#39;./Page&#39;));
+</code></pre>
+<h3>Vue 优化</h3>
+<pre><code class="language-vue">&lt;!-- 1. v-once：静态内容只渲染一次 --&gt;
+&lt;StaticComponent v-once /&gt;
+
+&lt;!-- 2. v-memo：缓存子树，仅依赖变化时更新 --&gt;
+&lt;li v-for=&quot;item in list&quot; :key=&quot;item.id&quot; v-memo=&quot;[item.selected]&quot;&gt;
+
+&lt;!-- 3. shallowRef / shallowReactive：浅层响应，减少 Proxy 开销 --&gt;
+const bigData = shallowRef(largeObject);
+
+&lt;!-- 4. computed 有缓存，避免模板中调用函数 --&gt;
+const sorted = computed(() =&gt; list.value.slice().sort());
+</code></pre>
+<hr>
+<h2>九、监控与持续优化</h2>
+<h3>线上性能监控（RUM）</h3>
+<pre><code class="language-javascript">// 使用 PerformanceObserver 采集真实用户数据
+const observer = new PerformanceObserver((list) =&gt; {
+  for (const entry of list.getEntries()) {
+    if (entry.entryType === &#39;largest-contentful-paint&#39;) {
+      analytics.send(&#39;LCP&#39;, entry.startTime);
+    }
+  }
+});
+observer.observe({ type: &#39;largest-contentful-paint&#39;, buffered: true });
+</code></pre>
+<h3>工具链</h3>
+<ul>
+<li><strong>Sentry Performance</strong>：错误 + 性能一体化监控</li>
+<li><strong>Datadog RUM / New Relic</strong>：企业级全栈监控</li>
+<li><strong>自建上报</strong>：PerformanceObserver + 后端接收 + Grafana 可视化</li>
+</ul>
+<h3>性能预算（Performance Budget）</h3>
+<p>在 CI 中集成 Lighthouse，超过阈值则阻断部署：</p>
+<pre><code class="language-yaml"># .github/workflows/ci.yml
+- name: Lighthouse Check
+  uses: treosh/lighthouse-ci-action@v10
+  with:
+    budgetPath: ./budget.json
+    uploadArtifacts: true
+</code></pre>
+<hr>
+<h2>十、性能优化清单</h2>
+<h3>加载性能</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 开启 Gzip/Brotli 压缩</li>
+<li><input disabled="" type="checkbox"> 静态资源走 CDN</li>
+<li><input disabled="" type="checkbox"> JS/CSS/HTML 文件 minify</li>
+<li><input disabled="" type="checkbox"> 图片使用 WebP/AVIF 格式</li>
+<li><input disabled="" type="checkbox"> 图片指定 width/height 防止 CLS</li>
+<li><input disabled="" type="checkbox"> 图片懒加载（<code>loading=&quot;lazy&quot;</code>）</li>
+<li><input disabled="" type="checkbox"> 关键资源 preload</li>
+<li><input disabled="" type="checkbox"> 路由级代码分割</li>
+<li><input disabled="" type="checkbox"> 第三方库按需导入</li>
+<li><input disabled="" type="checkbox"> 去掉未使用的依赖</li>
+<li><input disabled="" type="checkbox"> 开启 HTTP/2</li>
+</ul>
+<h3>运行时性能</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 列表有稳定 key</li>
+<li><input disabled="" type="checkbox"> 合理使用 memo/useMemo/useCallback</li>
+<li><input disabled="" type="checkbox"> 长列表使用虚拟滚动</li>
+<li><input disabled="" type="checkbox"> 动画使用 transform/opacity</li>
+<li><input disabled="" type="checkbox"> scroll/resize 事件使用节流</li>
+<li><input disabled="" type="checkbox"> 搜索输入使用防抖</li>
+<li><input disabled="" type="checkbox"> 避免在循环中读写 DOM 布局属性</li>
+<li><input disabled="" type="checkbox"> CPU 密集任务移到 Web Worker</li>
+</ul>
+<h3>监控</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 接入 Lighthouse CI</li>
+<li><input disabled="" type="checkbox"> 线上 RUM 采集 Core Web Vitals</li>
+<li><input disabled="" type="checkbox"> 设置性能预算告警</li>
+</ul>
+
+  </div>
+</body>
+</html>
