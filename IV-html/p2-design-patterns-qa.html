@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p2 design patterns qa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>设计模式 常见面试题（附答案）</h1>
+<h2>设计模式基础</h2>
+<h3>1. 什么是设计模式？有哪些分类？</h3>
+<p><strong>答案：</strong>
+设计模式是针对软件设计中常见问题的可复用解决方案，由 GoF（Gang of Four）整理为 23 种。三大分类：① <strong>创建型</strong>（对象创建方式）：单例、工厂、抽象工厂、建造者、原型；② <strong>结构型</strong>（类和对象的组合方式）：适配器、装饰器、代理、外观、桥接、组合、享元；③ <strong>行为型</strong>（对象间的通信和职责分配）：观察者、策略、命令、迭代器、状态、模板方法、责任链、中介者、备忘录、访问者、解释器。</p>
+<h3>2. 什么是 SOLID 原则？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>S</strong>（单一职责）：每个类只有一个引起变化的原因</li>
+<li><strong>O</strong>（开闭原则）：对扩展开放，对修改关闭（新功能通过扩展而非修改实现）</li>
+<li><strong>L</strong>（里氏替换）：子类可以替换父类使用而不改变程序正确性</li>
+<li><strong>I</strong>（接口隔离）：接口应细化，客户端不应依赖不需要的接口</li>
+<li><strong>D</strong>（依赖倒置）：高层模块不依赖低层模块，都依赖抽象；抽象不依赖细节，细节依赖抽象</li>
+</ul>
+<hr>
+<h2>创建型模式</h2>
+<h3>3. 什么是单例模式？前端有哪些应用？</h3>
+<p><strong>答案：</strong>
+保证一个类只有一个实例，提供全局访问点。实现：</p>
+<pre><code class="language-javascript">class Singleton {
+  static #instance = null;
+  constructor() {
+    if (Singleton.#instance) return Singleton.#instance;
+    Singleton.#instance = this;
+  }
+  static getInstance() {
+    return Singleton.#instance ?? new Singleton();
+  }
+}
+
+// 模块级单例（更 JS 化的方式）
+let instance = null;
+export function createStore() {
+  if (!instance) instance = { state: {}, ...methods };
+  return instance;
+}
+</code></pre>
+<p>前端应用：全局状态管理（Vuex/Pinia store）、事件总线、日志记录器、WebSocket 连接管理。</p>
+<h3>4. 什么是工厂模式？</h3>
+<p><strong>答案：</strong>
+工厂模式封装对象创建逻辑，调用方不需要知道具体创建细节。简单工厂：</p>
+<pre><code class="language-javascript">function createButton(type) {
+  const types = {
+    primary: PrimaryButton,
+    danger: DangerButton,
+    ghost: GhostButton,
+  };
+  const Constructor = types[type];
+  if (!Constructor) throw new Error(`Unknown type: ${type}`);
+  return new Constructor();
+}
+</code></pre>
+<p>工厂方法模式：将创建方法定义在父类中，子类决定实例化哪个类。抽象工厂：创建一系列相关对象（如 UI 主题工厂，同时创建按钮、输入框等配套组件）。</p>
+<h3>5. 什么是建造者模式（Builder）？</h3>
+<p><strong>答案：</strong>
+分步骤构建复杂对象，将构建过程与表示分离。常见形式是链式调用：</p>
+<pre><code class="language-javascript">class QueryBuilder {
+  #query = { table: &#39;&#39;, conditions: [], limit: null };
+
+  from(table) { this.#query.table = table; return this; }
+  where(condition) { this.#query.conditions.push(condition); return this; }
+  limitTo(n) { this.#query.limit = n; return this; }
+  build() { return { ...this.#query }; }
+}
+
+const query = new QueryBuilder().from(&#39;users&#39;).where(&#39;age &gt; 18&#39;).limitTo(10).build();
+</code></pre>
+<p>前端应用：复杂表单配置、查询参数构建、测试数据 Builder、Axios 请求封装。</p>
+<hr>
+<h2>结构型模式</h2>
+<h3>6. 什么是代理模式？前端有哪些应用？</h3>
+<p><strong>答案：</strong>
+代理对象控制对真实对象的访问，可以在访问前后添加额外逻辑（权限、缓存、日志）。</p>
+<pre><code class="language-javascript">// ES6 Proxy 实现
+function createProxy(target) {
+  return new Proxy(target, {
+    get(obj, key) {
+      console.log(`Getting ${key}`);
+      return obj[key];
+    },
+    set(obj, key, value) {
+      console.log(`Setting ${key} = ${value}`);
+      obj[key] = value;
+      return true;
+    }
+  });
+}
+</code></pre>
+<p>前端应用：Vue 3 响应式系统（Proxy 追踪依赖）、图片懒加载代理、接口缓存代理（同参数请求复用）、权限控制代理。</p>
+<h3>7. 什么是装饰器模式？和继承的区别？</h3>
+<p><strong>答案：</strong>
+装饰器在不修改原类的情况下，通过包装对象添加新功能，运行时动态增强，可叠加多个装饰器：</p>
+<pre><code class="language-javascript">// 函数装饰器（高阶函数）
+function withLogging(fn) {
+  return function(...args) {
+    console.log(`Calling ${fn.name} with`, args);
+    const result = fn.apply(this, args);
+    console.log(`Result:`, result);
+    return result;
+  };
+}
+
+function withCache(fn) {
+  const cache = new Map();
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+const enhanced = withLogging(withCache(fetchUser));
+</code></pre>
+<p>区别：继承是编译期静态的，装饰器是运行时动态的，更灵活（可组合、可选择）。</p>
+<h3>8. 什么是适配器模式？</h3>
+<p><strong>答案：</strong>
+适配器将一个接口转换为客户端期望的另一个接口，解决接口不兼容问题：</p>
+<pre><code class="language-javascript">// 旧的 XML API 适配为新的 JSON API
+class XMLDataAdapter {
+  constructor(xmlDataSource) {
+    this.xmlDataSource = xmlDataSource;
+  }
+  getData() {
+    const xmlData = this.xmlDataSource.fetchXML();
+    return this.parseXMLToJSON(xmlData); // 转换格式
+  }
+  parseXMLToJSON(xml) { /* ... */ }
+}
+
+// 前端常见：第三方 SDK 封装（统一接口，底层可切换）
+class AnalyticsAdapter {
+  track(event, data) {
+    if (isGoogleAnalytics) ga(&#39;send&#39;, event, data);
+    else if (isMixpanel) mixpanel.track(event, data);
+  }
+}
+</code></pre>
+<h3>9. 什么是外观模式（Facade）？</h3>
+<p><strong>答案：</strong>
+外观模式为复杂子系统提供简化的统一接口，隐藏内部复杂性。前端常见示例：</p>
+<pre><code class="language-javascript">// 封装复杂的浏览器存储逻辑
+class StorageFacade {
+  get(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch {
+      return null;
+    }
+  }
+  set(key, value, ttl) {
+    localStorage.setItem(key, JSON.stringify({ value, expires: Date.now() + ttl }));
+  }
+  clear() { localStorage.clear(); }
+}
+</code></pre>
+<p>前端应用：SDK 对外 API 设计、复杂工具库的简化封装（如封装 Axios 的请求工厂）。</p>
+<hr>
+<h2>行为型模式</h2>
+<h3>10. 什么是观察者模式？和发布订阅的区别？</h3>
+<p><strong>答案：</strong>
+<strong>观察者模式</strong>：Subject（主题）直接持有 Observer 列表，状态变化时直接通知：</p>
+<pre><code class="language-javascript">class EventEmitter {
+  #listeners = new Map();
+  on(event, fn) {
+    if (!this.#listeners.has(event)) this.#listeners.set(event, []);
+    this.#listeners.get(event).push(fn);
+    return () =&gt; this.off(event, fn); // 返回取消订阅函数
+  }
+  emit(event, data) { this.#listeners.get(event)?.forEach(fn =&gt; fn(data)); }
+  off(event, fn) {
+    this.#listeners.set(event, this.#listeners.get(event)?.filter(f =&gt; f !== fn) ?? []);
+  }
+}
+</code></pre>
+<p><strong>发布订阅模式</strong>：引入事件总线（Message Broker），发布者和订阅者完全解耦，互不知晓对方。观察者模式耦合度更高，发布订阅解耦更彻底（跨模块通信用发布订阅）。</p>
+<h3>11. 什么是策略模式？</h3>
+<p><strong>答案：</strong>
+策略模式定义一系列算法，将它们封装为独立对象，可以互换使用，消除大量 <code>if-else</code>：</p>
+<pre><code class="language-javascript">const validators = {
+  required: (value) =&gt; !!value || &#39;必填&#39;,
+  email: (value) =&gt; /\S+@\S+\.\S+/.test(value) || &#39;邮箱格式错误&#39;,
+  minLength: (min) =&gt; (value) =&gt; value.length &gt;= min || `最少 ${min} 个字符`,
+};
+
+function validate(value, rules) {
+  return rules.map(rule =&gt; {
+    const fn = typeof rule === &#39;function&#39; ? rule : validators[rule];
+    return fn(value);
+  }).filter(result =&gt; result !== true);
+}
+
+// 使用
+const errors = validate(&#39;abc&#39;, [&#39;required&#39;, validators.email, validators.minLength(8)]);
+</code></pre>
+<p>前端应用：表单验证策略、排序策略、权限策略、动画缓动函数。</p>
+<h3>12. 什么是命令模式？</h3>
+<p><strong>答案：</strong>
+将操作封装为对象，支持排队执行、撤销（undo）/重做（redo）、宏命令：</p>
+<pre><code class="language-javascript">class CommandManager {
+  #history = [];
+  #future = [];
+
+  execute(command) {
+    command.execute();
+    this.#history.push(command);
+    this.#future = []; // 执行新命令清空重做栈
+  }
+  undo() {
+    const command = this.#history.pop();
+    if (command) { command.undo(); this.#future.push(command); }
+  }
+  redo() {
+    const command = this.#future.pop();
+    if (command) { command.execute(); this.#history.push(command); }
+  }
+}
+</code></pre>
+<p>前端应用：富文本编辑器（撤销/重做）、表单多步操作、Canvas 绘图工具。</p>
+<h3>13. 什么是迭代器模式？</h3>
+<p><strong>答案：</strong>
+提供一种统一方式顺序访问集合元素，不暴露内部结构。ES6 的 Iterator 协议是该模式的标准实现：</p>
+<pre><code class="language-javascript">class Range {
+  constructor(start, end) { this.start = start; this.end = end; }
+  [Symbol.iterator]() {
+    let current = this.start;
+    return {
+      next: () =&gt; current &lt;= this.end
+        ? { value: current++, done: false }
+        : { value: undefined, done: true }
+    };
+  }
+}
+
+for (const n of new Range(1, 5)) console.log(n); // 1 2 3 4 5
+// Generator 是创建迭代器的语法糖
+function* range(start, end) {
+  for (let i = start; i &lt;= end; i++) yield i;
+}
+</code></pre>
+<h3>14. 什么是状态模式？</h3>
+<p><strong>答案：</strong>
+将对象在不同状态下的行为封装到独立状态类中，状态切换时改变行为，消除大量状态判断：</p>
+<pre><code class="language-javascript">// 订单状态机
+const OrderStates = {
+  pending: {
+    pay: (order) =&gt; { order.setState(&#39;paid&#39;); },
+    cancel: (order) =&gt; { order.setState(&#39;cancelled&#39;); },
+  },
+  paid: {
+    ship: (order) =&gt; { order.setState(&#39;shipped&#39;); },
+    refund: (order) =&gt; { order.setState(&#39;refunding&#39;); },
+  },
+  shipped: {
+    complete: (order) =&gt; { order.setState(&#39;completed&#39;); },
+  },
+};
+
+class Order {
+  #state = &#39;pending&#39;;
+  setState(state) { this.#state = state; }
+  do(action) { OrderStates[this.#state]?.[action]?.(this) ?? console.log(&#39;非法操作&#39;); }
+}
+</code></pre>
+<h3>15. 什么是模板方法模式？</h3>
+<p><strong>答案：</strong>
+在父类中定义算法骨架（步骤顺序），子类实现具体步骤，不改变整体结构：</p>
+<pre><code class="language-javascript">class DataProcessor {
+  // 模板方法
+  process(data) {
+    const parsed = this.parse(data);    // 步骤1：解析
+    const filtered = this.filter(parsed); // 步骤2：过滤
+    return this.format(filtered);         // 步骤3：格式化
+  }
+  parse(data) { return data; }          // 默认实现
+  filter(data) { return data; }
+  format(data) { throw new Error(&#39;必须实现 format&#39;); } // 抽象方法
+}
+
+class CSVProcessor extends DataProcessor {
+  parse(data) { return data.split(&#39;\n&#39;).map(row =&gt; row.split(&#39;,&#39;)); }
+  format(data) { return data.map(row =&gt; ({ name: row[0], value: row[1] })); }
+}
+</code></pre>
+<hr>
+<h2>前端特有模式</h2>
+<h3>16. 什么是 Flux / Redux 模式？</h3>
+<p><strong>答案：</strong>
+Flux 是单向数据流架构模式：<code>Action → Dispatcher → Store → View → Action...</code>。Redux 是 Flux 的改进实现：单一 <code>Store</code>，纯函数 <code>Reducer</code>（<code>(state, action) =&gt; newState</code>），不可变数据。核心价值：状态变化可预测、可追踪（时间旅行调试）、易于测试。适合复杂状态管理，简单应用过度设计。</p>
+<h3>17. 什么是高阶组件（HOC）模式？</h3>
+<p><strong>答案：</strong>
+高阶组件是接收组件、返回新组件的函数，用于复用组件逻辑（横切关注点）：</p>
+<pre><code class="language-javascript">function withAuth(WrappedComponent) {
+  return function AuthWrapper(props) {
+    const { isLoggedIn } = useAuth();
+    if (!isLoggedIn) return &lt;Redirect to=&quot;/login&quot; /&gt;;
+    return &lt;WrappedComponent {...props} /&gt;;
+  };
+}
+
+function withLoading(WrappedComponent) {
+  return function LoadingWrapper({ isLoading, ...props }) {
+    if (isLoading) return &lt;Spinner /&gt;;
+    return &lt;WrappedComponent {...props} /&gt;;
+  };
+}
+
+const ProtectedPage = withAuth(withLoading(UserDashboard));
+</code></pre>
+<p>现代 React 中 Hook 可替代大部分 HOC 场景，但 HOC 在错误边界等场景仍有用。</p>
+<h3>18. 什么是 Render Props 模式？</h3>
+<p><strong>答案：</strong>
+通过 <code>prop</code> 传入一个函数（返回 JSX），让组件可以共享内部状态：</p>
+<pre><code class="language-javascript">function Mouse({ render }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  return (
+    &lt;div onMouseMove={e =&gt; setPosition({ x: e.clientX, y: e.clientY })}&gt;
+      {render(position)}
+    &lt;/div&gt;
+  );
+}
+
+// 使用
+&lt;Mouse render={({ x, y }) =&gt; &lt;Cursor x={x} y={y} /&gt;} /&gt;
+</code></pre>
+<p>现代 React 中大部分 Render Props 场景可用自定义 Hook 代替，更简洁。</p>
+<h3>19. 什么是组合（Composition）优于继承？</h3>
+<p><strong>答案：</strong>
+继承的问题：深层继承链脆弱（修改父类影响所有子类）、多重继承困难、功能绑定死板。组合通过将行为组合进对象（注入或混入），更灵活：</p>
+<pre><code class="language-typescript">// 继承方式
+class FlightAnimal extends Animal { fly() {} }
+class SwimmingAnimal extends Animal { swim() {} }
+// 问题：会飞又会游泳的动物怎么继承？
+
+// 组合方式
+const canFly = { fly: () =&gt; &#39;飞翔&#39; };
+const canSwim = { swim: () =&gt; 游泳 };
+const duck = { ...canFly, ...canSwim, name: &#39;鸭子&#39; }; // 自由组合
+</code></pre>
+<p>React Hook 就是&quot;功能组合&quot;的最佳体现：<code>useAuth() + useForm() + useDebounce()</code> 按需组合，而非深层继承。</p>
+<h3>20. 什么是依赖注入（DI）？</h3>
+<p><strong>答案：</strong>
+依赖注入是控制反转（IoC）的一种实现：对象不自己创建依赖，而是由外部注入。好处：解耦、易于测试（注入 Mock）、易于替换实现。</p>
+<pre><code class="language-typescript">// 不好：硬依赖
+class UserService {
+  private db = new MySQLDatabase(); // 无法测试/替换
+}
+
+// 好：依赖注入
+class UserService {
+  constructor(private db: IDatabase) {} // 注入接口，可替换
+}
+
+// 测试时注入 Mock
+const service = new UserService(new MockDatabase());
+// NestJS 中由 IoC 容器自动注入
+</code></pre>
+<h2>总结</h2>
+<p>这些设计模式题目覆盖了 SOLID 原则、创建型/结构型/行为型经典模式，以及前端特有的 HOC、Render Props、组合模式和依赖注入，注重与实际前端框架的关联，适合面试系统复习。</p>
+
+  </div>
+</body>
+</html>

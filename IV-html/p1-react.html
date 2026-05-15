@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p1 react</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p><code>useEffect</code> hook on component initialization effect that runs once when the App component mounts</p>
+<p>执行顺序：
+// 输出顺序：
+// 1. 组件渲染开始
+// 3. 组件渲染结束
+// 2. useInsertionEffect - DOM 更新前
+// 4. useLayoutEffect - DOM 更新后，重绘前
+// 6. useEffect - 重绘后，异步执行</p>
+<p>需要操作 DOM？
+├─ 是 → 需要读取布局信息？
+│   ├─ 是 → useLayoutEffect (防止闪烁)
+│   └─ 否 → useEffect (异步操作)
+└─ 否 → 需要 CSS-in-JS？
+    ├─ 是 → useInsertionEffect
+    └─ 否 → useEffect</p>
+<p>需要 DOM 引用？
+├─ 是 → useRef
+└─ 否 → 持久化值？→ useRef</p>
+<p>需要暴露方法给父组件？
+├─ 是 → useImperativeHandle + forwardRef
+└─ 否 → 不需要</p>
+<h2>总结</h2>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>主要用途</th>
+<th>执行时机</th>
+<th>性能影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>useEffect</strong></td>
+<td>数据获取、订阅、异步操作</td>
+<td>异步 (重绘后)</td>
+<td>最小</td>
+</tr>
+<tr>
+<td><strong>useLayoutEffect</strong></td>
+<td>DOM 布局、防止闪烁</td>
+<td>同步 (重绘前)</td>
+<td>可能阻塞</td>
+</tr>
+<tr>
+<td><strong>useInsertionEffect</strong></td>
+<td>CSS-in-JS、动态样式</td>
+<td>同步 (DOM 更新前)</td>
+<td>最小</td>
+</tr>
+<tr>
+<td><strong>useRef</strong></td>
+<td>DOM 引用、持久化值</td>
+<td>渲染时</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>useImperativeHandle</strong></td>
+<td>暴露组件方法</td>
+<td>渲染时</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<p><strong>最佳实践</strong>：</p>
+<ol>
+<li><strong>默认选择 <code>useEffect</code></strong></li>
+<li><strong>需要防止闪烁时用 <code>useLayoutEffect</code></strong></li>
+<li><strong>开发 CSS-in-JS 库用 <code>useInsertionEffect</code></strong></li>
+<li><strong>需要 DOM 引用用 <code>useRef</code></strong></li>
+<li><strong>需要暴露方法用 <code>useImperativeHandle</code></strong></li>
+</ol>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p0 browser qa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>浏览器原理 常见面试题（附答案）</h1>
+<h2>浏览器渲染流程</h2>
+<h3>1. 浏览器的整体渲染流程是什么？</h3>
+<p><strong>答案：</strong>
+① DNS 解析，建立 TCP 连接（TLS 握手）；② 发送 HTTP 请求，接收响应；③ 解析 HTML 构建 DOM 树；④ 解析 CSS 构建 CSSOM 树；⑤ 合并 DOM 和 CSSOM 构建 Render Tree（只含可见节点）；⑥ Layout（回流/重排）：计算每个节点的位置和尺寸；⑦ Paint（重绘）：生成绘制指令；⑧ Compositing（合成）：将各层合并输出到屏幕。</p>
+<h3>2. 什么是 DOM 树和 CSSOM 树？</h3>
+<p><strong>答案：</strong>
+DOM（Document Object Model）树是 HTML 解析后的树形表示，每个 HTML 元素是一个节点，JavaScript 通过 DOM API 操作页面结构。CSSOM（CSS Object Model）树是 CSS 解析后的树形表示，包含每个节点的完整样式信息（含继承和层叠计算结果）。只有两棵树都构建完成，浏览器才能生成 Render Tree 进行布局。</p>
+<h3>3. CSS 为什么会阻塞渲染？JS 呢？</h3>
+<p><strong>答案：</strong>
+CSS 阻塞渲染：浏览器必须等 CSSOM 构建完成再构建 Render Tree，因此 CSS 加载会阻塞渲染（但不阻塞 HTML 解析）。同时 CSS 阻塞 JS 执行（JS 可能查询样式，需等 CSSOM 完成）。JS 阻塞 HTML 解析：<code>&lt;script&gt;</code> 标签会暂停 HTML 解析（可能修改 DOM），加载并执行完才继续，这是为什么 JS 推荐放在 <code>&lt;/body&gt;</code> 前或使用 <code>defer</code>/<code>async</code>。</p>
+<h3>4. <code>defer</code> 和 <code>async</code> 的区别？</h3>
+<p><strong>答案：</strong>
+两者都异步下载脚本不阻塞 HTML 解析。区别：<code>async</code> 下载完立即执行（暂停 HTML 解析），执行顺序不保证；<code>defer</code> 在 HTML 解析完成后、<code>DOMContentLoaded</code> 事件前按顺序执行。推荐：普通脚本用 <code>defer</code>；独立脚本（如统计、广告）用 <code>async</code>；关键脚本放 <code>&lt;head&gt;</code> 不加属性。</p>
+<h3>5. 什么是回流（Reflow）和重绘（Repaint）？</h3>
+<p><strong>答案：</strong>
+回流（Reflow/Layout）：元素的几何属性（位置、尺寸）发生变化，浏览器重新计算布局，成本最高。重绘（Repaint/Paint）：样式改变但不影响布局（如颜色、背景），浏览器重新绘制，成本次之。合成（Compositing）：只改变变换、透明度等可由 GPU 处理的属性，最高效，不触发回流和重绘。</p>
+<h3>6. 哪些操作容易触发回流？如何优化？</h3>
+<p><strong>答案：</strong>
+触发回流的操作：修改宽高、位置、字体大小、内外边距；增删 DOM 节点；读取 <code>offsetWidth</code>/<code>scrollTop</code>/<code>getBoundingClientRect</code> 等强制同步布局属性。优化：① 批量修改 DOM（DocumentFragment、className 一次性修改）；② 避免在循环中读写布局属性（读写分离）；③ 用 <code>transform/opacity</code> 代替 <code>top/left</code> 做动画；④ 使用 <code>will-change</code> 提示浏览器创建独立合成层。</p>
+<h3>7. 什么是合成层（Compositing Layer）？</h3>
+<p><strong>答案：</strong>
+浏览器将部分元素提升到独立的合成层，由 GPU 处理，不触发回流和重绘。触发条件：<code>transform: translateZ(0)</code>、<code>will-change: transform</code>、<code>opacity</code> 动画、<code>position: fixed</code>、<code>&lt;video&gt;</code>/<code>&lt;canvas&gt;</code>/<code>&lt;iframe&gt;</code>、有重叠需要处理的透明情况。过多合成层会占用大量内存，<code>will-change</code> 不要滥用。</p>
+<h3>8. 什么是 <code>DOMContentLoaded</code> 和 <code>load</code> 事件的区别？</h3>
+<p><strong>答案：</strong>
+<code>DOMContentLoaded</code>：HTML 解析完成、DOM 树构建完毕时触发，不等待样式表、图片、子框架加载完成（但会等待 <code>defer</code> 脚本执行完成）。<code>load</code>：页面所有资源（图片、CSS、JS、iframe等）全部加载完成后触发。一般 DOM 操作在 <code>DOMContentLoaded</code> 监听，统计页面加载完成用 <code>load</code>。</p>
+<h3>9. 什么是 FCP、LCP、CLS、FID/INP？</h3>
+<p><strong>答案：</strong>
+这是 Core Web Vitals（核心网页指标）：</p>
+<ul>
+<li><strong>FCP</strong>（First Contentful Paint）：首次有内容绘制到屏幕的时间，衡量感知加载速度</li>
+<li><strong>LCP</strong>（Largest Contentful Paint）：最大内容绘制时间，衡量主要内容加载速度（目标 &lt;2.5s）</li>
+<li><strong>CLS</strong>（Cumulative Layout Shift）：累计布局偏移分数，衡量视觉稳定性（目标 &lt;0.1）</li>
+<li><strong>INP</strong>（Interaction to Next Paint，取代 FID）：用户交互到下次绘制的延迟，衡量交互响应性（目标 &lt;200ms）</li>
+</ul>
+<h3>10. 什么是关键渲染路径？如何优化？</h3>
+<p><strong>答案：</strong>
+关键渲染路径是浏览器从收到 HTML 到首次渲染的最短路径。优化方向：① 减少关键资源数量和体积（内联关键 CSS、压缩）；② 减少关键路径长度（减少 RTT、CDN）；③ 预加载关键资源（<code>&lt;link rel=&quot;preload&quot;&gt;</code>）；④ 延迟非关键资源（<code>defer</code>、懒加载）；⑤ 服务端渲染或流式渲染提前输出 HTML。</p>
+<h2>浏览器事件系统</h2>
+<h3>11. 什么是事件捕获、目标阶段和事件冒泡？</h3>
+<p><strong>答案：</strong>
+DOM 事件分三阶段：① 捕获阶段（从 window 向下到目标元素）；② 目标阶段（在目标元素上触发）；③ 冒泡阶段（从目标元素向上到 window）。<code>addEventListener(event, handler, true)</code> 在捕获阶段监听；默认（<code>false</code>/不传）在冒泡阶段监听。<code>stopPropagation()</code> 阻止向上冒泡，<code>stopImmediatePropagation()</code> 同时阻止同元素其他监听器。</p>
+<h3>12. 什么是事件委托？有什么好处？</h3>
+<p><strong>答案：</strong>
+事件委托利用事件冒泡，把子元素的事件监听器绑定在父元素上，通过 <code>event.target</code> 判断实际触发元素。好处：① 减少内存占用（一个监听器代替大量子元素监听器）；② 动态新增子元素自动生效，无需重新绑定；③ 减少 DOM 操作次数。缺点：<code>stopPropagation</code> 会破坏委托；某些事件不冒泡（如 <code>focus</code>，需用 <code>focusin</code> 代替）。</p>
+<h3>13. <code>event.preventDefault()</code> 和 <code>event.stopPropagation()</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>preventDefault()</code>：阻止元素的默认行为（如阻止链接跳转、表单提交、右键菜单），不影响事件传播。<code>stopPropagation()</code>：阻止事件继续向上冒泡（或向下捕获），不影响元素默认行为。两者相互独立，可同时调用。<code>return false</code>（在 jQuery 中）等价于两者都调用，原生事件中只相当于 <code>preventDefault()</code>。</p>
+<h3>14. 什么是自定义事件（CustomEvent）？</h3>
+<p><strong>答案：</strong>
+<code>new CustomEvent(&#39;myEvent&#39;, { detail: { data: 123 }, bubbles: true, cancelable: true })</code> 创建自定义事件，通过 <code>element.dispatchEvent(event)</code> 分发，其他地方用 <code>addEventListener(&#39;myEvent&#39;, handler)</code> 监听。<code>detail</code> 字段传递自定义数据。适合跨组件、跨模块通信（原生发布订阅），不依赖框架。</p>
+<h2>浏览器存储</h2>
+<h3>15. <code>localStorage</code>、<code>sessionStorage</code> 和 <code>Cookie</code> 的区别？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Cookie</th>
+<th>localStorage</th>
+<th>sessionStorage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储大小</td>
+<td>~4KB</td>
+<td>~5-10MB</td>
+<td>~5-10MB</td>
+</tr>
+<tr>
+<td>过期时间</td>
+<td>可设置</td>
+<td>永久</td>
+<td>标签页关闭</td>
+</tr>
+<tr>
+<td>随请求发送</td>
+<td>是（自动）</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>可访问域</td>
+<td>可跨子域</td>
+<td>同源</td>
+<td>同源+同标签页</td>
+</tr>
+<tr>
+<td>JS 可读</td>
+<td>可被 HttpOnly 禁止</td>
+<td>是</td>
+<td>是</td>
+</tr>
+</tbody></table>
+<h3>16. 什么是 IndexedDB？</h3>
+<p><strong>答案：</strong>
+IndexedDB 是浏览器内置的 NoSQL 数据库，支持存储大量结构化数据（非字符串），支持索引、事务、游标。存储上限通常为磁盘的一定比例（远超 localStorage）。API 是异步的（基于事件，建议用 <code>idb</code> 等封装库）。适合离线 Web 应用、缓存大量数据（如邮件客户端、文档编辑器）。</p>
+<h3>17. 什么是 Cache API 和 Service Worker 缓存？</h3>
+<p><strong>答案：</strong>
+Cache API 提供独立于 HTTP 缓存的可编程缓存机制，由 Service Worker 管理。Service Worker 是独立线程，可拦截所有网络请求，实现：离线缓存（PWA）、后台同步、推送通知。Cache API 存储 Request/Response 对，容量大，可精确控制缓存策略（Cache First、Network First、Stale-While-Revalidate）。</p>
+<h2>浏览器事件循环与性能</h2>
+<h3>18. 浏览器的事件循环和 Node.js 有什么区别？</h3>
+<p><strong>答案：</strong>
+浏览器事件循环：每次循环取一个宏任务执行，执行完清空微任务队列，然后渲染（如需要），再取下一个宏任务。Node.js 事件循环：基于 libuv，有多个阶段（timers、pending callbacks、idle/prepare、poll、check、close），且有 <code>process.nextTick</code>（优先级高于 Promise 微任务）和 <code>setImmediate</code>（check 阶段）等特有 API。</p>
+<h3>19. 什么是 <code>requestAnimationFrame</code>？和 <code>setTimeout</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>requestAnimationFrame(callback)</code> 在下一帧绘制前执行回调，与浏览器刷新率同步（通常 60fps = 16.7ms/帧），适合动画。比 <code>setTimeout(fn, 16)</code> 好的地方：① 精确同步屏幕刷新，不丢帧；② 页面不可见时自动暂停（节省资源）；③ 合并多个 RAF 回调，避免不必要的绘制。动画应优先用 RAF 或 CSS 动画而非 <code>setInterval</code>。</p>
+<h3>20. 什么是 <code>requestIdleCallback</code>？</h3>
+<p><strong>答案：</strong>
+<code>requestIdleCallback(callback)</code> 在浏览器空闲时（主线程无高优先级任务时）执行回调，<code>callback</code> 接收 <code>IdleDeadline</code> 对象，可查询剩余空闲时间。适合非关键的后台任务（如数据上报、预加载、非紧急 DOM 操作）。React Fiber 架构受此启发，用 MessageChannel 模拟实现时间切片调度。</p>
+<h3>21. 什么是长任务（Long Task）？如何检测？</h3>
+<p><strong>答案：</strong>
+超过 50ms 的任务被称为长任务，会阻塞主线程导致页面卡顿。检测方式：① PerformanceObserver 监听 <code>longtasks</code> 条目；② Chrome DevTools Performance 面板（红色火焰表示长任务）；③ <code>performance.getEntriesByType(&#39;longtask&#39;)</code>。优化：将长任务拆分为小任务（使用 <code>scheduler.yield()</code>、<code>setTimeout(fn, 0)</code>、<code>requestIdleCallback</code>）。</p>
+<h3>22. 什么是 Web Worker？</h3>
+<p><strong>答案：</strong>
+Web Worker 在浏览器后台线程执行脚本，不阻塞主线程 UI，通过 <code>postMessage</code> 与主线程通信。Worker 无法访问 DOM，有独立的全局作用域。类型：① Dedicated Worker（专用，单页面）；② Shared Worker（共享，多标签页）；③ Service Worker（拦截网络请求，离线缓存）。适合 CPU 密集型任务：图像处理、数据压缩、复杂计算。</p>
+<h2>浏览器安全</h2>
+<h3>23. 什么是点击劫持（Clickjacking）？如何防御？</h3>
+<p><strong>答案：</strong>
+攻击者用透明 iframe 覆盖正常页面，诱导用户点击实际上是 iframe 内目标站点的元素，执行非预期操作（如转账、授权）。防御：① 服务端设置 <code>X-Frame-Options: DENY/SAMEORIGIN</code> 禁止或限制被 iframe 嵌入；② CSP 的 <code>frame-ancestors &#39;none&#39;</code> 指令；③ JS 判断 <code>window.self !== window.top</code> 时跳出 iframe（framebuster，可被绕过）。</p>
+<h3>24. 什么是 HTTPS 降级攻击？HSTS 如何防御？</h3>
+<p><strong>答案：</strong>
+中间人通过 SSL Stripping 将 HTTPS 连接降级为 HTTP，拦截明文数据。HSTS（HTTP Strict Transport Security）通过响应头 <code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload</code> 告诉浏览器该域名只能用 HTTPS 访问，并缓存此规则。浏览器在缓存期内自动将 HTTP 请求升级为 HTTPS，不给中间人降级机会。</p>
+<h3>25. 什么是子资源完整性（SRI）？</h3>
+<p><strong>答案：</strong>
+SRI（Subresource Integrity）通过在 <code>&lt;link&gt;</code>/<code>&lt;script&gt;</code> 标签上加 <code>integrity</code> 属性（<code>sha256-&lt;base64hash&gt;</code>），让浏览器在加载资源后验证内容哈希是否匹配，防止 CDN 被篡改导致执行恶意脚本。不匹配则拒绝执行。使用第三方 CDN 时应配合 SRI 使用。</p>
+<h2>浏览器 API</h2>
+<h3>26. IntersectionObserver 有什么用？</h3>
+<p><strong>答案：</strong>
+IntersectionObserver 异步观察目标元素与视口（或祖先）的交叉状态，替代昂贵的 <code>scroll</code> 事件 + <code>getBoundingClientRect()</code> 方案。常用于：图片懒加载（进入视口才加载）、无限滚动、动画触发、广告曝光统计。性能远优于滚动事件监听，浏览器原生优化，不在主线程同步计算。</p>
+<h3>27. MutationObserver 有什么用？</h3>
+<p><strong>答案：</strong>
+MutationObserver 异步监听 DOM 变化（子节点增删、属性变化、文本内容变化），替代已废弃的 <code>Mutation Events</code>（同步、性能差）。常用于：监听第三方代码对 DOM 的修改、虚拟 DOM 框架的 DOM diff 辅助、无障碍工具监听页面变化。每帧合并回调，性能友好。</p>
+<h3>28. ResizeObserver 有什么用？</h3>
+<p><strong>答案：</strong>
+ResizeObserver 监听元素尺寸变化（区别于 <code>window.resize</code> 只监听视口），可精确监听任意元素大小变化。常用于：响应式图表（容器大小变化时重绘）、自适应组件、取代轮询判断元素大小。不触发回流，性能比 resize 事件 + <code>getBoundingClientRect</code> 好。</p>
+<h3>29. <code>history</code> API 和 <code>hash</code> 路由的区别？</h3>
+<p><strong>答案：</strong>
+Hash 路由：URL 中 <code>#</code> 后的部分不发送到服务器，通过 <code>hashchange</code> 事件监听变化，兼容性好，服务器不需要配置。History 路由：使用 <code>pushState</code>/<code>replaceState</code> 修改 URL（无 <code>#</code>），通过 <code>popstate</code> 事件监听，URL 更美观，但需要服务器配置将所有路径返回 <code>index.html</code>，否则刷新 404。现代框架（React Router、Vue Router）默认推荐 History 模式。</p>
+<h3>30. 什么是浏览器的 Performance API？</h3>
+<p><strong>答案：</strong>
+Performance API 提供高精度时间测量和性能数据。常用：<code>performance.now()</code>（比 <code>Date.now()</code> 精度更高）；<code>performance.mark()</code>/<code>measure()</code>（自定义性能标记）；<code>PerformanceObserver</code> 监听各类性能条目（LCP、FCP、longtasks、resource、navigation）；<code>performance.getEntriesByType(&#39;resource&#39;)</code> 查询所有资源加载时序。是性能监控和优化的基础工具。</p>
+<h2>总结</h2>
+<p>这些题目覆盖了浏览器渲染流程、事件系统、存储机制、事件循环、性能优化、安全防护及常用 API，是深入理解前端运行环境的核心知识。</p>
+
+  </div>
+</body>
+</html>

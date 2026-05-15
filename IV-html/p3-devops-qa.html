@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p3 devops qa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DevOps / 部署 常见面试题（附答案）</h1>
+<h2>Docker 基础</h2>
+<h3>1. 什么是 Docker？和虚拟机的区别？</h3>
+<p><strong>答案：</strong>
+Docker 是容器化平台，通过容器将应用及其依赖打包，实现&quot;一次构建，到处运行&quot;。与虚拟机区别：容器共享宿主机 OS 内核，启动快（秒级）、资源占用少（MB 级）；虚拟机每个实例有独立 OS，启动慢（分钟级）、资源占用多（GB 级）。容器隔离性略弱于虚拟机，但足以满足绝大多数场景。</p>
+<h3>2. <code>Dockerfile</code> 的常用指令有哪些？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-dockerfile">FROM node:20-alpine          # 基础镜像
+WORKDIR /app                 # 设置工作目录
+COPY package*.json ./        # 先复制依赖文件（利用层缓存）
+RUN npm ci --production      # 安装依赖
+COPY . .                     # 复制源码
+RUN npm run build            # 构建
+EXPOSE 3000                  # 声明端口（仅文档，不真正发布）
+ENV NODE_ENV=production      # 设置环境变量
+USER node                    # 切换到非 root 用户（安全）
+CMD [&quot;node&quot;, &quot;dist/main.js&quot;] # 容器启动命令
+</code></pre>
+<h3>3. 如何优化 Docker 镜像体积和构建速度？</h3>
+<p><strong>答案：</strong>
+① <strong>使用 Alpine 基础镜像</strong>（<code>node:20-alpine</code>，~5MB vs ~300MB）；② <strong>利用层缓存</strong>：先复制 <code>package.json</code> 安装依赖，再复制源码，依赖不变时跳过耗时的 <code>npm install</code>；③ <strong>多阶段构建（Multi-stage Build）</strong>：</p>
+<pre><code class="language-dockerfile"># 构建阶段
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# 运行阶段（只包含产物，不含 node_modules/源码）
+FROM nginx:alpine AS runner
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+</code></pre>
+<p>④ <code>.dockerignore</code> 排除 <code>node_modules</code>、<code>.git</code>、测试文件等；⑤ 合并多个 <code>RUN</code> 命令减少层数。</p>
+<h3>4. 常用的 Docker 命令有哪些？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-bash">docker build -t myapp:1.0 .        # 构建镜像
+docker run -d -p 3000:3000 --name myapp myapp:1.0  # 后台运行容器
+docker ps                           # 查看运行中的容器
+docker logs myapp -f                # 查看日志（-f 实时跟随）
+docker exec -it myapp sh            # 进入容器 shell
+docker stop/rm myapp                # 停止/删除容器
+docker images                       # 查看镜像列表
+docker rmi myapp:1.0               # 删除镜像
+docker push registry.example.com/myapp:1.0  # 推送到仓库
+docker pull nginx:alpine            # 拉取镜像
+</code></pre>
+<h3>5. 什么是 Docker Compose？</h3>
+<p><strong>答案：</strong>
+Docker Compose 用 YAML 文件定义多容器应用，一键启动/停止完整环境：</p>
+<pre><code class="language-yaml"># docker-compose.yml
+version: &#39;3.9&#39;
+services:
+  app:
+    build: .
+    ports: [&#39;3000:3000&#39;]
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/mydb
+    depends_on: [db, redis]
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+volumes:
+  postgres_data:
+</code></pre>
+<pre><code class="language-bash">docker compose up -d    # 后台启动所有服务
+docker compose down     # 停止并删除容器
+docker compose logs -f  # 查看所有服务日志
+</code></pre>
+<h2>Nginx</h2>
+<h3>6. Nginx 的常见用途有哪些？</h3>
+<p><strong>答案：</strong>
+① <strong>静态文件服务</strong>（部署前端 dist 目录）；② <strong>反向代理</strong>（将请求转发到后端服务，隐藏后端）；③ <strong>负载均衡</strong>（分发请求到多个后端实例）；④ <strong>SSL 终结</strong>（在 Nginx 层处理 HTTPS，后端用 HTTP）；⑤ <strong>缓存</strong>（对后端响应缓存，减轻后端压力）；⑥ <strong>跨域配置</strong>（统一处理 CORS 头）；⑦ <strong>Gzip/Brotli 压缩</strong>。</p>
+<h3>7. Nginx 部署 SPA 的配置是什么？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name example.com;
+    root /usr/share/nginx/html;
+
+    # Gzip 压缩
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript;
+
+    # 静态资源长缓存（带 hash 指纹）
+    location ~* \.(js|css|png|jpg|woff2)$ {
+        expires 1y;
+        add_header Cache-Control &quot;public, immutable&quot;;
+    }
+
+    # SPA 路由：所有路径都返回 index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # API 反向代理
+    location /api/ {
+        proxy_pass http://backend:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+</code></pre>
+<h3>8. 什么是负载均衡？Nginx 有哪些负载均衡策略？</h3>
+<p><strong>答案：</strong>
+负载均衡将请求分发到多个服务器，提高可用性和吞吐量。Nginx 策略：</p>
+<pre><code class="language-nginx">upstream backend {
+    least_conn;           # 最少连接数（默认 round-robin 轮询）
+    # ip_hash;            # 同一 IP 总去同一服务器（会话粘性）
+    server backend1:3000 weight=3;  # 权重（处理3/4请求）
+    server backend2:3000;
+    server backend3:3000 backup;    # 备用节点
+}
+</code></pre>
+<p>策略：<code>round-robin</code>（轮询，默认）、<code>least_conn</code>（最少连接）、<code>ip_hash</code>（IP 哈希，会话粘性）、<code>weight</code>（权重）。</p>
+<h2>CI/CD 进阶</h2>
+<h3>9. 前端项目的标准部署流程是什么？</h3>
+<p><strong>答案：</strong>
+① <code>git push</code> 触发 CI；② 安装依赖（<code>pnpm install --frozen-lockfile</code>）；③ 类型检查 + Lint + 单元测试；④ 构建（<code>vite build</code>）；⑤ 构建 Docker 镜像并推送到 Registry；⑥ 部署到测试环境（自动）；⑦ E2E 测试；⑧ 人工审批（可选）；⑨ 部署到生产环境（蓝绿/滚动/金丝雀部署）；⑩ 健康检查 + 冒烟测试；⑪ 失败时自动回滚。</p>
+<h3>10. 什么是蓝绿部署、滚动部署和金丝雀发布？</h3>
+<p><strong>答案：</strong>
+<strong>蓝绿部署</strong>：维护两套完全相同的环境（蓝/绿），新版本部署到绿环境，验证后将流量切换，出问题快速切回蓝环境。零停机，资源成本翻倍。<strong>滚动部署</strong>：逐步替换旧实例（如先更新 1/4，再 2/4...），零停机，过程中新旧版本并存，适合无状态服务。<strong>金丝雀发布（灰度）</strong>：只将一小部分流量（如 5%）导向新版本，观察指标，逐步扩大流量比例，风险最低但周期最长。</p>
+<h2>Kubernetes 基础</h2>
+<h3>11. 什么是 Kubernetes？核心概念有哪些？</h3>
+<p><strong>答案：</strong>
+Kubernetes（K8s）是容器编排平台，自动化部署、扩缩容和运维容器化应用。核心概念：</p>
+<ul>
+<li><strong>Pod</strong>：最小部署单元，包含一个或多个容器</li>
+<li><strong>Deployment</strong>：声明 Pod 的期望状态，管理滚动更新和回滚</li>
+<li><strong>Service</strong>：为 Pod 提供稳定的网络访问入口（负载均衡）</li>
+<li><strong>Ingress</strong>：HTTP 路由规则（域名/路径 → Service）</li>
+<li><strong>ConfigMap/Secret</strong>：配置和敏感数据注入</li>
+<li><strong>Namespace</strong>：资源隔离单元</li>
+</ul>
+<h3>12. 什么是 <code>readinessProbe</code> 和 <code>livenessProbe</code>？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-yaml">livenessProbe:      # 存活探针：失败则重启容器
+  httpGet:
+    path: /health
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+readinessProbe:     # 就绪探针：失败则不接收流量（不重启）
+  httpGet:
+    path: /ready
+    port: 3000
+  initialDelaySeconds: 5
+</code></pre>
+<p><code>livenessProbe</code> 检测容器是否还在运行，失败则重启（解决死锁等问题）；<code>readinessProbe</code> 检测容器是否准备好处理请求，失败则从 Service 负载均衡中移除（不接收流量，不影响已有连接）。两者配合实现真正的零停机部署。</p>
+<h2>监控与可观测性</h2>
+<h3>13. 什么是可观测性三大支柱？</h3>
+<p><strong>答案：</strong>
+① <strong>Logs（日志）</strong>：离散的时间点事件记录，用于问题排查（ELK 栈：Elasticsearch + Logstash + Kibana，或 Loki + Grafana）；② <strong>Metrics（指标）</strong>：聚合的数值型数据（CPU、内存、QPS、错误率），用于监控告警（Prometheus + Grafana）；③ <strong>Traces（链路追踪）</strong>：完整请求在分布式系统中的传播路径，用于性能分析和定位瓶颈（Jaeger、Zipkin、OpenTelemetry）。三者互补，完整覆盖系统可观测性。</p>
+<h3>14. 如何在 Node.js 中实现结构化日志？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-javascript">import pino from &#39;pino&#39;; // 高性能结构化日志库
+
+const logger = pino({
+  level: process.env.LOG_LEVEL ?? &#39;info&#39;,
+  transport: process.env.NODE_ENV === &#39;development&#39;
+    ? { target: &#39;pino-pretty&#39; } // 开发时美化输出
+    : undefined, // 生产时输出 JSON（便于日志系统采集）
+});
+
+// 使用
+logger.info({ userId: 123, action: &#39;login&#39; }, &#39;User logged in&#39;);
+logger.error({ err, requestId }, &#39;Request failed&#39;);
+</code></pre>
+<p>结构化日志（JSON 格式）便于日志系统（ELK/Loki）解析、查询和告警，比非结构化日志（字符串）更易于自动化处理。</p>
+<h3>15. 什么是健康检查端点？如何实现？</h3>
+<p><strong>答案：</strong>
+健康检查端点供负载均衡器、K8s 探针、监控系统调用：</p>
+<pre><code class="language-javascript">// /health - 基础存活检查（只要进程运行就 200）
+app.get(&#39;/health&#39;, (req, res) =&gt; res.json({ status: &#39;ok&#39; }));
+
+// /ready - 就绪检查（验证所有依赖可用）
+app.get(&#39;/ready&#39;, async (req, res) =&gt; {
+  try {
+    await db.query(&#39;SELECT 1&#39;);    // 检查 DB 连接
+    await redis.ping();             // 检查 Redis 连接
+    res.json({ status: &#39;ready&#39;, db: &#39;ok&#39;, redis: &#39;ok&#39; });
+  } catch (err) {
+    res.status(503).json({ status: &#39;not ready&#39;, error: err.message });
+  }
+});
+</code></pre>
+<h2>总结</h2>
+<p>这些题目覆盖了 Docker（容器化、多阶段构建、Compose）、Nginx（SPA 部署、反向代理、负载均衡）、CI/CD 流程、Kubernetes 基础和可观测性，适合作为 DevOps/部署方向的面试复习资料。</p>
+
+  </div>
+</body>
+</html>
