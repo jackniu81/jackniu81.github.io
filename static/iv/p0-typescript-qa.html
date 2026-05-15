@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p0 typescript qa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TypeScript 常见面试题（附答案）</h1>
+<h2>基础类型与类型系统</h2>
+<h3>1. TypeScript 和 JavaScript 的主要区别是什么？</h3>
+<p><strong>答案：</strong>
+TypeScript 是 JavaScript 的超集，增加了静态类型系统、接口、泛型、枚举、装饰器等特性。TS 在编译期进行类型检查，捕获潜在错误；JS 是动态类型，错误只在运行时暴露。TS 最终编译为 JS 运行，不改变运行时行为，只提升开发阶段的安全性和可维护性。</p>
+<h3>2. TypeScript 的基础类型有哪些？</h3>
+<p><strong>答案：</strong>
+基本类型：<code>string</code>、<code>number</code>、<code>boolean</code>、<code>null</code>、<code>undefined</code>、<code>symbol</code>、<code>bigint</code>；特殊类型：<code>any</code>（放弃类型检查）、<code>unknown</code>（安全的 any，使用前必须收窄）、<code>never</code>（不可能有值）、<code>void</code>（无返回值函数）；引用类型：<code>object</code>、数组 <code>T[]</code>、元组 <code>[T, U]</code>、枚举 <code>enum</code>。</p>
+<h3>3. <code>any</code> 和 <code>unknown</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>any</code> 完全跳过类型检查，可以赋值给任何类型并执行任何操作，危险性高；<code>unknown</code> 是类型安全的 any，接收任何值，但使用前必须通过类型守卫收窄到具体类型才能操作。推荐用 <code>unknown</code> 处理不确定类型的输入（如 API 响应、catch 的错误对象）。</p>
+<h3>4. <code>never</code> 类型有什么用？</h3>
+<p><strong>答案：</strong>
+<code>never</code> 表示&quot;永远不会发生&quot;的值类型。常见场景：① 抛出异常的函数返回类型；② 无限循环函数；③ 穷举检查（exhaustive check）——在 <code>switch</code> 末尾用 <code>const x: never = value</code> 确保所有 case 都被处理，新增联合类型成员时编译器自动报错，是防止遗漏分支的利器。</p>
+<h3>5. <code>type</code> 和 <code>interface</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+主要区别：① <code>interface</code> 支持声明合并（多次声明同名接口自动合并），<code>type</code> 不行；② <code>type</code> 可以表示联合类型、交叉类型、元组、基本类型别名等，<code>interface</code> 只能描述对象形状；③ 扩展语法：<code>interface</code> 用 <code>extends</code>，<code>type</code> 用 <code>&amp;</code> 交叉类型。实践建议：公共 API / 对象形状用 <code>interface</code>，复杂类型操作用 <code>type</code>。</p>
+<h3>6. 什么是联合类型和交叉类型？</h3>
+<p><strong>答案：</strong>
+联合类型 <code>A | B</code>：值可以是 A 或 B 之一，只能访问两者共有属性，需类型守卫收窄后访问特有属性；交叉类型 <code>A &amp; B</code>：合并多个类型所有属性，值必须同时满足所有类型，常用于 Mixin 和扩展对象类型。</p>
+<h3>7. 什么是类型断言？和类型转换有什么区别？</h3>
+<p><strong>答案：</strong>
+类型断言（<code>as</code> 关键字）告诉编译器&quot;我知道这个值的类型&quot;，只在编译期生效，不做运行时转换，若断言错误运行时仍会报错。与强制类型转换不同，断言不改变运行时值。双重断言 <code>as unknown as T</code> 可绕过不相关类型限制，应谨慎使用。非空断言 <code>value!</code> 告诉编译器值一定不为 null/undefined。</p>
+<h3>8. 什么是类型守卫？</h3>
+<p><strong>答案：</strong>
+类型守卫在运行时检查类型并缩小联合类型范围。常见形式：① <code>typeof</code>（基本类型）；② <code>instanceof</code>（类实例）；③ <code>in</code> 操作符（检查属性存在）；④ 自定义守卫函数（返回 <code>value is Type</code> 谓词，如 <code>function isUser(v: any): v is User { return &#39;name&#39; in v }</code>）。使用后 TS 自动收窄类型，无需额外断言。</p>
+<h3>9. 什么是字面量类型和 <code>as const</code>？</h3>
+<p><strong>答案：</strong>
+字面量类型把具体值作为类型，如 <code>type Dir = &#39;left&#39; | &#39;right&#39;</code>，比字符串更精确。<code>as const</code> 把对象/数组所有属性推导为字面量类型且变为 <code>readonly</code>，如 <code>const colors = [&#39;red&#39;, &#39;blue&#39;] as const</code> 使 <code>colors</code> 类型为 <code>readonly [&#39;red&#39;, &#39;blue&#39;]</code>，可用 <code>typeof colors[number]</code> 提取精确联合类型。</p>
+<h3>10. 什么是可辨识联合类型（Discriminated Union）？</h3>
+<p><strong>答案：</strong>
+也叫标签联合，每个联合成员有一个共同的字面量类型字段（标签），通过标签收窄类型。例如 <code>type Shape = { kind: &#39;circle&#39;; radius: number } | { kind: &#39;rect&#39;; width: number }</code>，在 <code>switch(shape.kind)</code> 中 TS 自动推导每个分支的具体类型。是处理多态数据的最佳模式。</p>
+<h2>泛型</h2>
+<h3>11. 什么是泛型？为什么比 <code>any</code> 好？</h3>
+<p><strong>答案：</strong>
+泛型用 <code>&lt;T&gt;</code> 声明类型参数，延迟确定具体类型到调用时，保持类型信息传递。<code>function identity&lt;T&gt;(arg: T): T { return arg }</code> 调用时 TS 自动推导 T，返回值和输入保持同一类型。比 <code>any</code> 好在：不丢失类型信息，调用方仍有完整的类型提示和检查。</p>
+<h3>12. 泛型约束如何使用？</h3>
+<p><strong>答案：</strong>
+<code>&lt;T extends SomeType&gt;</code> 限制泛型范围，确保 T 具有特定属性。如 <code>&lt;T extends { length: number }&gt;</code> 保证 T 有 <code>length</code>；<code>&lt;K extends keyof T&gt;</code> 保证 K 是 T 的合法键；多重约束 <code>&lt;T extends A &amp; B&gt;</code>；约束默认值 <code>&lt;T = string&gt;</code> 不传类型参数时使用 <code>string</code>。</p>
+<h3>13. 什么是条件类型？</h3>
+<p><strong>答案：</strong>
+条件类型形如 <code>T extends U ? X : Y</code>，根据类型关系动态推导结果类型。在分布式上下文中（T 为裸类型参数时），联合类型会被分别处理。常配合 <code>infer</code> 提取子类型：<code>type Awaited&lt;T&gt; = T extends Promise&lt;infer R&gt; ? R : T</code>，<code>type ReturnType&lt;T&gt; = T extends (...args: any[]) =&gt; infer R ? R : never</code>。</p>
+<h3>14. 什么是映射类型？</h3>
+<p><strong>答案：</strong>
+映射类型通过 <code>{ [K in keyof T]: ... }</code> 遍历并转换对象类型的属性，可修改修饰符（<code>-?</code> 移除可选、<code>+readonly</code> 添加只读）。内置工具类型如 <code>Partial</code>、<code>Readonly</code>、<code>Required</code>、<code>Pick</code> 都是映射类型实现的，也是自定义工具类型的核心语法。</p>
+<h3>15. 什么是模板字面量类型？</h3>
+<p><strong>答案：</strong>
+TS 4.1 引入，在类型层面做字符串拼接：<code>type EventName&lt;T extends string&gt; = `on${Capitalize&lt;T&gt;}`</code>。可将联合类型和字符串模板组合批量生成新联合类型，如 <code>type CSSProp = `margin-${Side}`</code>。内置字符串工具类型：<code>Uppercase</code>、<code>Lowercase</code>、<code>Capitalize</code>、<code>Uncapitalize</code>。</p>
+<h2>工具类型</h2>
+<h3>16. 常用工具类型有哪些，分别有什么用？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>Partial&lt;T&gt;</code> / <code>Required&lt;T&gt;</code>：全部属性变可选 / 必填</li>
+<li><code>Readonly&lt;T&gt;</code>：全部属性变只读</li>
+<li><code>Pick&lt;T, K&gt;</code> / <code>Omit&lt;T, K&gt;</code>：选取 / 排除指定属性</li>
+<li><code>Record&lt;K, V&gt;</code>：构建键值映射类型</li>
+<li><code>Exclude&lt;T, U&gt;</code> / <code>Extract&lt;T, U&gt;</code>：联合类型排除 / 提取</li>
+<li><code>NonNullable&lt;T&gt;</code>：排除 null 和 undefined</li>
+<li><code>ReturnType&lt;T&gt;</code> / <code>Parameters&lt;T&gt;</code>：提取函数返回类型 / 参数类型元组</li>
+<li><code>Awaited&lt;T&gt;</code>：提取 Promise 展开后的类型</li>
+</ul>
+<h3>17. 如何实现 <code>DeepPartial</code>（深层可选）？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">type DeepPartial&lt;T&gt; = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial&lt;T[K]&gt; : T[K];
+};
+</code></pre>
+<p>通过递归映射类型：对每个属性若为对象则继续递归 <code>DeepPartial</code>，否则直接保留类型。同理可实现 <code>DeepReadonly</code>、<code>DeepRequired</code> 等变体。</p>
+<h3>18. <code>keyof</code> 和 <code>typeof</code> 在类型中的用法？</h3>
+<p><strong>答案：</strong>
+<code>keyof T</code> 提取类型 T 所有键的联合类型（<code>&#39;name&#39; | &#39;age&#39;</code>），常用于约束键名参数如 <code>function get&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K]</code>。<code>typeof variable</code> 在类型上下文中获取变量的推导类型，常用于 <code>type Config = typeof defaultConfig</code> 从值推导类型。组合 <code>keyof typeof obj</code> 是提取对象字面量键联合类型的常见模式。</p>
+<h3>19. 什么是索引签名和索引访问类型？</h3>
+<p><strong>答案：</strong>
+索引签名 <code>{ [key: string]: number }</code> 描述动态属性名的对象，键类型只能为 <code>string</code>、<code>number</code> 或 <code>symbol</code>。索引访问类型 <code>T[K]</code>（查找类型）获取 T 类型在键 K 下的值类型，如 <code>type AgeType = Person[&#39;age&#39;]</code>，可与联合键组合 <code>Person[&#39;name&#39; | &#39;age&#39;]</code>。</p>
+<h3>20. 如何从函数重载中提取类型？</h3>
+<p><strong>答案：</strong>
+<code>Parameters&lt;typeof fn&gt;</code> 提取最后一个重载的参数类型，<code>ReturnType&lt;typeof fn&gt;</code> 提取最后一个重载的返回类型。若需要提取特定重载的类型，可以用条件类型和函数类型匹配。更复杂的情况建议手动定义独立的类型而不是依赖提取。</p>
+<h2>类与装饰器</h2>
+<h3>21. TypeScript 类中的访问修饰符有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>public</code>（默认）：任何地方可访问</li>
+<li><code>private</code>：只能类内部访问（编译期检查，运行时不受限）</li>
+<li><code>protected</code>：类内部和子类可访问</li>
+<li><code>readonly</code>：只读（必须在声明或构造函数中初始化）</li>
+<li><code>#field</code>：ES 私有字段（运行时真正私有）</li>
+<li><code>abstract</code>：声明抽象类/方法</li>
+<li><code>override</code>（TS 4.3+）：显式标记覆盖父类方法，防止拼写错误</li>
+</ul>
+<h3>22. 什么是装饰器？有哪些常见类型？</h3>
+<p><strong>答案：</strong>
+装饰器是 TS 实验性特性（需开启 <code>experimentalDecorators</code>），语法 <code>@decorator</code>，本质是高阶函数，在不修改原代码的情况下增强行为。类型：① 类装饰器（修改/替换类）；② 方法装饰器（修改方法描述符）；③ 属性装饰器；④ 参数装饰器。常用于 NestJS（路由、注入、验证）、Angular、ORM（TypeORM 实体定义）。</p>
+<h3>23. 什么是抽象类？和接口的区别？</h3>
+<p><strong>答案：</strong>
+抽象类（<code>abstract class</code>）不能实例化，只能继承；可包含抽象方法（无实现，子类必须实现）和普通方法（有实现）；一个类只能继承一个抽象类。接口只声明形状，无实现；一个类可实现多个接口。选择依据：需要共享实现代码用抽象类，只需规范形状/多重实现用接口。</p>
+<h2>模块与配置</h2>
+<h3>24. <code>tsconfig.json</code> 的关键配置项有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>strict</code>：开启所有严格检查（强烈推荐）</li>
+<li><code>target</code>：编译目标 JS 版本（ES2020/ESNext）</li>
+<li><code>module</code>：输出模块格式（commonjs/ESNext）</li>
+<li><code>moduleResolution</code>：模块解析策略（<code>bundler</code> 适合 Vite 等现代工具）</li>
+<li><code>paths</code>：路径别名（<code>@/*</code> → <code>src/*</code>）</li>
+<li><code>baseUrl</code>：路径解析基准目录</li>
+<li><code>noEmit</code>：只做类型检查不输出文件（配合打包工具使用）</li>
+<li><code>lib</code>：包含的类型定义库（<code>[&quot;ESNext&quot;, &quot;DOM&quot;]</code>）</li>
+<li><code>strict</code> 下包含：<code>noImplicitAny</code>、<code>strictNullChecks</code>、<code>strictFunctionTypes</code> 等</li>
+</ul>
+<h3>25. 什么是声明文件（<code>.d.ts</code>）？</h3>
+<p><strong>答案：</strong>
+声明文件只包含类型声明，不含实现，用于为 JS 库提供类型信息。通过 <code>declare</code> 关键字声明模块、全局变量、函数类型。使用方式：① 安装 <code>@types/xxx</code>（DefinitelyTyped 社区维护）；② 库自带 <code>.d.ts</code>（<code>package.json</code> 中 <code>types</code> 字段）；③ 自建 <code>custom.d.ts</code> 为无类型的本地模块声明。</p>
+<h3>26. 什么是可空引用类型（<code>strictNullChecks</code>）？</h3>
+<p><strong>答案：</strong>
+开启 <code>strictNullChecks</code> 后，<code>null</code> 和 <code>undefined</code> 不再是所有类型的子类型，必须显式声明 <code>string | null</code>。这强制开发者在使用可能为空的值前做判断，在编译期消灭大量潜在的空指针错误。可选链 <code>?.</code> 和非空断言 <code>!</code> 是与之配套的常用语法。</p>
+<h2>TypeScript 实战</h2>
+<h3>27. 如何在 React + TypeScript 中定义组件 Props？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">interface ButtonProps {
+  label: string;
+  onClick?: () =&gt; void;
+  variant?: &#39;primary&#39; | &#39;secondary&#39;;
+  children?: React.ReactNode;
+}
+// 推荐普通函数声明（比 FC 更精确）
+function Button({ label, onClick, variant = &#39;primary&#39; }: ButtonProps) { ... }
+</code></pre>
+<p>事件类型：<code>React.MouseEvent&lt;HTMLButtonElement&gt;</code>、<code>React.ChangeEvent&lt;HTMLInputElement&gt;</code>。Ref 类型：<code>React.RefObject&lt;HTMLDivElement&gt;</code>。</p>
+<h3>28. 如何类型安全地封装 API 请求？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">interface ApiResponse&lt;T&gt; {
+  code: number;
+  message: string;
+  data: T;
+}
+async function get&lt;T&gt;(url: string): Promise&lt;ApiResponse&lt;T&gt;&gt; {
+  const res = await axios.get&lt;ApiResponse&lt;T&gt;&gt;(url);
+  return res.data;
+}
+// 调用
+const result = await get&lt;User[]&gt;(&#39;/users&#39;);
+// result.data 类型为 User[]
+</code></pre>
+<p>对于运行时验证，可配合 <code>zod</code> 同时生成类型和运行时校验 schema。</p>
+<h3>29. 什么是协变和逆变？</h3>
+<p><strong>答案：</strong>
+协变（covariant）：子类型可赋值给父类型的位置（返回值是协变的）。逆变（contravariant）：父类型可赋值给子类型的位置（函数参数是逆变的）。开启 <code>strictFunctionTypes</code> 后，函数参数变为严格逆变。理解变型有助于理解为何某些函数类型赋值会报错：<code>(x: Dog) =&gt; void</code> 不可赋值给 <code>(x: Animal) =&gt; void</code>，但反过来可以。</p>
+<h3>30. 如何处理第三方库没有类型定义的情况？</h3>
+<p><strong>答案：</strong>
+① 安装 <code>@types/xxx</code>（优先）；② 创建 <code>src/types/xxx.d.ts</code>，用 <code>declare module &#39;xxx&#39;</code> 声明最简类型（至少避免编译错误）；③ 精确声明需要用到的 API 形状；④ 临时方案可用 <code>// @ts-ignore</code> 或 <code>// @ts-expect-error</code> 忽略单行错误；⑤ 考虑向 DefinitelyTyped 贡献类型定义。</p>
+<h2>进阶特性</h2>
+<h3>31. 什么是 <code>satisfies</code> 运算符（TS 4.9）？</h3>
+<p><strong>答案：</strong>
+<code>satisfies</code> 验证表达式符合某类型，但不改变推导类型（不像 <code>: Type</code> 注解会拓宽类型）。例如：</p>
+<pre><code class="language-typescript">const config = { port: 3000, host: &#39;localhost&#39; } satisfies Record&lt;string, string | number&gt;;
+// config.port 类型仍为 3000（字面量），而非 string | number
+</code></pre>
+<p>既保留精确的字面量类型推导，又做类型约束验证，是两全其美的方案。</p>
+<h3>32. 什么是 <code>using</code> 关键字（TS 5.2）？</h3>
+<p><strong>答案：</strong>
+基于 ECMAScript 的显式资源管理提案，<code>using</code> 声明的变量在离开作用域时自动调用 <code>[Symbol.dispose]()</code>，<code>await using</code> 对应异步版本 <code>[Symbol.asyncDispose]()</code>。类似 C# 的 <code>using</code> 语句，可用于自动清理文件句柄、数据库连接、定时器等资源，避免遗忘 <code>finally</code> 中的清理代码。</p>
+<h3>33. 如何实现类型安全的事件发射器？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">type EventMap = {
+  &#39;user:login&#39;: { userId: string };
+  &#39;user:logout&#39;: void;
+};
+class TypedEmitter&lt;T extends Record&lt;string, any&gt;&gt; {
+  on&lt;K extends keyof T&gt;(event: K, handler: (data: T[K]) =&gt; void): void { ... }
+  emit&lt;K extends keyof T&gt;(event: K, data: T[K]): void { ... }
+}
+const emitter = new TypedEmitter&lt;EventMap&gt;();
+emitter.on(&#39;user:login&#39;, ({ userId }) =&gt; console.log(userId)); // 完整类型推导
+</code></pre>
+<h3>34. 什么是 <code>const</code> 类型参数（TS 5.0）？</h3>
+<p><strong>答案：</strong>
+在泛型中用 <code>&lt;const T&gt;</code> 声明，类似对类型参数隐式应用 <code>as const</code>，函数调用时自动将字面量推导为精确类型，无需在调用处手动加 <code>as const</code>。如：</p>
+<pre><code class="language-typescript">function createConfig&lt;const T&gt;(config: T): T { return config; }
+const c = createConfig({ port: 3000 }); // port: 3000 而非 number
+</code></pre>
+<h3>35. 如何用 TypeScript 实现安全的对象深路径访问？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">type DeepGet&lt;T, P extends string&gt; =
+  P extends `${infer K}.${infer Rest}`
+    ? K extends keyof T ? DeepGet&lt;T[K], Rest&gt; : never
+    : P extends keyof T ? T[P] : never;
+
+function deepGet&lt;T, P extends string&gt;(obj: T, path: P): DeepGet&lt;T, P&gt; {
+  return path.split(&#39;.&#39;).reduce((acc: any, key) =&gt; acc?.[key], obj);
+}
+</code></pre>
+<p>利用模板字面量类型递归解析路径字符串，实现编译期类型安全的深路径访问。</p>
+<h2>总结</h2>
+<p>这些题目覆盖了 TypeScript 的类型系统、泛型、工具类型、类与装饰器、模块配置及实战应用，适合作为 TypeScript 面试系统复习资料。</p>
+
+  </div>
+</body>
+</html>

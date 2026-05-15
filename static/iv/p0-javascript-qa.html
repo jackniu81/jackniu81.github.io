@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p0 javascript qa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
+    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
+    p { margin-bottom: 12px; }
+    ul, ol { margin: 10px 0 10px 25px; }
+    li { margin-bottom: 6px; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 14px;
+      color: #e74c3c;
+    }
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #ecf0f1;
+    }
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 15px;
+      margin: 15px 0;
+      color: #7f8c8d;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #3498db; color: #fff; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    strong { color: #2c3e50; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>JavaScript</h1>
+<h2>基础语法与类型</h2>
+<h3>1. JavaScript 是什么？</h3>
+<p><strong>答案：</strong>
+JavaScript 是一门高阶、动态、解释型编程语言，广泛用于 Web 前端，也可用于服务端和脚本开发。</p>
+<h3>2. JavaScript 的基本数据类型有哪些？</h3>
+<p><strong>答案：</strong>
+常见基本类型有 <code>string</code>、<code>number</code>、<code>boolean</code>、<code>undefined</code>、<code>null</code>、<code>symbol</code> 和 <code>bigint</code>。</p>
+<h3>3. <code>typeof null</code> 为什么是 <code>object</code>？</h3>
+<p><strong>答案：</strong>
+这是 JavaScript 早期实现遗留问题，并不是因为 <code>null</code> 真正属于对象类型。</p>
+<h3>4. <code>undefined</code> 和 <code>null</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>undefined</code> 常表示未赋值，<code>null</code> 常表示主动置空，两者语义不同。</p>
+<h3>5. 什么是引用类型？</h3>
+<p><strong>答案：</strong>
+对象、数组、函数等存储的是引用地址，多个变量可能指向同一块内存。</p>
+<h3>6. <code>==</code> 和 <code>===</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>==</code> 会做隐式类型转换后再比较，<code>===</code> 不会转换类型，要求类型和值都相等。</p>
+<h3>7. 为什么推荐使用 <code>===</code>？</h3>
+<p><strong>答案：</strong>
+因为它能避免隐式类型转换带来的歧义，让比较结果更可预测。</p>
+<h3>8. <code>NaN</code> 有什么特点？</h3>
+<p><strong>答案：</strong>
+<code>NaN</code> 表示“不是一个数字”，它与任何值都不相等，包括它自己。</p>
+<h3>9. 如何判断一个值是不是 <code>NaN</code>？</h3>
+<p><strong>答案：</strong>
+推荐使用 <code>Number.isNaN()</code>，因为它不会做不必要的类型转换。</p>
+<h3>10. <code>let</code>、<code>const</code>、<code>var</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>var</code> 有变量提升且是函数作用域；<code>let</code> 和 <code>const</code> 是块级作用域，<code>const</code> 不能重新赋值。</p>
+<h3>11. 什么是变量提升？</h3>
+<p><strong>答案：</strong>
+变量提升指声明会在编译阶段提前处理，但赋值不会一起提升。</p>
+<h3>12. 什么是暂时性死区？</h3>
+<p><strong>答案：</strong>
+在 <code>let</code> 和 <code>const</code> 声明前访问变量会报错，这段区域就叫暂时性死区。</p>
+<h3>13. <code>const</code> 声明的对象为什么还能改属性？</h3>
+<p><strong>答案：</strong>
+因为 <code>const</code> 只保证变量绑定地址不变，不保证对象内部内容不可变。</p>
+<h3>14. 什么是类型转换？</h3>
+<p><strong>答案：</strong>
+类型转换是把一个值转换成另一种类型，分为显式转换和隐式转换。</p>
+<h3>15. 显式转换常见方式有哪些？</h3>
+<p><strong>答案：</strong>
+常见有 <code>Number()</code>、<code>String()</code>、<code>Boolean()</code>、<code>parseInt()</code> 和 <code>parseFloat()</code>。</p>
+<h3>16. 哪些值会被转换成 <code>false</code>？</h3>
+<p><strong>答案：</strong>
+常见有 <code>false</code>、<code>0</code>、<code>-0</code>、<code>&#39;&#39;</code>、<code>null</code>、<code>undefined</code> 和 <code>NaN</code>。</p>
+<h3>17. 什么是模板字符串？</h3>
+<p><strong>答案：</strong>
+模板字符串使用反引号包裹，支持多行字符串和 <code>${}</code> 插值表达式。</p>
+<h3>18. 什么是解构赋值？</h3>
+<p><strong>答案：</strong>
+解构赋值允许从数组或对象中快速提取值并赋给变量。</p>
+<h3>19. 展开运算符有什么作用？</h3>
+<p><strong>答案：</strong>
+展开运算符可用于展开数组、对象或函数参数，常用于拷贝和合并数据。</p>
+<h3>20. 剩余参数是什么？</h3>
+<p><strong>答案：</strong>
+剩余参数用 <code>...args</code> 接收不定数量参数，并将其收集为数组。</p>
+<h2>作用域、闭包与 this</h2>
+<h3>21. 什么是作用域？</h3>
+<p><strong>答案：</strong>
+作用域是变量和函数可被访问的范围，常见有全局作用域、函数作用域和块级作用域。</p>
+<h3>22. 什么是作用域链？</h3>
+<p><strong>答案：</strong>
+当访问变量时，JavaScript 会沿当前作用域逐级向外查找，形成作用域链。</p>
+<h3>23. 什么是闭包？</h3>
+<p><strong>答案：</strong>
+闭包是函数和其词法作用域的组合，即使函数在外部执行，也能访问定义时的外部变量。</p>
+<p>关键特性：</p>
+<ul>
+<li>函数嵌套：内部函数引用外部函数的变量</li>
+<li>变量持久化：外部函数执行完毕后，变量不会销毁</li>
+<li>私有数据：外部无法直接访问闭包内的变量</li>
+</ul>
+<p>潜在问题：</p>
+<ol>
+<li>内存占用：闭包会阻止垃圾回收，如果创建大量闭包且不释放，可能导致内存泄漏。</li>
+<li>过期变量：在异步场景中可能读取到旧的值（经典的 <code>for</code> 循环 <code>setTimeout</code> 问题）。</li>
+</ol>
+<p>实际应用：</p>
+<ul>
+<li>工厂函数（createCounter）</li>
+<li>防抖/节流（保存 timer 引用）</li>
+<li>模块模式（暴露公共 API，隐藏私有变量）</li>
+</ul>
+<h3>24. 闭包的常见应用场景有哪些？</h3>
+<p><strong>答案：</strong>
+常见于函数工厂、模块封装、回调保留上下文和防抖节流实现。</p>
+<h3>25. 闭包可能带来什么问题？</h3>
+<p><strong>答案：</strong>
+如果不合理使用，可能导致内存占用增加或读取到过期变量值。</p>
+<h3>26. 什么是 <code>this</code>？</h3>
+<p><strong>答案：</strong>
+<code>this</code> 是函数执行时的上下文对象，它的指向取决于调用方式而不是定义位置。</p>
+<h3>27. 普通函数中的 <code>this</code> 如何确定？</h3>
+<p><strong>答案：</strong>
+默认调用时在严格模式下是 <code>undefined</code>，作为对象方法调用时通常指向该对象。</p>
+<h3>28. 箭头函数的 <code>this</code> 有什么特点？</h3>
+<p><strong>答案：</strong>
+箭头函数没有自己的 <code>this</code>，它会继承外层词法作用域的 <code>this</code>。</p>
+<h3>29. <code>call</code>、<code>apply</code>、<code>bind</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+它们都可改变函数 <code>this</code>；<code>call</code> 和 <code>apply</code> 立即执行，<code>bind</code> 返回新函数延后执行。</p>
+<h3>30. 什么情况下适合用箭头函数？</h3>
+<p><strong>答案：</strong>
+适合不需要自身 <code>this</code>、<code>arguments</code>、<code>new</code> 的回调场景。</p>
+<h2>原型与继承</h2>
+<h3>31. 什么是原型？</h3>
+<p><strong>答案：</strong>
+原型是对象用于共享属性和方法的一套机制，大多数对象都可通过原型链访问继承内容。</p>
+<h3>32. 什么是原型链？</h3>
+<p><strong>答案：</strong>
+对象查找属性时如果自身没有，会沿着原型不断向上查找，直到 <code>null</code> 为止，这就是原型链。</p>
+<h3>33. <code>prototype</code> 和 <code>__proto__</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>prototype</code> 是函数在作为构造函数时提供给实例共享的方法对象；<code>__proto__</code> 是对象指向其原型的内部链接。</p>
+<h3>34. 什么是构造函数？</h3>
+<p><strong>答案：</strong>
+构造函数是通过 <code>new</code> 调用来创建对象的函数，通常用于初始化实例属性。</p>
+<h3>35. <code>new</code> 操作符做了什么？</h3>
+<p><strong>答案：</strong>
+它创建新对象、链接原型、绑定 <code>this</code>、执行构造函数并返回新对象。</p>
+<h3>36. 什么是继承？</h3>
+<p><strong>答案：</strong>
+继承是让一个对象或类复用另一个对象或类能力的机制。</p>
+<h3>37. ES6 <code>class</code> 本质上是什么？</h3>
+<p><strong>答案：</strong>
+<code>class</code> 本质上是原型继承的语法糖，并没有改变 JavaScript 原型机制。</p>
+<h3>38. <code>extends</code> 的作用是什么？</h3>
+<p><strong>答案：</strong>
+<code>extends</code> 用于类继承，子类可以复用父类属性和方法。</p>
+<h3>39. <code>super</code> 的作用是什么？</h3>
+<p><strong>答案：</strong>
+<code>super</code> 用于调用父类构造函数或父类方法。</p>
+<h3>40. 为什么说 JavaScript 是基于原型的语言？</h3>
+<p><strong>答案：</strong>
+因为对象之间的能力复用主要依赖原型链，而不是传统类继承体系。</p>
+<h2>异步编程</h2>
+<h3>41. 什么是同步和异步？</h3>
+<p><strong>答案：</strong>
+同步任务按顺序阻塞执行；异步任务可先挂起，等条件满足后再继续处理。</p>
+<h3>42. 什么是回调函数？</h3>
+<p><strong>答案：</strong>
+回调函数是作为参数传给其他函数，并在特定时机执行的函数。</p>
+<h3>43. 什么是回调地狱？</h3>
+<p><strong>答案：</strong>
+指多层嵌套回调导致代码难读、难维护、难处理错误的情况。</p>
+<h3>44. Promise 是什么？</h3>
+<p><strong>答案：</strong>
+Promise 是对异步结果的抽象，表示一个未来可能成功或失败的操作。</p>
+<h3>45. Promise 有哪些状态？</h3>
+<p><strong>答案：</strong>
+有 <code>pending</code>、<code>fulfilled</code> 和 <code>rejected</code> 三种状态。</p>
+<h3>46. <code>then</code>、<code>catch</code>、<code>finally</code> 分别做什么？</h3>
+<p><strong>答案：</strong>
+<code>then</code> 处理成功结果，<code>catch</code> 处理失败，<code>finally</code> 无论结果如何都会执行。</p>
+<h3>47. <code>async/await</code> 是什么？</h3>
+<p><strong>答案：</strong>
+它是基于 Promise 的异步语法糖，让异步代码写起来更像同步流程。</p>
+<h3>48. <code>await</code> 后面必须是什么？</h3>
+<p><strong>答案：</strong>
+通常是 Promise，也可以是普通值；普通值会被自动包装为已完成状态。</p>
+<h3>49. <code>async</code> 函数的返回值是什么？</h3>
+<p><strong>答案：</strong>
+<code>async</code> 函数总是返回一个 Promise。</p>
+<h3>50. 如何并发执行多个异步任务？</h3>
+<p><strong>答案：</strong>
+可以使用 <code>Promise.all()</code> 或 <code>Promise.allSettled()</code> 并发处理多个 Promise。</p>
+<h3>51. <code>Promise.all</code> 和 <code>Promise.allSettled</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+前者任一失败就整体失败；后者会返回每个任务的最终状态。</p>
+<h3>52. 什么是事件循环？</h3>
+<p><strong>答案：</strong>
+事件循环是 JavaScript 处理同步任务、宏任务和微任务的调度机制。执行流程：先执行当前调用栈中的同步代码；调用栈清空后，清空所有微任务队列；然后取出一个宏任务执行；执行完再清空微任务队列，如此循环。这保证了微任务（如 Promise 回调）总是在下一个宏任务之前执行。</p>
+<h3>53. 什么是宏任务？</h3>
+<p><strong>答案：</strong>
+常见宏任务包括 <code>setTimeout</code>、<code>setInterval</code>、I/O、UI 渲染等。</p>
+<h3>54. 什么是微任务？</h3>
+<p><strong>答案：</strong>
+常见微任务包括 <code>Promise.then</code>、<code>catch</code>、<code>finally</code>、<code>queueMicrotask</code>。</p>
+<h3>55. 为什么微任务优先于宏任务？</h3>
+<p><strong>答案：</strong>
+事件循环会在当前宏任务结束后，先清空微任务队列，再进入下一个宏任务。</p>
+<h2>数组、对象与函数</h2>
+<h3>56. 常见数组遍历方法有哪些？</h3>
+<p><strong>答案：</strong>
+常见有 <code>forEach</code>、<code>map</code>、<code>filter</code>、<code>reduce</code>、<code>some</code>、<code>every</code>、<code>find</code> 等。</p>
+<h3>57. <code>map</code> 和 <code>forEach</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>map</code> 会返回新数组，适合做数据映射；<code>forEach</code> 主要用于遍历副作用操作。</p>
+<h3>58. <code>filter</code> 的作用是什么？</h3>
+<p><strong>答案：</strong>
+<code>filter</code> 根据条件筛选数组项，并返回一个新数组。</p>
+<h3>59. <code>reduce</code> 常用于什么？</h3>
+<p><strong>答案：</strong>
+常用于聚合计算、数组扁平化、对象构建和函数组合等场景。</p>
+<h3>60. 如何判断一个变量是不是数组？</h3>
+<p><strong>答案：</strong>
+推荐使用 <code>Array.isArray()</code>。</p>
+<h3>61. 深拷贝和浅拷贝的区别是什么？</h3>
+<p><strong>答案：</strong>
+浅拷贝只复制第一层引用，深拷贝会递归复制嵌套对象，生成完全独立的新结构。</p>
+<h3>62. 常见浅拷贝方式有哪些？</h3>
+<p><strong>答案：</strong>
+常见有展开运算符、<code>Object.assign()</code>、数组的 <code>slice()</code> 等。</p>
+<h3>63. <code>JSON.parse(JSON.stringify())</code> 做深拷贝有什么问题？</h3>
+<p><strong>答案：</strong>
+它会丢失函数、<code>undefined</code>、<code>symbol</code>、循环引用和特殊对象类型信息。</p>
+<h3>64. 什么是高阶函数？</h3>
+<p><strong>答案：</strong>
+高阶函数是接收函数作为参数或返回函数的函数。</p>
+<h3>65. 什么是柯里化？</h3>
+<p><strong>答案：</strong>
+柯里化是把接收多个参数的函数拆成一系列接收单个参数函数的技术。</p>
+<h3>66. 什么是函数防抖？</h3>
+<p><strong>答案：</strong>
+防抖是高频触发时只在停止触发一段时间后执行一次。</p>
+<h3>67. 什么是函数节流？</h3>
+<p><strong>答案：</strong>
+节流是规定时间内最多执行一次，适合滚动和窗口缩放等场景。</p>
+<h3>68. 什么是纯函数？</h3>
+<p><strong>答案：</strong>
+纯函数对于相同输入始终返回相同输出，且没有副作用。</p>
+<h3>69. 为什么纯函数更容易维护？</h3>
+<p><strong>答案：</strong>
+因为它结果可预测、易测试、易复用，也更利于性能优化。</p>
+<h3>70. 什么是副作用？</h3>
+<p><strong>答案：</strong>
+副作用是函数执行过程中对外部状态产生影响，如修改全局变量、请求接口、操作 DOM 等。</p>
+<h2>DOM、浏览器与 Web API</h2>
+<h3>71. DOM 是什么？</h3>
+<p><strong>答案：</strong>
+DOM 是浏览器对 HTML 文档的对象化表示，JavaScript 可以通过它读写页面结构。</p>
+<h3>72. BOM 是什么？</h3>
+<p><strong>答案：</strong>
+BOM 是浏览器对象模型，提供 <code>window</code>、<code>location</code>、<code>history</code>、<code>navigator</code> 等浏览器能力。</p>
+<h3>73. 事件冒泡是什么？</h3>
+<p><strong>答案：</strong>
+事件冒泡是事件从目标元素逐层向父级传播的过程。</p>
+<h3>74. 事件捕获是什么？</h3>
+<p><strong>答案：</strong>
+事件捕获是事件从最外层祖先节点向目标节点传播的过程。</p>
+<h3>75. 如何阻止事件冒泡？</h3>
+<p><strong>答案：</strong>
+可以使用 <code>event.stopPropagation()</code>。</p>
+<h3>76. 如何阻止默认行为？</h3>
+<p><strong>答案：</strong>
+可以使用 <code>event.preventDefault()</code>。</p>
+<h3>77. 什么是事件委托？</h3>
+<p><strong>答案：</strong>
+事件委托是把子元素事件统一绑定到父元素上，利用事件冒泡处理，提高性能和动态节点支持能力。</p>
+<h3>78. <code>localStorage</code> 和 <code>sessionStorage</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>localStorage</code> 持久保存，除非手动清除；<code>sessionStorage</code> 在会话结束后清空。</p>
+<h3>79. Cookie、localStorage、sessionStorage 的区别是什么？</h3>
+<p><strong>答案：</strong>
+Cookie 会随请求发送，容量较小；<code>localStorage</code> 和 <code>sessionStorage</code> 只在浏览器端保存，容量通常更大。</p>
+<h3>80. 什么是同源策略？</h3>
+<p><strong>答案：</strong>
+同源策略限制不同源之间的资源访问，用于保障浏览器安全。</p>
+<h3>81. 什么是跨域？</h3>
+<p><strong>答案：</strong>
+当协议、域名或端口任一不同，就属于跨域访问。</p>
+<h3>82. 常见跨域解决方案有哪些？</h3>
+<p><strong>答案：</strong>
+常见有 CORS、反向代理、JSONP（仅限 GET）等。</p>
+<h3>83. 什么是 AJAX？</h3>
+<p><strong>答案：</strong>
+AJAX 是在不刷新页面的情况下与服务器交换数据并更新页面内容的技术方式。</p>
+<h3>84. 什么是防抖在输入搜索中的应用？</h3>
+<p><strong>答案：</strong>
+它可避免用户每输入一个字符就发请求，从而减少无效调用。</p>
+<h3>85. 什么是节流在滚动中的应用？</h3>
+<p><strong>答案：</strong>
+它可避免滚动事件高频触发导致频繁计算和渲染。</p>
+<h2>模块化、面向对象与工程化</h2>
+<h3>86. 什么是模块化？</h3>
+<p><strong>答案：</strong>
+模块化是把代码拆成职责清晰、可复用、可维护的独立单元。</p>
+<h3>87. CommonJS 和 ES Module 的区别是什么？</h3>
+<p><strong>答案：</strong>
+CommonJS 主要用于 Node.js，运行时加载；ES Module 是官方标准，支持静态分析和浏览器原生支持。</p>
+<h3>88. <code>import</code> 和 <code>require</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>import</code> 属于 ES Module，通常在编译时处理；<code>require</code> 是 CommonJS 的同步加载方式。</p>
+<h3>89. 什么是默认导出和命名导出？</h3>
+<p><strong>答案：</strong>
+默认导出每个模块只能有一个；命名导出可以有多个，并通过名称导入。</p>
+<h3>90. 什么是严格模式？</h3>
+<p><strong>答案：</strong>
+严格模式通过 <code>&#39;use strict&#39;</code> 开启，可让 JavaScript 执行更严格，减少隐式错误。</p>
+<h3>91. 什么是垃圾回收？</h3>
+<p><strong>答案：</strong>
+垃圾回收是 JavaScript 引擎自动释放不再可访问内存的机制。</p>
+<h3>92. 常见垃圾回收策略有哪些？</h3>
+<p><strong>答案：</strong>
+常见有标记清除和引用计数，现代引擎主要以标记清除为主。</p>
+<h3>93. 什么是内存泄漏？</h3>
+<p><strong>答案：</strong>
+内存泄漏是指本该释放的内存因为仍被引用而无法回收，导致占用持续增加。</p>
+<h3>94. 常见内存泄漏场景有哪些？</h3>
+<p><strong>答案：</strong>
+常见有未清理定时器、事件监听未移除、闭包滥用和全局变量污染。</p>
+<h3>95. 什么是函数式编程思想？</h3>
+<p><strong>答案：</strong>
+它强调不可变数据、纯函数、函数组合和声明式处理。</p>
+<h3>96. 什么是面向对象思想？</h3>
+<p><strong>答案：</strong>
+面向对象强调通过对象封装数据与行为，并通过继承、多态等方式组织代码。</p>
+<h3>97. JavaScript 中如何实现封装？</h3>
+<p><strong>答案：</strong>
+可以通过闭包、模块、类和私有字段等方式实现封装。</p>
+<h3>98. 面试中如何系统回答 JavaScript 问题？</h3>
+<p><strong>答案：</strong>
+可以从概念、原理、示例、常见坑和实际应用几个层次来展开。</p>
+<h3>99. JavaScript 为什么是前端核心语言？</h3>
+<p><strong>答案：</strong>
+因为它直接运行在浏览器中，承担交互、逻辑、网络请求和应用工程化等核心职责。</p>
+<h3>100. 如何总结 JavaScript 的核心能力？</h3>
+<p><strong>答案：</strong>
+JavaScript 的核心能力可以概括为：动态类型、函数式特性、原型继承、异步编程和强大的浏览器生态支持。</p>
+<h2>进阶特性</h2>
+<h3>101. <code>for...in</code> 和 <code>for...of</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>for...in</code> 遍历对象的可枚举属性键（包括继承的原型链属性），主要用于普通对象；<code>for...of</code> 遍历实现了 <code>Symbol.iterator</code> 的可迭代对象的值，适合数组、字符串、Set、Map 等，不适用于普通对象。遍历数组建议用 <code>for...of</code> 或 <code>forEach</code>，遍历对象用 <code>for...in</code> 并配合 <code>hasOwnProperty</code> 过滤继承属性。</p>
+<h3>102. <code>typeof</code> 和 <code>instanceof</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>typeof</code> 返回字符串表示基本类型，对 <code>null</code> 返回 <code>&quot;object&quot;</code>（历史遗留问题），对函数返回 <code>&quot;function&quot;</code>，适合判断基本类型；<code>instanceof</code> 检查对象是否在某构造函数的原型链上，只适用于引用类型，不适合跨 iframe 场景。判断数组推荐 <code>Array.isArray()</code>，判断精确类型可用 <code>Object.prototype.toString.call()</code>。</p>
+<h3>103. <code>?.</code> 可选链 和 <code>??</code> 空值合并运算符分别有什么作用？</h3>
+<p><strong>答案：</strong>
+<code>?.</code> 可选链在访问深层属性时，若某层为 <code>null</code> 或 <code>undefined</code> 则短路返回 <code>undefined</code>，避免报错，如 <code>obj?.a?.b</code>；<code>??</code> 空值合并只在左侧为 <code>null</code> 或 <code>undefined</code> 时返回右侧默认值，与 <code>||</code> 的区别是不把 <code>0</code>、<code>&#39;&#39;</code>、<code>false</code> 视为无效值。组合用法 <code>obj?.value ?? &#39;default&#39;</code> 是常见安全访问模式。</p>
+<h3>104. 什么是 WeakMap 和 WeakSet？</h3>
+<p><strong>答案：</strong>
+WeakMap 的键必须是对象，且持有弱引用，不会阻止垃圾回收；WeakSet 只存放对象弱引用。它们都不可遍历、没有 <code>size</code> 属性。常用于存储与对象关联的私有数据（如 DOM 节点元数据）或缓存，避免内存泄漏。</p>
+<h3>105. 什么是 Generator 函数？</h3>
+<p><strong>答案：</strong>
+Generator 是可暂停执行的函数，用 <code>function*</code> 声明，通过 <code>yield</code> 输出值并暂停，调用时返回一个迭代器对象。每次调用 <code>.next()</code> 执行到下一个 <code>yield</code> 处，<code>.next(value)</code> 还可以向 <code>yield</code> 传回值。适合实现惰性序列、分步执行流程，也是 <code>async/await</code> 的底层原理基础。</p>
+<h3>106. 什么是 Proxy 和 Reflect？</h3>
+<p><strong>答案：</strong>
+<code>Proxy</code> 可拦截并自定义对象的基本操作（如读写属性、函数调用、<code>in</code> 操作符等），是 Vue 3 响应式系统的核心基础。<code>Reflect</code> 提供与 Proxy 捕获器一一对应的静态方法，在 handler 中调用 <code>Reflect</code> 方法可以保持对象的默认行为，二者通常配合使用。</p>
+<h3>107. 什么是 Symbol？</h3>
+<p><strong>答案：</strong>
+Symbol 是 ES6 引入的原始类型，每次调用 <code>Symbol()</code> 产生唯一值。常见用途：定义对象唯一键避免属性名冲突、实现迭代协议（<code>Symbol.iterator</code>）、自定义 <code>toString</code> 行为（<code>Symbol.toPrimitive</code>）等。Symbol 属性默认不出现在 <code>for...in</code>、<code>Object.keys()</code> 和 <code>JSON.stringify()</code> 中。</p>
+<h3>108. <code>Object.freeze</code> 和 <code>const</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>const</code> 只保证变量绑定不可重新赋值，对象内容仍可修改；<code>Object.freeze</code> 让对象属性不可修改、不可添加或删除，但只是浅冻结，嵌套对象属性仍可变。深度冻结需要递归对每层对象调用 <code>freeze</code>。两者解决的是不同层面的不可变问题。</p>
+<h3>109. <code>Promise.race</code> 和 <code>Promise.any</code> 的区别是什么？</h3>
+<p><strong>答案：</strong>
+<code>Promise.race</code> 返回最先敲定（无论成功或失败）的 Promise 结果；<code>Promise.any</code> 返回最先成功的 Promise，只有全部 reject 才会以 <code>AggregateError</code> 拒绝。<code>race</code> 适合超时控制（竞争一个 timeout Promise），<code>any</code> 适合多源竞速取最快成功的响应。</p>
+<h3>110. 什么是 <code>Object.keys</code> / <code>Object.values</code> / <code>Object.entries</code> 的区别？</h3>
+<p><strong>答案：</strong>
+三者都只返回对象自身的可枚举属性，不含继承属性。<code>Object.keys</code> 返回键数组；<code>Object.values</code> 返回值数组；<code>Object.entries</code> 返回 <code>[key, value]</code> 键值对数组，常配合 <code>for...of</code> 或 <code>fromEntries</code> 做对象转换。</p>
+<h3>111. 什么是防抖和节流的实现原理？</h3>
+<p><strong>答案：</strong>
+防抖（debounce）：每次触发时清除之前的定时器，重新计时，时间到期后才执行。适合搜索输入、窗口 resize 结束后的操作。节流（throttle）：记录上次执行时间，每次触发判断时间差是否超过阈值，超过才执行。适合滚动监听、鼠标移动等高频事件。二者都用闭包保存状态（timer/lastTime）。</p>
+<h3>112. 什么是模块的循环依赖？如何处理？</h3>
+<p><strong>答案：</strong>
+循环依赖指模块 A 依赖 B，B 又依赖 A。ES Module 的循环依赖在加载时会返回未完成的绑定（实时绑定），执行时才有值，可能导致某个值为 <code>undefined</code>。处理方式：重构代码抽出公共依赖为第三个模块、延迟访问（在函数内部引用而非顶层）、检查循环依赖工具（如 madge）。</p>
+<h2>总结</h2>
+<p>这些题目覆盖了 JavaScript 的数据类型、作用域、闭包、原型、异步编程、数组对象、浏览器 API、模块化与工程化能力，以及进阶特性，适合作为系统面试复习资料。</p>
+
+  </div>
+</body>
+</html>
