@@ -1,93 +1,186 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p3 testing qa</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试实践 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #27ae60;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #27ae60;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>前端测试 常见面试题（附答案）</h1>
-<h2>测试基础</h2>
-<h3>1. 为什么需要写测试？</h3>
-<p><strong>答案：</strong>
+<div class="topbar">
+  <h1>测试实践</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P3 扩展知识</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="_1">前端测试 常见面试题（附答案）</h1>
+<h2 id="_2">测试基础</h2>
+<h3 id="1">1. 为什么需要写测试？</h3>
+<p><strong>答案：</strong><br>
 ① 捕获回归问题：修改代码时自动发现破坏的功能；② 提升重构信心：有测试保障才敢大胆重构；③ 活文档：测试用例本身就是对代码行为的描述；④ 强迫好设计：可测试的代码往往设计更解耦；⑤ 减少手动测试成本：CI 自动运行，节省 QA 时间。</p>
-<h3>2. 测试金字塔是什么？</h3>
-<p><strong>答案：</strong>
+<h3 id="2">2. 测试金字塔是什么？</h3>
+<p><strong>答案：</strong><br>
 从下到上：① <strong>单元测试</strong>（最多，最快，成本最低）：测试单个函数/模块的独立逻辑；② <strong>集成测试</strong>（中等）：测试多个模块协作，如组件+API 的交互；③ <strong>E2E 测试</strong>（最少，最慢，成本最高）：模拟真实用户操作整个应用流程。金字塔原则：多写单元测试，少写 E2E 测试，适量集成测试。</p>
-<h3>3. 什么是 TDD（测试驱动开发）？</h3>
-<p><strong>答案：</strong>
+<h3 id="3-tdd">3. 什么是 TDD（测试驱动开发）？</h3>
+<p><strong>答案：</strong><br>
 TDD 遵循 Red-Green-Refactor 循环：① <strong>Red</strong>：先写一个会失败的测试；② <strong>Green</strong>：写最少代码让测试通过；③ <strong>Refactor</strong>：在测试保护下重构代码。好处：强制明确需求、避免过度设计、测试覆盖率高。挑战：初期效率较低，需要团队纪律。</p>
-<h2>单元测试</h2>
-<h3>4. Vitest 和 Jest 的区别是什么？</h3>
-<p><strong>答案：</strong>
+<h2 id="_3">单元测试</h2>
+<h3 id="4-vitest-jest">4. Vitest 和 Jest 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
 Jest 是 Meta 出品的成熟测试框架，生态最丰富，配置复杂度较高，Vite 项目需要额外配置（ESM/TS 转换）。Vitest 是专为 Vite 设计的测试框架，复用 Vite 配置，开箱即用（无需额外 Babel/Transform 配置），速度更快（利用 Vite 的 HMR），API 与 Jest 兼容（迁移成本低）。新 Vite 项目推荐 Vitest，现有 Jest 项目迁移成本较低。</p>
-<h3>5. 测试的基本结构是什么？</h3>
+<h3 id="5">5. 测试的基本结构是什么？</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-javascript">// 使用 Vitest / Jest
-import { describe, it, expect, beforeEach, afterEach } from &#39;vitest&#39;;
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-describe(&#39;UserService&#39;, () =&gt; {
+describe('UserService', () =&gt; {
   let service;
 
   beforeEach(() =&gt; {
@@ -98,55 +191,53 @@ describe(&#39;UserService&#39;, () =&gt; {
     vi.clearAllMocks();
   });
 
-  it(&#39;should return user by id&#39;, async () =&gt; {
+  it('should return user by id', async () =&gt; {
     // Arrange
-    mockDb.findById.mockResolvedValue({ id: 1, name: &#39;Alice&#39; });
+    mockDb.findById.mockResolvedValue({ id: 1, name: 'Alice' });
     // Act
     const user = await service.getUser(1);
     // Assert
-    expect(user).toEqual({ id: 1, name: &#39;Alice&#39; });
+    expect(user).toEqual({ id: 1, name: 'Alice' });
   });
 
-  it(&#39;should throw when user not found&#39;, async () =&gt; {
+  it('should throw when user not found', async () =&gt; {
     mockDb.findById.mockResolvedValue(null);
-    await expect(service.getUser(999)).rejects.toThrow(&#39;User not found&#39;);
+    await expect(service.getUser(999)).rejects.toThrow('User not found');
   });
 });
 </code></pre>
-<h3>6. 什么是 Mock？有哪些类型？</h3>
-<p><strong>答案：</strong>
-Mock 是测试替身，替换真实依赖（如 API、数据库、定时器）使测试可控、快速、隔离。类型：</p>
-<ul>
-<li><strong>Stub</strong>：返回预设数据，不关心调用方式</li>
-<li><strong>Mock</strong>：验证调用方式（是否被调用、调用参数、调用次数）</li>
-<li><strong>Spy</strong>：包装真实函数，同时记录调用信息</li>
-<li><strong>Fake</strong>：轻量实现（如 in-memory 数据库替代真实 DB）</li>
-</ul>
+<h3 id="6-mock">6. 什么是 Mock？有哪些类型？</h3>
+<p><strong>答案：</strong><br>
+Mock 是测试替身，替换真实依赖（如 API、数据库、定时器）使测试可控、快速、隔离。类型：<br>
+- <strong>Stub</strong>：返回预设数据，不关心调用方式<br>
+- <strong>Mock</strong>：验证调用方式（是否被调用、调用参数、调用次数）<br>
+- <strong>Spy</strong>：包装真实函数，同时记录调用信息<br>
+- <strong>Fake</strong>：轻量实现（如 in-memory 数据库替代真实 DB）</p>
 <pre><code class="language-javascript">// Vitest Mock
 const mockFetch = vi.fn().mockResolvedValue({ data: [] });
-vi.spyOn(axios, &#39;get&#39;).mockResolvedValue({ data: [] });
-vi.mock(&#39;./userService&#39;, () =&gt; ({ getUser: vi.fn() }));
+vi.spyOn(axios, 'get').mockResolvedValue({ data: [] });
+vi.mock('./userService', () =&gt; ({ getUser: vi.fn() }));
 </code></pre>
-<h3>7. 如何测试异步代码？</h3>
+<h3 id="7">7. 如何测试异步代码？</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-javascript">// 1. async/await（推荐）
-it(&#39;fetches user&#39;, async () =&gt; {
+it('fetches user', async () =&gt; {
   const user = await fetchUser(1);
-  expect(user.name).toBe(&#39;Alice&#39;);
+  expect(user.name).toBe('Alice');
 });
 
 // 2. 返回 Promise
-it(&#39;fetches user&#39;, () =&gt; {
-  return fetchUser(1).then(user =&gt; expect(user.name).toBe(&#39;Alice&#39;));
+it('fetches user', () =&gt; {
+  return fetchUser(1).then(user =&gt; expect(user.name).toBe('Alice'));
 });
 
 // 3. 测试 reject
-it(&#39;throws on error&#39;, async () =&gt; {
-  await expect(fetchUser(-1)).rejects.toThrow(&#39;Invalid ID&#39;);
+it('throws on error', async () =&gt; {
+  await expect(fetchUser(-1)).rejects.toThrow('Invalid ID');
 });
 
 // 4. 模拟定时器
-it(&#39;debounce fires after delay&#39;, () =&gt; {
+it('debounce fires after delay', () =&gt; {
   vi.useFakeTimers();
   const fn = vi.fn();
   const debounced = debounce(fn, 300);
@@ -156,112 +247,109 @@ it(&#39;debounce fires after delay&#39;, () =&gt; {
   vi.useRealTimers();
 });
 </code></pre>
-<h3>8. 什么是测试覆盖率？各维度含义是什么？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li><strong>Line Coverage</strong>：代码行覆盖率（最基础）</li>
-<li><strong>Statement Coverage</strong>：语句覆盖率</li>
-<li><strong>Branch Coverage</strong>：分支覆盖率（if/else 每个分支）</li>
-<li><strong>Function Coverage</strong>：函数覆盖率</li>
-</ul>
+<h3 id="8">8. 什么是测试覆盖率？各维度含义是什么？</h3>
+<p><strong>答案：</strong><br>
+- <strong>Line Coverage</strong>：代码行覆盖率（最基础）<br>
+- <strong>Statement Coverage</strong>：语句覆盖率<br>
+- <strong>Branch Coverage</strong>：分支覆盖率（if/else 每个分支）<br>
+- <strong>Function Coverage</strong>：函数覆盖率</p>
 <p>覆盖率不等于质量，100% 覆盖率不代表没有 Bug（测试断言可能不够）。合理目标：核心业务逻辑 &gt;80%，工具函数 &gt;90%，不强追 100%（边际收益递减）。</p>
-<h2>组件测试</h2>
-<h3>9. 什么是 React Testing Library？它的设计理念是什么？</h3>
-<p><strong>答案：</strong>
-React Testing Library（RTL）是以用户角度测试组件的库，核心理念：<strong>&quot;测试你的软件像用户使用它一样&quot;</strong>，即通过用户可见的元素和行为（而非内部实现细节）来测试。提倡：用 <code>getByRole</code>/<code>getByText</code>/<code>getByLabelText</code> 而非 <code>getByTestId</code>（前者更接近用户视角）；测试组件的输出和副作用，不测试组件内部状态。</p>
-<h3>10. RTL 的常用查询方法有什么区别？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li><strong><code>getBy*</code></strong>：必须存在，不存在抛错（同步）</li>
-<li><strong><code>queryBy*</code></strong>：可以不存在，不存在返回 null（用于断言元素不存在）</li>
-<li><strong><code>findBy*</code></strong>：等待元素出现（异步，返回 Promise，适合异步渲染后的元素）</li>
-<li><strong><code>getAllBy*</code>/<code>queryAllBy*</code>/<code>findAllBy*</code></strong>：以上的多元素版本</li>
-</ul>
+<h2 id="_4">组件测试</h2>
+<h3 id="9-react-testing-library">9. 什么是 React Testing Library？它的设计理念是什么？</h3>
+<p><strong>答案：</strong><br>
+React Testing Library（RTL）是以用户角度测试组件的库，核心理念：<strong>"测试你的软件像用户使用它一样"</strong>，即通过用户可见的元素和行为（而非内部实现细节）来测试。提倡：用 <code>getByRole</code>/<code>getByText</code>/<code>getByLabelText</code> 而非 <code>getByTestId</code>（前者更接近用户视角）；测试组件的输出和副作用，不测试组件内部状态。</p>
+<h3 id="10-rtl">10. RTL 的常用查询方法有什么区别？</h3>
+<p><strong>答案：</strong><br>
+- <strong><code>getBy*</code></strong>：必须存在，不存在抛错（同步）<br>
+- <strong><code>queryBy*</code></strong>：可以不存在，不存在返回 null（用于断言元素不存在）<br>
+- <strong><code>findBy*</code></strong>：等待元素出现（异步，返回 Promise，适合异步渲染后的元素）<br>
+- <strong><code>getAllBy*</code>/<code>queryAllBy*</code>/<code>findAllBy*</code></strong>：以上的多元素版本</p>
 <p>优先级（从高到低）：<code>ByRole &gt; ByLabelText &gt; ByPlaceholderText &gt; ByText &gt; ByDisplayValue &gt; ByAltText &gt; ByTitle &gt; ByTestId</code>。</p>
-<h3>11. 如何测试 React 组件？</h3>
+<h3 id="11-react">11. 如何测试 React 组件？</h3>
 <p><strong>答案：</strong></p>
-<pre><code class="language-javascript">import { render, screen, fireEvent, waitFor } from &#39;@testing-library/react&#39;;
-import userEvent from &#39;@testing-library/user-event&#39;;
+<pre><code class="language-javascript">import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-describe(&#39;LoginForm&#39;, () =&gt; {
-  it(&#39;submits form with correct values&#39;, async () =&gt; {
+describe('LoginForm', () =&gt; {
+  it('submits form with correct values', async () =&gt; {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
     render(&lt;LoginForm onSubmit={onSubmit} /&gt;);
 
-    await user.type(screen.getByLabelText(&#39;邮箱&#39;), &#39;test@example.com&#39;);
-    await user.type(screen.getByLabelText(&#39;密码&#39;), &#39;password123&#39;);
-    await user.click(screen.getByRole(&#39;button&#39;, { name: &#39;登录&#39; }));
+    await user.type(screen.getByLabelText('邮箱'), 'test@example.com');
+    await user.type(screen.getByLabelText('密码'), 'password123');
+    await user.click(screen.getByRole('button', { name: '登录' }));
 
     expect(onSubmit).toHaveBeenCalledWith({
-      email: &#39;test@example.com&#39;,
-      password: &#39;password123&#39;,
+      email: 'test@example.com',
+      password: 'password123',
     });
   });
 
-  it(&#39;shows error when login fails&#39;, async () =&gt; {
+  it('shows error when login fails', async () =&gt; {
     const user = userEvent.setup();
     // Mock API 失败
-    server.use(rest.post(&#39;/api/login&#39;, (req, res, ctx) =&gt; res(ctx.status(401))));
+    server.use(rest.post('/api/login', (req, res, ctx) =&gt; res(ctx.status(401))));
     render(&lt;LoginForm /&gt;);
 
-    await user.click(screen.getByRole(&#39;button&#39;, { name: &#39;登录&#39; }));
-    await screen.findByText(&#39;邮箱或密码错误&#39;);
+    await user.click(screen.getByRole('button', { name: '登录' }));
+    await screen.findByText('邮箱或密码错误');
   });
 });
 </code></pre>
-<h3>12. 什么是 MSW（Mock Service Worker）？</h3>
-<p><strong>答案：</strong>
+<h3 id="12-mswmock-service-worker">12. 什么是 MSW（Mock Service Worker）？</h3>
+<p><strong>答案：</strong><br>
 MSW 通过 Service Worker 在网络层拦截 API 请求，返回 Mock 数据，无需修改业务代码中的请求逻辑：</p>
 <pre><code class="language-javascript">// handlers.js
-import { http, HttpResponse } from &#39;msw&#39;;
+import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.get(&#39;/api/users&#39;, () =&gt; {
-    return HttpResponse.json([{ id: 1, name: &#39;Alice&#39; }]);
+  http.get('/api/users', () =&gt; {
+    return HttpResponse.json([{ id: 1, name: 'Alice' }]);
   }),
-  http.post(&#39;/api/login&#39;, async ({ request }) =&gt; {
+  http.post('/api/login', async ({ request }) =&gt; {
     const body = await request.json();
-    if (body.password !== &#39;correct&#39;) return HttpResponse.json({}, { status: 401 });
-    return HttpResponse.json({ token: &#39;abc123&#39; });
+    if (body.password !== 'correct') return HttpResponse.json({}, { status: 401 });
+    return HttpResponse.json({ token: 'abc123' });
   }),
 ];
 </code></pre>
 <p>优势：同一套 handler 可用于开发环境和测试环境，真实模拟网络行为，不依赖具体请求库（axios/fetch 都拦截）。</p>
-<h2>E2E 测试</h2>
-<h3>13. Playwright 和 Cypress 有什么区别？</h3>
-<p><strong>答案：</strong>
+<h2 id="e2e">E2E 测试</h2>
+<h3 id="13-playwright-cypress">13. Playwright 和 Cypress 有什么区别？</h3>
+<p><strong>答案：</strong><br>
 <strong>Playwright</strong>：Microsoft 出品，支持 Chrome/Firefox/Safari/WebKit 多浏览器，速度快（并发执行），支持移动端模拟，API 更底层灵活，适合复杂多浏览器测试。<strong>Cypress</strong>：专注 Chrome（新版支持 Firefox/Edge），有实时可视化 UI（开发调试友好），API 简洁，自动等待，生态成熟，更适合前端团队快速上手。新项目可优先考虑 Playwright（跨浏览器支持更全，性能更好）。</p>
-<h3>14. 如何用 Playwright 写 E2E 测试？</h3>
+<h3 id="14-playwright-e2e">14. 如何用 Playwright 写 E2E 测试？</h3>
 <p><strong>答案：</strong></p>
-<pre><code class="language-javascript">import { test, expect } from &#39;@playwright/test&#39;;
+<pre><code class="language-javascript">import { test, expect } from '@playwright/test';
 
-test.describe(&#39;用户登录流程&#39;, () =&gt; {
-  test(&#39;成功登录后跳转到首页&#39;, async ({ page }) =&gt; {
-    await page.goto(&#39;/login&#39;);
+test.describe('用户登录流程', () =&gt; {
+  test('成功登录后跳转到首页', async ({ page }) =&gt; {
+    await page.goto('/login');
 
-    await page.getByLabel(&#39;邮箱&#39;).fill(&#39;user@example.com&#39;);
-    await page.getByLabel(&#39;密码&#39;).fill(&#39;password123&#39;);
-    await page.getByRole(&#39;button&#39;, { name: &#39;登录&#39; }).click();
+    await page.getByLabel('邮箱').fill('user@example.com');
+    await page.getByLabel('密码').fill('password123');
+    await page.getByRole('button', { name: '登录' }).click();
 
-    await expect(page).toHaveURL(&#39;/dashboard&#39;);
-    await expect(page.getByText(&#39;欢迎回来&#39;)).toBeVisible();
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByText('欢迎回来')).toBeVisible();
   });
 
-  test(&#39;密码错误显示错误提示&#39;, async ({ page }) =&gt; {
-    await page.goto(&#39;/login&#39;);
-    await page.getByLabel(&#39;密码&#39;).fill(&#39;wrongpassword&#39;);
-    await page.getByRole(&#39;button&#39;, { name: &#39;登录&#39; }).click();
-    await expect(page.getByText(&#39;邮箱或密码错误&#39;)).toBeVisible();
+  test('密码错误显示错误提示', async ({ page }) =&gt; {
+    await page.goto('/login');
+    await page.getByLabel('密码').fill('wrongpassword');
+    await page.getByRole('button', { name: '登录' }).click();
+    await expect(page.getByText('邮箱或密码错误')).toBeVisible();
   });
 });
 </code></pre>
-<h3>15. E2E 测试如何处理测试数据隔离？</h3>
-<p><strong>答案：</strong>
+<h3 id="15-e2e">15. E2E 测试如何处理测试数据隔离？</h3>
+<p><strong>答案：</strong><br>
 ① <strong>每个测试独立准备数据</strong>：<code>test.beforeEach</code> 中调用 API 创建测试用户，<code>afterEach</code> 清理；② <strong>使用唯一前缀/ID</strong>：测试数据用时间戳或 UUID 标记，避免冲突；③ <strong>测试数据库</strong>：E2E 测试连接独立的测试数据库，测试后重置；④ <strong>数据快照</strong>：每次测试前恢复数据库到固定快照；⑤ <strong>Mock API</strong>：E2E 层也可以用 MSW 拦截 API，不真实请求后端（牺牲一些真实性换取稳定）。</p>
-<h2>总结</h2>
+<h2 id="_5">总结</h2>
 <p>这些题目覆盖了单元测试（Vitest/Jest）、Mock 策略、组件测试（RTL）、API Mock（MSW）和 E2E 测试（Playwright/Cypress），适合作为前端测试面试复习资料。</p>
-
   </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p3-testing-qa.md</div>
+</div>
 </body>
 </html>

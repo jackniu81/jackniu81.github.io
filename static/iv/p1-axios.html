@@ -1,256 +1,350 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p1 axios</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axios & HTTP 客户端 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Axios 常见面试题（50道）</h1>
-<h2>基础概念</h2>
-<h3>1. 什么是 Axios？</h3>
-<p><strong>答案：</strong>
-Axios 是一个基于 Promise 的 HTTP 客户端，可运行在浏览器和 Node.js 环境中。</p>
-<h3>2. Axios 的核心特点有哪些？</h3>
-<p><strong>答案：</strong>
-它支持拦截器、实例化、超时控制、取消请求、自动 JSON 转换和统一错误处理。</p>
-<h3>3. Axios 和 <code>fetch</code> 的主要区别是什么？</h3>
-<p><strong>答案：</strong>
-Axios 内置拦截器和更一致的错误处理；<code>fetch</code> 是原生 API，更轻量，但很多能力需要自行封装。</p>
-<h3>4. 为什么很多项目会选择 Axios？</h3>
-<p><strong>答案：</strong>
-因为它适合做统一请求层封装，便于鉴权、错误治理、接口复用和工程化维护。</p>
-<h3>5. Axios 支持哪些常见请求方法？</h3>
-<p><strong>答案：</strong>
-常见有 <code>get</code>、<code>post</code>、<code>put</code>、<code>patch</code>、<code>delete</code>、<code>head</code> 和 <code>options</code>。</p>
-<h3>6. 如何安装 Axios？</h3>
-<p><strong>答案：</strong>
-一般通过 <code>npm install axios</code> 或 <code>pnpm add axios</code> 安装。</p>
-<h3>7. Axios 的基本返回值是什么？</h3>
-<p><strong>答案：</strong>
-它返回一个 Promise，成功时得到响应对象，失败时进入 rejected 状态。</p>
-<h3>8. 响应对象通常包含哪些字段？</h3>
-<p><strong>答案：</strong>
-常见字段有 <code>data</code>、<code>status</code>、<code>statusText</code>、<code>headers</code>、<code>config</code> 和 <code>request</code>。</p>
-<h3>9. <code>response.data</code> 表示什么？</h3>
-<p><strong>答案：</strong>
-它通常表示服务端真正返回的业务数据，也是业务代码最常读取的部分。</p>
-<h3>10. Axios 是否可以在 Node.js 中使用？</h3>
-<p><strong>答案：</strong>
-可以，Axios 同时支持浏览器和 Node.js，因此也常用于 SSR 或脚本请求场景。</p>
-<h2>请求配置</h2>
-<h3>11. Axios 配置对象常见字段有哪些？</h3>
-<p><strong>答案：</strong>
-常见包括 <code>url</code>、<code>method</code>、<code>baseURL</code>、<code>headers</code>、<code>params</code>、<code>data</code>、<code>timeout</code>、<code>responseType</code>、<code>withCredentials</code> 等。</p>
-<h3>12. <code>baseURL</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-用于统一配置接口前缀，减少重复书写，并方便在不同环境间切换。</p>
-<h3>13. <code>params</code> 和 <code>data</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>params</code> 一般用于 URL 查询参数，<code>data</code> 一般用于请求体。</p>
-<h3>14. <code>headers</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-它用于设置请求头，比如 <code>Authorization</code>、<code>Content-Type</code>、语言信息和 traceId。</p>
-<h3>15. <code>timeout</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-它用于限制请求等待时间，超过设定值会抛出超时错误。</p>
-<h3>16. <code>withCredentials</code> 在什么场景下使用？</h3>
-<p><strong>答案：</strong>
-当跨域请求需要携带 Cookie 或其他凭证时使用，但前后端都要正确配置。</p>
-<h3>17. <code>responseType</code> 常见取值有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>json</code>、<code>text</code>、<code>blob</code>、<code>arraybuffer</code>、<code>document</code> 等。</p>
-<h3>18. 如何设置 Axios 的全局默认配置？</h3>
-<p><strong>答案：</strong>
-可以通过 <code>axios.defaults</code> 设置全局 <code>baseURL</code>、公共请求头、超时时间等。</p>
-<h3>19. 为什么推荐创建 Axios 实例？</h3>
-<p><strong>答案：</strong>
-因为不同业务模块往往需要不同配置，实例化可以隔离拦截器和默认参数。</p>
-<h3>20. 如何创建 Axios 实例？</h3>
-<p><strong>答案：</strong>
-使用 <code>axios.create()</code> 传入配置对象即可创建独立实例。</p>
-<h2>拦截器</h2>
-<h3>21. 什么是 Axios 拦截器？</h3>
-<p><strong>答案：</strong>
-拦截器是在请求发送前或响应返回后统一处理逻辑的机制。</p>
-<h3>22. 请求拦截器常见用途有哪些？</h3>
-<p><strong>答案：</strong>
-常用于追加 token、统一参数、签名、日志和 loading 控制。</p>
-<h3>23. 响应拦截器常见用途有哪些？</h3>
-<p><strong>答案：</strong>
-常用于统一解包数据、处理错误码、登录失效跳转和消息提示。</p>
-<h3>24. 为什么很多项目会在响应拦截器里直接返回 <code>response.data</code>？</h3>
-<p><strong>答案：</strong>
-因为这样可以简化业务层调用，减少每次都写 <code>response.data</code> 的重复代码。</p>
-<h3>25. 如何移除拦截器？</h3>
-<p><strong>答案：</strong>
-注册拦截器后会得到一个 id，可通过 <code>eject(id)</code> 移除。</p>
-<h3>26. 使用拦截器时有哪些风险？</h3>
-<p><strong>答案：</strong>
-风险包括重复注册、循环请求、错误被吞掉以及多个实例逻辑混乱。</p>
-<h3>27. 为什么不要把所有逻辑都塞进拦截器？</h3>
-<p><strong>答案：</strong>
-因为拦截器应该只放通用治理逻辑，过多业务逻辑会让调试和维护变困难。</p>
-<h3>28. 请求拦截器里如何添加 token？</h3>
-<p><strong>答案：</strong>
-通常读取本地存储或状态管理中的 token，再写入 <code>config.headers.Authorization</code>。</p>
-<h3>29. 响应拦截器如何统一处理业务错误码？</h3>
-<p><strong>答案：</strong>
-可以根据后端返回的 <code>code</code> 或 <code>success</code> 字段决定提示、跳转或抛出错误。</p>
-<h3>30. 为什么实例级拦截器通常优于全局拦截器？</h3>
-<p><strong>答案：</strong>
-因为实例级更容易按业务域隔离，避免不同系统之间互相污染。</p>
-<h2>错误处理</h2>
-<h3>31. Axios 如何处理 HTTP 4xx/5xx 状态码？</h3>
-<p><strong>答案：</strong>
-默认会把这类响应当作 Promise reject，让你在 <code>catch</code> 或响应拦截器中处理。</p>
-<h3>32. Axios 的错误对象通常包含什么？</h3>
-<p><strong>答案：</strong>
-常见包括 <code>message</code>、<code>code</code>、<code>config</code>、<code>request</code> 和 <code>response</code>。</p>
-<h3>33. 如何区分接口错误和网络错误？</h3>
-<p><strong>答案：</strong>
-有 <code>error.response</code> 通常表示服务端返回了错误状态；只有 <code>error.request</code> 通常表示未收到响应。</p>
-<h3>34. 如何统一处理 401 未授权？</h3>
-<p><strong>答案：</strong>
-一般在响应拦截器中清理登录态并跳转登录页，或进入刷新 token 流程。</p>
-<h3>35. 如何统一处理 500 服务异常？</h3>
-<p><strong>答案：</strong>
-可以在拦截器中统一记录日志、提示用户稍后重试，并按需上报监控。</p>
-<h3>36. 什么是 <code>validateStatus</code>？</h3>
-<p><strong>答案：</strong>
-它用于自定义哪些 HTTP 状态码应被视为成功响应。</p>
-<h3>37. 为什么统一错误处理很重要？</h3>
-<p><strong>答案：</strong>
-因为它能减少重复代码，提升用户体验一致性，并方便监控与排障。</p>
-<h3>38. 如何避免在每个接口调用处都写重复的 <code>try/catch</code>？</h3>
-<p><strong>答案：</strong>
-可以把通用错误治理放到 Axios 封装层或拦截器中，业务层只处理特殊场景。</p>
-<h3>39. Axios 超时报错如何识别？</h3>
-<p><strong>答案：</strong>
-一般可以根据错误 <code>code</code>、错误消息或配置项判断是否为超时场景。</p>
-<h3>40. 为什么不能简单把所有错误都提示给用户？</h3>
-<p><strong>答案：</strong>
-因为有些错误适合静默处理或自动重试，全部直接提示会造成糟糕的交互体验。</p>
-<h2>并发、取消与高级能力</h2>
-<h3>41. Axios 如何发送并发请求？</h3>
-<p><strong>答案：</strong>
-一般结合 <code>Promise.all</code> 或 <code>Promise.allSettled</code> 发起多个请求并统一处理结果。</p>
-<h3>42. <code>Promise.all</code> 和 <code>Promise.allSettled</code> 在并发请求中有什么区别？</h3>
-<p><strong>答案：</strong>
-前者只要有一个失败就整体失败，后者会返回每个请求各自的成功或失败结果。</p>
-<h3>43. Axios 如何取消请求？</h3>
-<p><strong>答案：</strong>
-现在更推荐使用 <code>AbortController</code> 传入 <code>signal</code> 来取消请求。</p>
-<h3>44. 哪些场景特别适合取消请求？</h3>
-<p><strong>答案：</strong>
-搜索联想、组件卸载、路由切换、条件快速切换和重复提交都是典型场景。</p>
-<h3>45. 什么是重复请求去重？</h3>
-<p><strong>答案：</strong>
-指对同一时间内相同接口和参数的请求进行取消、忽略或复用，避免资源浪费。</p>
-<h3>46. Axios 如何实现文件上传？</h3>
-<p><strong>答案：</strong>
-使用 <code>FormData</code> 组装文件后发起请求，并可结合 <code>onUploadProgress</code> 监听进度。</p>
-<h3>47. Axios 如何实现文件下载？</h3>
-<p><strong>答案：</strong>
-一般设置 <code>responseType: &#39;blob&#39;</code>，再将返回的二进制数据转成可下载链接。</p>
-<h3>48. 什么是请求重试机制？</h3>
-<p><strong>答案：</strong>
-指请求失败后按规则重新发起请求，常用于瞬时网络抖动或临时性错误。</p>
-<h3>49. 请求重试时要注意什么？</h3>
-<p><strong>答案：</strong>
-要控制次数、间隔和适用请求类型，尤其要谨慎处理非幂等请求。</p>
-<h3>50. 面试中如何总结 Axios 的核心价值？</h3>
-<p><strong>答案：</strong>
-Axios 不只是发请求的工具，更是前端做统一接口治理、鉴权、错误处理和请求封装的基础设施。关键在于如何结合拦截器、实例化、类型封装将其融入工程体系，而不是简单地 <code>import axios from &#39;axios&#39;</code> 就直接调用。</p>
-<h2>工程化与进阶实践</h2>
-<h3>51. 多个拦截器的执行顺序是怎样的？</h3>
-<p><strong>答案：</strong>
-请求拦截器按注册的<strong>逆序</strong>执行（后注册的先执行），响应拦截器按注册的<strong>顺序</strong>执行（先注册的先执行）。因此全局基础逻辑建议先注册，业务特定逻辑后注册叠加，可以在基础行为之上逐层增强。</p>
-<h3>52. 如何实现 Token 自动刷新（无感刷新）？</h3>
-<p><strong>答案：</strong>
-核心思路：① 响应拦截器检测到 401 时，将当前请求挂起到队列；② 发起刷新 Token 请求（用一个标志位保证只发一次）；③ 刷新成功后将队列中的请求重新发出，失败则跳转登录页。关键点：用 <code>Promise</code> 包装队列请求，刷新期间所有新请求等待，刷新完毕后统一 resolve 或 reject。</p>
-<h3>53. 如何实现请求指数退避重试？</h3>
-<p><strong>答案：</strong>
-在响应拦截器中判断是否符合重试条件（如 5xx 错误、超时、特定网络错误），记录当前重试次数于 <code>config</code>，延迟时间按 <code>delay = baseDelay * 2^retryCount</code> 计算，通过 <code>setTimeout</code> 配合返回新的 <code>axios(config)</code> Promise 实现重试。注意设置最大次数和最大延迟上限，且非幂等请求（POST 写操作）需谨慎开启。</p>
-<h3>54. 如何在 TypeScript 中为 Axios 封装类型？</h3>
-<p><strong>答案：</strong>
-① 泛型声明响应类型：<code>axios.get&lt;User[]&gt;(&#39;/users&#39;)</code> 或封装 <code>request&lt;T&gt;(config): Promise&lt;T&gt;</code>；② 扩展 <code>AxiosRequestConfig</code> 接口添加自定义字段（如 <code>skipAuth?: boolean</code>）；③ 用 <code>AxiosResponse&lt;T&gt;</code> 约束拦截器返回值。建议统一封装一个类型化的 <code>request</code> 函数，避免每个调用处都写泛型。</p>
-<h3>55. 如何处理接口不同环境的 baseURL 切换？</h3>
-<p><strong>答案：</strong>
-常见方案：① 通过 <code>.env</code> 文件定义环境变量（<code>VITE_API_BASE</code>），Axios 实例读取 <code>import.meta.env.VITE_API_BASE</code>；② 结合打包工具的代理配置（如 Vite <code>server.proxy</code>）在开发环境代理接口，生产环境直接使用真实域名；③ 多实例方案：不同 API 域对应不同实例，各自配置 <code>baseURL</code>。</p>
-<h3>56. 如何实现接口级别的缓存？</h3>
-<p><strong>答案：</strong>
-在请求拦截器中根据 URL + 参数生成 key，检查内存缓存（Map）；命中缓存则直接返回缓存结果（通过取消请求并在响应拦截器中注入缓存数据，或用 Adapter 拦截）。设置 TTL 过期时间控制缓存有效期。更完整的方案可使用 React Query / SWR 等库。</p>
-<h3>57. Axios 的 <code>transformRequest</code> 和 <code>transformResponse</code> 有什么用？</h3>
-<p><strong>答案：</strong>
-<code>transformRequest</code> 在请求发出前对请求数据做转换（如序列化、加密），是数组可叠加多个处理函数；<code>transformResponse</code> 在响应数据进入拦截器前做转换（如解密、格式标准化）。与拦截器的区别：<code>transform</code> 更底层，在序列化/反序列化层面操作，拦截器在 Promise 层操作。</p>
-<h3>58. 如何在 Axios 请求中统一注入 traceId？</h3>
-<p><strong>答案：</strong>
-在请求拦截器中生成或读取当前请求的 traceId（如 UUID），写入请求头（如 <code>X-Trace-Id</code>）。同时在响应拦截器中读取服务端返回的 traceId（如 <code>x-request-id</code>）并挂到日志上下文。这样前后端日志可通过同一 traceId 串联，方便排查问题。</p>
-<h2>总结</h2>
-<p>这些题目覆盖了 Axios 的基础概念、配置、拦截器、错误处理、并发控制、取消请求与工程化封装（类型、刷新、重试、缓存、traceId），适合作为系统复习资料。</p>
-
+<div class="topbar">
+  <h1>Axios & HTTP 客户端</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
   </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="axios-50">Axios 常见面试题（50道）</h1>
+<h2 id="_1">基础概念</h2>
+<h3 id="1-axios">1. 什么是 Axios？</h3>
+<p><strong>答案：</strong><br>
+Axios 是一个基于 Promise 的 HTTP 客户端，可运行在浏览器和 Node.js 环境中。</p>
+<h3 id="2-axios">2. Axios 的核心特点有哪些？</h3>
+<p><strong>答案：</strong><br>
+它支持拦截器、实例化、超时控制、取消请求、自动 JSON 转换和统一错误处理。</p>
+<h3 id="3-axios-fetch">3. Axios 和 <code>fetch</code> 的主要区别是什么？</h3>
+<p><strong>答案：</strong><br>
+Axios 内置拦截器和更一致的错误处理；<code>fetch</code> 是原生 API，更轻量，但很多能力需要自行封装。</p>
+<h3 id="4-axios">4. 为什么很多项目会选择 Axios？</h3>
+<p><strong>答案：</strong><br>
+因为它适合做统一请求层封装，便于鉴权、错误治理、接口复用和工程化维护。</p>
+<h3 id="5-axios">5. Axios 支持哪些常见请求方法？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>get</code>、<code>post</code>、<code>put</code>、<code>patch</code>、<code>delete</code>、<code>head</code> 和 <code>options</code>。</p>
+<h3 id="6-axios">6. 如何安装 Axios？</h3>
+<p><strong>答案：</strong><br>
+一般通过 <code>npm install axios</code> 或 <code>pnpm add axios</code> 安装。</p>
+<h3 id="7-axios">7. Axios 的基本返回值是什么？</h3>
+<p><strong>答案：</strong><br>
+它返回一个 Promise，成功时得到响应对象，失败时进入 rejected 状态。</p>
+<h3 id="8">8. 响应对象通常包含哪些字段？</h3>
+<p><strong>答案：</strong><br>
+常见字段有 <code>data</code>、<code>status</code>、<code>statusText</code>、<code>headers</code>、<code>config</code> 和 <code>request</code>。</p>
+<h3 id="9-responsedata">9. <code>response.data</code> 表示什么？</h3>
+<p><strong>答案：</strong><br>
+它通常表示服务端真正返回的业务数据，也是业务代码最常读取的部分。</p>
+<h3 id="10-axios-nodejs">10. Axios 是否可以在 Node.js 中使用？</h3>
+<p><strong>答案：</strong><br>
+可以，Axios 同时支持浏览器和 Node.js，因此也常用于 SSR 或脚本请求场景。</p>
+<h2 id="_2">请求配置</h2>
+<h3 id="11-axios">11. Axios 配置对象常见字段有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见包括 <code>url</code>、<code>method</code>、<code>baseURL</code>、<code>headers</code>、<code>params</code>、<code>data</code>、<code>timeout</code>、<code>responseType</code>、<code>withCredentials</code> 等。</p>
+<h3 id="12-baseurl">12. <code>baseURL</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+用于统一配置接口前缀，减少重复书写，并方便在不同环境间切换。</p>
+<h3 id="13-params-data">13. <code>params</code> 和 <code>data</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>params</code> 一般用于 URL 查询参数，<code>data</code> 一般用于请求体。</p>
+<h3 id="14-headers">14. <code>headers</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+它用于设置请求头，比如 <code>Authorization</code>、<code>Content-Type</code>、语言信息和 traceId。</p>
+<h3 id="15-timeout">15. <code>timeout</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+它用于限制请求等待时间，超过设定值会抛出超时错误。</p>
+<h3 id="16-withcredentials">16. <code>withCredentials</code> 在什么场景下使用？</h3>
+<p><strong>答案：</strong><br>
+当跨域请求需要携带 Cookie 或其他凭证时使用，但前后端都要正确配置。</p>
+<h3 id="17-responsetype">17. <code>responseType</code> 常见取值有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>json</code>、<code>text</code>、<code>blob</code>、<code>arraybuffer</code>、<code>document</code> 等。</p>
+<h3 id="18-axios">18. 如何设置 Axios 的全局默认配置？</h3>
+<p><strong>答案：</strong><br>
+可以通过 <code>axios.defaults</code> 设置全局 <code>baseURL</code>、公共请求头、超时时间等。</p>
+<h3 id="19-axios">19. 为什么推荐创建 Axios 实例？</h3>
+<p><strong>答案：</strong><br>
+因为不同业务模块往往需要不同配置，实例化可以隔离拦截器和默认参数。</p>
+<h3 id="20-axios">20. 如何创建 Axios 实例？</h3>
+<p><strong>答案：</strong><br>
+使用 <code>axios.create()</code> 传入配置对象即可创建独立实例。</p>
+<h2 id="_3">拦截器</h2>
+<h3 id="21-axios">21. 什么是 Axios 拦截器？</h3>
+<p><strong>答案：</strong><br>
+拦截器是在请求发送前或响应返回后统一处理逻辑的机制。</p>
+<h3 id="22">22. 请求拦截器常见用途有哪些？</h3>
+<p><strong>答案：</strong><br>
+常用于追加 token、统一参数、签名、日志和 loading 控制。</p>
+<h3 id="23">23. 响应拦截器常见用途有哪些？</h3>
+<p><strong>答案：</strong><br>
+常用于统一解包数据、处理错误码、登录失效跳转和消息提示。</p>
+<h3 id="24-responsedata">24. 为什么很多项目会在响应拦截器里直接返回 <code>response.data</code>？</h3>
+<p><strong>答案：</strong><br>
+因为这样可以简化业务层调用，减少每次都写 <code>response.data</code> 的重复代码。</p>
+<h3 id="25">25. 如何移除拦截器？</h3>
+<p><strong>答案：</strong><br>
+注册拦截器后会得到一个 id，可通过 <code>eject(id)</code> 移除。</p>
+<h3 id="26">26. 使用拦截器时有哪些风险？</h3>
+<p><strong>答案：</strong><br>
+风险包括重复注册、循环请求、错误被吞掉以及多个实例逻辑混乱。</p>
+<h3 id="27">27. 为什么不要把所有逻辑都塞进拦截器？</h3>
+<p><strong>答案：</strong><br>
+因为拦截器应该只放通用治理逻辑，过多业务逻辑会让调试和维护变困难。</p>
+<h3 id="28-token">28. 请求拦截器里如何添加 token？</h3>
+<p><strong>答案：</strong><br>
+通常读取本地存储或状态管理中的 token，再写入 <code>config.headers.Authorization</code>。</p>
+<h3 id="29">29. 响应拦截器如何统一处理业务错误码？</h3>
+<p><strong>答案：</strong><br>
+可以根据后端返回的 <code>code</code> 或 <code>success</code> 字段决定提示、跳转或抛出错误。</p>
+<h3 id="30">30. 为什么实例级拦截器通常优于全局拦截器？</h3>
+<p><strong>答案：</strong><br>
+因为实例级更容易按业务域隔离，避免不同系统之间互相污染。</p>
+<h2 id="_4">错误处理</h2>
+<h3 id="31-axios-http-4xx5xx">31. Axios 如何处理 HTTP 4xx/5xx 状态码？</h3>
+<p><strong>答案：</strong><br>
+默认会把这类响应当作 Promise reject，让你在 <code>catch</code> 或响应拦截器中处理。</p>
+<h3 id="32-axios">32. Axios 的错误对象通常包含什么？</h3>
+<p><strong>答案：</strong><br>
+常见包括 <code>message</code>、<code>code</code>、<code>config</code>、<code>request</code> 和 <code>response</code>。</p>
+<h3 id="33">33. 如何区分接口错误和网络错误？</h3>
+<p><strong>答案：</strong><br>
+有 <code>error.response</code> 通常表示服务端返回了错误状态；只有 <code>error.request</code> 通常表示未收到响应。</p>
+<h3 id="34-401">34. 如何统一处理 401 未授权？</h3>
+<p><strong>答案：</strong><br>
+一般在响应拦截器中清理登录态并跳转登录页，或进入刷新 token 流程。</p>
+<h3 id="35-500">35. 如何统一处理 500 服务异常？</h3>
+<p><strong>答案：</strong><br>
+可以在拦截器中统一记录日志、提示用户稍后重试，并按需上报监控。</p>
+<h3 id="36-validatestatus">36. 什么是 <code>validateStatus</code>？</h3>
+<p><strong>答案：</strong><br>
+它用于自定义哪些 HTTP 状态码应被视为成功响应。</p>
+<h3 id="37">37. 为什么统一错误处理很重要？</h3>
+<p><strong>答案：</strong><br>
+因为它能减少重复代码，提升用户体验一致性，并方便监控与排障。</p>
+<h3 id="38-trycatch">38. 如何避免在每个接口调用处都写重复的 <code>try/catch</code>？</h3>
+<p><strong>答案：</strong><br>
+可以把通用错误治理放到 Axios 封装层或拦截器中，业务层只处理特殊场景。</p>
+<h3 id="39-axios">39. Axios 超时报错如何识别？</h3>
+<p><strong>答案：</strong><br>
+一般可以根据错误 <code>code</code>、错误消息或配置项判断是否为超时场景。</p>
+<h3 id="40">40. 为什么不能简单把所有错误都提示给用户？</h3>
+<p><strong>答案：</strong><br>
+因为有些错误适合静默处理或自动重试，全部直接提示会造成糟糕的交互体验。</p>
+<h2 id="_5">并发、取消与高级能力</h2>
+<h3 id="41-axios">41. Axios 如何发送并发请求？</h3>
+<p><strong>答案：</strong><br>
+一般结合 <code>Promise.all</code> 或 <code>Promise.allSettled</code> 发起多个请求并统一处理结果。</p>
+<h3 id="42-promiseall-promiseallsettled">42. <code>Promise.all</code> 和 <code>Promise.allSettled</code> 在并发请求中有什么区别？</h3>
+<p><strong>答案：</strong><br>
+前者只要有一个失败就整体失败，后者会返回每个请求各自的成功或失败结果。</p>
+<h3 id="43-axios">43. Axios 如何取消请求？</h3>
+<p><strong>答案：</strong><br>
+现在更推荐使用 <code>AbortController</code> 传入 <code>signal</code> 来取消请求。</p>
+<h3 id="44">44. 哪些场景特别适合取消请求？</h3>
+<p><strong>答案：</strong><br>
+搜索联想、组件卸载、路由切换、条件快速切换和重复提交都是典型场景。</p>
+<h3 id="45">45. 什么是重复请求去重？</h3>
+<p><strong>答案：</strong><br>
+指对同一时间内相同接口和参数的请求进行取消、忽略或复用，避免资源浪费。</p>
+<h3 id="46-axios">46. Axios 如何实现文件上传？</h3>
+<p><strong>答案：</strong><br>
+使用 <code>FormData</code> 组装文件后发起请求，并可结合 <code>onUploadProgress</code> 监听进度。</p>
+<h3 id="47-axios">47. Axios 如何实现文件下载？</h3>
+<p><strong>答案：</strong><br>
+一般设置 <code>responseType: 'blob'</code>，再将返回的二进制数据转成可下载链接。</p>
+<h3 id="48">48. 什么是请求重试机制？</h3>
+<p><strong>答案：</strong><br>
+指请求失败后按规则重新发起请求，常用于瞬时网络抖动或临时性错误。</p>
+<h3 id="49">49. 请求重试时要注意什么？</h3>
+<p><strong>答案：</strong><br>
+要控制次数、间隔和适用请求类型，尤其要谨慎处理非幂等请求。</p>
+<h3 id="50-axios">50. 面试中如何总结 Axios 的核心价值？</h3>
+<p><strong>答案：</strong><br>
+Axios 不只是发请求的工具，更是前端做统一接口治理、鉴权、错误处理和请求封装的基础设施。关键在于如何结合拦截器、实例化、类型封装将其融入工程体系，而不是简单地 <code>import axios from 'axios'</code> 就直接调用。</p>
+<h2 id="_6">工程化与进阶实践</h2>
+<h3 id="51">51. 多个拦截器的执行顺序是怎样的？</h3>
+<p><strong>答案：</strong><br>
+请求拦截器按注册的<strong>逆序</strong>执行（后注册的先执行），响应拦截器按注册的<strong>顺序</strong>执行（先注册的先执行）。因此全局基础逻辑建议先注册，业务特定逻辑后注册叠加，可以在基础行为之上逐层增强。</p>
+<h3 id="52-token">52. 如何实现 Token 自动刷新（无感刷新）？</h3>
+<p><strong>答案：</strong><br>
+核心思路：① 响应拦截器检测到 401 时，将当前请求挂起到队列；② 发起刷新 Token 请求（用一个标志位保证只发一次）；③ 刷新成功后将队列中的请求重新发出，失败则跳转登录页。关键点：用 <code>Promise</code> 包装队列请求，刷新期间所有新请求等待，刷新完毕后统一 resolve 或 reject。</p>
+<h3 id="53">53. 如何实现请求指数退避重试？</h3>
+<p><strong>答案：</strong><br>
+在响应拦截器中判断是否符合重试条件（如 5xx 错误、超时、特定网络错误），记录当前重试次数于 <code>config</code>，延迟时间按 <code>delay = baseDelay * 2^retryCount</code> 计算，通过 <code>setTimeout</code> 配合返回新的 <code>axios(config)</code> Promise 实现重试。注意设置最大次数和最大延迟上限，且非幂等请求（POST 写操作）需谨慎开启。</p>
+<h3 id="54-typescript-axios">54. 如何在 TypeScript 中为 Axios 封装类型？</h3>
+<p><strong>答案：</strong><br>
+① 泛型声明响应类型：<code>axios.get&lt;User[]&gt;('/users')</code> 或封装 <code>request&lt;T&gt;(config): Promise&lt;T&gt;</code>；② 扩展 <code>AxiosRequestConfig</code> 接口添加自定义字段（如 <code>skipAuth?: boolean</code>）；③ 用 <code>AxiosResponse&lt;T&gt;</code> 约束拦截器返回值。建议统一封装一个类型化的 <code>request</code> 函数，避免每个调用处都写泛型。</p>
+<h3 id="55-baseurl">55. 如何处理接口不同环境的 baseURL 切换？</h3>
+<p><strong>答案：</strong><br>
+常见方案：① 通过 <code>.env</code> 文件定义环境变量（<code>VITE_API_BASE</code>），Axios 实例读取 <code>import.meta.env.VITE_API_BASE</code>；② 结合打包工具的代理配置（如 Vite <code>server.proxy</code>）在开发环境代理接口，生产环境直接使用真实域名；③ 多实例方案：不同 API 域对应不同实例，各自配置 <code>baseURL</code>。</p>
+<h3 id="56">56. 如何实现接口级别的缓存？</h3>
+<p><strong>答案：</strong><br>
+在请求拦截器中根据 URL + 参数生成 key，检查内存缓存（Map）；命中缓存则直接返回缓存结果（通过取消请求并在响应拦截器中注入缓存数据，或用 Adapter 拦截）。设置 TTL 过期时间控制缓存有效期。更完整的方案可使用 React Query / SWR 等库。</p>
+<h3 id="57-axios-transformrequest-transformresponse">57. Axios 的 <code>transformRequest</code> 和 <code>transformResponse</code> 有什么用？</h3>
+<p><strong>答案：</strong><br>
+<code>transformRequest</code> 在请求发出前对请求数据做转换（如序列化、加密），是数组可叠加多个处理函数；<code>transformResponse</code> 在响应数据进入拦截器前做转换（如解密、格式标准化）。与拦截器的区别：<code>transform</code> 更底层，在序列化/反序列化层面操作，拦截器在 Promise 层操作。</p>
+<h3 id="58-axios-traceid">58. 如何在 Axios 请求中统一注入 traceId？</h3>
+<p><strong>答案：</strong><br>
+在请求拦截器中生成或读取当前请求的 traceId（如 UUID），写入请求头（如 <code>X-Trace-Id</code>）。同时在响应拦截器中读取服务端返回的 traceId（如 <code>x-request-id</code>）并挂到日志上下文。这样前后端日志可通过同一 traceId 串联，方便排查问题。</p>
+<h2 id="_7">总结</h2>
+<p>这些题目覆盖了 Axios 的基础概念、配置、拦截器、错误处理、并发控制、取消请求与工程化封装（类型、刷新、重试、缓存、traceId），适合作为系统复习资料。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-axios.md</div>
+</div>
 </body>
 </html>

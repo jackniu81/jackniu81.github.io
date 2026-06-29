@@ -1,458 +1,536 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p0 react qa</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e74c3c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e74c3c;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>React 常见面试题 100 道（附答案）</h1>
-<h2>1. 什么是 React？</h2>
-<p><strong>答案：</strong>
-React 是一个用于构建用户界面的 JavaScript 库，核心思想是组件化开发和声明式编程。它通过虚拟 DOM 提升更新效率，常用于构建单页应用。</p>
-<h2>2. React 的核心特点有哪些？</h2>
-<p><strong>答案：</strong></p>
-<ul>
-<li>组件化</li>
-<li>声明式 UI</li>
-<li>虚拟 DOM</li>
-<li>单向数据流</li>
-<li>JSX 语法</li>
-</ul>
-<h2>3. 什么是 JSX？</h2>
-<p><strong>答案：</strong>
-JSX 是 JavaScript 的语法扩展，允许你在 JavaScript 中编写类似 HTML 的代码。浏览器不能直接识别 JSX，需要通过 Babel 等工具编译成普通 JavaScript。</p>
-<h2>4. 为什么 React 使用虚拟 DOM？</h2>
-<p><strong>答案：</strong>
-虚拟 DOM 是真实 DOM 的 JavaScript 表示。React 先比较新旧虚拟 DOM 的差异，再最小化更新真实 DOM，从而减少直接操作 DOM 的开销，提高性能。</p>
-<h2>5. 什么是组件？</h2>
-<p><strong>答案：</strong>
-组件是 React 应用的基本构建单元。它把 UI 拆分成独立、可复用的部分，每个组件负责自己的结构和逻辑。</p>
-<h2>6. 函数组件和类组件的区别是什么？</h2>
-<p><strong>答案：</strong>
-函数组件本质上是普通函数，使用 Hook 管理状态和副作用；类组件使用 <code>class</code> 定义，通过 <code>this.state</code> 和生命周期方法管理逻辑。现在实际开发中函数组件更常用。</p>
-<h2>7. 什么是 Props？</h2>
-<p><strong>答案：</strong>
-Props 是父组件向子组件传递数据的方式，是只读的。子组件不能直接修改 Props。</p>
-<h2>8. 什么是 State？</h2>
-<p><strong>答案：</strong>
-State 是组件内部维护的数据，状态变化会触发组件重新渲染。函数组件一般通过 <code>useState</code> 管理状态。</p>
-<h2>9. Props 和 State 的区别是什么？</h2>
-<p><strong>答案：</strong></p>
-<ul>
-<li>Props：由父组件传入，只读</li>
-<li>State：组件自身维护，可变</li>
-<li>Props 主要用于组件通信，State 主要用于组件内部数据管理</li>
-</ul>
-<h2>10. 什么是单向数据流？</h2>
-<p><strong>答案：</strong>
-React 中数据通常从父组件流向子组件，子组件通过 Props 接收数据，不能反向直接修改父组件状态。这让数据变化路径更清晰，更容易维护。</p>
-<h2>11. 什么是受控组件？</h2>
-<p><strong>答案：</strong>
-受控组件是指表单元素的值由 React 状态控制。例如输入框的 <code>value</code> 来自 state，<code>onChange</code> 负责更新 state。</p>
-<h2>12. 什么是非受控组件？</h2>
-<p><strong>答案：</strong>
-非受控组件是指表单数据由 DOM 本身管理，通常通过 <code>ref</code> 获取输入值。适合简单场景，但不如受控组件易管理。</p>
-<h2>13. React 中 <code>key</code> 有什么作用？</h2>
-<p><strong>答案：</strong>
-<code>key</code> 用于帮助 React 识别列表中哪些元素发生了变化，从而更高效地进行 diff 和更新。<code>key</code> 应该稳定且唯一，不推荐直接使用数组索引，除非列表不会变化。</p>
-<h2>14. 为什么不推荐把数组下标作为 <code>key</code>？</h2>
-<p><strong>答案：</strong>
-如果列表顺序发生变化，使用索引会导致 React 错误复用组件，可能引发状态错乱和渲染异常。</p>
-<h2>15. 什么是事件绑定？</h2>
-<p><strong>答案：</strong>
-React 中通过驼峰命名方式绑定事件，例如 <code>onClick</code>、<code>onChange</code>。事件处理函数通常写成函数引用，而不是直接执行。</p>
-<h2>16. React 中为什么要用 <code>className</code> 而不是 <code>class</code>？</h2>
-<p><strong>答案：</strong>
-因为 <code>class</code> 是 JavaScript 保留关键字，所以 JSX 中使用 <code>className</code> 表示 HTML 的类名。</p>
-<h2>17. 什么是条件渲染？</h2>
-<p><strong>答案：</strong>
-条件渲染是根据条件决定渲染不同内容。常见写法有 <code>if</code>、三元表达式、逻辑与 <code>&amp;&amp;</code>。</p>
-<h2>18. 什么是列表渲染？</h2>
-<p><strong>答案：</strong>
-列表渲染是通过 <code>map()</code> 遍历数组并返回一组 JSX 元素，通常需要配合 <code>key</code> 使用。</p>
-<h2>19. <code>useState</code> 是做什么的？</h2>
-<p><strong>答案：</strong>
-<code>useState</code> 是 React Hook，用于在函数组件中声明和更新状态。</p>
-<h2>20. <code>setState</code> 或 <code>setXxx</code> 为什么是异步/批量的？</h2>
-<p><strong>答案：</strong>
-React 为了性能会合并多次状态更新，减少不必要的重复渲染，因此状态更新通常不是立即同步反映到界面上的。</p>
-<h2>21. <code>useEffect</code> 是做什么的？</h2>
-<p><strong>答案：</strong>
-<code>useEffect</code> 用于处理副作用逻辑，例如请求数据、订阅事件、操作定时器、手动修改 DOM 等。</p>
-<h2>22. <code>useEffect</code> 的依赖数组有什么作用？</h2>
-<p><strong>答案：</strong>
-依赖数组用于控制副作用执行时机：</p>
-<ul>
-<li>不传：每次渲染后都执行</li>
-<li>空数组 <code>[]</code>：只在首次挂载后执行一次</li>
-<li><code>[a, b]</code>：当 <code>a</code> 或 <code>b</code> 变化时执行</li>
-</ul>
-<h2>23. <code>useEffect</code> 的清理函数有什么用？</h2>
-<p><strong>答案：</strong>
-清理函数用于在组件卸载前或下一次 effect 执行前清理副作用，如移除事件监听、清除定时器、取消订阅，防止内存泄漏。</p>
-<h2>24. <code>useLayoutEffect</code> 和 <code>useEffect</code> 的区别是什么？</h2>
-<p><strong>答案：</strong>
-<code>useLayoutEffect</code> 在 DOM 更新后、浏览器重绘前同步执行；<code>useEffect</code> 在页面重绘后异步执行。前者适合读取布局和避免闪烁，后者更常用。</p>
-<h2>25. 什么是 <code>useRef</code>？</h2>
-<p><strong>答案：</strong>
-<code>useRef</code> 用于保存一个可变引用，它的值在多次渲染之间保持不变。常见用途是获取 DOM 元素，或者保存不会触发重新渲染的数据。</p>
-<h2>26. <code>useMemo</code> 的作用是什么？</h2>
-<p><strong>答案：</strong>
-<code>useMemo</code> 用于记忆化计算结果，避免在每次渲染时重复执行昂贵计算。</p>
-<h2>27. <code>useCallback</code> 的作用是什么？</h2>
-<p><strong>答案：</strong>
-<code>useCallback</code> 用于记忆化函数本身，避免每次渲染都创建新的函数引用，常用于优化子组件渲染。</p>
-<h2>28. <code>useMemo</code> 和 <code>useCallback</code> 的区别是什么？</h2>
-<p><strong>答案：</strong></p>
-<ul>
-<li><code>useMemo</code> 缓存的是计算结果</li>
-<li><code>useCallback</code> 缓存的是函数本身
-本质上 <code>useCallback(fn, deps)</code> 可以看作 <code>useMemo(() =&gt; fn, deps)</code>。</li>
-</ul>
-<h2>29. 什么是 <code>React.memo</code>？</h2>
-<p><strong>答案：</strong>
-<code>React.memo</code> 是高阶组件，用于缓存函数组件。当组件的 Props 没有变化时，React 可以跳过重新渲染。</p>
-<h2>30. 什么情况下需要做记忆化优化？</h2>
-<p><strong>答案：</strong>
-当组件渲染频繁、计算昂贵、或者因为函数和对象引用变化导致子组件重复渲染时，可以考虑使用 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code>。</p>
-<h2>31. 什么是高阶组件（HOC）？</h2>
-<p><strong>答案：</strong>
-高阶组件是一个函数，接收组件作为参数并返回一个新组件，用于复用组件逻辑，例如权限控制、日志埋点等。</p>
-<h2>32. 什么是 Render Props？</h2>
-<p><strong>答案：</strong>
-Render Props 是一种通过函数作为 Props 传递渲染逻辑的模式，用于实现逻辑复用。</p>
-<h2>33. 什么是 Context？</h2>
-<p><strong>答案：</strong>
-Context 提供了一种跨组件层级共享数据的方式，适合主题、语言、登录态等全局数据，避免层层 Props 传递。</p>
-<h2>34. <code>useContext</code> 的作用是什么？</h2>
-<p><strong>答案：</strong>
-<code>useContext</code> 用于在函数组件中读取 Context 提供的值。</p>
-<h2>35. 什么是 React Fragment？</h2>
-<p><strong>答案：</strong>
-Fragment 用于在不增加额外 DOM 节点的情况下返回多个元素，写法有 <code>&lt;React.Fragment&gt;</code> 或 <code>&lt;&gt;...&lt;/&gt;</code>。</p>
-<h2>36. React 中如何进行父子组件通信？</h2>
-<p><strong>答案：</strong></p>
-<ul>
-<li>父传子：通过 Props</li>
-<li>子传父：父组件传函数给子组件，子组件调用该函数</li>
-<li>跨层级通信：通过 Context 或状态管理库</li>
-</ul>
-<h2>37. 什么是提升状态（Lifting State Up）？</h2>
-<p><strong>答案：</strong>
-当多个组件需要共享同一份数据时，把状态提到它们最近的共同父组件中进行统一管理，这就是状态提升。</p>
-<h2>38. React 中如何实现表单处理？</h2>
-<p><strong>答案：</strong>
-一般通过受控组件实现：输入框的值绑定到 state，<code>onChange</code> 事件更新 state。复杂场景可结合表单库，如 React Hook Form。</p>
-<h2>39. 什么是合成事件（SyntheticEvent）？</h2>
-<p><strong>答案：</strong>
-React 对原生浏览器事件进行了封装，形成跨浏览器兼容的合成事件。开发者通常直接使用 React 提供的事件对象即可。</p>
-<h2>40. React 中如何防止组件重复渲染？</h2>
-<p><strong>答案：</strong>
-常见方法：</p>
-<ul>
-<li>使用 <code>React.memo</code></li>
-<li>使用 <code>useMemo</code> / <code>useCallback</code></li>
-<li>合理拆分组件</li>
-<li>避免每次渲染创建新对象和新函数</li>
-<li>减少不必要的状态更新</li>
-</ul>
-<h2>41. 什么是受控输入延迟问题，怎么优化？</h2>
-<p><strong>答案：</strong>
-当输入框绑定的状态更新引发大量组件重渲染时，可能出现输入卡顿。可通过拆分组件、降低状态提升范围、使用 <code>useDeferredValue</code>、<code>memo</code> 等方式优化。</p>
-<h2>42. 什么是 React Router？</h2>
-<p><strong>答案：</strong>
-React Router 是 React 常用的路由库，用于实现前端页面切换、嵌套路由、动态路由、导航守卫等。</p>
-<h2>43. React 中什么是懒加载（Lazy Loading）？</h2>
-<p><strong>答案：</strong>
-懒加载是指按需加载组件，而不是一次性加载全部代码。React 中常用 <code>React.lazy</code> 和 <code>Suspense</code> 实现。</p>
-<h2>44. <code>React.lazy</code> 和 <code>Suspense</code> 怎么配合使用？</h2>
-<p><strong>答案：</strong>
-<code>React.lazy</code> 用于动态导入组件，<code>Suspense</code> 用于在组件加载完成前显示 fallback 内容。</p>
-<h2>45. 什么是错误边界（Error Boundary）？</h2>
-<p><strong>答案：</strong>
-错误边界用于捕获其子组件树中的 JavaScript 渲染错误，并显示降级 UI。传统上通过类组件中的 <code>componentDidCatch</code> 和 <code>getDerivedStateFromError</code> 实现。</p>
-<h2>46. React 的生命周期有哪些？</h2>
-<p><strong>答案：</strong>
-类组件常见生命周期包括：</p>
-<ul>
-<li>挂载：<code>constructor</code>、<code>render</code>、<code>componentDidMount</code></li>
-<li>更新：<code>render</code>、<code>componentDidUpdate</code></li>
-<li>卸载：<code>componentWillUnmount</code>
-函数组件一般通过 Hook 模拟这些能力。</li>
-</ul>
-<h2>47. React 18 有哪些重要特性？</h2>
-<p><strong>答案：</strong>
-React 18 引入了并发渲染相关能力，例如自动批处理、<code>startTransition</code>、<code>useDeferredValue</code>、新的 <code>createRoot</code> API 等。</p>
-<h2>48. 什么是 <code>startTransition</code>？</h2>
-<p><strong>答案：</strong>
-<code>startTransition</code> 用于标记某些更新为“低优先级更新”，让 React 优先处理更重要的交互更新，提高用户体验。</p>
-<h2>49. React 中为什么强调不可变数据？</h2>
-<p><strong>答案：</strong>
-React 通常通过引用变化判断数据是否更新。如果直接修改原对象，React 可能无法正确识别变化；使用不可变更新更利于性能优化和状态追踪。</p>
-<h2>50. React 项目中常见的性能优化手段有哪些？</h2>
-<p><strong>答案：</strong></p>
-<ul>
-<li>合理拆分组件</li>
-<li>使用 <code>key</code></li>
-<li>使用 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code></li>
-<li>路由和组件懒加载</li>
-<li>减少不必要的状态提升</li>
-<li>避免重复请求</li>
-<li>虚拟列表优化长列表</li>
-<li>使用 Profiler 分析性能瓶颈</li>
-</ul>
-<h2>51. 什么是 Portal？</h2>
-<p><strong>答案：</strong>
-Portal 允许把子组件渲染到父组件 DOM 层级之外的节点中，常用于弹窗、提示框、抽屉等浮层场景。</p>
-<h2>52. 什么是 StrictMode？</h2>
-<p><strong>答案：</strong>
-<code>StrictMode</code> 是开发环境下的辅助工具，用于提示潜在问题，例如不安全生命周期、重复副作用等，不会影响生产环境渲染结果。</p>
-<h2>53. 为什么开发环境下 <code>useEffect</code> 可能执行两次？</h2>
-<p><strong>答案：</strong>
-在 React 18 的严格模式下，开发环境会故意重复执行部分生命周期和副作用，用来帮助你发现副作用不纯或清理不完整的问题。</p>
-<h2>54. 什么是受控和非受控表单的取舍原则？</h2>
-<p><strong>答案：</strong>
-需要统一校验、联动和状态管理时优先使用受控组件；表单简单、只在提交时读取值时可以考虑非受控组件。</p>
-<h2>55. 什么是状态提升的缺点？</h2>
-<p><strong>答案：</strong>
-状态提升会让父组件承担更多职责，导致 Props 传递链变长、组件耦合增强，过度使用会降低可维护性。</p>
-<h2>56. React 中如何复用逻辑？</h2>
-<p><strong>答案：</strong>
-常见方式有自定义 Hook、Context、组合模式、Render Props 和 HOC。当前最主流的是自定义 Hook。</p>
-<h2>57. 什么是自定义 Hook？</h2>
-<p><strong>答案：</strong>
-自定义 Hook 是把可复用的状态逻辑和副作用逻辑抽取到以 <code>use</code> 开头的函数中，便于多个组件共享逻辑。</p>
-<h2>58. 自定义 Hook 和普通函数有什么区别？</h2>
-<p><strong>答案：</strong>
-自定义 Hook 可以调用其他 Hook，并遵守 Hook 规则；普通函数不能随意调用 Hook，也不参与 React 的状态管理流程。</p>
-<h2>59. Hook 使用时有哪些规则？</h2>
-<p><strong>答案：</strong>
-Hook 只能在函数组件或自定义 Hook 顶层调用，不能放在条件、循环、嵌套函数中，以保证调用顺序稳定。</p>
-<h2>60. 为什么 Hook 不能放在条件语句中？</h2>
-<p><strong>答案：</strong>
-因为 React 依赖 Hook 的调用顺序来关联状态。如果条件分支导致调用顺序变化，就会出现状态错位。</p>
-<h2>61. React 中什么是闭包陷阱？</h2>
-<p><strong>答案：</strong>
-在函数组件中，事件处理器或副作用可能捕获旧的状态值，导致读取到过期数据。这类问题通常与依赖项不完整或异步回调有关。</p>
-<h2>62. 如何解决闭包导致的旧值问题？</h2>
-<p><strong>答案：</strong>
-可以补全依赖数组、使用函数式更新、使用 <code>useRef</code> 保存最新值，或重构代码避免在旧闭包中读取状态。</p>
-<h2>63. 什么是函数式更新？</h2>
-<p><strong>答案：</strong>
-函数式更新是把更新函数传给 <code>setState</code>，例如 <code>setCount(prev =&gt; prev + 1)</code>，适合依赖前一个状态值的场景。</p>
-<h2>64. React 中如何共享全局状态？</h2>
-<p><strong>答案：</strong>
-小型应用可以用 Context，中大型应用通常结合 Zustand、Redux Toolkit、Jotai 等状态管理库。</p>
-<h2>65. Context 是否适合所有全局状态？</h2>
-<p><strong>答案：</strong>
-不适合。Context 更适合低频更新的共享数据；高频更新状态如果直接放入 Context，容易导致大量消费者重复渲染。</p>
-<h2>66. 什么是 Props Drilling？</h2>
-<p><strong>答案：</strong>
-Props Drilling 指数据必须层层通过中间组件传递给深层子组件，即使中间组件本身并不使用这些数据。</p>
-<h2>67. 如何避免 Props Drilling？</h2>
-<p><strong>答案：</strong>
-可以使用 Context、状态管理库、组合模式，或者重新设计组件层级，减少不必要的数据穿透。</p>
-<h2>68. 什么是组合优于继承？</h2>
-<p><strong>答案：</strong>
-React 更推荐通过组件组合来复用 UI 和行为，而不是像传统 OOP 那样依赖继承层级，这样更灵活、更易维护。</p>
-<h2>69. React 中什么是受控副作用？</h2>
-<p><strong>答案：</strong>
-指副作用的触发时机、依赖关系和清理逻辑都明确可控，避免无序请求、重复订阅和资源泄漏。</p>
-<h2>70. 何时应该拆分组件？</h2>
-<p><strong>答案：</strong>
-当一个组件职责过多、状态复杂、复用性差或渲染范围过大时，应考虑拆分为更小、更清晰的组件。</p>
-<h2>71. React 中什么是渲染阶段和提交阶段？</h2>
-<p><strong>答案：</strong>
-渲染阶段负责计算新 UI；提交阶段才真正修改 DOM。理解这两个阶段有助于判断副作用和性能问题。</p>
-<h2>72. 为什么不能在渲染阶段做副作用？</h2>
-<p><strong>答案：</strong>
-因为渲染阶段应该保持纯函数特性，可能被中断或重复执行；副作用应放在 <code>useEffect</code> 等提交后阶段处理。</p>
-<h2>73. React 中什么是批处理更新？</h2>
-<p><strong>答案：</strong>
-批处理更新指 React 会把同一轮事件中的多个状态更新合并处理，从而减少重复渲染，提升性能。</p>
-<h2>74. React 18 自动批处理有什么变化？</h2>
-<p><strong>答案：</strong>
-React 18 将自动批处理扩展到更多异步场景，比如 <code>Promise</code>、<code>setTimeout</code> 和原生事件回调中。</p>
-<h2>75. 什么是 <code>flushSync</code>？</h2>
-<p><strong>答案：</strong>
-<code>flushSync</code> 用于强制 React 立即同步刷新更新。只有在确实需要立刻拿到更新后 DOM 结果时才应谨慎使用。</p>
-<h2>76. 什么是 <code>useDeferredValue</code>？</h2>
-<p><strong>答案：</strong>
-<code>useDeferredValue</code> 用于把某个值的更新延后为低优先级更新，常用于优化搜索输入、大列表过滤等场景。</p>
-<h2>77. <code>startTransition</code> 和 <code>useDeferredValue</code> 的区别是什么？</h2>
-<p><strong>答案：</strong>
-<code>startTransition</code> 用于把一段状态更新标记为低优先级；<code>useDeferredValue</code> 用于延后某个值的消费，二者都服务于交互流畅性优化。</p>
-<h2>78. 什么是服务端渲染（SSR）？</h2>
-<p><strong>答案：</strong>
-SSR 是指先在服务端生成 HTML，再返回给浏览器。它有助于首屏速度、SEO 和弱网场景体验。</p>
-<h2>79. SSR 的优缺点是什么？</h2>
-<p><strong>答案：</strong>
-优点是首屏快、SEO 友好；缺点是服务端压力更高、开发复杂度更大，还要处理水合一致性问题。</p>
-<h2>80. 什么是 Hydration？</h2>
-<p><strong>答案：</strong>
-Hydration 指浏览器在拿到服务端渲染的 HTML 后，把 React 事件和状态系统“挂载”到已有 DOM 上的过程。</p>
-<h2>81. 什么是 Hydration Mismatch？</h2>
-<p><strong>答案：</strong>
-指服务端输出和客户端首次渲染结果不一致，React 会报警告甚至重新渲染，常见原因是时间、随机数和环境差异。</p>
-<h2>82. React 中如何处理长列表性能问题？</h2>
-<p><strong>答案：</strong>
-可以使用虚拟列表、分页、懒加载、稳定的 <code>key</code> 和减少单项渲染复杂度等方式优化。</p>
-<h2>83. 什么是虚拟列表？</h2>
-<p><strong>答案：</strong>
-虚拟列表只渲染可视区域附近的列表项，而不是一次性渲染全部数据，从而显著降低 DOM 数量和渲染开销。</p>
-<h2>84. React 中为什么要保持组件纯净？</h2>
-<p><strong>答案：</strong>
-纯组件更容易预测、测试和优化。相同输入应产生相同输出，避免在渲染函数中偷偷修改外部状态。</p>
-<h2>85. 什么是不可变更新？</h2>
-<p><strong>答案：</strong>
-不可变更新指不直接修改原对象或数组，而是创建新引用返回，例如使用展开运算符、<code>map</code>、<code>filter</code> 等。</p>
-<h2>86. React 中如何更新对象状态？</h2>
-<p><strong>答案：</strong>
-通常使用浅拷贝创建新对象，例如 <code>setUser(prev =&gt; ({ ...prev, name: &#39;Tom&#39; }))</code>，避免直接修改原对象。</p>
-<h2>87. React 中如何更新数组状态？</h2>
-<p><strong>答案：</strong>
-使用 <code>map</code>、<code>filter</code>、<code>concat</code>、展开运算符等返回新数组，而不是直接 <code>push</code>、<code>splice</code> 修改原数组。</p>
-<h2>88. 什么是 key 冲突？</h2>
-<p><strong>答案：</strong>
-当兄弟节点之间的 <code>key</code> 不唯一时，React 无法准确识别节点身份，可能导致错误复用和渲染异常。</p>
-<h2>89. React 中受控组件为什么更适合复杂表单？</h2>
-<p><strong>答案：</strong>
-因为数据、校验、联动和提交都由 React 状态统一管理，更容易实现规则校验、格式转换和业务逻辑组合。</p>
-<h2>90. React 中如何做代码分割？</h2>
-<p><strong>答案：</strong>
-可以通过动态导入、<code>React.lazy</code>、路由级懒加载和构建工具分包策略来减少首屏加载体积。</p>
-<h2>91. 什么是 Suspense 的常见使用场景？</h2>
-<p><strong>答案：</strong>
-常见于懒加载组件的加载占位，也可用于配合特定数据获取方案展示统一 fallback。</p>
-<h2>92. React 中什么是错误恢复边界？</h2>
-<p><strong>答案：</strong>
-它本质上还是 Error Boundary 的一种使用思路：当局部 UI 报错时，只让局部降级，而不是整个应用白屏。</p>
-<h2>93. React 中如何优化 Context 性能？</h2>
-<p><strong>答案：</strong>
-可以拆分多个 Context、稳定 <code>value</code> 引用、减少无关数据放入同一个 Provider，必要时引入外部状态库。</p>
-<h2>94. 为什么内联对象和函数可能影响性能？</h2>
-<p><strong>答案：</strong>
-因为它们每次渲染都会生成新引用，可能导致依赖比较失败，让子组件或副作用不必要地重新执行。</p>
-<h2>95. 什么是受控渲染范围？</h2>
-<p><strong>答案：</strong>
-指通过组件拆分、局部状态、记忆化和上下文隔离，把状态变化影响限制在尽可能小的组件范围内。</p>
-<h2>96. React 中如何排查性能问题？</h2>
-<p><strong>答案：</strong>
-可以借助 React DevTools Profiler、浏览器 Performance 面板、日志埋点和组件边界拆分来定位瓶颈。</p>
-<h2>97. React 项目中常见反模式有哪些？</h2>
-<p><strong>答案：</strong>
-包括直接修改 state、滥用 Context、过度记忆化、在渲染中做副作用、使用不稳定 <code>key</code>、过度提升状态等。</p>
-<h2>98. 什么是 React 的声明式编程？</h2>
-<p><strong>答案：</strong>
-你只需要描述在某个状态下 UI 应该是什么样子，React 会负责把状态变化映射为界面更新，而不是手动操作 DOM。</p>
-<h2>99. React 为什么适合大型前端应用？</h2>
-<p><strong>答案：</strong>
-因为它具备组件化、生态成熟、状态管理方案丰富、工程化能力强、可测试性和可维护性较高等优势。</p>
-<h2>100. 面试中如何系统回答 React 问题？</h2>
-<p><strong>答案：</strong>
-可以按“概念定义、核心原理、使用场景、优缺点、常见坑、优化手段”这个结构回答，层次会更清晰。</p>
-<h2>进阶与新特性</h2>
-<h3>101. 什么是 <code>useReducer</code>？</h3>
-<p><strong>答案：</strong>
-<code>useReducer</code> 是管理复杂状态逻辑的 Hook，接收 <code>(state, action) =&gt; newState</code> 的 reducer 函数和初始状态，返回当前状态和 <code>dispatch</code>。适合多个子值相互依赖、状态变化逻辑复杂、需要集中管理的场景，比多个 <code>useState</code> 更清晰。本质上 <code>useState</code> 是 <code>useReducer</code> 的简化版。</p>
-<h3>102. 什么是 <code>useId</code>？</h3>
-<p><strong>答案：</strong>
-<code>useId</code> 是 React 18 新增的 Hook，用于生成在服务端和客户端之间稳定一致的唯一 ID，解决 SSR 水合时 ID 不匹配的问题。常用于 <code>aria</code> 属性（如 <code>aria-labelledby</code>）或表单 <code>label</code> 与控件的关联，不要用它生成列表 <code>key</code>。</p>
-<h3>103. 什么是 <code>forwardRef</code>？</h3>
-<p><strong>答案：</strong>
-<code>forwardRef</code> 允许函数组件将接收到的 ref 转发给其内部的 DOM 节点或子组件。语法为 <code>React.forwardRef((props, ref) =&gt; &lt;input ref={ref} /&gt;)</code>。常用于封装表单控件库、需要父组件直接控制子组件 DOM（如聚焦、滚动）的场景。</p>
-<h3>104. 什么是 <code>useImperativeHandle</code>？</h3>
-<p><strong>答案：</strong>
-<code>useImperativeHandle</code> 配合 <code>forwardRef</code> 使用，允许自定义暴露给父组件 ref 的实例值，而不是暴露整个 DOM 节点。例如只暴露 <code>{ focus, reset }</code> 方法，隐藏其他 DOM 接口，实现更好的封装性。</p>
-<h3>105. 什么是 React Server Components（RSC）？</h3>
-<p><strong>答案：</strong>
-RSC 是 React 18+ 引入的新模式，允许在服务端渲染组件，不把相应的 JavaScript 发送到客户端，减少 bundle 体积。Server Components 可以直接访问数据库、文件系统、后端服务，但不能使用 state、effect 和浏览器 API。交互逻辑仍由 Client Components（加 <code>&quot;use client&quot;</code> 指令）承担，两者可以组合使用。</p>
-<h3>106. React diff 算法的核心规则是什么？</h3>
-<p><strong>答案：</strong>
-React diff（协调算法）基于三个假设：① 跨层级移动忽略不计，只做同层比较；② 不同类型的元素生成不同树，直接替换；③ 通过 <code>key</code> 标识稳定的子元素身份。这使复杂度从 O(n³) 降到 O(n)。所以 <code>key</code> 的稳定性对性能至关重要，随机或索引 key 会破坏 diff 优化。</p>
-<h3>107. 什么是 React 中的受控与非受控的对比？</h3>
-<p><strong>答案：</strong>
-受控组件：值由 React state 驱动，通过 <code>onChange</code> 同步，易于校验和联动，但代码量较多。非受控组件：值由 DOM 自身维护，通过 <code>ref</code> 读取，适合简单场景或集成第三方库。复杂表单（校验、联动、提交控制）推荐受控；简单表单或文件上传等场景可用非受控。</p>
-<h3>108. 什么是 <code>use</code> Hook（React 19）？</h3>
-<p><strong>答案：</strong>
-<code>use</code> 是 React 19 新增的 Hook，可以读取 Promise 或 Context 的值。读取 Promise 时，若未 resolve 会触发最近的 <code>&lt;Suspense&gt;</code> fallback；读取 Context 类似 <code>useContext</code>。与其他 Hook 不同，<code>use</code> 可以在条件语句中调用，使异步数据处理更灵活。</p>
-<h3>109. React 中如何避免 <code>useEffect</code> 中的竞态条件？</h3>
-<p><strong>答案：</strong>
-竞态条件发生在快速切换时多个请求并发，后发出的先返回导致数据错误。解决方案：① 在 <code>useEffect</code> 清理函数中用 <code>AbortController</code> 取消请求；② 设置 <code>let isCancelled = false</code> 标志，在回调中判断后再 <code>setState</code>；③ 使用 React Query、SWR 等数据获取库，它们内置了竞态处理。</p>
-<h3>110. 什么是 React Query / SWR？</h3>
-<p><strong>答案：</strong>
-它们是专注于服务端状态管理的库。核心能力包括：自动缓存和去重请求、窗口聚焦时自动重新验证、后台刷新、加载/错误状态管理、分页和无限滚动支持。相比 <code>useEffect + useState</code>，大大减少数据获取的样板代码，并解决了竞态条件、请求重复等问题。</p>
-<h3>111. 什么是 Zustand？与 Redux 的区别是什么？</h3>
-<p><strong>答案：</strong>
-Zustand 是轻量级状态管理库，API 极简：通过 <code>create</code> 定义 store，直接在组件中 <code>useStore(state =&gt; state.count)</code> 使用。无需 Provider 包裹、无需 action/reducer 样板、支持订阅局部状态避免不必要渲染。Redux（Toolkit）更适合大型项目，有 devtools、时间旅行调试、严格的单向数据流。</p>
-<h3>112. 什么是 React 中的 Compound Components 模式？</h3>
-<p><strong>答案：</strong>
-复合组件模式是将多个相关组件组合使用，通过 Context 共享内部状态，对外提供灵活的组合 API。例如 <code>&lt;Select&gt;</code> 和 <code>&lt;Select.Option&gt;</code> 的关系。优点是 API 灵活，调用方可以自由排列子组件、插入自定义内容，而不需要通过大量 props 控制内部细节。</p>
-<h2>总结</h2>
-<p>这些题目覆盖了 React 面试中的基础概念、组件通信、Hooks、渲染机制、性能优化、并发特性、SSR 与工程实践，适合作为系统复习清单。</p>
-
+<div class="topbar">
+  <h1>React</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P0 核心必考</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
   </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="react-100">React 常见面试题 100 道（附答案）</h1>
+<h2 id="1-react">1. 什么是 React？</h2>
+<p><strong>答案：</strong><br>
+React 是一个用于构建用户界面的 JavaScript 库，核心思想是组件化开发和声明式编程。它通过虚拟 DOM 提升更新效率，常用于构建单页应用。</p>
+<h2 id="2-react">2. React 的核心特点有哪些？</h2>
+<p><strong>答案：</strong><br>
+- 组件化<br>
+- 声明式 UI<br>
+- 虚拟 DOM<br>
+- 单向数据流<br>
+- JSX 语法</p>
+<h2 id="3-jsx">3. 什么是 JSX？</h2>
+<p><strong>答案：</strong><br>
+JSX 是 JavaScript 的语法扩展，允许你在 JavaScript 中编写类似 HTML 的代码。浏览器不能直接识别 JSX，需要通过 Babel 等工具编译成普通 JavaScript。</p>
+<h2 id="4-react-dom">4. 为什么 React 使用虚拟 DOM？</h2>
+<p><strong>答案：</strong><br>
+虚拟 DOM 是真实 DOM 的 JavaScript 表示。React 先比较新旧虚拟 DOM 的差异，再最小化更新真实 DOM，从而减少直接操作 DOM 的开销，提高性能。</p>
+<h2 id="5">5. 什么是组件？</h2>
+<p><strong>答案：</strong><br>
+组件是 React 应用的基本构建单元。它把 UI 拆分成独立、可复用的部分，每个组件负责自己的结构和逻辑。</p>
+<h2 id="6">6. 函数组件和类组件的区别是什么？</h2>
+<p><strong>答案：</strong><br>
+函数组件本质上是普通函数，使用 Hook 管理状态和副作用；类组件使用 <code>class</code> 定义，通过 <code>this.state</code> 和生命周期方法管理逻辑。现在实际开发中函数组件更常用。</p>
+<h2 id="7-props">7. 什么是 Props？</h2>
+<p><strong>答案：</strong><br>
+Props 是父组件向子组件传递数据的方式，是只读的。子组件不能直接修改 Props。</p>
+<h2 id="8-state">8. 什么是 State？</h2>
+<p><strong>答案：</strong><br>
+State 是组件内部维护的数据，状态变化会触发组件重新渲染。函数组件一般通过 <code>useState</code> 管理状态。</p>
+<h2 id="9-props-state">9. Props 和 State 的区别是什么？</h2>
+<p><strong>答案：</strong><br>
+- Props：由父组件传入，只读<br>
+- State：组件自身维护，可变<br>
+- Props 主要用于组件通信，State 主要用于组件内部数据管理</p>
+<h2 id="10">10. 什么是单向数据流？</h2>
+<p><strong>答案：</strong><br>
+React 中数据通常从父组件流向子组件，子组件通过 Props 接收数据，不能反向直接修改父组件状态。这让数据变化路径更清晰，更容易维护。</p>
+<h2 id="11">11. 什么是受控组件？</h2>
+<p><strong>答案：</strong><br>
+受控组件是指表单元素的值由 React 状态控制。例如输入框的 <code>value</code> 来自 state，<code>onChange</code> 负责更新 state。</p>
+<h2 id="12">12. 什么是非受控组件？</h2>
+<p><strong>答案：</strong><br>
+非受控组件是指表单数据由 DOM 本身管理，通常通过 <code>ref</code> 获取输入值。适合简单场景，但不如受控组件易管理。</p>
+<h2 id="13-react-key">13. React 中 <code>key</code> 有什么作用？</h2>
+<p><strong>答案：</strong><br>
+<code>key</code> 用于帮助 React 识别列表中哪些元素发生了变化，从而更高效地进行 diff 和更新。<code>key</code> 应该稳定且唯一，不推荐直接使用数组索引，除非列表不会变化。</p>
+<h2 id="14-key">14. 为什么不推荐把数组下标作为 <code>key</code>？</h2>
+<p><strong>答案：</strong><br>
+如果列表顺序发生变化，使用索引会导致 React 错误复用组件，可能引发状态错乱和渲染异常。</p>
+<h2 id="15">15. 什么是事件绑定？</h2>
+<p><strong>答案：</strong><br>
+React 中通过驼峰命名方式绑定事件，例如 <code>onClick</code>、<code>onChange</code>。事件处理函数通常写成函数引用，而不是直接执行。</p>
+<h2 id="16-react-classname-class">16. React 中为什么要用 <code>className</code> 而不是 <code>class</code>？</h2>
+<p><strong>答案：</strong><br>
+因为 <code>class</code> 是 JavaScript 保留关键字，所以 JSX 中使用 <code>className</code> 表示 HTML 的类名。</p>
+<h2 id="17">17. 什么是条件渲染？</h2>
+<p><strong>答案：</strong><br>
+条件渲染是根据条件决定渲染不同内容。常见写法有 <code>if</code>、三元表达式、逻辑与 <code>&amp;&amp;</code>。</p>
+<h2 id="18">18. 什么是列表渲染？</h2>
+<p><strong>答案：</strong><br>
+列表渲染是通过 <code>map()</code> 遍历数组并返回一组 JSX 元素，通常需要配合 <code>key</code> 使用。</p>
+<h2 id="19-usestate">19. <code>useState</code> 是做什么的？</h2>
+<p><strong>答案：</strong><br>
+<code>useState</code> 是 React Hook，用于在函数组件中声明和更新状态。</p>
+<h2 id="20-setstate-setxxx">20. <code>setState</code> 或 <code>setXxx</code> 为什么是异步/批量的？</h2>
+<p><strong>答案：</strong><br>
+React 为了性能会合并多次状态更新，减少不必要的重复渲染，因此状态更新通常不是立即同步反映到界面上的。</p>
+<h2 id="21-useeffect">21. <code>useEffect</code> 是做什么的？</h2>
+<p><strong>答案：</strong><br>
+<code>useEffect</code> 用于处理副作用逻辑，例如请求数据、订阅事件、操作定时器、手动修改 DOM 等。</p>
+<h2 id="22-useeffect">22. <code>useEffect</code> 的依赖数组有什么作用？</h2>
+<p><strong>答案：</strong><br>
+依赖数组用于控制副作用执行时机：<br>
+- 不传：每次渲染后都执行<br>
+- 空数组 <code>[]</code>：只在首次挂载后执行一次<br>
+- <code>[a, b]</code>：当 <code>a</code> 或 <code>b</code> 变化时执行</p>
+<h2 id="23-useeffect">23. <code>useEffect</code> 的清理函数有什么用？</h2>
+<p><strong>答案：</strong><br>
+清理函数用于在组件卸载前或下一次 effect 执行前清理副作用，如移除事件监听、清除定时器、取消订阅，防止内存泄漏。</p>
+<h2 id="24-uselayouteffect-useeffect">24. <code>useLayoutEffect</code> 和 <code>useEffect</code> 的区别是什么？</h2>
+<p><strong>答案：</strong><br>
+<code>useLayoutEffect</code> 在 DOM 更新后、浏览器重绘前同步执行；<code>useEffect</code> 在页面重绘后异步执行。前者适合读取布局和避免闪烁，后者更常用。</p>
+<h2 id="25-useref">25. 什么是 <code>useRef</code>？</h2>
+<p><strong>答案：</strong><br>
+<code>useRef</code> 用于保存一个可变引用，它的值在多次渲染之间保持不变。常见用途是获取 DOM 元素，或者保存不会触发重新渲染的数据。</p>
+<h2 id="26-usememo">26. <code>useMemo</code> 的作用是什么？</h2>
+<p><strong>答案：</strong><br>
+<code>useMemo</code> 用于记忆化计算结果，避免在每次渲染时重复执行昂贵计算。</p>
+<h2 id="27-usecallback">27. <code>useCallback</code> 的作用是什么？</h2>
+<p><strong>答案：</strong><br>
+<code>useCallback</code> 用于记忆化函数本身，避免每次渲染都创建新的函数引用，常用于优化子组件渲染。</p>
+<h2 id="28-usememo-usecallback">28. <code>useMemo</code> 和 <code>useCallback</code> 的区别是什么？</h2>
+<p><strong>答案：</strong><br>
+- <code>useMemo</code> 缓存的是计算结果<br>
+- <code>useCallback</code> 缓存的是函数本身<br>
+本质上 <code>useCallback(fn, deps)</code> 可以看作 <code>useMemo(() =&gt; fn, deps)</code>。</p>
+<h2 id="29-reactmemo">29. 什么是 <code>React.memo</code>？</h2>
+<p><strong>答案：</strong><br>
+<code>React.memo</code> 是高阶组件，用于缓存函数组件。当组件的 Props 没有变化时，React 可以跳过重新渲染。</p>
+<h2 id="30">30. 什么情况下需要做记忆化优化？</h2>
+<p><strong>答案：</strong><br>
+当组件渲染频繁、计算昂贵、或者因为函数和对象引用变化导致子组件重复渲染时，可以考虑使用 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code>。</p>
+<h2 id="31-hoc">31. 什么是高阶组件（HOC）？</h2>
+<p><strong>答案：</strong><br>
+高阶组件是一个函数，接收组件作为参数并返回一个新组件，用于复用组件逻辑，例如权限控制、日志埋点等。</p>
+<h2 id="32-render-props">32. 什么是 Render Props？</h2>
+<p><strong>答案：</strong><br>
+Render Props 是一种通过函数作为 Props 传递渲染逻辑的模式，用于实现逻辑复用。</p>
+<h2 id="33-context">33. 什么是 Context？</h2>
+<p><strong>答案：</strong><br>
+Context 提供了一种跨组件层级共享数据的方式，适合主题、语言、登录态等全局数据，避免层层 Props 传递。</p>
+<h2 id="34-usecontext">34. <code>useContext</code> 的作用是什么？</h2>
+<p><strong>答案：</strong><br>
+<code>useContext</code> 用于在函数组件中读取 Context 提供的值。</p>
+<h2 id="35-react-fragment">35. 什么是 React Fragment？</h2>
+<p><strong>答案：</strong><br>
+Fragment 用于在不增加额外 DOM 节点的情况下返回多个元素，写法有 <code>&lt;React.Fragment&gt;</code> 或 <code>&lt;&gt;...&lt;/&gt;</code>。</p>
+<h2 id="36-react">36. React 中如何进行父子组件通信？</h2>
+<p><strong>答案：</strong><br>
+- 父传子：通过 Props<br>
+- 子传父：父组件传函数给子组件，子组件调用该函数<br>
+- 跨层级通信：通过 Context 或状态管理库</p>
+<h2 id="37-lifting-state-up">37. 什么是提升状态（Lifting State Up）？</h2>
+<p><strong>答案：</strong><br>
+当多个组件需要共享同一份数据时，把状态提到它们最近的共同父组件中进行统一管理，这就是状态提升。</p>
+<h2 id="38-react">38. React 中如何实现表单处理？</h2>
+<p><strong>答案：</strong><br>
+一般通过受控组件实现：输入框的值绑定到 state，<code>onChange</code> 事件更新 state。复杂场景可结合表单库，如 React Hook Form。</p>
+<h2 id="39-syntheticevent">39. 什么是合成事件（SyntheticEvent）？</h2>
+<p><strong>答案：</strong><br>
+React 对原生浏览器事件进行了封装，形成跨浏览器兼容的合成事件。开发者通常直接使用 React 提供的事件对象即可。</p>
+<h2 id="40-react">40. React 中如何防止组件重复渲染？</h2>
+<p><strong>答案：</strong><br>
+常见方法：<br>
+- 使用 <code>React.memo</code><br>
+- 使用 <code>useMemo</code> / <code>useCallback</code><br>
+- 合理拆分组件<br>
+- 避免每次渲染创建新对象和新函数<br>
+- 减少不必要的状态更新</p>
+<h2 id="41">41. 什么是受控输入延迟问题，怎么优化？</h2>
+<p><strong>答案：</strong><br>
+当输入框绑定的状态更新引发大量组件重渲染时，可能出现输入卡顿。可通过拆分组件、降低状态提升范围、使用 <code>useDeferredValue</code>、<code>memo</code> 等方式优化。</p>
+<h2 id="42-react-router">42. 什么是 React Router？</h2>
+<p><strong>答案：</strong><br>
+React Router 是 React 常用的路由库，用于实现前端页面切换、嵌套路由、动态路由、导航守卫等。</p>
+<h2 id="43-react-lazy-loading">43. React 中什么是懒加载（Lazy Loading）？</h2>
+<p><strong>答案：</strong><br>
+懒加载是指按需加载组件，而不是一次性加载全部代码。React 中常用 <code>React.lazy</code> 和 <code>Suspense</code> 实现。</p>
+<h2 id="44-reactlazy-suspense">44. <code>React.lazy</code> 和 <code>Suspense</code> 怎么配合使用？</h2>
+<p><strong>答案：</strong><br>
+<code>React.lazy</code> 用于动态导入组件，<code>Suspense</code> 用于在组件加载完成前显示 fallback 内容。</p>
+<h2 id="45-error-boundary">45. 什么是错误边界（Error Boundary）？</h2>
+<p><strong>答案：</strong><br>
+错误边界用于捕获其子组件树中的 JavaScript 渲染错误，并显示降级 UI。传统上通过类组件中的 <code>componentDidCatch</code> 和 <code>getDerivedStateFromError</code> 实现。</p>
+<h2 id="46-react">46. React 的生命周期有哪些？</h2>
+<p><strong>答案：</strong><br>
+类组件常见生命周期包括：<br>
+- 挂载：<code>constructor</code>、<code>render</code>、<code>componentDidMount</code><br>
+- 更新：<code>render</code>、<code>componentDidUpdate</code><br>
+- 卸载：<code>componentWillUnmount</code><br>
+函数组件一般通过 Hook 模拟这些能力。</p>
+<h2 id="47-react-18">47. React 18 有哪些重要特性？</h2>
+<p><strong>答案：</strong><br>
+React 18 引入了并发渲染相关能力，例如自动批处理、<code>startTransition</code>、<code>useDeferredValue</code>、新的 <code>createRoot</code> API 等。</p>
+<h2 id="48-starttransition">48. 什么是 <code>startTransition</code>？</h2>
+<p><strong>答案：</strong><br>
+<code>startTransition</code> 用于标记某些更新为“低优先级更新”，让 React 优先处理更重要的交互更新，提高用户体验。</p>
+<h2 id="49-react">49. React 中为什么强调不可变数据？</h2>
+<p><strong>答案：</strong><br>
+React 通常通过引用变化判断数据是否更新。如果直接修改原对象，React 可能无法正确识别变化；使用不可变更新更利于性能优化和状态追踪。</p>
+<h2 id="50-react">50. React 项目中常见的性能优化手段有哪些？</h2>
+<p><strong>答案：</strong><br>
+- 合理拆分组件<br>
+- 使用 <code>key</code><br>
+- 使用 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code><br>
+- 路由和组件懒加载<br>
+- 减少不必要的状态提升<br>
+- 避免重复请求<br>
+- 虚拟列表优化长列表<br>
+- 使用 Profiler 分析性能瓶颈</p>
+<h2 id="51-portal">51. 什么是 Portal？</h2>
+<p><strong>答案：</strong><br>
+Portal 允许把子组件渲染到父组件 DOM 层级之外的节点中，常用于弹窗、提示框、抽屉等浮层场景。</p>
+<h2 id="52-strictmode">52. 什么是 StrictMode？</h2>
+<p><strong>答案：</strong><br>
+<code>StrictMode</code> 是开发环境下的辅助工具，用于提示潜在问题，例如不安全生命周期、重复副作用等，不会影响生产环境渲染结果。</p>
+<h2 id="53-useeffect">53. 为什么开发环境下 <code>useEffect</code> 可能执行两次？</h2>
+<p><strong>答案：</strong><br>
+在 React 18 的严格模式下，开发环境会故意重复执行部分生命周期和副作用，用来帮助你发现副作用不纯或清理不完整的问题。</p>
+<h2 id="54">54. 什么是受控和非受控表单的取舍原则？</h2>
+<p><strong>答案：</strong><br>
+需要统一校验、联动和状态管理时优先使用受控组件；表单简单、只在提交时读取值时可以考虑非受控组件。</p>
+<h2 id="55">55. 什么是状态提升的缺点？</h2>
+<p><strong>答案：</strong><br>
+状态提升会让父组件承担更多职责，导致 Props 传递链变长、组件耦合增强，过度使用会降低可维护性。</p>
+<h2 id="56-react">56. React 中如何复用逻辑？</h2>
+<p><strong>答案：</strong><br>
+常见方式有自定义 Hook、Context、组合模式、Render Props 和 HOC。当前最主流的是自定义 Hook。</p>
+<h2 id="57-hook">57. 什么是自定义 Hook？</h2>
+<p><strong>答案：</strong><br>
+自定义 Hook 是把可复用的状态逻辑和副作用逻辑抽取到以 <code>use</code> 开头的函数中，便于多个组件共享逻辑。</p>
+<h2 id="58-hook">58. 自定义 Hook 和普通函数有什么区别？</h2>
+<p><strong>答案：</strong><br>
+自定义 Hook 可以调用其他 Hook，并遵守 Hook 规则；普通函数不能随意调用 Hook，也不参与 React 的状态管理流程。</p>
+<h2 id="59-hook">59. Hook 使用时有哪些规则？</h2>
+<p><strong>答案：</strong><br>
+Hook 只能在函数组件或自定义 Hook 顶层调用，不能放在条件、循环、嵌套函数中，以保证调用顺序稳定。</p>
+<h2 id="60-hook">60. 为什么 Hook 不能放在条件语句中？</h2>
+<p><strong>答案：</strong><br>
+因为 React 依赖 Hook 的调用顺序来关联状态。如果条件分支导致调用顺序变化，就会出现状态错位。</p>
+<h2 id="61-react">61. React 中什么是闭包陷阱？</h2>
+<p><strong>答案：</strong><br>
+在函数组件中，事件处理器或副作用可能捕获旧的状态值，导致读取到过期数据。这类问题通常与依赖项不完整或异步回调有关。</p>
+<h2 id="62">62. 如何解决闭包导致的旧值问题？</h2>
+<p><strong>答案：</strong><br>
+可以补全依赖数组、使用函数式更新、使用 <code>useRef</code> 保存最新值，或重构代码避免在旧闭包中读取状态。</p>
+<h2 id="63">63. 什么是函数式更新？</h2>
+<p><strong>答案：</strong><br>
+函数式更新是把更新函数传给 <code>setState</code>，例如 <code>setCount(prev =&gt; prev + 1)</code>，适合依赖前一个状态值的场景。</p>
+<h2 id="64-react">64. React 中如何共享全局状态？</h2>
+<p><strong>答案：</strong><br>
+小型应用可以用 Context，中大型应用通常结合 Zustand、Redux Toolkit、Jotai 等状态管理库。</p>
+<h2 id="65-context">65. Context 是否适合所有全局状态？</h2>
+<p><strong>答案：</strong><br>
+不适合。Context 更适合低频更新的共享数据；高频更新状态如果直接放入 Context，容易导致大量消费者重复渲染。</p>
+<h2 id="66-props-drilling">66. 什么是 Props Drilling？</h2>
+<p><strong>答案：</strong><br>
+Props Drilling 指数据必须层层通过中间组件传递给深层子组件，即使中间组件本身并不使用这些数据。</p>
+<h2 id="67-props-drilling">67. 如何避免 Props Drilling？</h2>
+<p><strong>答案：</strong><br>
+可以使用 Context、状态管理库、组合模式，或者重新设计组件层级，减少不必要的数据穿透。</p>
+<h2 id="68">68. 什么是组合优于继承？</h2>
+<p><strong>答案：</strong><br>
+React 更推荐通过组件组合来复用 UI 和行为，而不是像传统 OOP 那样依赖继承层级，这样更灵活、更易维护。</p>
+<h2 id="69-react">69. React 中什么是受控副作用？</h2>
+<p><strong>答案：</strong><br>
+指副作用的触发时机、依赖关系和清理逻辑都明确可控，避免无序请求、重复订阅和资源泄漏。</p>
+<h2 id="70">70. 何时应该拆分组件？</h2>
+<p><strong>答案：</strong><br>
+当一个组件职责过多、状态复杂、复用性差或渲染范围过大时，应考虑拆分为更小、更清晰的组件。</p>
+<h2 id="71-react">71. React 中什么是渲染阶段和提交阶段？</h2>
+<p><strong>答案：</strong><br>
+渲染阶段负责计算新 UI；提交阶段才真正修改 DOM。理解这两个阶段有助于判断副作用和性能问题。</p>
+<h2 id="72">72. 为什么不能在渲染阶段做副作用？</h2>
+<p><strong>答案：</strong><br>
+因为渲染阶段应该保持纯函数特性，可能被中断或重复执行；副作用应放在 <code>useEffect</code> 等提交后阶段处理。</p>
+<h2 id="73-react">73. React 中什么是批处理更新？</h2>
+<p><strong>答案：</strong><br>
+批处理更新指 React 会把同一轮事件中的多个状态更新合并处理，从而减少重复渲染，提升性能。</p>
+<h2 id="74-react-18">74. React 18 自动批处理有什么变化？</h2>
+<p><strong>答案：</strong><br>
+React 18 将自动批处理扩展到更多异步场景，比如 <code>Promise</code>、<code>setTimeout</code> 和原生事件回调中。</p>
+<h2 id="75-flushsync">75. 什么是 <code>flushSync</code>？</h2>
+<p><strong>答案：</strong><br>
+<code>flushSync</code> 用于强制 React 立即同步刷新更新。只有在确实需要立刻拿到更新后 DOM 结果时才应谨慎使用。</p>
+<h2 id="76-usedeferredvalue">76. 什么是 <code>useDeferredValue</code>？</h2>
+<p><strong>答案：</strong><br>
+<code>useDeferredValue</code> 用于把某个值的更新延后为低优先级更新，常用于优化搜索输入、大列表过滤等场景。</p>
+<h2 id="77-starttransition-usedeferredvalue">77. <code>startTransition</code> 和 <code>useDeferredValue</code> 的区别是什么？</h2>
+<p><strong>答案：</strong><br>
+<code>startTransition</code> 用于把一段状态更新标记为低优先级；<code>useDeferredValue</code> 用于延后某个值的消费，二者都服务于交互流畅性优化。</p>
+<h2 id="78-ssr">78. 什么是服务端渲染（SSR）？</h2>
+<p><strong>答案：</strong><br>
+SSR 是指先在服务端生成 HTML，再返回给浏览器。它有助于首屏速度、SEO 和弱网场景体验。</p>
+<h2 id="79-ssr">79. SSR 的优缺点是什么？</h2>
+<p><strong>答案：</strong><br>
+优点是首屏快、SEO 友好；缺点是服务端压力更高、开发复杂度更大，还要处理水合一致性问题。</p>
+<h2 id="80-hydration">80. 什么是 Hydration？</h2>
+<p><strong>答案：</strong><br>
+Hydration 指浏览器在拿到服务端渲染的 HTML 后，把 React 事件和状态系统“挂载”到已有 DOM 上的过程。</p>
+<h2 id="81-hydration-mismatch">81. 什么是 Hydration Mismatch？</h2>
+<p><strong>答案：</strong><br>
+指服务端输出和客户端首次渲染结果不一致，React 会报警告甚至重新渲染，常见原因是时间、随机数和环境差异。</p>
+<h2 id="82-react">82. React 中如何处理长列表性能问题？</h2>
+<p><strong>答案：</strong><br>
+可以使用虚拟列表、分页、懒加载、稳定的 <code>key</code> 和减少单项渲染复杂度等方式优化。</p>
+<h2 id="83">83. 什么是虚拟列表？</h2>
+<p><strong>答案：</strong><br>
+虚拟列表只渲染可视区域附近的列表项，而不是一次性渲染全部数据，从而显著降低 DOM 数量和渲染开销。</p>
+<h2 id="84-react">84. React 中为什么要保持组件纯净？</h2>
+<p><strong>答案：</strong><br>
+纯组件更容易预测、测试和优化。相同输入应产生相同输出，避免在渲染函数中偷偷修改外部状态。</p>
+<h2 id="85">85. 什么是不可变更新？</h2>
+<p><strong>答案：</strong><br>
+不可变更新指不直接修改原对象或数组，而是创建新引用返回，例如使用展开运算符、<code>map</code>、<code>filter</code> 等。</p>
+<h2 id="86-react">86. React 中如何更新对象状态？</h2>
+<p><strong>答案：</strong><br>
+通常使用浅拷贝创建新对象，例如 <code>setUser(prev =&gt; ({ ...prev, name: 'Tom' }))</code>，避免直接修改原对象。</p>
+<h2 id="87-react">87. React 中如何更新数组状态？</h2>
+<p><strong>答案：</strong><br>
+使用 <code>map</code>、<code>filter</code>、<code>concat</code>、展开运算符等返回新数组，而不是直接 <code>push</code>、<code>splice</code> 修改原数组。</p>
+<h2 id="88-key">88. 什么是 key 冲突？</h2>
+<p><strong>答案：</strong><br>
+当兄弟节点之间的 <code>key</code> 不唯一时，React 无法准确识别节点身份，可能导致错误复用和渲染异常。</p>
+<h2 id="89-react">89. React 中受控组件为什么更适合复杂表单？</h2>
+<p><strong>答案：</strong><br>
+因为数据、校验、联动和提交都由 React 状态统一管理，更容易实现规则校验、格式转换和业务逻辑组合。</p>
+<h2 id="90-react">90. React 中如何做代码分割？</h2>
+<p><strong>答案：</strong><br>
+可以通过动态导入、<code>React.lazy</code>、路由级懒加载和构建工具分包策略来减少首屏加载体积。</p>
+<h2 id="91-suspense">91. 什么是 Suspense 的常见使用场景？</h2>
+<p><strong>答案：</strong><br>
+常见于懒加载组件的加载占位，也可用于配合特定数据获取方案展示统一 fallback。</p>
+<h2 id="92-react">92. React 中什么是错误恢复边界？</h2>
+<p><strong>答案：</strong><br>
+它本质上还是 Error Boundary 的一种使用思路：当局部 UI 报错时，只让局部降级，而不是整个应用白屏。</p>
+<h2 id="93-react-context">93. React 中如何优化 Context 性能？</h2>
+<p><strong>答案：</strong><br>
+可以拆分多个 Context、稳定 <code>value</code> 引用、减少无关数据放入同一个 Provider，必要时引入外部状态库。</p>
+<h2 id="94">94. 为什么内联对象和函数可能影响性能？</h2>
+<p><strong>答案：</strong><br>
+因为它们每次渲染都会生成新引用，可能导致依赖比较失败，让子组件或副作用不必要地重新执行。</p>
+<h2 id="95">95. 什么是受控渲染范围？</h2>
+<p><strong>答案：</strong><br>
+指通过组件拆分、局部状态、记忆化和上下文隔离，把状态变化影响限制在尽可能小的组件范围内。</p>
+<h2 id="96-react">96. React 中如何排查性能问题？</h2>
+<p><strong>答案：</strong><br>
+可以借助 React DevTools Profiler、浏览器 Performance 面板、日志埋点和组件边界拆分来定位瓶颈。</p>
+<h2 id="97-react">97. React 项目中常见反模式有哪些？</h2>
+<p><strong>答案：</strong><br>
+包括直接修改 state、滥用 Context、过度记忆化、在渲染中做副作用、使用不稳定 <code>key</code>、过度提升状态等。</p>
+<h2 id="98-react">98. 什么是 React 的声明式编程？</h2>
+<p><strong>答案：</strong><br>
+你只需要描述在某个状态下 UI 应该是什么样子，React 会负责把状态变化映射为界面更新，而不是手动操作 DOM。</p>
+<h2 id="99-react">99. React 为什么适合大型前端应用？</h2>
+<p><strong>答案：</strong><br>
+因为它具备组件化、生态成熟、状态管理方案丰富、工程化能力强、可测试性和可维护性较高等优势。</p>
+<h2 id="100-react">100. 面试中如何系统回答 React 问题？</h2>
+<p><strong>答案：</strong><br>
+可以按“概念定义、核心原理、使用场景、优缺点、常见坑、优化手段”这个结构回答，层次会更清晰。</p>
+<h2 id="_1">进阶与新特性</h2>
+<h3 id="101-usereducer">101. 什么是 <code>useReducer</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>useReducer</code> 是管理复杂状态逻辑的 Hook，接收 <code>(state, action) =&gt; newState</code> 的 reducer 函数和初始状态，返回当前状态和 <code>dispatch</code>。适合多个子值相互依赖、状态变化逻辑复杂、需要集中管理的场景，比多个 <code>useState</code> 更清晰。本质上 <code>useState</code> 是 <code>useReducer</code> 的简化版。</p>
+<h3 id="102-useid">102. 什么是 <code>useId</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>useId</code> 是 React 18 新增的 Hook，用于生成在服务端和客户端之间稳定一致的唯一 ID，解决 SSR 水合时 ID 不匹配的问题。常用于 <code>aria</code> 属性（如 <code>aria-labelledby</code>）或表单 <code>label</code> 与控件的关联，不要用它生成列表 <code>key</code>。</p>
+<h3 id="103-forwardref">103. 什么是 <code>forwardRef</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>forwardRef</code> 允许函数组件将接收到的 ref 转发给其内部的 DOM 节点或子组件。语法为 <code>React.forwardRef((props, ref) =&gt; &lt;input ref={ref} /&gt;)</code>。常用于封装表单控件库、需要父组件直接控制子组件 DOM（如聚焦、滚动）的场景。</p>
+<h3 id="104-useimperativehandle">104. 什么是 <code>useImperativeHandle</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>useImperativeHandle</code> 配合 <code>forwardRef</code> 使用，允许自定义暴露给父组件 ref 的实例值，而不是暴露整个 DOM 节点。例如只暴露 <code>{ focus, reset }</code> 方法，隐藏其他 DOM 接口，实现更好的封装性。</p>
+<h3 id="105-react-server-componentsrsc">105. 什么是 React Server Components（RSC）？</h3>
+<p><strong>答案：</strong><br>
+RSC 是 React 18+ 引入的新模式，允许在服务端渲染组件，不把相应的 JavaScript 发送到客户端，减少 bundle 体积。Server Components 可以直接访问数据库、文件系统、后端服务，但不能使用 state、effect 和浏览器 API。交互逻辑仍由 Client Components（加 <code>"use client"</code> 指令）承担，两者可以组合使用。</p>
+<h3 id="106-react-diff">106. React diff 算法的核心规则是什么？</h3>
+<p><strong>答案：</strong><br>
+React diff（协调算法）基于三个假设：① 跨层级移动忽略不计，只做同层比较；② 不同类型的元素生成不同树，直接替换；③ 通过 <code>key</code> 标识稳定的子元素身份。这使复杂度从 O(n³) 降到 O(n)。所以 <code>key</code> 的稳定性对性能至关重要，随机或索引 key 会破坏 diff 优化。</p>
+<h3 id="107-react">107. 什么是 React 中的受控与非受控的对比？</h3>
+<p><strong>答案：</strong><br>
+受控组件：值由 React state 驱动，通过 <code>onChange</code> 同步，易于校验和联动，但代码量较多。非受控组件：值由 DOM 自身维护，通过 <code>ref</code> 读取，适合简单场景或集成第三方库。复杂表单（校验、联动、提交控制）推荐受控；简单表单或文件上传等场景可用非受控。</p>
+<h3 id="108-use-hookreact-19">108. 什么是 <code>use</code> Hook（React 19）？</h3>
+<p><strong>答案：</strong><br>
+<code>use</code> 是 React 19 新增的 Hook，可以读取 Promise 或 Context 的值。读取 Promise 时，若未 resolve 会触发最近的 <code>&lt;Suspense&gt;</code> fallback；读取 Context 类似 <code>useContext</code>。与其他 Hook 不同，<code>use</code> 可以在条件语句中调用，使异步数据处理更灵活。</p>
+<h3 id="109-react-useeffect">109. React 中如何避免 <code>useEffect</code> 中的竞态条件？</h3>
+<p><strong>答案：</strong><br>
+竞态条件发生在快速切换时多个请求并发，后发出的先返回导致数据错误。解决方案：① 在 <code>useEffect</code> 清理函数中用 <code>AbortController</code> 取消请求；② 设置 <code>let isCancelled = false</code> 标志，在回调中判断后再 <code>setState</code>；③ 使用 React Query、SWR 等数据获取库，它们内置了竞态处理。</p>
+<h3 id="110-react-query-swr">110. 什么是 React Query / SWR？</h3>
+<p><strong>答案：</strong><br>
+它们是专注于服务端状态管理的库。核心能力包括：自动缓存和去重请求、窗口聚焦时自动重新验证、后台刷新、加载/错误状态管理、分页和无限滚动支持。相比 <code>useEffect + useState</code>，大大减少数据获取的样板代码，并解决了竞态条件、请求重复等问题。</p>
+<h3 id="111-zustand-redux">111. 什么是 Zustand？与 Redux 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+Zustand 是轻量级状态管理库，API 极简：通过 <code>create</code> 定义 store，直接在组件中 <code>useStore(state =&gt; state.count)</code> 使用。无需 Provider 包裹、无需 action/reducer 样板、支持订阅局部状态避免不必要渲染。Redux（Toolkit）更适合大型项目，有 devtools、时间旅行调试、严格的单向数据流。</p>
+<h3 id="112-react-compound-components">112. 什么是 React 中的 Compound Components 模式？</h3>
+<p><strong>答案：</strong><br>
+复合组件模式是将多个相关组件组合使用，通过 Context 共享内部状态，对外提供灵活的组合 API。例如 <code>&lt;Select&gt;</code> 和 <code>&lt;Select.Option&gt;</code> 的关系。优点是 API 灵活，调用方可以自由排列子组件、插入自定义内容，而不需要通过大量 props 控制内部细节。</p>
+<h2 id="_2">总结</h2>
+<p>这些题目覆盖了 React 面试中的基础概念、组件通信、Hooks、渲染机制、性能优化、并发特性、SSR 与工程实践，适合作为系统复习清单。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p0-react-qa.md</div>
+</div>
 </body>
 </html>

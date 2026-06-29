@@ -1,87 +1,178 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p3 database qa</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据库 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #27ae60;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #27ae60;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>数据库 常见面试题（附答案）</h1>
-<h2>SQL 基础</h2>
-<h3>1. 什么是关系型数据库？</h3>
-<p><strong>答案：</strong>
+<div class="topbar">
+  <h1>数据库</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P3 扩展知识</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="_1">数据库 常见面试题（附答案）</h1>
+<h2 id="sql">SQL 基础</h2>
+<h3 id="1">1. 什么是关系型数据库？</h3>
+<p><strong>答案：</strong><br>
 关系型数据库以表（行列结构）组织数据，表间通过主键/外键关联，使用 SQL 查询，遵循 ACID 事务特性。常见：MySQL、PostgreSQL、SQL Server、SQLite（轻量）。适合结构化数据、需要事务和复杂关联查询的场景。</p>
-<h3>2. 常见的 SQL 语句类型有哪些？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li><strong>DDL</strong>（数据定义）：<code>CREATE TABLE</code>、<code>ALTER TABLE</code>、<code>DROP TABLE</code></li>
-<li><strong>DML</strong>（数据操作）：<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code></li>
-<li><strong>DQL</strong>（数据查询）：<code>SELECT</code></li>
-<li><strong>DCL</strong>（数据控制）：<code>GRANT</code>、<code>REVOKE</code></li>
-<li><strong>TCL</strong>（事务控制）：<code>BEGIN</code>、<code>COMMIT</code>、<code>ROLLBACK</code></li>
-</ul>
-<h3>3. <code>INNER JOIN</code>、<code>LEFT JOIN</code>、<code>RIGHT JOIN</code> 的区别？</h3>
+<h3 id="2-sql">2. 常见的 SQL 语句类型有哪些？</h3>
+<p><strong>答案：</strong><br>
+- <strong>DDL</strong>（数据定义）：<code>CREATE TABLE</code>、<code>ALTER TABLE</code>、<code>DROP TABLE</code><br>
+- <strong>DML</strong>（数据操作）：<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code><br>
+- <strong>DQL</strong>（数据查询）：<code>SELECT</code><br>
+- <strong>DCL</strong>（数据控制）：<code>GRANT</code>、<code>REVOKE</code><br>
+- <strong>TCL</strong>（事务控制）：<code>BEGIN</code>、<code>COMMIT</code>、<code>ROLLBACK</code></p>
+<h3 id="3-inner-joinleft-joinright-join">3. <code>INNER JOIN</code>、<code>LEFT JOIN</code>、<code>RIGHT JOIN</code> 的区别？</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-sql">-- INNER JOIN：只返回两表都有匹配的行
 SELECT u.name, o.amount FROM users u INNER JOIN orders o ON u.id = o.user_id;
@@ -93,10 +184,10 @@ SELECT u.name, o.amount FROM users u LEFT JOIN orders o ON u.id = o.user_id;
 -- RIGHT JOIN：返回右表所有行（可以用 LEFT JOIN 反写）
 -- FULL JOIN：两表所有行（MySQL 不支持，需 UNION 模拟）
 </code></pre>
-<h3>4. 什么是子查询？和 JOIN 如何选择？</h3>
-<p><strong>答案：</strong>
+<h3 id="4-join">4. 什么是子查询？和 JOIN 如何选择？</h3>
+<p><strong>答案：</strong><br>
 子查询是嵌套在另一个查询中的 SELECT。相关子查询（依赖外层）每行执行一次，性能差；非相关子查询执行一次，可被优化器转为 JOIN。一般优先用 JOIN（优化器更容易优化），但子查询语义更清晰时也可用。复杂场景可用 CTE（公共表表达式）<code>WITH</code> 提升可读性。</p>
-<h3>5. 什么是聚合函数和 <code>GROUP BY</code>？</h3>
+<h3 id="5-group-by">5. 什么是聚合函数和 <code>GROUP BY</code>？</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-sql">-- 聚合函数：COUNT、SUM、AVG、MAX、MIN
 SELECT department, COUNT(*) as count, AVG(salary) as avg_salary
@@ -106,111 +197,78 @@ HAVING AVG(salary) &gt; 5000  -- HAVING 过滤分组结果（WHERE 过滤行，H
 ORDER BY avg_salary DESC;
 </code></pre>
 <p><code>WHERE</code> 在分组前过滤行，<code>HAVING</code> 在分组后过滤组，不可混用。</p>
-<h3>6. 什么是索引？有哪些类型？</h3>
-<p><strong>答案：</strong>
+<h3 id="6">6. 什么是索引？有哪些类型？</h3>
+<p><strong>答案：</strong><br>
 索引是加速查询的数据结构（通常是 B-Tree），以额外存储和写入成本换取读取速度。类型：① 主键索引（唯一、非空）；② 唯一索引；③ 普通索引；④ 联合索引（多列）；⑤ 全文索引（<code>FULLTEXT</code>，搜索文本）；⑥ 覆盖索引（查询的所有列都在索引中，无需回表）。索引不是越多越好——过多索引增加写入开销和存储。</p>
-<h3>7. 什么时候索引会失效？</h3>
-<p><strong>答案：</strong>
-① 对索引列做函数运算（<code>WHERE YEAR(created_at) = 2024</code>，应改为范围查询）；② 隐式类型转换（列是 int，查询用字符串 <code>WHERE id = &#39;1&#39;</code>）；③ LIKE 以通配符开头（<code>LIKE &#39;%keyword&#39;</code>，改为 <code>LIKE &#39;keyword%&#39;</code> 可用索引）；④ OR 连接非索引列；⑤ 联合索引违反最左前缀（<code>(a,b,c)</code> 索引，查询只有 <code>b=?</code> 不走索引）；⑥ 优化器认为全表扫描更快时（小表、选择性低的列）。</p>
-<h3>8. 什么是事务？ACID 是什么？</h3>
-<p><strong>答案：</strong>
-事务是一组操作的逻辑单元，要么全部成功，要么全部失败。ACID：</p>
-<ul>
-<li><strong>A</strong>（原子性）：事务中操作要么全做，要么全不做</li>
-<li><strong>C</strong>（一致性）：事务前后数据库从一个一致状态变为另一个一致状态</li>
-<li><strong>I</strong>（隔离性）：并发事务互不干扰</li>
-<li><strong>D</strong>（持久性）：事务提交后修改永久保存</li>
-</ul>
+<h3 id="7">7. 什么时候索引会失效？</h3>
+<p><strong>答案：</strong><br>
+① 对索引列做函数运算（<code>WHERE YEAR(created_at) = 2024</code>，应改为范围查询）；② 隐式类型转换（列是 int，查询用字符串 <code>WHERE id = '1'</code>）；③ LIKE 以通配符开头（<code>LIKE '%keyword'</code>，改为 <code>LIKE 'keyword%'</code> 可用索引）；④ OR 连接非索引列；⑤ 联合索引违反最左前缀（<code>(a,b,c)</code> 索引，查询只有 <code>b=?</code> 不走索引）；⑥ 优化器认为全表扫描更快时（小表、选择性低的列）。</p>
+<h3 id="8-acid">8. 什么是事务？ACID 是什么？</h3>
+<p><strong>答案：</strong><br>
+事务是一组操作的逻辑单元，要么全部成功，要么全部失败。ACID：<br>
+- <strong>A</strong>（原子性）：事务中操作要么全做，要么全不做<br>
+- <strong>C</strong>（一致性）：事务前后数据库从一个一致状态变为另一个一致状态<br>
+- <strong>I</strong>（隔离性）：并发事务互不干扰<br>
+- <strong>D</strong>（持久性）：事务提交后修改永久保存</p>
 <pre><code class="language-sql">BEGIN TRANSACTION;
 UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 COMMIT; -- 或 ROLLBACK;
 </code></pre>
-<h3>9. 什么是事务隔离级别？</h3>
-<p><strong>答案：</strong></p>
-<table>
-<thead>
-<tr>
-<th>隔离级别</th>
-<th>脏读</th>
-<th>不可重复读</th>
-<th>幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>READ UNCOMMITTED</td>
-<td>✓</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>READ COMMITTED</td>
-<td>✗</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>REPEATABLE READ（MySQL 默认）</td>
-<td>✗</td>
-<td>✗</td>
-<td>✓（MySQL 通过 MVCC 解决）</td>
-</tr>
-<tr>
-<td>SERIALIZABLE</td>
-<td>✗</td>
-<td>✗</td>
-<td>✗</td>
-</tr>
-</tbody></table>
+<h3 id="9">9. 什么是事务隔离级别？</h3>
+<p><strong>答案：</strong><br>
+| 隔离级别 | 脏读 | 不可重复读 | 幻读 |<br>
+|----------|------|------------|------|<br>
+| READ UNCOMMITTED | ✓ | ✓ | ✓ |<br>
+| READ COMMITTED | ✗ | ✓ | ✓ |<br>
+| REPEATABLE READ（MySQL 默认）| ✗ | ✗ | ✓（MySQL 通过 MVCC 解决）|<br>
+| SERIALIZABLE | ✗ | ✗ | ✗ |</p>
 <p>脏读：读到未提交的数据；不可重复读：同一事务两次读结果不同；幻读：同一事务两次查询行数不同。</p>
-<h3>10. 什么是数据库锁？乐观锁和悲观锁？</h3>
-<p><strong>答案：</strong>
+<h3 id="10">10. 什么是数据库锁？乐观锁和悲观锁？</h3>
+<p><strong>答案：</strong><br>
 <strong>悲观锁</strong>：认为冲突概率高，操作前加锁（<code>SELECT ... FOR UPDATE</code>），其他事务等待。适合写多读少、冲突频繁场景。<strong>乐观锁</strong>：认为冲突概率低，不加锁，提交时检查数据是否被修改（通常通过版本号 <code>version</code> 字段）：</p>
-<pre><code class="language-sql">UPDATE orders SET status=&#39;shipped&#39;, version=version+1
+<pre><code class="language-sql">UPDATE orders SET status='shipped', version=version+1
 WHERE id=1 AND version=5; -- 若影响行数=0则冲突，重试
 </code></pre>
 <p>适合读多写少、冲突少场景，性能更好。</p>
-<h2>NoSQL</h2>
-<h3>11. Redis 是什么？有哪些数据结构？</h3>
-<p><strong>答案：</strong>
-Redis 是内存数据库，支持持久化，以高性能键值存储为核心。数据结构：</p>
-<ul>
-<li><strong>String</strong>：最基础，计数器、缓存、分布式锁（<code>SET key value NX EX 30</code>）</li>
-<li><strong>Hash</strong>：对象存储（<code>HSET user:1 name Alice age 25</code>）</li>
-<li><strong>List</strong>：消息队列、最近记录（<code>LPUSH</code>/<code>RPOP</code>）</li>
-<li><strong>Set</strong>：去重集合、共同好友（<code>SADD</code>/<code>SMEMBERS</code>/<code>SINTER</code>）</li>
-<li><strong>Sorted Set</strong>：排行榜（<code>ZADD</code>，按分数排序，<code>ZRANGE</code>/<code>ZRANK</code>）</li>
-<li><strong>Bitmap/HyperLogLog/Stream</strong>：特殊用途（统计日活、流式日志）</li>
-</ul>
-<h3>12. Redis 的缓存策略有哪些？</h3>
-<p><strong>答案：</strong>
+<h2 id="nosql">NoSQL</h2>
+<h3 id="11-redis">11. Redis 是什么？有哪些数据结构？</h3>
+<p><strong>答案：</strong><br>
+Redis 是内存数据库，支持持久化，以高性能键值存储为核心。数据结构：<br>
+- <strong>String</strong>：最基础，计数器、缓存、分布式锁（<code>SET key value NX EX 30</code>）<br>
+- <strong>Hash</strong>：对象存储（<code>HSET user:1 name Alice age 25</code>）<br>
+- <strong>List</strong>：消息队列、最近记录（<code>LPUSH</code>/<code>RPOP</code>）<br>
+- <strong>Set</strong>：去重集合、共同好友（<code>SADD</code>/<code>SMEMBERS</code>/<code>SINTER</code>）<br>
+- <strong>Sorted Set</strong>：排行榜（<code>ZADD</code>，按分数排序，<code>ZRANGE</code>/<code>ZRANK</code>）<br>
+- <strong>Bitmap/HyperLogLog/Stream</strong>：特殊用途（统计日活、流式日志）</p>
+<h3 id="12-redis">12. Redis 的缓存策略有哪些？</h3>
+<p><strong>答案：</strong><br>
 <strong>缓存击穿</strong>（热点 key 过期，大量请求直击 DB）：互斥锁（只允许一个请求重建缓存）或不设过期时间+主动更新。<strong>缓存穿透</strong>（查询不存在的数据，缓存永远不命中）：布隆过滤器拦截、缓存空值（短 TTL）。<strong>缓存雪崩</strong>（大量 key 同时过期）：过期时间加随机抖动、Redis 集群高可用。<strong>缓存更新策略</strong>：Cache-Aside（读缓存、缓存未命中查 DB 并写入）、Write-Through、Write-Behind。</p>
-<h3>13. MongoDB 和 MySQL 如何选择？</h3>
-<p><strong>答案：</strong>
+<h3 id="13-mongodb-mysql">13. MongoDB 和 MySQL 如何选择？</h3>
+<p><strong>答案：</strong><br>
 MongoDB（文档型 NoSQL）适合：数据结构多变（Schema 灵活）、嵌套文档（评论、标签等）、大量非结构化数据、快速迭代原型、需要水平扩展。MySQL（关系型）适合：数据结构稳定、需要复杂关联查询、严格事务（金融）、数据一致性要求高。混合使用也很常见：MySQL 存核心业务数据，MongoDB 存日志/用户行为，Redis 做缓存。</p>
-<h3>14. 什么是 ORM？常见 Node.js ORM 有哪些？</h3>
-<p><strong>答案：</strong>
-ORM（对象关系映射）允许用面向对象的方式操作数据库，自动生成 SQL，避免手写 SQL。常见 Node.js ORM：</p>
-<ul>
-<li><strong>Prisma</strong>：类型安全、自动生成 TypeScript 类型、Schema 优先、现代项目首选</li>
-<li><strong>TypeORM</strong>：装饰器风格、适合 NestJS</li>
-<li><strong>Sequelize</strong>：老牌，支持多数据库</li>
-<li><strong>Drizzle ORM</strong>：轻量、类型安全、更接近 SQL 语法</li>
-</ul>
+<h3 id="14-orm-nodejs-orm">14. 什么是 ORM？常见 Node.js ORM 有哪些？</h3>
+<p><strong>答案：</strong><br>
+ORM（对象关系映射）允许用面向对象的方式操作数据库，自动生成 SQL，避免手写 SQL。常见 Node.js ORM：<br>
+- <strong>Prisma</strong>：类型安全、自动生成 TypeScript 类型、Schema 优先、现代项目首选<br>
+- <strong>TypeORM</strong>：装饰器风格、适合 NestJS<br>
+- <strong>Sequelize</strong>：老牌，支持多数据库<br>
+- <strong>Drizzle ORM</strong>：轻量、类型安全、更接近 SQL 语法</p>
 <p>Prisma 示例：</p>
 <pre><code class="language-typescript">const users = await prisma.user.findMany({
   where: { age: { gt: 18 } },
   include: { orders: true },
-  orderBy: { createdAt: &#39;desc&#39; },
+  orderBy: { createdAt: 'desc' },
   take: 10,
 });
 </code></pre>
-<h3>15. 什么是数据库连接池？</h3>
-<p><strong>答案：</strong>
+<h3 id="15">15. 什么是数据库连接池？</h3>
+<p><strong>答案：</strong><br>
 连接池预先创建并维护一定数量的数据库连接，请求时从池中借用，用完归还，避免每次操作都建立/断开连接（建立连接开销大）。关键参数：最小连接数、最大连接数（超过则等待或报错）、空闲超时。Node.js 中 Prisma/TypeORM/Sequelize 都内置连接池管理。生产环境需根据数据库和服务器性能调整池大小。</p>
-<h2>总结</h2>
+<h2 id="_2">总结</h2>
 <p>这些题目覆盖了 SQL 基础、索引优化、事务和锁、Redis 数据结构与缓存策略、NoSQL 选型和 ORM，适合作为全栈/后端方向数据库面试复习资料。</p>
-
   </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p3-database-qa.md</div>
+</div>
 </body>
 </html>
