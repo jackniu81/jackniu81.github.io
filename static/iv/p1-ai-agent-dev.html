@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ai Agent Dev — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>Ai Agent Dev</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="ai-agent-nodejs-typescript">AI Agent 实战开发（Node.js / TypeScript）</h1>
+<blockquote>
+<p>面向已有 Node.js 基础的开发者，聚焦工程实现而非理论。覆盖工具调用、Agentic Loop、限流重试、MCP、流式输出、成本控制等生产级话题。</p>
+</blockquote>
+<hr>
+<h2 id="agentic-loop">一、从零实现 Agentic Loop</h2>
+<h3 id="11-agentic-loop">1.1 什么是 Agentic Loop？</h3>
+<p>AI Agent 的核心是一个"感知 → 决策 → 行动 → 感知"的循环，每一轮都携带完整历史：</p>
+<pre><code>用户输入
+    ↓
+[循环开始]
+  Step 1: 调用 LLM（携带完整 messages）
+  Step 2: LLM 返回 → 判断：
+          ├─ 普通回复  → 结束循环，返回给用户
+          └─ Tool Call → 执行工具 → 结果加入 messages → 回到 Step 1
+[循环结束]
+</code></pre>
+<h3 id="12-agentic-looptypescript">1.2 最小可运行的 Agentic Loop（TypeScript）</h3>
+<pre><code class="language-typescript">import OpenAI from &quot;openai&quot;;
+
+const client = new OpenAI({
+  apiKey: process.env.SILICONFLOW_KEY,
+  baseURL: &quot;https://api.siliconflow.cn/v1&quot;,
+});
+
+// 工具定义
+const tools: OpenAI.Chat.ChatCompletionTool[] = [
+  {
+    type: &quot;function&quot;,
+    function: {
+      name: &quot;get_weather&quot;,
+      description: &quot;获取指定城市的当前天气&quot;,
+      parameters: {
+        type: &quot;object&quot;,
+        properties: {
+          city: { type: &quot;string&quot;, description: &quot;城市名，如：北京&quot; },
+        },
+        required: [&quot;city&quot;],
+      },
+    },
+  },
+];
+
+// 工具实现
+const toolHandlers: Record&lt;string, (args: any) =&gt; string&gt; = {
+  get_weather: ({ city }) =&gt; `${city}：晴天，25°C，湿度 60%`,
+};
+
+// Agentic Loop 主函数
+async function runAgent(userInput: string): Promise&lt;string&gt; {
+  const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    { role: &quot;user&quot;, content: userInput },
+  ];
+
+  const MAX_STEPS = 10; // 防止无限循环
+
+  for (let step = 0; step &lt; MAX_STEPS; step++) {
+    const response = await client.chat.completions.create({
+      model: &quot;deepseek-ai/DeepSeek-V4-Flash&quot;,
+      messages,
+      tools,
+    });
+
+    const message = response.choices[0].message;
+    messages.push(message); // 将 AI 回复加入历史
+
+    // 没有工具调用 → 最终回答，结束循环
+    if (!message.tool_calls || message.tool_calls.length === 0) {
+      return message.content ?? &quot;&quot;;
+    }
+
+    // 执行所有工具调用
+    for (const toolCall of message.tool_calls) {
+      const name = toolCall.function.name;
+      const args = JSON.parse(toolCall.function.arguments);
+      const result = toolHandlers[name]?.(args) ?? &quot;工具未找到&quot;;
+
+      messages.push({
+        role: &quot;tool&quot;,
+        tool_call_id: toolCall.id,
+        content: result,
+      });
+    }
+    // 继续循环，让 LLM 基于工具结果生成下一步
+  }
+
+  return &quot;已达到最大步骤数，任务未完成&quot;;
+}
+
+// 调用
+const answer = await runAgent(&quot;北京今天天气怎么样？帮我决定要不要带伞&quot;);
+console.log(answer);
+</code></pre>
+<hr>
+<h2 id="_1">二、多轮对话管理</h2>
+<h3 id="21">2.1 维护对话历史</h3>
+<pre><code class="language-typescript">class ChatSession {
+  private messages: OpenAI.Chat.ChatCompletionMessageParam[] = [];
+  private model: string;
+
+  constructor(
+    systemPrompt: string,
+    model = &quot;deepseek-ai/DeepSeek-V4-Flash&quot;
+  ) {
+    this.model = model;
+    if (systemPrompt) {
+      this.messages.push({ role: &quot;system&quot;, content: systemPrompt });
+    }
+  }
+
+  async send(userInput: string): Promise&lt;string&gt; {
+    this.messages.push({ role: &quot;user&quot;, content: userInput });
+
+    const response = await client.chat.completions.create({
+      model: this.model,
+      messages: this.messages,
+    });
+
+    const reply = response.choices[0].message.content ?? &quot;&quot;;
+    this.messages.push({ role: &quot;assistant&quot;, content: reply });
+    return reply;
+  }
+
+  // 切换模型但保留历史（应对限流时切换）
+  switchModel(newModel: string) {
+    this.model = newModel;
+  }
+
+  // 压缩历史（防止 context 超限）
+  trimHistory(keepLast = 10) {
+    const system = this.messages.filter((m) =&gt; m.role === &quot;system&quot;);
+    const rest = this.messages.filter((m) =&gt; m.role !== &quot;system&quot;);
+    this.messages = [...system, ...rest.slice(-keepLast)];
+  }
+}
+
+// 使用
+const session = new ChatSession(&quot;你是一个 Node.js 专家&quot;);
+const r1 = await session.send(&quot;用 Express 写一个 GET 接口&quot;);
+const r2 = await session.send(&quot;帮我加上参数验证&quot;);  // 携带上下文，知道上文的接口
+</code></pre>
+<h3 id="22-token">2.2 多轮中的 Token 成本控制</h3>
+<pre><code class="language-typescript">// 估算 token 数（粗略：1 token ≈ 4 个英文字符 / 1.5 个中文字符）
+function estimateTokens(messages: OpenAI.Chat.ChatCompletionMessageParam[]) {
+  const text = messages.map((m) =&gt; String(m.content)).join(&quot;&quot;);
+  return Math.ceil(text.length / 3);
+}
+
+// 超过阈值就自动压缩
+async function sendWithTrim(session: ChatSession, input: string) {
+  if (estimateTokens(session[&quot;messages&quot;]) &gt; 6000) {
+    session.trimHistory(6); // 保留最近 6 轮
+    console.log(&quot;已压缩对话历史&quot;);
+  }
+  return session.send(input);
+}
+</code></pre>
+<hr>
+<h2 id="_2">三、限流与重试（生产必备）</h2>
+<h3 id="31">3.1 指数退避重试</h3>
+<pre><code class="language-typescript">interface RetryOptions {
+  maxRetries?: number;
+  baseDelay?: number;   // 初始等待时间（毫秒）
+  maxDelay?: number;    // 最长等待时间（毫秒）
+  stopThreshold?: number; // retry-after 超过此值直接报错（配额耗尽）
+}
+
+async function withRetry&lt;T&gt;(
+  fn: () =&gt; Promise&lt;T&gt;,
+  options: RetryOptions = {}
+): Promise&lt;T&gt; {
+  const {
+    maxRetries = 5,
+    baseDelay = 1000,
+    maxDelay = 30000,
+    stopThreshold = 5 * 60 * 1000, // 5 分钟
+  } = options;
+
+  for (let attempt = 1; attempt &lt;= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      const is429 = err?.status === 429;
+      const isLast = attempt === maxRetries;
+
+      if (!is429 || isLast) throw err;
+
+      // 读取服务器建议的等待时间
+      const retryAfterSec = parseInt(err?.headers?.[&quot;retry-after&quot;] ?? &quot;0&quot;);
+      const retryAfterMs = retryAfterSec * 1000;
+
+      // 超过阈值 = 配额耗尽，不再重试
+      if (retryAfterMs &gt; stopThreshold) {
+        console.error(`配额耗尽，retry-after=${retryAfterSec}s，停止重试`);
+        throw err;
+      }
+
+      // 指数退避 + 随机抖动
+      const backoff = Math.min(baseDelay * 2 ** (attempt - 1), maxDelay);
+      const jitter = Math.random() * 500;
+      const delay = retryAfterMs &gt; 0 ? retryAfterMs : backoff + jitter;
+
+      console.warn(`[重试 ${attempt}/${maxRetries}] 429 限流，等待 ${Math.round(delay / 1000)}s...`);
+      await new Promise((r) =&gt; setTimeout(r, delay));
+    }
+  }
+
+  throw new Error(&quot;超过最大重试次数&quot;);
+}
+
+// 使用：包裹任何 API 调用
+const response = await withRetry(() =&gt;
+  client.chat.completions.create({
+    model: &quot;Qwen/Qwen2.5-7B-Instruct&quot;,
+    messages: [{ role: &quot;user&quot;, content: &quot;你好&quot; }],
+  })
+);
+</code></pre>
+<h3 id="32-agentic-loop-429">3.2 Agentic Loop 中的重试（中途 429 不丢上下文）</h3>
+<pre><code class="language-typescript">async function runAgentWithRetry(userInput: string): Promise&lt;string&gt; {
+  const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    { role: &quot;user&quot;, content: userInput },
+  ];
+
+  for (let step = 0; step &lt; 10; step++) {
+    // 每次 API 调用都包裹重试逻辑
+    const response = await withRetry(() =&gt;
+      client.chat.completions.create({
+        model: &quot;deepseek-ai/DeepSeek-V4-Flash&quot;,
+        messages, // messages 完整保留，重试时上下文不丢失
+        tools,
+      })
+    );
+
+    const message = response.choices[0].message;
+    messages.push(message);
+
+    if (!message.tool_calls?.length) return message.content ?? &quot;&quot;;
+
+    for (const toolCall of message.tool_calls) {
+      const args = JSON.parse(toolCall.function.arguments);
+      const result = toolHandlers[toolCall.function.name]?.(args) ?? &quot;error&quot;;
+      messages.push({ role: &quot;tool&quot;, tool_call_id: toolCall.id, content: result });
+    }
+  }
+  return &quot;步骤数超限&quot;;
+}
+</code></pre>
+<hr>
+<h2 id="streaming">四、流式输出（Streaming）</h2>
+<h3 id="41">4.1 基础流式输出</h3>
+<pre><code class="language-typescript">async function streamChat(userInput: string) {
+  const stream = await client.chat.completions.stream({
+    model: &quot;deepseek-ai/DeepSeek-V4-Flash&quot;,
+    messages: [{ role: &quot;user&quot;, content: userInput }],
+  });
+
+  for await (const chunk of stream) {
+    const delta = chunk.choices[0]?.delta?.content;
+    if (delta) process.stdout.write(delta); // 逐 token 打印
+  }
+
+  const finalMessage = await stream.finalMessage();
+  return finalMessage.choices[0].message.content;
+}
+</code></pre>
+<h3 id="42-express-api-sse">4.2 在 Express API 中返回流（SSE）</h3>
+<pre><code class="language-typescript">import express from &quot;express&quot;;
+
+const app = express();
+
+app.post(&quot;/chat/stream&quot;, async (req, res) =&gt; {
+  res.setHeader(&quot;Content-Type&quot;, &quot;text/event-stream&quot;);
+  res.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);
+  res.setHeader(&quot;Connection&quot;, &quot;keep-alive&quot;);
+
+  const { message } = req.body;
+
+  const stream = await client.chat.completions.stream({
+    model: &quot;deepseek-ai/DeepSeek-V4-Flash&quot;,
+    messages: [{ role: &quot;user&quot;, content: message }],
+  });
+
+  for await (const chunk of stream) {
+    const delta = chunk.choices[0]?.delta?.content;
+    if (delta) {
+      res.write(`data: ${JSON.stringify({ text: delta })}\n\n`);
+    }
+  }
+
+  res.write(&quot;data: [DONE]\n\n&quot;);
+  res.end();
+});
+</code></pre>
+<hr>
+<h2 id="mcpmodel-context-protocol">五、MCP（Model Context Protocol）</h2>
+<h3 id="51-mcp">5.1 什么是 MCP？</h3>
+<p>MCP 是 Anthropic 于 2024 年发布的开放标准，统一了 <strong>Agent ↔ 工具</strong> 之间的通信协议：</p>
+<pre><code>没有 MCP：每个 Agent 框架有自己的工具调用格式，互不兼容
+有了 MCP：工具（MCP Server）和 Agent（MCP Client）遵循统一协议，可以自由组合
+</code></pre>
+<p><strong>类比</strong>：MCP 之于 AI Agent，相当于 USB 之于硬件设备——统一接口，即插即用。</p>
+<h3 id="52-mcp">5.2 MCP 架构</h3>
+<pre><code>MCP Client（AI IDE / Agent）
+    │
+    │  JSON-RPC over stdio / HTTP
+    │
+MCP Server（工具提供方）
+    ├── tools/list    → 列出所有工具
+    ├── tools/call    → 执行工具
+    ├── resources/list → 列出资源（文件、数据库等）
+    └── prompts/list  → 列出预设 Prompt 模板
+</code></pre>
+<h3 id="53-typescript-mcp-server">5.3 用 TypeScript 实现一个 MCP Server</h3>
+<pre><code class="language-typescript">import { McpServer } from &quot;@modelcontextprotocol/sdk/server/mcp.js&quot;;
+import { StdioServerTransport } from &quot;@modelcontextprotocol/sdk/server/stdio.js&quot;;
+import { z } from &quot;zod&quot;;
+
+const server = new McpServer({ name: &quot;my-tools&quot;, version: &quot;1.0.0&quot; });
+
+// 注册工具
+server.tool(
+  &quot;get_weather&quot;,
+  &quot;获取指定城市的天气&quot;,
+  { city: z.string().describe(&quot;城市名称，如：北京&quot;) },
+  async ({ city }) =&gt; ({
+    content: [{ type: &quot;text&quot;, text: `${city}：晴天，25°C` }],
+  })
+);
+
+server.tool(
+  &quot;read_file&quot;,
+  &quot;读取本地文件内容&quot;,
+  { path: z.string().describe(&quot;文件路径&quot;) },
+  async ({ path }) =&gt; {
+    const fs = await import(&quot;fs/promises&quot;);
+    const content = await fs.readFile(path, &quot;utf-8&quot;);
+    return { content: [{ type: &quot;text&quot;, text: content }] };
+  }
+);
+
+// 启动（通过 stdio 与 MCP Client 通信）
+const transport = new StdioServerTransport();
+await server.connect(transport);
+</code></pre>
+<pre><code class="language-bash"># 安装依赖
+npm install @modelcontextprotocol/sdk zod
+
+# 在 IDE（如 Cline、Claude Desktop）的 MCP 配置中注册：
+# {
+#   &quot;my-tools&quot;: {
+#     &quot;command&quot;: &quot;node&quot;,
+#     &quot;args&quot;: [&quot;path/to/server.js&quot;]
+#   }
+# }
+</code></pre>
+<h3 id="54-mcp-vs-function-calling">5.4 MCP vs 直接 Function Calling 对比</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>直接 Function Calling</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工具定义位置</td>
+<td>代码里硬编码</td>
+<td>MCP Server（独立进程）</td>
+</tr>
+<tr>
+<td>复用性</td>
+<td>每个项目重复写</td>
+<td>一次实现，所有支持 MCP 的 IDE/Agent 通用</td>
+</tr>
+<tr>
+<td>语言限制</td>
+<td>与 Agent 同语言</td>
+<td>任意语言实现 Server</td>
+</tr>
+<tr>
+<td>适合场景</td>
+<td>简单、一次性工具</td>
+<td>通用工具、团队共享</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_3">六、工具设计最佳实践</h2>
+<h3 id="61">6.1 好的工具描述 = 更准确的工具调用</h3>
+<p>LLM 靠 <code>description</code> 决定是否调用以及如何调用工具，描述要清晰准确：</p>
+<pre><code class="language-typescript">// ❌ 差的描述
+{ name: &quot;search&quot;, description: &quot;搜索&quot; }
+
+// ✅ 好的描述
+{
+  name: &quot;search_web&quot;,
+  description: &quot;在互联网上搜索实时信息。当需要查找最新资讯、新闻、价格或 LLM 训练数据截止日期后的信息时使用。&quot;,
+  parameters: {
+    type: &quot;object&quot;,
+    properties: {
+      query: {
+        type: &quot;string&quot;,
+        description: &quot;搜索关键词，用英文效果更好&quot;
+      },
+      max_results: {
+        type: &quot;number&quot;,
+        description: &quot;返回结果数量，默认 5，最多 10&quot;,
+        default: 5
+      }
+    },
+    required: [&quot;query&quot;]
+  }
+}
+</code></pre>
+<h3 id="62">6.2 工具返回格式</h3>
+<pre><code class="language-typescript">// 工具返回要简洁，避免塞入过多 token
+// ❌ 返回整个 HTML 页面
+return fullHtmlPage; // 几千 token，浪费
+
+// ✅ 返回提炼后的关键信息
+return JSON.stringify({
+  title: &quot;搜索结果标题&quot;,
+  summary: &quot;摘要内容（不超过 200 字）&quot;,
+  url: &quot;https://...&quot;
+});
+</code></pre>
+<hr>
+<h2 id="_4">七、生产级成本控制</h2>
+<h3 id="71">7.1 模型路由策略</h3>
+<pre><code class="language-typescript">type TaskType = &quot;simple&quot; | &quot;coding&quot; | &quot;complex&quot;;
+
+const MODEL_ROUTER: Record&lt;TaskType, string&gt; = {
+  simple:  &quot;Qwen/Qwen2.5-7B-Instruct&quot;,       // 免费，简单问答
+  coding:  &quot;deepseek-ai/DeepSeek-V4-Flash&quot;,   // ¥1/M，代码任务
+  complex: &quot;deepseek-ai/DeepSeek-V4-Pro&quot;,     // ¥3/M，复杂推理
+};
+
+function selectModel(userInput: string): string {
+  if (userInput.length &lt; 50 &amp;&amp; !userInput.includes(&quot;代码&quot;)) {
+    return MODEL_ROUTER.simple;
+  }
+  if (/代码|函数|组件|接口|bug|error/i.test(userInput)) {
+    return MODEL_ROUTER.coding;
+  }
+  return MODEL_ROUTER.complex;
+}
+</code></pre>
+<h3 id="72-token">7.2 Token 消耗监控</h3>
+<pre><code class="language-typescript">let totalTokensUsed = 0;
+const MONTHLY_BUDGET_TOKENS = 5_000_000; // 500 万 token ≈ ¥5
+
+async function chatWithBudget(messages: any[]) {
+  if (totalTokensUsed &gt; MONTHLY_BUDGET_TOKENS) {
+    throw new Error(&quot;本月 Token 预算已用完&quot;);
+  }
+
+  const response = await client.chat.completions.create({
+    model: &quot;deepseek-ai/DeepSeek-V4-Flash&quot;,
+    messages,
+  });
+
+  totalTokensUsed += response.usage?.total_tokens ?? 0;
+  console.log(`本次消耗: ${response.usage?.total_tokens} tokens | 累计: ${totalTokensUsed}`);
+
+  return response;
+}
+</code></pre>
+<hr>
+<h2 id="_5">八、面试高频问题</h2>
+<h3 id="q1-agent">Q1: 手写一个支持工具调用的 Agent，不用框架</h3>
+<p>见第一节的最小 Agentic Loop 实现。核心是：while 循环 + messages 数组 + tool_calls 判断。</p>
+<h3 id="q2-agent">Q2: 如何防止 Agent 无限循环？</h3>
+<ul>
+<li>设置 <code>MAX_STEPS</code> 最大步骤数</li>
+<li>检测重复工具调用（相同参数调用超过 N 次则中断）</li>
+<li>设置超时（整体任务不超过 X 秒）</li>
+</ul>
+<h3 id="q3-context">Q3: 多轮对话 context 越来越长怎么处理？</h3>
+<ul>
+<li><strong>滑动窗口</strong>：只保留最近 N 轮对话</li>
+<li><strong>摘要压缩</strong>：用 LLM 将历史摘要成一段话，替换原始历史</li>
+<li><strong>Prompt Caching</strong>：固定前缀（系统提示、文档）缓存在服务端，只有新消息收费</li>
+</ul>
+<h3 id="q4-agent-agentic-loop-429">Q4: Agent 在 Agentic Loop 中途遇到 429 怎么处理？</h3>
+<ul>
+<li>每次 API 调用外层包裹 <code>withRetry</code></li>
+<li>retry 时携带<strong>完整的 messages 数组</strong>（包含已执行的工具结果）</li>
+<li>LLM 能看到前面的上下文，从断点继续，不会"失忆"</li>
+<li>若 <code>retry-after</code> &gt; 5 分钟（配额耗尽），立即报错而非等待</li>
+</ul>
+<h3 id="q5-streaming-streaming">Q5: Streaming 和普通请求的区别？何时用 Streaming？</h3>
+<ul>
+<li><strong>普通</strong>：等全部生成完才返回，用户等待体验差</li>
+<li><strong>Streaming</strong>：逐 token 返回，用户看到"实时打字"效果</li>
+<li><strong>使用场景</strong>：用户直接交互的聊天界面用 Streaming；后台批处理任务用普通请求</li>
+</ul>
+<h3 id="q6-mcp">Q6: MCP 是什么？为什么要有它？</h3>
+<p>见第五节。核心：统一 Agent ↔ 工具 的通信协议，解决工具复用和跨框架互操作问题。一个 MCP Server 可以被 Cline、Continue.dev、Claude Desktop 等所有支持 MCP 的 Agent 直接使用。</p>
+<h3 id="q7-function-calling-mcp-tool">Q7: Function Calling 和 MCP Tool 的区别？</h3>
+<ul>
+<li><strong>Function Calling</strong>：每个项目代码里写死，不可复用</li>
+<li><strong>MCP Tool</strong>：独立进程，标准协议，任何 MCP Client 都能调用</li>
+</ul>
+<h3 id="q8-llm">Q8: 如何设计工具让 LLM 更精准地调用？</h3>
+<ul>
+<li><code>description</code> 要清晰说明<strong>何时用</strong>、<strong>不该何时用</strong></li>
+<li>参数的 <code>description</code> 要给出具体格式示例</li>
+<li>工具数量不要太多（超过 20 个性能下降），按场景精选</li>
+<li>工具返回结果要简洁，不要超过 500 tokens</li>
+</ul>
+<hr>
+<h2 id="nodejs">九、推荐工具链（Node.js 生态）</h2>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>推荐</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LLM SDK</strong></td>
+<td><code>openai</code>（npm）</td>
+<td>OpenAI 兼容格式，适配所有国产 API</td>
+</tr>
+<tr>
+<td><strong>Agent 框架</strong></td>
+<td>LangChain.js</td>
+<td>JS 版 LangChain，功能齐全</td>
+</tr>
+<tr>
+<td><strong>MCP SDK</strong></td>
+<td><code>@modelcontextprotocol/sdk</code></td>
+<td>官方 TypeScript SDK</td>
+</tr>
+<tr>
+<td><strong>参数验证</strong></td>
+<td><code>zod</code></td>
+<td>MCP 工具参数定义，类型安全</td>
+</tr>
+<tr>
+<td><strong>API 框架</strong></td>
+<td><code>fastapi</code> / <code>hono</code></td>
+<td>部署 Agent 为 REST API</td>
+</tr>
+<tr>
+<td><strong>监控</strong></td>
+<td><code>langfuse</code></td>
+<td>开源可自部署，追踪 Agent 每一步</td>
+</tr>
+<tr>
+<td><strong>向量数据库</strong></td>
+<td><code>chroma</code>（本地）/ Pinecone（云）</td>
+<td>RAG 长期记忆</td>
+</tr>
+<tr>
+<td><strong>国内 API</strong></td>
+<td>硅基流动 <code>siliconflow.cn</code></td>
+<td>聚合 DeepSeek/Qwen，国内直连</td>
+</tr>
+</tbody>
+</table>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-ai-agent-dev.md</div>
+</div>
+</body>
+</html>

@@ -161,8 +161,88 @@
 <div class="container">
   <div class="content">
     <h1 id="web">Web 网站性能优化指南</h1>
-<h2 id="_1">一、性能指标体系</h2>
-<h3 id="core-web-vitals">核心网页指标（Core Web Vitals）</h3>
+<h2 id="dd-2025">DD 页面（2025）</h2>
+<h3 id="_1">流量规模</h3>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>日请求量</th>
+<th>平均 TPS</th>
+<th>峰值 TPS（3×）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop</td>
+<td>1M / Day</td>
+<td>11.6 TPS</td>
+<td>~35 TPS</td>
+</tr>
+<tr>
+<td>Mobile</td>
+<td>500K / Day</td>
+<td>5.8 TPS</td>
+<td>~17 TPS</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td><strong>1.5M / Day</strong></td>
+<td><strong>17.4 TPS</strong></td>
+<td><strong>~52 TPS</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>压测目标：web 500 TPS（Akamai CDN 层 8000 TPS），实际流量远低于容量上限。</p>
+<p>Perf test: 600 TPS, 0.5 second</p>
+</blockquote>
+<h3 id="core-web-vitals">Core Web Vitals 实测数据</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>实测值</th>
+<th>目标值</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TTI</td>
+<td>1.9s</td>
+<td>&lt; 3.8s</td>
+<td>良好</td>
+</tr>
+<tr>
+<td>TTFB</td>
+<td>0.92s</td>
+<td>&lt; 0.8s</td>
+<td>略高，可接受</td>
+</tr>
+<tr>
+<td>LCP</td>
+<td>2.0s</td>
+<td>&lt; 2.5s</td>
+<td>良好</td>
+</tr>
+<tr>
+<td>INP</td>
+<td>150ms</td>
+<td>&lt; 200ms</td>
+<td>良好</td>
+</tr>
+<tr>
+<td>CLS</td>
+<td>0.09</td>
+<td>&lt; 0.1</td>
+<td>良好（接近边界）</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_2">一、性能指标体系</h2>
+<h3 id="core-web-vitals_1">核心网页指标（Core Web Vitals）</h3>
 <table>
 <thead>
 <tr>
@@ -193,14 +273,14 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_2">其他重要指标</h3>
+<h3 id="_3">其他重要指标</h3>
 <ul>
 <li><strong>FCP</strong>（First Contentful Paint）：首次内容绘制，&lt; 1.8s 为良</li>
 <li><strong>TTFB</strong>（Time To First Byte）：首字节时间，&lt; 800ms 为良</li>
 <li><strong>TTI</strong>（Time To Interactive）：可交互时间，越短越好</li>
 <li><strong>TBT</strong>（Total Blocking Time）：总阻塞时间，&lt; 200ms 为良</li>
 </ul>
-<h3 id="_3">测量工具</h3>
+<h3 id="_4">测量工具</h3>
 <ul>
 <li><strong>Lighthouse</strong>（Chrome DevTools / CI 集成）</li>
 <li><strong>WebPageTest</strong>（真实网络多地测试）</li>
@@ -208,7 +288,115 @@
 <li><strong>PerformanceObserver API</strong>（线上真实用户监控 / RUM）</li>
 </ul>
 <hr>
-<h2 id="_4">二、网络传输优化</h2>
+<h2 id="_5">二、性能优化全景总览</h2>
+<pre><code>Web 性能优化
+│
+├── 🌐 网络传输
+│   ├── 减少请求数（合并、内联 Critical CSS）
+│   ├── 压缩体积（Gzip/Brotli、Tree Shaking、Minify）
+│   ├── 图片优化（WebP/AVIF、srcset、懒加载）
+│   ├── 缓存策略（Cache-Control、ETag、Service Worker）
+│   └── CDN（静态资源 CDN、边缘节点就近加速）
+│
+├── ⚡ 加载策略
+│   ├── 资源预加载（&lt;link rel=&quot;preload/prefetch/preconnect&quot;&gt;）
+│   ├── 代码分割（Dynamic Import、Route-level splitting）
+│   ├── 懒加载（图片/组件 LazyLoad、Intersection Observer）
+│   └── SSR / SSG（服务端渲染、静态生成，改善 TTFB &amp; LCP）
+│
+├── 🎨 渲染性能
+│   ├── 减少重排重绘（批量 DOM 操作、will-change、transform）
+│   ├── 虚拟列表（长列表只渲染可视区，如 vue-virtual-scroller）
+│   ├── 避免布局抖动（读写分离，requestAnimationFrame）
+│   └── CSS 优化（减少复杂选择器、避免 @import 阻塞）
+│
+├── 🔧 JavaScript 优化
+│   ├── 减少主线程阻塞（Web Worker 处理密集计算）
+│   ├── 防抖节流（Debounce / Throttle 高频事件）
+│   ├── 避免内存泄漏（清理事件监听、定时器）
+│   └── 减少第三方脚本（异步加载、Facade 模式延迟加载）
+│
+├── 🖥️ 服务端 &amp; 架构
+│   ├── HTTP/2（多路复用、头部压缩）
+│   ├── 数据库查询优化（索引、缓存、连接池）
+│   ├── Redis 缓存（热点数据、Session、API 结果缓存）
+│   └── BFF / API 聚合（减少前端瀑布请求）
+│
+└── 📊 监控 &amp; 持续优化
+    ├── RUM 真实用户监控（PerformanceObserver、Sentry）
+    ├── Lighthouse CI（PR 合并前自动评分）
+    ├── Core Web Vitals 看板（Search Console、Datadog）
+    └── 性能预算（Bundle Size 超限 CI 失败）
+</code></pre>
+<h3 id="roi">优化优先级（ROI 由高到低）</h3>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>优化项</th>
+<th>影响指标</th>
+<th>难度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔴 P0</td>
+<td>CDN + Brotli 压缩</td>
+<td>TTFB、LCP</td>
+<td>低</td>
+</tr>
+<tr>
+<td>🔴 P0</td>
+<td>图片 WebP + 懒加载</td>
+<td>LCP、流量成本</td>
+<td>低</td>
+</tr>
+<tr>
+<td>🔴 P0</td>
+<td>缓存策略（强缓存静态资源）</td>
+<td>TTFB、带宽</td>
+<td>低</td>
+</tr>
+<tr>
+<td>🟠 P1</td>
+<td>代码分割 + 路由懒加载</td>
+<td>TTI、TBT</td>
+<td>中</td>
+</tr>
+<tr>
+<td>🟠 P1</td>
+<td>Critical CSS 内联</td>
+<td>FCP</td>
+<td>中</td>
+</tr>
+<tr>
+<td>🟠 P1</td>
+<td>资源预加载 preload/preconnect</td>
+<td>LCP</td>
+<td>低</td>
+</tr>
+<tr>
+<td>🟡 P2</td>
+<td>虚拟列表（长列表场景）</td>
+<td>INP、内存</td>
+<td>高</td>
+</tr>
+<tr>
+<td>🟡 P2</td>
+<td>SSR / SSG</td>
+<td>TTFB、LCP、SEO</td>
+<td>高</td>
+</tr>
+<tr>
+<td>🟡 P2</td>
+<td>Web Worker（复杂计算）</td>
+<td>INP、TBT</td>
+<td>高</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="_6">三、网络传输优化</h2>
 <h3 id="1-http">1. 减少 HTTP 请求数</h3>
 <ul>
 <li>合并 CSS/JS 文件（构建工具自动处理）</li>
@@ -332,8 +520,8 @@ npx webpack-bundle-analyzer
 <li>合并相同的 <code>@media</code> 查询</li>
 </ul>
 <hr>
-<h2 id="_5">五、图片与多媒体优化</h2>
-<h3 id="_6">图片格式选择</h3>
+<h2 id="_7">五、图片与多媒体优化</h2>
+<h3 id="_8">图片格式选择</h3>
 <table>
 <thead>
 <tr>
@@ -367,21 +555,21 @@ npx webpack-bundle-analyzer
   &lt;img src=&quot;image.jpg&quot; alt=&quot;描述&quot; width=&quot;800&quot; height=&quot;450&quot;&gt;
 &lt;/picture&gt;
 </code></pre>
-<h3 id="_7">懒加载</h3>
+<h3 id="_9">懒加载</h3>
 <pre><code class="language-html">&lt;!-- 原生懒加载（浏览器支持 &gt;95%） --&gt;
 &lt;img src=&quot;large.jpg&quot; loading=&quot;lazy&quot; alt=&quot;...&quot;&gt;
 
 &lt;!-- 视频懒加载 --&gt;
 &lt;video loading=&quot;lazy&quot; preload=&quot;none&quot;&gt;&lt;/video&gt;
 </code></pre>
-<h3 id="_8">图片尺寸优化</h3>
+<h3 id="_10">图片尺寸优化</h3>
 <ul>
 <li>始终指定 <code>width</code> 和 <code>height</code> 属性，防止 CLS</li>
 <li>用 <code>object-fit: cover</code> 配合固定容器，避免图片撑开布局</li>
 <li>Next.js <code>&lt;Image&gt;</code> / Nuxt <code>&lt;NuxtImg&gt;</code> 自动优化（格式转换、懒加载、占位符）</li>
 </ul>
 <hr>
-<h2 id="_9">六、字体优化</h2>
+<h2 id="_11">六、字体优化</h2>
 <h3 id="1-font-display-swap">1. 使用 <code>font-display: swap</code></h3>
 <pre><code class="language-css">@font-face {
   font-family: 'MyFont';
@@ -398,7 +586,7 @@ npx webpack-bundle-analyzer
 <pre><code class="language-html">&lt;link rel=&quot;preload&quot; href=&quot;/fonts/main.woff2&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin&gt;
 </code></pre>
 <hr>
-<h2 id="_10">七、服务端与网络层优化</h2>
+<h2 id="_12">七、服务端与网络层优化</h2>
 <h3 id="1-ssr">1. 服务端渲染（SSR）</h3>
 <ul>
 <li><strong>Next.js / Nuxt</strong>：服务端直接返回完整 HTML，显著提升 FCP 和 LCP</li>
@@ -457,7 +645,7 @@ const bigData = shallowRef(largeObject);
 const sorted = computed(() =&gt; list.value.slice().sort());
 </code></pre>
 <hr>
-<h2 id="_11">九、监控与持续优化</h2>
+<h2 id="_13">九、监控与持续优化</h2>
 <h3 id="rum">线上性能监控（RUM）</h3>
 <pre><code class="language-javascript">// 使用 PerformanceObserver 采集真实用户数据
 const observer = new PerformanceObserver((list) =&gt; {
@@ -469,7 +657,7 @@ const observer = new PerformanceObserver((list) =&gt; {
 });
 observer.observe({ type: 'largest-contentful-paint', buffered: true });
 </code></pre>
-<h3 id="_12">工具链</h3>
+<h3 id="_14">工具链</h3>
 <ul>
 <li><strong>Sentry Performance</strong>：错误 + 性能一体化监控</li>
 <li><strong>Datadog RUM / New Relic</strong>：企业级全栈监控</li>
@@ -485,8 +673,8 @@ observer.observe({ type: 'largest-contentful-paint', buffered: true });
     uploadArtifacts: true
 </code></pre>
 <hr>
-<h2 id="_13">十、性能优化清单</h2>
-<h3 id="_14">加载性能</h3>
+<h2 id="_15">十、性能优化清单</h2>
+<h3 id="_16">加载性能</h3>
 <ul>
 <li>[ ] 开启 Gzip/Brotli 压缩</li>
 <li>[ ] 静态资源走 CDN</li>
@@ -500,7 +688,7 @@ observer.observe({ type: 'largest-contentful-paint', buffered: true });
 <li>[ ] 去掉未使用的依赖</li>
 <li>[ ] 开启 HTTP/2</li>
 </ul>
-<h3 id="_15">运行时性能</h3>
+<h3 id="_17">运行时性能</h3>
 <ul>
 <li>[ ] 列表有稳定 key</li>
 <li>[ ] 合理使用 memo/useMemo/useCallback</li>
@@ -511,7 +699,7 @@ observer.observe({ type: 'largest-contentful-paint', buffered: true });
 <li>[ ] 避免在循环中读写 DOM 布局属性</li>
 <li>[ ] CPU 密集任务移到 Web Worker</li>
 </ul>
-<h3 id="_16">监控</h3>
+<h3 id="_18">监控</h3>
 <ul>
 <li>[ ] 接入 Lighthouse CI</li>
 <li>[ ] 线上 RUM 采集 Core Web Vitals</li>

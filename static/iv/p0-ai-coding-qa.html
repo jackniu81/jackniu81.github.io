@@ -175,13 +175,19 @@ AI 编程助手是基于大语言模型的代码生成和辅助工具，能够�
 - <strong>测试生成</strong>：自动生成单元测试<br>
 - <strong>文档生成</strong>：生成代码注释和文档</p>
 <h3 id="3-ai">3. 主流 AI 编程工具有哪些？</h3>
-<p><strong>答案：</strong><br>
-- <strong>GitHub Copilot</strong>：微软出品，VS Code 插件，生态成熟<br>
-- <strong>Claude Code</strong>：Anthropic 出品，命令行工具，深度推理能力强<br>
-- <strong>Cursor</strong>：AI-first IDE，基于 VS Code，日常开发体验好<br>
-- <strong>Windsurf</strong>：Codeium 出品，AI 原生 IDE，Cascade 引擎<br>
-- <strong>ChatGPT</strong>：OpenAI 出品，通用对话，可辅助编程<br>
-- <strong>Gemini</strong>：Google 出品，多模态能力</p>
+<p><strong>答案：</strong></p>
+<p><strong>IDE / 编辑器类</strong>：<br>
+- <strong>GitHub Copilot</strong>：微软出品，2026 年迁移至 AI Credits 计费，支持多种 IDE，企业生态最成熟<br>
+- <strong>Cursor</strong>：AI-first IDE（基于 VS Code），Cloud Agents 支持长期自主任务，2026 年最热门<br>
+- <strong>Windsurf</strong>：Codeium 出品，已被 OpenAI 收购（2025），Cascade 引擎，将深度集成 GPT-5<br>
+- <strong>Claude Code</strong>：Anthropic 出品，CLI + Desktop App，自主推理能力顶尖，SWE-bench 领先</p>
+<p><strong>Agent / 全自主类</strong>：<br>
+- <strong>Devin</strong>（Cognition AI）：AI 软件工程师，独立完成编程任务，有独立沙盒环境<br>
+- <strong>Jules</strong>（Google）：GitHub 原生 Agent，@Jules 分配任务，底层用 Gemini 2.5 Pro<br>
+- <strong>Amazon Q Developer</strong>：AWS 生态专用，安全扫描 + 代码转换，企业合规强</p>
+<p><strong>通用辅助类</strong>：<br>
+- <strong>ChatGPT / GPT-5</strong>：OpenAI，通用对话，可辅助编程和代码讲解<br>
+- <strong>Gemini 2.5</strong>：Google，超大上下文（1M token），适合大代码库分析</p>
 <h2 id="_2">提示词技巧</h2>
 <h3 id="4-ai">4. 如何写好 AI 编程提示词？</h3>
 <p><strong>答案：</strong><br>
@@ -234,56 +240,66 @@ AI 编程助手是基于大语言模型的代码生成和辅助工具，能够�
 <h3 id="8-github-copilot">8. GitHub Copilot 的优势和劣势是什么？</h3>
 <p><strong>答案：</strong><br>
 <strong>优势</strong>：<br>
-- 生态成熟，支持多种 IDE<br>
-- 价格相对较低（$10/月）<br>
-- 企业易推广，合规友好<br>
-- 代码补全速度快</p>
+- 生态最成熟，支持 VS Code、JetBrains、Visual Studio 等主流 IDE<br>
+- 企业合规友好，数据留存策略清晰<br>
+- 代码补全速度快（Next Edit Suggestions）<br>
+- 2026 年集成 GPT-5、Claude 等多模型可选<br>
+- PR Review 自动化，CI/CD 集成好</p>
 <p><strong>劣势</strong>：<br>
-- 自主能力弱，需要人工引导<br>
-- 上下文理解有限<br>
-- 深度推理能力不如 Claude<br>
-- 依赖 GitHub 生态</p>
-<p><strong>适合场景</strong>：日常代码补全、企业统一部署</p>
+- 2026 年迁移至 AI Credits 按量计费，成本可能上升<br>
+- 自主 Agent 能力不如 Cursor Cloud Agents<br>
+- 深度推理不如 Claude Code</p>
+<p><strong>定价（2026）</strong>：<br>
+- Copilot Pro：$10/月（含 AI Credits 额度）<br>
+- Copilot Pro+：$39/月<br>
+- Copilot Business：$19/用户/月<br>
+- 超出额度按 token 按需计费</p>
+<p><strong>适合场景</strong>：企业统一部署、已深度集成 GitHub 工作流的团队</p>
 <h3 id="9-claude-code">9. Claude Code 的优势和劣势是什么？</h3>
 <p><strong>答案：</strong><br>
 <strong>优势</strong>：<br>
-- 深度推理能力强，适合复杂任务<br>
-- 跨文件理解能力好<br>
-- 可自主规划和执行<br>
-- 按使用量计费，适合间歇性使用</p>
+- 深度推理能力顶尖（Claude Opus 4，SWE-bench 72.5%）<br>
+- 跨文件、跨模块理解能力强<br>
+- 原生 MCP 集成，可调用外部工具<br>
+- Fork 模式：可拆分子任务给并行子 Agent<br>
+- 2026 年新增 Desktop App（不再只是 CLI）<br>
+- <code>/design</code> 技能：直接生成 UI 设计稿并实现<br>
+- Remote Control：手机上远程启动开发机上的 Claude Code 会话</p>
 <p><strong>劣势</strong>：<br>
-- 命令行界面，无 IDE 集成<br>
-- 成本较高<br>
-- 需要明确任务边界<br>
-- 学习曲线陡峭</p>
-<p><strong>适合场景</strong>：架构重构、复杂 bug 追踪、技术债务清理</p>
+- 成本较高（按 token 计费）<br>
+- 学习曲线陡峭（需熟悉命令行工作流）<br>
+- 需要明确任务边界，否则可能过度修改</p>
+<p><strong>适合场景</strong>：架构重构、复杂 bug 追踪、技术债务清理、长期大型任务</p>
 <h3 id="10-cursor">10. Cursor 的优势和劣势是什么？</h3>
 <p><strong>答案：</strong><br>
 <strong>优势</strong>：<br>
-- VS Code 体验，上手快<br>
-- 日常开发效率高<br>
-- Composer 多文件编辑<br>
-- 价格适中（$20/月）</p>
+- VS Code 体验，上手快，生态丰富<br>
+- <strong>Cloud Agents</strong>（2026 新增）：云端 Agent 可长期自主运行，无需本地开着电脑<br>
+- <strong>Subscriptions</strong>：Agent 可订阅 PR、Slack 事件，自动被唤醒处理任务<br>
+- <strong>/goal</strong>：设置长期目标（如"修复所有 flaky test"），Agent 持续工作直到完成<br>
+- <strong>子 Agent VM</strong>：并行子任务各自独立虚拟机，不互相干扰<br>
+- <strong>Origin</strong>：内置 Git 托管，Agent 原生代码仓库<br>
+- <strong>Builds</strong>：预热开发环境，Agent 启动快 3x</p>
 <p><strong>劣势</strong>：<br>
-- 深度推理不如 Claude Code<br>
-- 需要订阅<br>
-- 自主能力有限</p>
-<p><strong>适合场景</strong>：日常开发、快速原型、中小型项目</p>
+- 深度单步推理不如 Claude Code<br>
+- Cloud Agents 需要额外付费<br>
+- 夹在 OpenAI/Anthropic 两大巨头之间，生存压力大</p>
+<p><strong>适合场景</strong>：日常开发、中大型项目、需要长期自主 Agent 运行的团队</p>
 <h3 id="11-windsurf">11. Windsurf 的优势和劣势是什么？</h3>
 <p><strong>答案：</strong></p>
 <blockquote>
-<p>Windsurf 由 <strong>Codeium</strong> 公司开发（非 Cognition，Cognition 是 Devin 的开发商）。</p>
+<p>Windsurf 由 <strong>Codeium</strong> 公司开发。2025 年 OpenAI 宣布以约 30 亿美元收购 Codeium，Windsurf 归属 OpenAI。</p>
 </blockquote>
 <p><strong>优势</strong>：<br>
-- Cascade 引擎，Agentic 自主能力强<br>
-- AI 原生设计，端到端任务执行体验流畅<br>
-- 快速原型开发，支持多文件编辑<br>
-- 免费版可用，性价比高</p>
+- Cascade 引擎，Agentic 自主能力强，端到端体验流畅<br>
+- 快速原型开发，多文件编辑体验好<br>
+- 未来将深度集成 GPT-5，模型能力大幅提升<br>
+- 免费版仍可用</p>
 <p><strong>劣势</strong>：<br>
-- Codeium 已被 OpenAI 收购（2025 年），未来方向待观察<br>
-- 生态较新，第三方插件少<br>
-- 社区相对较小</p>
-<p><strong>适合场景</strong>：MVP 开发、快速迭代、实验性项目</p>
+- 被 OpenAI 收购后未来方向不确定，插件生态较小<br>
+- 社区相比 Cursor 小<br>
+- 企业客户需重新评估数据归属（已变为 OpenAI 旗下）</p>
+<p><strong>适合场景</strong>：快速原型、MVP 开发、希望体验最新 OpenAI 模型的用户</p>
 <h3 id="12-ai">12. 如何选择 AI 编程工具？</h3>
 <p><strong>答案：</strong><br>
 根据使用场景选择：<br>
@@ -591,17 +607,25 @@ Vibe Coding 是 OpenAI 联合创始人 <strong>Andrej Karpathy</strong> 于 2025
 - 安全漏洞难以察觉<br>
 - 技术债务积累</p>
 <p><strong>结论</strong>：Vibe Coding 提升了个人开发效率，但在团队或生产代码中仍需工程师深度理解代码。</p>
-<h3 id="37-gpt-4oclaude-37gemini-25">37. 主流大模型（GPT-4o、Claude 3.7、Gemini 2.5）编程能力有何差异？</h3>
+<h3 id="37-2025-2026">37. 主流大模型（2025-2026）编程能力有何差异？</h3>
 <p><strong>答案：</strong><br>
-| 模型 | 厂商 | 上下文窗口 | 编程特点 |<br>
-|---|---|---|---|<br>
-| <strong>GPT-4o</strong> | OpenAI | 128K | 综合能力强，速度快，工具生态最成熟 |<br>
-| <strong>Claude 3.7 Sonnet</strong> | Anthropic | 200K | 代码质量高，逻辑推理强，支持扩展思考 |<br>
-| <strong>Claude 3.5 Sonnet</strong> | Anthropic | 200K | 速度与质量均衡，SWE-bench 得分高 |<br>
-| <strong>Gemini 2.5 Pro</strong> | Google | 1M | 超长上下文，多模态强，适合大代码库分析 |<br>
-| <strong>DeepSeek V3/R1</strong> | DeepSeek | 64K | 开源，成本极低，编程任务表现接近 GPT-4o |<br>
-| <strong>o3/o4-mini</strong> | OpenAI | 200K | 推理模型，擅长复杂算法和数学问题 |</p>
-<p><strong>选择建议</strong>：日常编码用 Claude 3.5/3.7 Sonnet 或 GPT-4o；超大代码库分析用 Gemini 2.5 Pro；复杂算法用 o3；成本敏感用 DeepSeek。</p>
+| 模型 | 厂商 | 上下文 | SWE-bench | 编程特点 |<br>
+|---|---|---|---|---|<br>
+| <strong>Claude Opus 4</strong> | Anthropic | 200K | 72.5% | 代码质量最高，深度推理，并行子 Agent |<br>
+| <strong>Claude Sonnet 4</strong> | Anthropic | 200K | 65%+ | 速度/质量均衡，日常首选 |<br>
+| <strong>GPT-5</strong> | OpenAI | 128K | ~70% | 统一推理架构，工具生态最成熟 |<br>
+| <strong>GPT-5.3-Codex</strong> | OpenAI | - | - | 专为代码优化，GitHub Copilot 使用 |<br>
+| <strong>Gemini 2.5 Pro</strong> | Google | 1M | 竞争力强 | 超长上下文，性价比极高 |<br>
+| <strong>Gemini 2.5 Flash</strong> | Google | 1M | - | 速度快，成本低，日常轻量任务 |<br>
+| <strong>Grok 4</strong> | xAI | 超大 | - | 实时联网，竞赛题强 |<br>
+| <strong>DeepSeek V3</strong> | 深度求索 | 64K | 接近 GPT-4o | 开源，成本低 90%，中文强 |<br>
+| <strong>o3</strong> | OpenAI | 200K | - | 数学/算法推理顶尖，非实时 |</p>
+<p><strong>选择建议</strong>（2026）：<br>
+- 日常编码 → Claude Sonnet 4 或 GPT-5<br>
+- 复杂重构/大任务 → Claude Opus 4<br>
+- 超大代码库分析 → Gemini 2.5 Pro（1M 上下文）<br>
+- 算法竞赛/数学 → o3 或 Grok 4<br>
+- 成本敏感/开源 → DeepSeek V3</p>
 <h3 id="38-context-window-ai">38. 上下文窗口（Context Window）大小对 AI 编程有什么影响？</h3>
 <p><strong>答案：</strong><br>
 上下文窗口是模型一次能处理的 token 上限，直接影响 AI 对代码库的理解深度。</p>
@@ -769,20 +793,26 @@ Context Poisoning 是指会话历史中的<strong>错误信息、过时假设或
 3. <strong>精简历史</strong>：不必要的早期消息不用保留<br>
 4. <strong>明确约束</strong>：在会话开始时明确不变的约束条件<br>
 5. <strong>使用 Cursor Rules</strong>：将核心规范放入规则文件，而非依赖会话记忆</p>
-<h3 id="50-claude-code-2025">50. Claude Code 的最新特性（2025）有哪些亮点？</h3>
+<h3 id="50-claude-code-2025-2026">50. Claude Code 的最新特性（2025-2026）有哪些亮点？</h3>
 <p><strong>答案：</strong><br>
-Claude Code 是 Anthropic 出品的 <strong>终端原生 AI 编程工具</strong>，2025 年有多项重要更新：</p>
-<p><strong>核心特性</strong>：<br>
-- <strong>多模态输入</strong>：可接受截图、架构图作为上下文<br>
-- <strong>自主执行</strong>：可自动运行测试、调试、提交代码<br>
-- <strong>MCP 集成</strong>：原生支持 MCP 协议，可调用外部工具<br>
-- <strong>Project Memory</strong>：<code>CLAUDE.md</code> 文件持久化项目背景<br>
-- <strong>并行子 Agent</strong>：可拆分任务给多个子 Agent 并行执行<br>
-- <strong>扩展思考（Extended Thinking）</strong>：使用 Claude 3.7 时可开启深度推理模式<br>
-- <strong>GitHub 集成</strong>：可直接操作 PR、Issue、代码审查</p>
+Claude Code 是 Anthropic 出品的 AI 编程工具，已从纯 CLI 工具演进为功能完备的平台：</p>
+<p><strong>核心能力</strong>：<br>
+- <strong>多模态输入</strong>：接受截图、架构图、UI 设计稿作为上下文<br>
+- <strong>自主执行</strong>：自动运行测试、调试、提交代码、处理 PR<br>
+- <strong>MCP 集成</strong>：原生支持 MCP 协议，可调用数十种外部工具<br>
+- <strong>CLAUDE.md</strong>：项目级规范文件，持久化项目背景和编码规范<br>
+- <strong>Fork 模式</strong>：主会话可派生子 Agent 并行处理子任务，2026 年交互会话默认开启<br>
+- <strong>Desktop App</strong>：不再只是 CLI，有图形界面应用<br>
+- <strong>Remote Control</strong>：在手机上远程启动开发机上的 Claude Code 会话</p>
+<p><strong>2026 年新增</strong>：<br>
+- <strong><code>/design</code> 技能</strong>：生成 UI 设计稿（Artboard），选择后直接实现（Pro/Max/Team/Enterprise）<br>
+- <strong>Concise 输出模式</strong>：优先给结果，省略过程叙述，提升工作效率<br>
+- <strong>跨会话消息传递</strong>：不同 Claude Code 会话之间可直接通信<br>
+- <strong>自托管环境</strong>：企业可在自有基础设施上运行 Cloud 会话（Team/Enterprise）<br>
+- <strong><code>--restricted</code> 模式</strong>：移除终端执行工具，仅允许文件操作，适合受限环境</p>
 <p><strong>CLAUDE.md 最佳实践</strong>：</p>
 <pre><code class="language-markdown"># 项目背景
-本项目是一个 B2B SaaS 平台，使用 Next.js 14 + TypeScript + Prisma
+B2B SaaS 平台，技术栈：Next.js 14 + TypeScript + Prisma + PostgreSQL
 
 # 编码规范
 - 使用函数式组件，禁止 Class 组件
@@ -793,7 +823,250 @@ Claude Code 是 Anthropic 出品的 <strong>终端原生 AI 编程工具</strong
 - 启动开发服务器：npm run dev
 - 运行测试：npm test
 - 类型检查：npm run type-check
+
+# 注意事项
+- 禁止直接修改 /migrations 目录
+- PR 提交前必须通过 npm run lint
 </code></pre>
+<hr>
+<h2 id="2025-2026">2025-2026 最新动态</h2>
+<h3 id="51-claude-4">51. Claude 4 系列有哪些主要特点？</h3>
+<p><strong>答案：</strong><br>
+Anthropic 于 2025 年 8 月发布 Claude 4 系列，包含 <strong>Sonnet 4</strong> 和 <strong>Opus 4</strong> 两款：</p>
+<table>
+<thead>
+<tr>
+<th>型号</th>
+<th>定位</th>
+<th>亮点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude Sonnet 4</strong></td>
+<td>日常开发主力</td>
+<td>速度快、性价比高，SWE-bench 大幅提升</td>
+</tr>
+<tr>
+<td><strong>Claude Opus 4</strong></td>
+<td>高难度任务</td>
+<td>200K token 上下文，SWE-bench 72.5%，深度推理</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心改进</strong>：<br>
+- <strong>扩展思考（Extended Thinking）</strong>：复杂问题可开启深度推理模式<br>
+- <strong>并行子 Agent</strong>：同一任务可拆分为多个并行子任务执行<br>
+- <strong>200K 上下文窗口</strong>：可一次性分析大型代码库<br>
+- <strong>MoE（混合专家）架构</strong>：降低推理成本，提升速度<br>
+- <strong>工具调用升级</strong>：更准确的工具参数生成，减少幻觉</p>
+<p><strong>与 Claude 3.x 对比</strong>：Opus 4 在代码任务上相比 3.5 Sonnet 整体提升约 15%，尤其在多步骤自主编程任务上表现突出。</p>
+<h3 id="52-gpt-5">52. GPT-5 的主要特点和编程能力如何？</h3>
+<p><strong>答案：</strong><br>
+OpenAI 于 2025 年 8 月发布 <strong>GPT-5</strong>，是首个将快速响应与深度推理统一在单一模型的版本。</p>
+<p><strong>核心特性</strong>：<br>
+- <strong>统一推理架构</strong>：不再区分 o1/o3 推理模型与 GPT 对话模型，一个模型自动切换<br>
+- <strong>幻觉率下降 45%</strong>：显著减少错误 API 调用和编造代码<br>
+- <strong>原生多模态</strong>：文本、图像、代码无缝处理<br>
+- <strong>适应性推理</strong>：难题自动启用"深度思考"，简单问题快速响应</p>
+<p><strong>编程基准</strong>：<br>
+- AIME 2025 数学：94.6%<br>
+- HumanEval：88.7%<br>
+- SWE-bench：接近行业领先</p>
+<p><strong>与 Claude 4 对比</strong>：<br>
+- GPT-5 工具生态最成熟，Agent 调用更稳定<br>
+- Claude 4 在代码质量和长上下文推理上略占优<br>
+- GPT-5 成本更低（$15/$60 per 1M tokens）</p>
+<h3 id="53-grok-4">53. Grok 4 是什么？在编程任务中表现如何？</h3>
+<p><strong>答案：</strong><br>
+<strong>Grok 4</strong> 是 xAI（Elon Musk 旗下）于 2025 年发布的旗舰模型：</p>
+<p><strong>主要特点</strong>：<br>
+- <strong>实时互联网访问</strong>：可直接搜索最新信息，无需 RAG<br>
+- <strong>超大上下文</strong>：支持极长上下文处理<br>
+- <strong>编程能力强</strong>：Codeforces 竞赛题解表现突出<br>
+- <strong>低延迟</strong>：响应速度快于同级竞品</p>
+<p><strong>集成方式</strong>：<br>
+- 通过 X Premium+ 订阅使用<br>
+- API 接入（兼容 OpenAI 格式）<br>
+- 在 Cursor/Continue 中可配置为自定义模型</p>
+<p><strong>适合场景</strong>：需要实时信息（如最新框架文档）的编程任务、算法竞赛题、快速原型。</p>
+<h3 id="54-google-jules">54. Google Jules 是什么？</h3>
+<p><strong>答案：</strong><br>
+<strong>Jules</strong> 是 Google 于 2025 年推出的 <strong>GitHub 原生 AI 编程 Agent</strong>，直接集成到 GitHub 工作流中。</p>
+<p><strong>工作方式</strong>：<br>
+1. 开发者在 GitHub 上给 Jules 分配任务（Issue 或 PR 评论中 @Jules）<br>
+2. Jules 在独立沙盒环境中分析代码库<br>
+3. 自动生成代码变更并创建 PR<br>
+4. 开发者审查，合并或继续迭代</p>
+<p><strong>核心能力</strong>：<br>
+- 跨文件代码修改<br>
+- 自动运行测试并修复失败用例<br>
+- 编写或更新文档<br>
+- 代码重构和技术债清理</p>
+<p><strong>与竞品对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>入口</th>
+<th>底层模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jules</td>
+<td>GitHub（原生集成）</td>
+<td>Gemini 2.5 Pro</td>
+</tr>
+<tr>
+<td>GitHub Copilot Workspace</td>
+<td>GitHub</td>
+<td>GPT-4o</td>
+</tr>
+<tr>
+<td>Devin</td>
+<td>Web/Slack</td>
+<td>专有</td>
+</tr>
+<tr>
+<td>SWE-agent</td>
+<td>命令行</td>
+<td>可配置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-windsurf-openai-ai">55. Windsurf 被 OpenAI 收购，对 AI 编程工具市场有什么影响？</h3>
+<p><strong>答案：</strong><br>
+2025 年，OpenAI 宣布收购 <strong>Codeium</strong>（Windsurf 母公司），收购金额约 30 亿美元。</p>
+<p><strong>主要影响</strong>：<br>
+- <strong>OpenAI 拥有完整 IDE 产品线</strong>：从 API → ChatGPT → GitHub Copilot（微软） → Windsurf，形成完整生态闭环<br>
+- <strong>Windsurf 将深度集成 GPT-5</strong>：Cascade 引擎将更换为 OpenAI 模型<br>
+- <strong>对 Cursor 的压力增大</strong>：Cursor 作为独立公司需要在两大巨头夹击中生存<br>
+- <strong>企业合规考量</strong>：Windsurf 数据将归属 OpenAI，企业客户需重新评估合规风险</p>
+<p><strong>当前状态</strong>（2025）：Windsurf 仍可正常使用，但未来方向与 OpenAI 战略对齐。</p>
+<p><strong>选择建议</strong>：<br>
+- 长期使用稳定性优先 → Cursor 或 GitHub Copilot<br>
+- 体验 OpenAI 最新模型 → Windsurf（将深度集成 GPT-5）</p>
+<h3 id="56-amazon-q-developer">56. Amazon Q Developer 是什么？</h3>
+<p><strong>答案：</strong><br>
+<strong>Amazon Q Developer</strong>（前身 AWS CodeWhisperer）是亚马逊面向企业开发者的 AI 编程助手。</p>
+<p><strong>核心功能</strong>：<br>
+- <strong>代码补全</strong>：支持 15+ 种编程语言<br>
+- <strong>安全扫描</strong>：自动检测代码中的安全漏洞（OWASP Top 10）<br>
+- <strong>代码转换</strong>：Java 8/11 自动升级到 Java 17/21<br>
+- <strong>AWS 深度集成</strong>：了解 AWS SDK、CloudFormation、CDK 最佳实践<br>
+- <strong>Agent 模式</strong>：自主完成多步骤开发任务</p>
+<p><strong>与 GitHub Copilot 的区别</strong>：<br>
+- Q Developer 更专注于 AWS 生态和企业安全合规<br>
+- Copilot 生态更广，语言支持更全<br>
+- Q Developer 有免费版（个人），企业版按席位收费</p>
+<p><strong>适合人群</strong>：AWS 生态的企业开发者，对安全合规要求高的团队。</p>
+<h3 id="57-2025-2026-ai">57. 2025-2026 主流 AI 模型最新对比</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>厂商</th>
+<th>上下文</th>
+<th>编程基准</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude Opus 4</strong></td>
+<td>Anthropic</td>
+<td>200K</td>
+<td>SWE 72.5%</td>
+<td>代码质量最高，深度推理</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4</strong></td>
+<td>Anthropic</td>
+<td>200K</td>
+<td>SWE 65%+</td>
+<td>速度/质量均衡，日常首选</td>
+</tr>
+<tr>
+<td><strong>GPT-5</strong></td>
+<td>OpenAI</td>
+<td>128K</td>
+<td>HumanEval 88.7%</td>
+<td>工具生态最成熟，统一推理</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.5 Pro</strong></td>
+<td>Google</td>
+<td>1M</td>
+<td>竞争力强</td>
+<td>超长上下文，极致性价比</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.5 Flash</strong></td>
+<td>Google</td>
+<td>1M</td>
+<td>高性价比</td>
+<td>速度快，成本低</td>
+</tr>
+<tr>
+<td><strong>Grok 4</strong></td>
+<td>xAI</td>
+<td>超大</td>
+<td>算法竞赛强</td>
+<td>实时联网，低延迟</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3</strong></td>
+<td>深度求索</td>
+<td>64K</td>
+<td>接近 GPT-4o</td>
+<td>开源，成本低 90%</td>
+</tr>
+<tr>
+<td><strong>o3</strong></td>
+<td>OpenAI</td>
+<td>200K</td>
+<td>数学/推理顶尖</td>
+<td>推理专用，非实时</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2026 趋势</strong>：<br>
+- 推理能力内置（thinking 成为标配）<br>
+- 上下文窗口持续扩大（1M+ 成主流）<br>
+- 多模态（图像→代码）能力提升<br>
+- 成本持续下降（同能力成本每年降低约 50%）</p>
+<h3 id="58-ai-eval">58. 什么是 AI 编程的 Eval（评估）体系？</h3>
+<p><strong>答案：</strong><br>
+Eval（评估）是确保 AI 编程工具在生产环境中稳定可靠的关键体系。</p>
+<p><strong>主要评估基准</strong>：<br>
+- <strong>SWE-bench</strong>：GitHub 真实 Issue 修复任务，是最权威的编程能力基准<br>
+- <strong>HumanEval</strong>：代码生成正确率（函数级别）<br>
+- <strong>Aider Polyglot</strong>：多语言编程能力评测<br>
+- <strong>LiveCodeBench</strong>：持续更新的编程竞赛题库（避免数据污染）<br>
+- <strong>MBPP（Mostly Basic Python Problems）</strong>：Python 基础编程评测</p>
+<p><strong>工程实践中的 Eval</strong>：</p>
+<pre><code class="language-python"># 构建 Golden Set（黄金测试集）
+eval_cases = [
+    {
+        &quot;input&quot;: &quot;修复这个 Bug：...&quot;,
+        &quot;expected_behavior&quot;: &quot;函数返回正确结果&quot;,
+        &quot;evaluation_criteria&quot;: [&quot;代码可运行&quot;, &quot;测试通过&quot;, &quot;逻辑正确&quot;]
+    }
+]
+
+# 使用 LLM-as-Judge 评估
+def evaluate_response(ai_output, expected):
+    judge_prompt = f&quot;&quot;&quot;
+    评估以下 AI 输出是否满足要求：
+    输出：{ai_output}
+    要求：{expected}
+    评分（1-5）并说明理由：
+    &quot;&quot;&quot;
+    return llm.generate(judge_prompt)
+</code></pre>
+<p><strong>常用评估工具</strong>：LangSmith、Langfuse、Arize Phoenix、Braintrust</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p0-ai-coding-qa.md</div>
 </div>

@@ -160,7 +160,7 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="sdd">SDD（规格驱动开发）面试题（附答案）</h1>
+    <h1 id="sddqa">SDD（规格驱动开发）QA</h1>
 <h2 id="_1">基础概念</h2>
 <h3 id="1-sddspec-driven-development">1. 什么是 SDD（Spec-Driven Development）？</h3>
 <p><strong>答案：</strong><br>
@@ -746,6 +746,227 @@ SDD 在 CI/CD 层面的集成点：</p>
 - 历史缺陷修复可选择性使用（简单缺陷可跳过规格步骤）<br>
 - 定期运行 <code>/update-knowledge</code> 保持知识库最新</p>
 <p><strong>注意</strong>：存量代码无需重构，SDD 主要针对新增功能。</p>
+<hr>
+<h2 id="spec-kit-speckitorg">Spec Kit 工具最佳实践（speckit.org）</h2>
+<h3 id="31-spec-kit-sdd">31. Spec Kit 是什么？与 SDD 方法论的关系是什么？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 是 SDD（规格驱动开发）方法论的<strong>开源工具实现</strong>，提供 CLI 工具（<code>specify</code>）和标准化的斜杠命令，让开发者可以在任意 AI 编码助手中使用 SDD 工作流。</p>
+<p><strong>关系</strong>：<br>
+- <strong>SDD</strong> 是方法论（思想）：规格 → 计划 → 实现<br>
+- <strong>Spec Kit</strong> 是工具（实践）：将 SDD 工作流编码为可执行命令</p>
+<p><strong>安装方式</strong>：</p>
+<pre><code class="language-bash"># 安装 Specify CLI
+npm install -g @speckit/cli
+
+# 在项目中初始化
+specify init
+</code></pre>
+<p><strong>初始化后</strong>，AI Agent 会自动获得 Spec Kit 的所有斜杠命令能力。</p>
+<h3 id="32-spec-kit-sdd">32. Spec Kit 的完整命令集是什么？与 SDD 命令如何对应？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 提供以下核心斜杠命令：</p>
+<table>
+<thead>
+<tr>
+<th>Spec Kit 命令</th>
+<th>SDD 等价</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/constitution</code></td>
+<td><code>CONSTITUTION.md</code> 配置</td>
+<td>建立项目治理原则和质量门禁</td>
+</tr>
+<tr>
+<td><code>/specify</code></td>
+<td><code>/create-specs</code></td>
+<td>从需求描述生成规格文档</td>
+</tr>
+<tr>
+<td><code>/clarify</code></td>
+<td>递归自答澄清机制</td>
+<td>解决规格中的模糊点</td>
+</tr>
+<tr>
+<td><code>/plan</code></td>
+<td><code>/create-plan</code></td>
+<td>从规格生成技术实施计划</td>
+</tr>
+<tr>
+<td><code>/tasks</code></td>
+<td>任务分解（T-01、T-02...）</td>
+<td>将计划分解为可执行的原子任务</td>
+</tr>
+<tr>
+<td><code>/analyze</code></td>
+<td>代码库分析</td>
+<td>分析代码库结构，生成 POD 知识</td>
+</tr>
+<tr>
+<td><code>/implement</code></td>
+<td><code>/execute</code></td>
+<td>执行 TDD 实现</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意</strong>：Codex CLI 不支持斜杠命令的自定义参数（平台限制），其他 AI 助手均完整支持。</p>
+<h3 id="33-spec-kit">33. Spec Kit 的两阶段开发工作流是什么？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 将开发工作流标准化为两个阶段：</p>
+<p><strong>阶段一：Foundation（基础建立）</strong><br>
+1. <strong>Constitution</strong>：运行 <code>/constitution</code> 确立项目原则、质量门禁、架构约束<br>
+2. <strong>Specification</strong>：运行 <code>/specify</code> 明确地定义需求（描述"做什么"，而非"怎么做"）<br>
+3. <strong>Clarification</strong>：运行 <code>/clarify</code> 解决规格中的所有歧义</p>
+<p><strong>阶段二：Implementation（实施执行）</strong><br>
+1. <strong>Planning</strong>：运行 <code>/plan</code> 选择技术栈和架构方案<br>
+2. <strong>Tasks</strong>：运行 <code>/tasks</code> 分解为可执行的原子任务<br>
+3. <strong>Implementation</strong>：运行 <code>/implement</code> 自动生成可工作的代码</p>
+<p><strong>核心原则</strong>：Phase 1 不能混入实现细节，Phase 2 必须严格基于 Phase 1 的产出。</p>
+<h3 id="34-spec-kit-focus-on-what">34. Spec Kit 的"Focus on What"原则是什么？</h3>
+<p><strong>答案：</strong><br>
+"Focus on What"是 Spec Kit 的核心哲学：<strong>定义你要构建什么、以及为什么构建，而不是定义技术实现细节</strong>。</p>
+<p><strong>传统开发的问题</strong>：<br>
+- 规格只是"脚手架"，编码开始后就被丢弃<br>
+- 开发者和产品之间的需求误解导致返工<br>
+- 代码即文档，技术债务积累</p>
+<p><strong>Spec Kit 的解法</strong>：<br>
+- 规格成为"可执行的"，直接驱动代码生成<br>
+- AI Agent 负责"怎么做"（技术选型、实现细节）<br>
+- 人类专注于"做什么"（业务场景、功能边界）</p>
+<p><strong>实践例子</strong>：</p>
+<pre><code>❌ 错误（混入技术细节）：
+&quot;使用 Redis 缓存用户 session，TTL 设置为 30 分钟，key 格式为 session:{userId}&quot;
+
+✅ 正确（聚焦业务场景）：
+&quot;用户登录后的会话应持久化，支持在会话过期前重新验证身份，非活跃用户的会话应自动失效&quot;
+</code></pre>
+<h3 id="35-spec-kit-ai-agent">35. Spec Kit 支持哪些 AI Agent？选择建议是什么？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 支持主流 AI 编码助手：</p>
+<table>
+<thead>
+<tr>
+<th>AI Agent</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>规格理解能力最强，多语言支持，上下文感知</td>
+<td>复杂规格项目，首选</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>VS Code 原生集成，企业安全，GitHub 生态</td>
+<td>企业项目，已有 GitHub 工作流</td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>AI-first 编辑器，性能好，直觉化集成</td>
+<td>日常开发，快速迭代</td>
+</tr>
+<tr>
+<td><strong>Gemini CLI</strong></td>
+<td>推理能力强，语言支持全面</td>
+<td>需要强推理的复杂规格</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>实时协作，智能代码生成</td>
+<td>团队协作开发</td>
+</tr>
+<tr>
+<td><strong>Codex CLI</strong></td>
+<td>OpenAI Codex，有平台限制</td>
+<td>不推荐用于 Spec Kit（不支持自定义参数）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其他支持</strong>：Qwen Code、opencode、Kilo Code、Auggie CLI、Roo Code</p>
+<p><strong>选择建议</strong>：对于 SDD 工作流，<strong>Claude Code</strong> 因其卓越的规格理解能力和上下文感知编程能力，是最推荐的选择。</p>
+<h3 id="36-clarify">36. <code>/clarify</code> 命令的最佳使用时机是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>/clarify</code> 是 Spec Kit 独立的澄清命令，不同于 SDD 的"递归自答澄清"（内嵌在 <code>/create-specs</code> 中），<code>/clarify</code> 是<strong>按需调用</strong>的：</p>
+<p><strong>触发时机</strong>：<br>
+1. 运行 <code>/specify</code> 后，规格中出现超过 3 个开放问题时<br>
+2. 人工审查规格后，发现需求描述存在歧义<br>
+3. <code>/plan</code> 被硬关卡阻断（有未解决开放问题）时</p>
+<p><strong>使用方式</strong>：</p>
+<pre><code>/clarify &quot;用户的&quot;活跃会话&quot;如何定义？是指最近30天有登录，还是当前有效的 JWT token？&quot;
+</code></pre>
+<p><strong>最佳实践</strong>：<br>
+- 每次 <code>/clarify</code> 聚焦单个问题，避免多问题混合<br>
+- 澄清后立即更新规格，不要积攒多个澄清再一起更新<br>
+- 澄清结果应记录决策依据，而非仅仅是答案</p>
+<h3 id="37-spec-kit-tasks">37. Spec Kit 的 <code>/tasks</code> 命令与直接实现有什么区别？为何不跳过？</h3>
+<p><strong>答案：</strong><br>
+<code>/tasks</code> 将 <code>/plan</code> 的技术计划分解为<strong>原子级可执行任务</strong>，是实现前的关键步骤：</p>
+<p><strong><code>/tasks</code> 的产出</strong>：</p>
+<pre><code>T-01: 创建 UserSession 数据模型（含字段定义和验证规则）
+T-02: 实现 SessionRepository 的 CRUD 接口
+T-03: 编写 T-01 和 T-02 的单元测试
+T-04: 集成 SessionService 到认证中间件
+T-05: 端到端测试：登录→会话创建→会话验证→会话过期
+</code></pre>
+<p><strong>跳过 <code>/tasks</code> 的风险</strong>：<br>
+- AI 直接从计划实现，容易遗漏任务，无法追踪进度<br>
+- 测试不完整（没有 T-XX 粒度的任务就没有对应测试用例）<br>
+- 无法从中断点恢复（不知道已完成哪些任务）</p>
+<p><strong>最佳实践</strong>：每个 Task 应该是独立可测试的，且完成所有 Task 后规格的所有 FR 都应有覆盖。</p>
+<h3 id="38-spec-kit">38. 如何用 Spec Kit 处理"探索性需求"（需求不清晰的情况）？</h3>
+<p><strong>答案：</strong><br>
+探索性需求（需求本身未定义清楚）是 Spec Kit 的边界场景，推荐策略：</p>
+<p><strong>策略一：先用 <code>/analyze</code> 建立基线</strong><br>
+- 运行 <code>/analyze</code> 分析现有代码库，生成技术上下文<br>
+- 基于上下文和 AI 对话，逐步澄清需求边界<br>
+- 形成初步规格后再运行 <code>/specify</code></p>
+<p><strong>策略二：写"探索性规格"（Spike Spec）</strong><br>
+- 明确标记规格为探索性（<code>[SPIKE]</code> 标签）<br>
+- 降低规格质量要求（允许更多假设）<br>
+- 实现后根据实际结果更新规格</p>
+<p><strong>策略三：分阶段规格</strong></p>
+<pre><code>Phase A 规格: 核心功能（确定需求）→ /specify → /plan → /implement
+Phase B 规格: 扩展功能（待探索）→ 持续用 /clarify 补充
+</code></pre>
+<p><strong>不建议</strong>：在需求完全不清晰时强行运行 <code>/implement</code>，会导致大量返工。</p>
+<h3 id="39-spec-kit">39. Spec Kit 最佳实践：规格文档应该多详细？</h3>
+<p><strong>答案：</strong><br>
+规格的详细程度遵循"<strong>足够但不过度</strong>"原则：</p>
+<p><strong>最低合格标准</strong>：<br>
+- 每条 FR 有明确的验收标准（AC）<br>
+- 没有未解决的 <code>[OPEN QUESTION]</code><br>
+- 不包含实现细节（无框架名、DB 名、API 路径）<br>
+- 作用域清晰（明确"不包含什么"）</p>
+<p><strong>过度详细的反模式</strong>：</p>
+<pre><code>❌ 过度规格化（限制 AI 的实现空间）：
+&quot;使用 Repository 模式，接口命名为 IUserRepository，
+方法名为 GetByIdAsync，返回类型为 Task&lt;UserEntity&gt;&quot;
+
+✅ 适当的规格：
+&quot;系统应能按用户 ID 检索用户信息，响应时间 &lt; 100ms，
+不存在时返回明确的错误信息&quot;
+</code></pre>
+<p><strong>黄金法则</strong>：规格应让一个不了解技术栈的产品经理能够理解，但让工程师无法从规格中推断出实现方案。</p>
+<h3 id="40-spec-kit-constitution">40. Spec Kit 的 <code>/constitution</code> 命令应该定义哪些内容？</h3>
+<p><strong>答案：</strong><br>
+<code>/constitution</code> 建立项目的<strong>治理宪法</strong>，内容应覆盖：</p>
+<p><strong>必须定义</strong>：<br>
+- <strong>架构原则</strong>：如"服务间通信只通过 API，不共享数据库"<br>
+- <strong>质量门禁</strong>：如"单元测试覆盖率 &gt; 80%，P0 功能 &gt; 95%"<br>
+- <strong>安全标准</strong>：如"所有外部输入必须验证，无硬编码凭据"<br>
+- <strong>向后兼容</strong>：如"公开 API 变更必须保持向后兼容，通过版本号管理破坏性变更"</p>
+<p><strong>可选定义</strong>：<br>
+- <strong>性能基线</strong>：核心接口响应时间上限<br>
+- <strong>合规要求</strong>：数据隐私、审计日志要求<br>
+- <strong>技术债务管控</strong>：如"不允许引入新的循环依赖"</p>
+<p><strong>最佳实践</strong>：<br>
+- Constitution 应由团队 Tech Lead 制定，不是由 AI 生成<br>
+- 尽量精简（10-15 条原则），避免变成"规则手册"<br>
+- 每次重大架构变更后审查并更新</p>
 <hr>
 <p>这些题目覆盖了 SDD 的核心概念、工作流程、命令详解、AI 模型选择策略、规格质量标准和最佳实践，适合作为 AI 原生开发方法论的系统学习资料。</p>
   </div>
