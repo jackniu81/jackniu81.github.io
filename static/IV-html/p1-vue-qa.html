@@ -1,413 +1,507 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p1 vue qa</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vue.js — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Vue 常见面试题 100 道（附答案）</h1>
-<h2>基础概念</h2>
-<h3>1. 什么是 Vue？</h3>
-<p><strong>答案：</strong>
-Vue 是一个渐进式 JavaScript 框架，主要用于构建用户界面，特点是上手快、响应式强、生态完整。</p>
-<h3>2. 什么是渐进式框架？</h3>
-<p><strong>答案：</strong>
-渐进式指你可以按需使用 Vue 的能力，既能只用视图层，也能结合路由、状态管理和工程化方案构建大型应用。</p>
-<h3>3. Vue 的核心特点有哪些？</h3>
-<p><strong>答案：</strong>
-核心特点包括响应式系统、组件化开发、模板语法、指令系统、生态完善和学习成本较低。</p>
-<h3>4. Vue 2 和 Vue 3 的主要区别是什么？</h3>
-<p><strong>答案：</strong>
-Vue 3 在性能、Tree Shaking、TypeScript 支持、Composition API 和源码架构上都有明显提升。</p>
-<h3>5. 什么是 MVVM？</h3>
-<p><strong>答案：</strong>
-MVVM 是一种分层思想，Model 表示数据，View 表示视图，ViewModel 负责把数据和视图绑定起来。</p>
-<h3>6. Vue 为什么适合中后台和中小型项目？</h3>
-<p><strong>答案：</strong>
-因为它语法直观、文档完善、开发效率高，适合快速搭建可维护的业务系统。</p>
-<h3>7. 什么是单文件组件？</h3>
-<p><strong>答案：</strong>
-单文件组件即 <code>.vue</code> 文件，通常由 <code>template</code>、<code>script</code> 和 <code>style</code> 三部分组成。</p>
-<h3>8. <code>template</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>template</code> 用于描述组件最终渲染出来的视图结构。</p>
-<h3>9. <code>script setup</code> 是什么？</h3>
-<p><strong>答案：</strong>
-<code>script setup</code> 是 Vue 3 的语法糖，能更简洁地编写 Composition API 组件。</p>
-<h3>10. <code>style scoped</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-它可以让当前组件的样式默认只作用于本组件，减少样式污染。</p>
-<h3>11. Vue 模板语法中的插值表达式是什么？</h3>
-<p><strong>答案：</strong>
-插值表达式通常写作 <code>{{ message }}</code>，用于把数据渲染到模板中。</p>
-<h3>12. Vue 指令是什么？</h3>
-<p><strong>答案：</strong>
-指令是带有 <code>v-</code> 前缀的特殊语法，用于给 DOM 添加响应式行为。</p>
-<h3>13. 常见的内置指令有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>v-bind</code>、<code>v-model</code>、<code>v-if</code>、<code>v-show</code>、<code>v-for</code>、<code>v-on</code>、<code>v-html</code> 等。</p>
-<h3>14. <code>v-bind</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>v-bind</code> 用于动态绑定属性，简写形式是 <code>:</code>。</p>
-<h3>15. <code>v-on</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>v-on</code> 用于绑定事件，简写形式是 <code>@</code>。</p>
-<h3>16. <code>v-model</code> 是做什么的？</h3>
-<p><strong>答案：</strong>
-<code>v-model</code> 用于实现表单控件和数据之间的双向绑定。</p>
-<h3>17. <code>v-if</code> 和 <code>v-show</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>v-if</code> 是真正的条件渲染，会销毁和重建节点；<code>v-show</code> 只是切换 <code>display</code> 样式。</p>
-<h3>18. <code>v-for</code> 需要注意什么？</h3>
-<p><strong>答案：</strong>
-使用 <code>v-for</code> 渲染列表时应提供稳定且唯一的 <code>key</code>，避免错误复用。</p>
-<h3>19. <code>key</code> 在 Vue 中的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>key</code> 用于帮助 Vue 识别节点身份，从而更准确地进行 diff 和复用。</p>
-<h3>20. Vue 中如何绑定 class 和 style？</h3>
-<p><strong>答案：</strong>
-可以绑定字符串、对象或数组，实现条件样式和动态样式控制。</p>
-<h2>响应式原理</h2>
-<h3>21. Vue 的响应式是什么？</h3>
-<p><strong>答案：</strong>
-响应式是指当数据发生变化时，依赖这些数据的视图会自动更新。</p>
-<h3>22. Vue 2 的响应式原理是什么？</h3>
-<p><strong>答案：</strong>
-Vue 2 主要通过 <code>Object.defineProperty</code> 劫持对象属性，实现依赖收集和派发更新。</p>
-<h3>23. Vue 3 的响应式原理是什么？</h3>
-<p><strong>答案：</strong>
-Vue 3 主要使用 <code>Proxy</code> 实现响应式，能够更完整地拦截对象操作，性能和能力都更好。</p>
-<h3>24. 为什么 Vue 3 使用 <code>Proxy</code> 更好？</h3>
-<p><strong>答案：</strong>
-因为它能监听属性新增、删除、数组索引变化等更多场景，且不需要递归遍历所有属性。</p>
-<h3>25. 什么是依赖收集？</h3>
-<p><strong>答案：</strong>
-依赖收集就是在读取响应式数据时记录当前副作用函数，方便数据变化时通知它重新执行。</p>
-<h3>26. 什么是派发更新？</h3>
-<p><strong>答案：</strong>
-派发更新是指当响应式数据变化后，通知相关依赖重新运行，从而刷新视图。</p>
-<h3>27. <code>reactive</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>reactive</code> 用于把对象转换成响应式代理对象。</p>
-<h3>28. <code>ref</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>ref</code> 用于创建响应式基本类型或对象包装值，读取时通常通过 <code>.value</code>。</p>
-<h3>29. <code>ref</code> 和 <code>reactive</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>ref</code> 更适合基本类型和单值场景，<code>reactive</code> 更适合对象类型；两者都可用于响应式状态管理。</p>
-<h3>30. 什么是自动解包？</h3>
-<p><strong>答案：</strong>
-在模板中使用 <code>ref</code> 时，Vue 会自动读取其 <code>.value</code>，这就是自动解包。</p>
-<h3>31. <code>computed</code> 是什么？</h3>
-<p><strong>答案：</strong>
-<code>computed</code> 是基于依赖自动缓存的计算属性，适合从已有状态推导新值。</p>
-<h3>32. <code>computed</code> 和方法的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>computed</code> 有缓存，依赖不变时不会重复计算；方法每次渲染都会重新执行。</p>
-<h3>33. <code>watch</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>watch</code> 用于监听特定数据源变化，并在变化时执行副作用逻辑。</p>
-<h3>34. <code>watchEffect</code> 和 <code>watch</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>watchEffect</code> 会自动收集依赖并立即执行，<code>watch</code> 需要显式指定监听源，更适合精确控制。</p>
-<h3>35. 什么是深度监听？</h3>
-<p><strong>答案：</strong>
-深度监听是指监听对象内部嵌套属性的变化，通常通过 <code>deep: true</code> 开启。</p>
-<h3>36. 深度监听有什么代价？</h3>
-<p><strong>答案：</strong>
-它会增加遍历和依赖追踪成本，在大对象上可能影响性能。</p>
-<h3>37. <code>readonly</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>readonly</code> 可以把响应式对象包装成只读版本，防止外部修改。</p>
-<h3>38. <code>shallowRef</code> 和 <code>ref</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>shallowRef</code> 只跟踪最外层值变化，不会深度响应式处理内部对象。</p>
-<h3>39. <code>shallowReactive</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-它只让对象第一层属性具备响应式，适合性能敏感或外部对象管理场景。</p>
-<h3>40. 什么时候适合用 <code>computed</code> 而不是 <code>watch</code>？</h3>
-<p><strong>答案：</strong>
-当你只是从已有状态推导新状态时优先用 <code>computed</code>，副作用场景再考虑 <code>watch</code>。</p>
-<h2>组件通信</h2>
-<h3>41. Vue 组件通信的常见方式有哪些？</h3>
-<p><strong>答案：</strong>
-常见方式有 <code>props</code>、<code>emit</code>、<code>provide/inject</code>、状态管理库和事件总线等。</p>
-<h3>42. <code>props</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>props</code> 用于父组件向子组件传递数据。</p>
-<h3>43. 为什么 <code>props</code> 是单向数据流？</h3>
-<p><strong>答案：</strong>
-因为子组件不应直接修改父组件传入的数据，这能让数据流更清晰、更易维护。</p>
-<h3>44. 子组件如何通知父组件？</h3>
-<p><strong>答案：</strong>
-通常通过 <code>emit</code> 触发自定义事件，把变化通知给父组件。</p>
-<h3>45. <code>emits</code> 选项有什么意义？</h3>
-<p><strong>答案：</strong>
-它用于显式声明组件会触发哪些事件，便于约束和维护。</p>
-<h3>46. 什么是 <code>provide/inject</code>？</h3>
-<p><strong>答案：</strong>
-它是一种跨层级传值机制，适合祖先组件向深层子孙组件提供共享数据。</p>
-<h3>47. <code>provide/inject</code> 适合替代全局状态管理吗？</h3>
-<p><strong>答案：</strong>
-不完全适合，它更适合局部依赖注入，不如 Pinia/Vuex 那样擅长统一全局状态治理。</p>
-<h3>48. 什么是事件总线？</h3>
-<p><strong>答案：</strong>
-事件总线是通过统一事件中心在非父子组件间通信的一种方式，但大型项目中不推荐滥用。</p>
-<h3>49. 为什么不推荐滥用事件总线？</h3>
-<p><strong>答案：</strong>
-因为它会让组件关系变隐式，事件来源和流向不清晰，调试困难。</p>
-<h3>50. 什么是插槽？</h3>
-<p><strong>答案：</strong>
-插槽允许父组件向子组件指定位置传入模板内容，提升组件复用能力。</p>
-<h3>51. 默认插槽和具名插槽的区别是什么？</h3>
-<p><strong>答案：</strong>
-默认插槽用于单一区域内容分发，具名插槽适合组件中存在多个插槽区域的场景。</p>
-<h3>52. 什么是作用域插槽？</h3>
-<p><strong>答案：</strong>
-作用域插槽允许子组件把数据暴露给父组件插槽内容，从而实现更灵活的渲染控制。</p>
-<h3>53. 组件通信中什么时候适合用 Pinia？</h3>
-<p><strong>答案：</strong>
-当多个页面或多个不相关组件需要共享状态，并且状态更新逻辑较复杂时适合使用 Pinia。</p>
-<h3>54. 什么是受控组件思想在 Vue 中的体现？</h3>
-<p><strong>答案：</strong>
-父组件通过 <code>modelValue</code> 等属性控制子组件状态，子组件通过事件把变更通知回去。</p>
-<h3>55. Vue 3 中自定义 <code>v-model</code> 是如何工作的？</h3>
-<p><strong>答案：</strong>
-默认使用 <code>modelValue</code> 作为 prop，<code>update:modelValue</code> 作为更新事件。</p>
-<h2>生命周期与组合式 API</h2>
-<h3>56. Vue 生命周期有哪些常见阶段？</h3>
-<p><strong>答案：</strong>
-常见包括创建、挂载、更新和卸载阶段，对应不同的生命周期钩子。</p>
-<h3>57. <code>onMounted</code> 适合做什么？</h3>
-<p><strong>答案：</strong>
-适合在组件挂载后执行 DOM 相关操作、发起初始化请求或注册浏览器事件。</p>
-<h3>58. <code>onUpdated</code> 何时触发？</h3>
-<p><strong>答案：</strong>
-当组件因为响应式数据变化而完成视图更新后触发。</p>
-<h3>59. <code>onUnmounted</code> 适合做什么？</h3>
-<p><strong>答案：</strong>
-适合清理定时器、事件监听、订阅和第三方实例，避免内存泄漏。</p>
-<h3>60. 为什么不要在 <code>onUpdated</code> 中随意修改状态？</h3>
-<p><strong>答案：</strong>
-因为这可能再次触发更新，导致不必要的循环渲染。</p>
-<h3>61. Composition API 的优势是什么？</h3>
-<p><strong>答案：</strong>
-它能按逻辑组织代码，更利于复杂组件拆分、复用和 TypeScript 支持。</p>
-<h3>62. Options API 和 Composition API 的区别是什么？</h3>
-<p><strong>答案：</strong>
-Options API 按选项类型组织代码，Composition API 按业务逻辑组织代码，更适合复杂场景。</p>
-<h3>63. 什么是组合式函数？</h3>
-<p><strong>答案：</strong>
-组合式函数是对可复用状态逻辑的抽取，类似 Vue 生态中的自定义 Hook。</p>
-<h3>64. 为什么复杂组件更适合 Composition API？</h3>
-<p><strong>答案：</strong>
-因为同一功能相关的状态、计算和副作用可以放在一起，维护成本更低。</p>
-<h3>65. <code>setup</code> 函数的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>setup</code> 是 Composition API 的入口，用于声明响应式状态、方法、计算属性和副作用逻辑。</p>
-<h3>66. <code>setup</code> 中为什么不能直接使用 <code>this</code>？</h3>
-<p><strong>答案：</strong>
-因为 <code>setup</code> 执行时组件实例尚未完全建立，它强调使用闭包而不是实例 <code>this</code>。</p>
-<h3>67. <code>nextTick</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>nextTick</code> 用于等待 DOM 更新完成后再执行逻辑，常用于读取最新 DOM 状态。</p>
-<h3>68. 什么是副作用清理？</h3>
-<p><strong>答案：</strong>
-副作用清理指在组件卸载或依赖变化前，释放订阅、监听器和异步任务等资源。</p>
-<h3>69. 什么情况下会使用 <code>onBeforeUnmount</code>？</h3>
-<p><strong>答案：</strong>
-当你需要在组件真正卸载前做收尾工作时可以使用它，比如提前停止某些任务。</p>
-<h3>70. <code>keep-alive</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-<code>keep-alive</code> 可以缓存动态组件实例，避免切换时重复销毁和重建。</p>
-<h2>路由与状态管理</h2>
-<h3>71. Vue Router 的作用是什么？</h3>
-<p><strong>答案：</strong>
-Vue Router 用于管理单页应用中的页面切换、嵌套路由、参数路由和导航流程。</p>
-<h3>72. 路由模式有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>hash</code> 模式和 <code>history</code> 模式，后者更美观但通常需要服务端配合。</p>
-<h3>73. 动态路由是什么？</h3>
-<p><strong>答案：</strong>
-动态路由是指路径中包含参数，如 <code>/user/:id</code>，可用于匹配不同资源详情页。</p>
-<h3>74. 什么是导航守卫？</h3>
-<p><strong>答案：</strong>
-导航守卫是在路由跳转前后执行的钩子，常用于权限校验和埋点。</p>
-<h3>75. 全局前置守卫常用于什么场景？</h3>
-<p><strong>答案：</strong>
-常用于登录校验、角色权限控制、页面白名单和动态标题设置。</p>
-<h3>76. 什么是路由懒加载？</h3>
-<p><strong>答案：</strong>
-路由懒加载是按需加载页面组件，从而减少首屏包体积。</p>
-<h3>77. Pinia 是什么？</h3>
-<p><strong>答案：</strong>
-Pinia 是 Vue 官方推荐的状态管理库，设计更简洁，TypeScript 支持也更友好。</p>
-<h3>78. Pinia 相比 Vuex 有什么优势？</h3>
-<p><strong>答案：</strong>
-Pinia API 更简单、模块天然独立、类型推导更好，不再强制使用 mutation。</p>
-<h3>79. Pinia 中的 <code>state</code>、<code>getters</code>、<code>actions</code> 分别是什么？</h3>
-<p><strong>答案：</strong>
-<code>state</code> 表示状态，<code>getters</code> 表示派生状态，<code>actions</code> 表示更新状态和封装业务逻辑的方法。</p>
-<h3>80. 什么时候不需要状态管理库？</h3>
-<p><strong>答案：</strong>
-当状态只在单个组件或少量父子组件间使用时，本地状态和 props/emit 通常就足够。</p>
-<h2>性能优化与工程化</h2>
-<h3>81. Vue 中常见性能优化手段有哪些？</h3>
-<p><strong>答案：</strong>
-包括组件拆分、稳定 <code>key</code>、懒加载、合理使用 <code>computed</code>、减少深度监听和列表虚拟化等。</p>
-<h3>82. 为什么不要在模板里写复杂表达式？</h3>
-<p><strong>答案：</strong>
-复杂表达式会降低可读性，也可能在每次渲染时重复计算，影响维护和性能。</p>
-<h3>83. 什么是异步组件？</h3>
-<p><strong>答案：</strong>
-异步组件是按需动态加载的组件，适合大组件或低频页面场景。</p>
-<h3>84. 什么是虚拟 DOM？</h3>
-<p><strong>答案：</strong>
-虚拟 DOM 是对真实 DOM 的 JavaScript 抽象，框架通过比较新旧虚拟 DOM 来优化更新。</p>
-<h3>85. Vue 中长列表如何优化？</h3>
-<p><strong>答案：</strong>
-可以使用分页、虚拟列表、懒渲染和减少单项组件复杂度等方式优化。</p>
-<h3>86. 为什么 <code>key</code> 不建议用数组索引？</h3>
-<p><strong>答案：</strong>
-因为列表顺序变化时会导致错误复用节点，可能出现状态错乱。</p>
-<h3>87. 什么是防抖和节流？</h3>
-<p><strong>答案：</strong>
-防抖是高频触发后只执行最后一次，节流是在一定时间内最多执行一次。</p>
-<h3>88. Vue 项目中常见的打包工具有哪些？</h3>
-<p><strong>答案：</strong>
-当前主流是 Vite，历史上也常见 Webpack。</p>
-<h3>89. 为什么 Vue 3 项目常用 Vite？</h3>
-<p><strong>答案：</strong>
-因为 Vite 启动快、热更新快、配置更轻量，开发体验更好。</p>
-<h3>90. 什么是 Tree Shaking？</h3>
-<p><strong>答案：</strong>
-Tree Shaking 是构建时删除未使用代码的优化手段，有助于减小打包体积。</p>
-<h3>91. 什么是 SSR？</h3>
-<p><strong>答案：</strong>
-SSR 是服务端先渲染 HTML 再返回给浏览器，有助于首屏速度和 SEO。</p>
-<h3>92. 什么是 Hydration？</h3>
-<p><strong>答案：</strong>
-Hydration 是客户端把交互能力挂载到服务端渲染结果上的过程。</p>
-<h3>93. 什么是 <code>&lt;Suspense&gt;</code>？</h3>
-<p><strong>答案：</strong>
-<code>&lt;Suspense&gt;</code> 用于在异步依赖尚未就绪时展示占位内容，改善异步组件体验。</p>
-<h3>94. Vue 中如何做权限控制？</h3>
-<p><strong>答案：</strong>
-通常结合路由守卫、角色信息、菜单配置和按钮级权限指令实现。</p>
-<h3>95. 什么是自定义指令？</h3>
-<p><strong>答案：</strong>
-自定义指令用于封装底层 DOM 操作行为，如聚焦、权限隐藏和拖拽。</p>
-<h3>96. 什么时候适合写自定义指令？</h3>
-<p><strong>答案：</strong>
-当你需要复用面向 DOM 的底层行为，而不是单纯的业务逻辑时适合使用。</p>
-<h3>97. Vue 中常见反模式有哪些？</h3>
-<p><strong>答案：</strong>
-包括直接修改 props、滥用深度监听、事件总线泛滥、模板过重和组件职责过大等。</p>
-<h3>98. 为什么说组件设计比框架 API 更重要？</h3>
-<p><strong>答案：</strong>
-因为真正决定可维护性的往往是组件职责划分、状态边界和通信方式，而不只是语法本身。</p>
-<h3>99. 面试中如何系统回答 Vue 问题？</h3>
-<p><strong>答案：</strong>
-可以按概念、原理、使用场景、优缺点和性能注意点几个层次来组织答案。</p>
-<h3>100. 如何总结 Vue 的核心价值？</h3>
-<p><strong>答案：</strong>
-Vue 的核心价值是以较低学习成本提供高效、清晰、可扩展的前端开发体验，适合从简单页面到复杂应用的多种场景。</p>
-<h2>进阶特性</h2>
-<h3>101. 什么是 <code>toRef</code> 和 <code>toRefs</code>？</h3>
-<p><strong>答案：</strong>
-<code>toRef</code> 为响应式对象的某个属性创建一个保持响应性的 ref，修改该 ref 会同步到原对象；<code>toRefs</code> 把整个响应式对象的所有属性都转成 ref 对象。常用于解构 <code>reactive</code> 对象后仍保持响应性，如 <code>const { name, age } = toRefs(state)</code>，避免解构后失去响应。</p>
-<h3>102. 什么是 <code>Teleport</code>？</h3>
-<p><strong>答案：</strong>
-<code>&lt;Teleport to=&quot;body&quot;&gt;</code> 可以把组件的 DOM 渲染到指定目标节点，但组件仍保留在当前组件树的逻辑位置（props、context 不变）。常用于弹窗、Toast、抽屉等浮层，避免因 <code>overflow: hidden</code> 或 <code>z-index</code> 层叠上下文带来的显示问题。</p>
-<h3>103. <code>defineProps</code> 和 <code>defineEmits</code> 在 <code>&lt;script setup&gt;</code> 中如何使用？</h3>
-<p><strong>答案：</strong>
-在 <code>&lt;script setup&gt;</code> 中，两者都是编译器宏，无需 import。<code>defineProps&lt;{ title: string }&gt;()</code> 声明接收的 props 类型；<code>defineEmits&lt;{ (e: &#39;change&#39;, value: string): void }&gt;()</code> 声明触发的事件。返回值分别是 props 对象和 emit 函数，TypeScript 泛型写法能提供完整的类型推导。</p>
-<h3>104. 什么是 <code>&lt;Transition&gt;</code> 和 <code>&lt;TransitionGroup&gt;</code>？</h3>
-<p><strong>答案：</strong>
-<code>&lt;Transition&gt;</code> 用于单个元素/组件进入或离开时的过渡效果，通过自动添加 <code>-enter-active</code>、<code>-leave-to</code> 等 CSS 类名与动画配合；<code>&lt;TransitionGroup&gt;</code> 用于列表元素的增删过渡，支持 <code>v-move</code> 实现 FLIP 动画。两者也支持 JavaScript 钩子实现精细控制。</p>
-<h3>105. <code>v-model</code> 在 Vue 3 中有哪些变化？</h3>
-<p><strong>答案：</strong>
-Vue 3 中 <code>v-model</code> 默认 prop 从 <code>value</code> 改为 <code>modelValue</code>，事件从 <code>input</code> 改为 <code>update:modelValue</code>；支持自定义参数名 <code>v-model:title</code>；支持多个 <code>v-model</code>（<code>v-model:title</code> + <code>v-model:content</code>）替代 Vue 2 的 <code>.sync</code> 修饰符，语义更统一。</p>
-<h3>106. 什么是 <code>defineExpose</code>？</h3>
-<p><strong>答案：</strong>
-在 <code>&lt;script setup&gt;</code> 中，组件内部所有变量默认不对外暴露。<code>defineExpose({ method, data })</code> 用于显式声明父组件通过 <code>ref</code> 可访问的属性和方法，提供精确的封装控制，相当于 Options API 中手动 <code>return</code> 的作用。</p>
-<h3>107. Vue 3 中 <code>markRaw</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>markRaw</code> 标记一个对象，使其永远不被 Vue 转换为响应式代理。适合第三方库实例（如地图、图表实例）或不需要响应式追踪的大型对象，避免 Proxy 包装带来的性能开销和意外副作用。</p>
-<h3>108. 什么是 Vue 3 的 <code>app.use</code> 和插件机制？</h3>
-<p><strong>答案：</strong>
-<code>app.use(plugin)</code> 安装插件，插件可以是有 <code>install</code> 方法的对象或函数。插件通常用于：注册全局组件、添加全局指令、通过 <code>provide</code> 注入全局服务、挂载 <code>app.config.globalProperties</code>。常见插件有 Vue Router、Pinia、Element Plus 等。</p>
-<h3>109. Vue 3 相比 Vue 2 在性能上有哪些提升？</h3>
-<p><strong>答案：</strong>
-① 响应式系统用 <code>Proxy</code> 替代 <code>Object.defineProperty</code>，支持数组索引和属性新增监听，无需 <code>Vue.set</code>；② 编译器优化：静态节点提升（hoisting）、Block Tree 跳过静态子树；③ 更好的 Tree Shaking，未使用的内置功能不会打包；④ <code>Fragment</code>、<code>Teleport</code>、<code>Suspense</code> 等新能力；⑤ 更小的核心体积。</p>
-<h3>110. 什么是 Vue 的 <code>watchEffect</code> vs <code>watch</code> 的最佳实践选择？</h3>
-<p><strong>答案：</strong>
-<code>watchEffect</code> 适合：自动追踪依赖、逻辑和依赖紧耦合、立即执行的场景，代码更简洁。<code>watch</code> 适合：需要访问变化前后的值（<code>oldVal</code>、<code>newVal</code>）、精确控制监听来源、避免首次执行的场景，控制更精确。两者都支持 <code>onCleanup</code> 做副作用清理。</p>
-<h2>总结</h2>
-<p>这些题目覆盖了 Vue 的基础语法、响应式原理、组件通信、生命周期、路由、状态管理、性能优化与工程实践，以及 Vue 3 进阶特性，适合作为系统化面试复习资料。</p>
-
+<div class="topbar">
+  <h1>Vue.js</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
   </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="vue-100">Vue 常见面试题 100 道（附答案）</h1>
+<h2 id="_1">基础概念</h2>
+<h3 id="1-vue">1. 什么是 Vue？</h3>
+<p><strong>答案：</strong><br>
+Vue 是一个渐进式 JavaScript 框架，主要用于构建用户界面，特点是上手快、响应式强、生态完整。</p>
+<h3 id="2">2. 什么是渐进式框架？</h3>
+<p><strong>答案：</strong><br>
+渐进式指你可以按需使用 Vue 的能力，既能只用视图层，也能结合路由、状态管理和工程化方案构建大型应用。</p>
+<h3 id="3-vue">3. Vue 的核心特点有哪些？</h3>
+<p><strong>答案：</strong><br>
+核心特点包括响应式系统、组件化开发、模板语法、指令系统、生态完善和学习成本较低。</p>
+<h3 id="4-vue-2-vue-3">4. Vue 2 和 Vue 3 的主要区别是什么？</h3>
+<p><strong>答案：</strong><br>
+Vue 3 在性能、Tree Shaking、TypeScript 支持、Composition API 和源码架构上都有明显提升。</p>
+<h3 id="5-mvvm">5. 什么是 MVVM？</h3>
+<p><strong>答案：</strong><br>
+MVVM 是一种分层思想，Model 表示数据，View 表示视图，ViewModel 负责把数据和视图绑定起来。</p>
+<h3 id="6-vue">6. Vue 为什么适合中后台和中小型项目？</h3>
+<p><strong>答案：</strong><br>
+因为它语法直观、文档完善、开发效率高，适合快速搭建可维护的业务系统。</p>
+<h3 id="7">7. 什么是单文件组件？</h3>
+<p><strong>答案：</strong><br>
+单文件组件即 <code>.vue</code> 文件，通常由 <code>template</code>、<code>script</code> 和 <code>style</code> 三部分组成。</p>
+<h3 id="8-template">8. <code>template</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>template</code> 用于描述组件最终渲染出来的视图结构。</p>
+<h3 id="9-script-setup">9. <code>script setup</code> 是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>script setup</code> 是 Vue 3 的语法糖，能更简洁地编写 Composition API 组件。</p>
+<h3 id="10-style-scoped">10. <code>style scoped</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+它可以让当前组件的样式默认只作用于本组件，减少样式污染。</p>
+<h3 id="11-vue">11. Vue 模板语法中的插值表达式是什么？</h3>
+<p><strong>答案：</strong><br>
+插值表达式通常写作 <code>{{ message }}</code>，用于把数据渲染到模板中。</p>
+<h3 id="12-vue">12. Vue 指令是什么？</h3>
+<p><strong>答案：</strong><br>
+指令是带有 <code>v-</code> 前缀的特殊语法，用于给 DOM 添加响应式行为。</p>
+<h3 id="13">13. 常见的内置指令有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>v-bind</code>、<code>v-model</code>、<code>v-if</code>、<code>v-show</code>、<code>v-for</code>、<code>v-on</code>、<code>v-html</code> 等。</p>
+<h3 id="14-v-bind">14. <code>v-bind</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>v-bind</code> 用于动态绑定属性，简写形式是 <code>:</code>。</p>
+<h3 id="15-v-on">15. <code>v-on</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>v-on</code> 用于绑定事件，简写形式是 <code>@</code>。</p>
+<h3 id="16-v-model">16. <code>v-model</code> 是做什么的？</h3>
+<p><strong>答案：</strong><br>
+<code>v-model</code> 用于实现表单控件和数据之间的双向绑定。</p>
+<h3 id="17-v-if-v-show">17. <code>v-if</code> 和 <code>v-show</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>v-if</code> 是真正的条件渲染，会销毁和重建节点；<code>v-show</code> 只是切换 <code>display</code> 样式。</p>
+<h3 id="18-v-for">18. <code>v-for</code> 需要注意什么？</h3>
+<p><strong>答案：</strong><br>
+使用 <code>v-for</code> 渲染列表时应提供稳定且唯一的 <code>key</code>，避免错误复用。</p>
+<h3 id="19-key-vue">19. <code>key</code> 在 Vue 中的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>key</code> 用于帮助 Vue 识别节点身份，从而更准确地进行 diff 和复用。</p>
+<h3 id="20-vue-class-style">20. Vue 中如何绑定 class 和 style？</h3>
+<p><strong>答案：</strong><br>
+可以绑定字符串、对象或数组，实现条件样式和动态样式控制。</p>
+<h2 id="_2">响应式原理</h2>
+<h3 id="21-vue">21. Vue 的响应式是什么？</h3>
+<p><strong>答案：</strong><br>
+响应式是指当数据发生变化时，依赖这些数据的视图会自动更新。</p>
+<h3 id="22-vue-2">22. Vue 2 的响应式原理是什么？</h3>
+<p><strong>答案：</strong><br>
+Vue 2 主要通过 <code>Object.defineProperty</code> 劫持对象属性，实现依赖收集和派发更新。</p>
+<h3 id="23-vue-3">23. Vue 3 的响应式原理是什么？</h3>
+<p><strong>答案：</strong><br>
+Vue 3 主要使用 <code>Proxy</code> 实现响应式，能够更完整地拦截对象操作，性能和能力都更好。</p>
+<h3 id="24-vue-3-proxy">24. 为什么 Vue 3 使用 <code>Proxy</code> 更好？</h3>
+<p><strong>答案：</strong><br>
+因为它能监听属性新增、删除、数组索引变化等更多场景，且不需要递归遍历所有属性。</p>
+<h3 id="25">25. 什么是依赖收集？</h3>
+<p><strong>答案：</strong><br>
+依赖收集就是在读取响应式数据时记录当前副作用函数，方便数据变化时通知它重新执行。</p>
+<h3 id="26">26. 什么是派发更新？</h3>
+<p><strong>答案：</strong><br>
+派发更新是指当响应式数据变化后，通知相关依赖重新运行，从而刷新视图。</p>
+<h3 id="27-reactive">27. <code>reactive</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>reactive</code> 用于把对象转换成响应式代理对象。</p>
+<h3 id="28-ref">28. <code>ref</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>ref</code> 用于创建响应式基本类型或对象包装值，读取时通常通过 <code>.value</code>。</p>
+<h3 id="29-ref-reactive">29. <code>ref</code> 和 <code>reactive</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>ref</code> 更适合基本类型和单值场景，<code>reactive</code> 更适合对象类型；两者都可用于响应式状态管理。</p>
+<h3 id="30">30. 什么是自动解包？</h3>
+<p><strong>答案：</strong><br>
+在模板中使用 <code>ref</code> 时，Vue 会自动读取其 <code>.value</code>，这就是自动解包。</p>
+<h3 id="31-computed">31. <code>computed</code> 是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>computed</code> 是基于依赖自动缓存的计算属性，适合从已有状态推导新值。</p>
+<h3 id="32-computed">32. <code>computed</code> 和方法的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>computed</code> 有缓存，依赖不变时不会重复计算；方法每次渲染都会重新执行。</p>
+<h3 id="33-watch">33. <code>watch</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>watch</code> 用于监听特定数据源变化，并在变化时执行副作用逻辑。</p>
+<h3 id="34-watcheffect-watch">34. <code>watchEffect</code> 和 <code>watch</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>watchEffect</code> 会自动收集依赖并立即执行，<code>watch</code> 需要显式指定监听源，更适合精确控制。</p>
+<h3 id="35">35. 什么是深度监听？</h3>
+<p><strong>答案：</strong><br>
+深度监听是指监听对象内部嵌套属性的变化，通常通过 <code>deep: true</code> 开启。</p>
+<h3 id="36">36. 深度监听有什么代价？</h3>
+<p><strong>答案：</strong><br>
+它会增加遍历和依赖追踪成本，在大对象上可能影响性能。</p>
+<h3 id="37-readonly">37. <code>readonly</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>readonly</code> 可以把响应式对象包装成只读版本，防止外部修改。</p>
+<h3 id="38-shallowref-ref">38. <code>shallowRef</code> 和 <code>ref</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>shallowRef</code> 只跟踪最外层值变化，不会深度响应式处理内部对象。</p>
+<h3 id="39-shallowreactive">39. <code>shallowReactive</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+它只让对象第一层属性具备响应式，适合性能敏感或外部对象管理场景。</p>
+<h3 id="40-computed-watch">40. 什么时候适合用 <code>computed</code> 而不是 <code>watch</code>？</h3>
+<p><strong>答案：</strong><br>
+当你只是从已有状态推导新状态时优先用 <code>computed</code>，副作用场景再考虑 <code>watch</code>。</p>
+<h2 id="_3">组件通信</h2>
+<h3 id="41-vue">41. Vue 组件通信的常见方式有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见方式有 <code>props</code>、<code>emit</code>、<code>provide/inject</code>、状态管理库和事件总线等。</p>
+<h3 id="42-props">42. <code>props</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>props</code> 用于父组件向子组件传递数据。</p>
+<h3 id="43-props">43. 为什么 <code>props</code> 是单向数据流？</h3>
+<p><strong>答案：</strong><br>
+因为子组件不应直接修改父组件传入的数据，这能让数据流更清晰、更易维护。</p>
+<h3 id="44">44. 子组件如何通知父组件？</h3>
+<p><strong>答案：</strong><br>
+通常通过 <code>emit</code> 触发自定义事件，把变化通知给父组件。</p>
+<h3 id="45-emits">45. <code>emits</code> 选项有什么意义？</h3>
+<p><strong>答案：</strong><br>
+它用于显式声明组件会触发哪些事件，便于约束和维护。</p>
+<h3 id="46-provideinject">46. 什么是 <code>provide/inject</code>？</h3>
+<p><strong>答案：</strong><br>
+它是一种跨层级传值机制，适合祖先组件向深层子孙组件提供共享数据。</p>
+<h3 id="47-provideinject">47. <code>provide/inject</code> 适合替代全局状态管理吗？</h3>
+<p><strong>答案：</strong><br>
+不完全适合，它更适合局部依赖注入，不如 Pinia/Vuex 那样擅长统一全局状态治理。</p>
+<h3 id="48">48. 什么是事件总线？</h3>
+<p><strong>答案：</strong><br>
+事件总线是通过统一事件中心在非父子组件间通信的一种方式，但大型项目中不推荐滥用。</p>
+<h3 id="49">49. 为什么不推荐滥用事件总线？</h3>
+<p><strong>答案：</strong><br>
+因为它会让组件关系变隐式，事件来源和流向不清晰，调试困难。</p>
+<h3 id="50">50. 什么是插槽？</h3>
+<p><strong>答案：</strong><br>
+插槽允许父组件向子组件指定位置传入模板内容，提升组件复用能力。</p>
+<h3 id="51">51. 默认插槽和具名插槽的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+默认插槽用于单一区域内容分发，具名插槽适合组件中存在多个插槽区域的场景。</p>
+<h3 id="52">52. 什么是作用域插槽？</h3>
+<p><strong>答案：</strong><br>
+作用域插槽允许子组件把数据暴露给父组件插槽内容，从而实现更灵活的渲染控制。</p>
+<h3 id="53-pinia">53. 组件通信中什么时候适合用 Pinia？</h3>
+<p><strong>答案：</strong><br>
+当多个页面或多个不相关组件需要共享状态，并且状态更新逻辑较复杂时适合使用 Pinia。</p>
+<h3 id="54-vue">54. 什么是受控组件思想在 Vue 中的体现？</h3>
+<p><strong>答案：</strong><br>
+父组件通过 <code>modelValue</code> 等属性控制子组件状态，子组件通过事件把变更通知回去。</p>
+<h3 id="55-vue-3-v-model">55. Vue 3 中自定义 <code>v-model</code> 是如何工作的？</h3>
+<p><strong>答案：</strong><br>
+默认使用 <code>modelValue</code> 作为 prop，<code>update:modelValue</code> 作为更新事件。</p>
+<h2 id="api">生命周期与组合式 API</h2>
+<h3 id="56-vue">56. Vue 生命周期有哪些常见阶段？</h3>
+<p><strong>答案：</strong><br>
+常见包括创建、挂载、更新和卸载阶段，对应不同的生命周期钩子。</p>
+<h3 id="57-onmounted">57. <code>onMounted</code> 适合做什么？</h3>
+<p><strong>答案：</strong><br>
+适合在组件挂载后执行 DOM 相关操作、发起初始化请求或注册浏览器事件。</p>
+<h3 id="58-onupdated">58. <code>onUpdated</code> 何时触发？</h3>
+<p><strong>答案：</strong><br>
+当组件因为响应式数据变化而完成视图更新后触发。</p>
+<h3 id="59-onunmounted">59. <code>onUnmounted</code> 适合做什么？</h3>
+<p><strong>答案：</strong><br>
+适合清理定时器、事件监听、订阅和第三方实例，避免内存泄漏。</p>
+<h3 id="60-onupdated">60. 为什么不要在 <code>onUpdated</code> 中随意修改状态？</h3>
+<p><strong>答案：</strong><br>
+因为这可能再次触发更新，导致不必要的循环渲染。</p>
+<h3 id="61-composition-api">61. Composition API 的优势是什么？</h3>
+<p><strong>答案：</strong><br>
+它能按逻辑组织代码，更利于复杂组件拆分、复用和 TypeScript 支持。</p>
+<h3 id="62-options-api-composition-api">62. Options API 和 Composition API 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+Options API 按选项类型组织代码，Composition API 按业务逻辑组织代码，更适合复杂场景。</p>
+<h3 id="63">63. 什么是组合式函数？</h3>
+<p><strong>答案：</strong><br>
+组合式函数是对可复用状态逻辑的抽取，类似 Vue 生态中的自定义 Hook。</p>
+<h3 id="64-composition-api">64. 为什么复杂组件更适合 Composition API？</h3>
+<p><strong>答案：</strong><br>
+因为同一功能相关的状态、计算和副作用可以放在一起，维护成本更低。</p>
+<h3 id="65-setup">65. <code>setup</code> 函数的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>setup</code> 是 Composition API 的入口，用于声明响应式状态、方法、计算属性和副作用逻辑。</p>
+<h3 id="66-setup-this">66. <code>setup</code> 中为什么不能直接使用 <code>this</code>？</h3>
+<p><strong>答案：</strong><br>
+因为 <code>setup</code> 执行时组件实例尚未完全建立，它强调使用闭包而不是实例 <code>this</code>。</p>
+<h3 id="67-nexttick">67. <code>nextTick</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>nextTick</code> 用于等待 DOM 更新完成后再执行逻辑，常用于读取最新 DOM 状态。</p>
+<h3 id="68">68. 什么是副作用清理？</h3>
+<p><strong>答案：</strong><br>
+副作用清理指在组件卸载或依赖变化前，释放订阅、监听器和异步任务等资源。</p>
+<h3 id="69-onbeforeunmount">69. 什么情况下会使用 <code>onBeforeUnmount</code>？</h3>
+<p><strong>答案：</strong><br>
+当你需要在组件真正卸载前做收尾工作时可以使用它，比如提前停止某些任务。</p>
+<h3 id="70-keep-alive">70. <code>keep-alive</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+<code>keep-alive</code> 可以缓存动态组件实例，避免切换时重复销毁和重建。</p>
+<h2 id="_4">路由与状态管理</h2>
+<h3 id="71-vue-router">71. Vue Router 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+Vue Router 用于管理单页应用中的页面切换、嵌套路由、参数路由和导航流程。</p>
+<h3 id="72">72. 路由模式有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>hash</code> 模式和 <code>history</code> 模式，后者更美观但通常需要服务端配合。</p>
+<h3 id="73">73. 动态路由是什么？</h3>
+<p><strong>答案：</strong><br>
+动态路由是指路径中包含参数，如 <code>/user/:id</code>，可用于匹配不同资源详情页。</p>
+<h3 id="74">74. 什么是导航守卫？</h3>
+<p><strong>答案：</strong><br>
+导航守卫是在路由跳转前后执行的钩子，常用于权限校验和埋点。</p>
+<h3 id="75">75. 全局前置守卫常用于什么场景？</h3>
+<p><strong>答案：</strong><br>
+常用于登录校验、角色权限控制、页面白名单和动态标题设置。</p>
+<h3 id="76">76. 什么是路由懒加载？</h3>
+<p><strong>答案：</strong><br>
+路由懒加载是按需加载页面组件，从而减少首屏包体积。</p>
+<h3 id="77-pinia">77. Pinia 是什么？</h3>
+<p><strong>答案：</strong><br>
+Pinia 是 Vue 官方推荐的状态管理库，设计更简洁，TypeScript 支持也更友好。</p>
+<h3 id="78-pinia-vuex">78. Pinia 相比 Vuex 有什么优势？</h3>
+<p><strong>答案：</strong><br>
+Pinia API 更简单、模块天然独立、类型推导更好，不再强制使用 mutation。</p>
+<h3 id="79-pinia-stategettersactions">79. Pinia 中的 <code>state</code>、<code>getters</code>、<code>actions</code> 分别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>state</code> 表示状态，<code>getters</code> 表示派生状态，<code>actions</code> 表示更新状态和封装业务逻辑的方法。</p>
+<h3 id="80">80. 什么时候不需要状态管理库？</h3>
+<p><strong>答案：</strong><br>
+当状态只在单个组件或少量父子组件间使用时，本地状态和 props/emit 通常就足够。</p>
+<h2 id="_5">性能优化与工程化</h2>
+<h3 id="81-vue">81. Vue 中常见性能优化手段有哪些？</h3>
+<p><strong>答案：</strong><br>
+包括组件拆分、稳定 <code>key</code>、懒加载、合理使用 <code>computed</code>、减少深度监听和列表虚拟化等。</p>
+<h3 id="82">82. 为什么不要在模板里写复杂表达式？</h3>
+<p><strong>答案：</strong><br>
+复杂表达式会降低可读性，也可能在每次渲染时重复计算，影响维护和性能。</p>
+<h3 id="83">83. 什么是异步组件？</h3>
+<p><strong>答案：</strong><br>
+异步组件是按需动态加载的组件，适合大组件或低频页面场景。</p>
+<h3 id="84-dom">84. 什么是虚拟 DOM？</h3>
+<p><strong>答案：</strong><br>
+虚拟 DOM 是对真实 DOM 的 JavaScript 抽象，框架通过比较新旧虚拟 DOM 来优化更新。</p>
+<h3 id="85-vue">85. Vue 中长列表如何优化？</h3>
+<p><strong>答案：</strong><br>
+可以使用分页、虚拟列表、懒渲染和减少单项组件复杂度等方式优化。</p>
+<h3 id="86-key">86. 为什么 <code>key</code> 不建议用数组索引？</h3>
+<p><strong>答案：</strong><br>
+因为列表顺序变化时会导致错误复用节点，可能出现状态错乱。</p>
+<h3 id="87">87. 什么是防抖和节流？</h3>
+<p><strong>答案：</strong><br>
+防抖是高频触发后只执行最后一次，节流是在一定时间内最多执行一次。</p>
+<h3 id="88-vue">88. Vue 项目中常见的打包工具有哪些？</h3>
+<p><strong>答案：</strong><br>
+当前主流是 Vite，历史上也常见 Webpack。</p>
+<h3 id="89-vue-3-vite">89. 为什么 Vue 3 项目常用 Vite？</h3>
+<p><strong>答案：</strong><br>
+因为 Vite 启动快、热更新快、配置更轻量，开发体验更好。</p>
+<h3 id="90-tree-shaking">90. 什么是 Tree Shaking？</h3>
+<p><strong>答案：</strong><br>
+Tree Shaking 是构建时删除未使用代码的优化手段，有助于减小打包体积。</p>
+<h3 id="91-ssr">91. 什么是 SSR？</h3>
+<p><strong>答案：</strong><br>
+SSR 是服务端先渲染 HTML 再返回给浏览器，有助于首屏速度和 SEO。</p>
+<h3 id="92-hydration">92. 什么是 Hydration？</h3>
+<p><strong>答案：</strong><br>
+Hydration 是客户端把交互能力挂载到服务端渲染结果上的过程。</p>
+<h3 id="93-suspense">93. 什么是 <code>&lt;Suspense&gt;</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>&lt;Suspense&gt;</code> 用于在异步依赖尚未就绪时展示占位内容，改善异步组件体验。</p>
+<h3 id="94-vue">94. Vue 中如何做权限控制？</h3>
+<p><strong>答案：</strong><br>
+通常结合路由守卫、角色信息、菜单配置和按钮级权限指令实现。</p>
+<h3 id="95">95. 什么是自定义指令？</h3>
+<p><strong>答案：</strong><br>
+自定义指令用于封装底层 DOM 操作行为，如聚焦、权限隐藏和拖拽。</p>
+<h3 id="96">96. 什么时候适合写自定义指令？</h3>
+<p><strong>答案：</strong><br>
+当你需要复用面向 DOM 的底层行为，而不是单纯的业务逻辑时适合使用。</p>
+<h3 id="97-vue">97. Vue 中常见反模式有哪些？</h3>
+<p><strong>答案：</strong><br>
+包括直接修改 props、滥用深度监听、事件总线泛滥、模板过重和组件职责过大等。</p>
+<h3 id="98-api">98. 为什么说组件设计比框架 API 更重要？</h3>
+<p><strong>答案：</strong><br>
+因为真正决定可维护性的往往是组件职责划分、状态边界和通信方式，而不只是语法本身。</p>
+<h3 id="99-vue">99. 面试中如何系统回答 Vue 问题？</h3>
+<p><strong>答案：</strong><br>
+可以按概念、原理、使用场景、优缺点和性能注意点几个层次来组织答案。</p>
+<h3 id="100-vue">100. 如何总结 Vue 的核心价值？</h3>
+<p><strong>答案：</strong><br>
+Vue 的核心价值是以较低学习成本提供高效、清晰、可扩展的前端开发体验，适合从简单页面到复杂应用的多种场景。</p>
+<h2 id="_6">进阶特性</h2>
+<h3 id="101-toref-torefs">101. 什么是 <code>toRef</code> 和 <code>toRefs</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>toRef</code> 为响应式对象的某个属性创建一个保持响应性的 ref，修改该 ref 会同步到原对象；<code>toRefs</code> 把整个响应式对象的所有属性都转成 ref 对象。常用于解构 <code>reactive</code> 对象后仍保持响应性，如 <code>const { name, age } = toRefs(state)</code>，避免解构后失去响应。</p>
+<h3 id="102-teleport">102. 什么是 <code>Teleport</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>&lt;Teleport to="body"&gt;</code> 可以把组件的 DOM 渲染到指定目标节点，但组件仍保留在当前组件树的逻辑位置（props、context 不变）。常用于弹窗、Toast、抽屉等浮层，避免因 <code>overflow: hidden</code> 或 <code>z-index</code> 层叠上下文带来的显示问题。</p>
+<h3 id="103-defineprops-defineemits-script-setup">103. <code>defineProps</code> 和 <code>defineEmits</code> 在 <code>&lt;script setup&gt;</code> 中如何使用？</h3>
+<p><strong>答案：</strong><br>
+在 <code>&lt;script setup&gt;</code> 中，两者都是编译器宏，无需 import。<code>defineProps&lt;{ title: string }&gt;()</code> 声明接收的 props 类型；<code>defineEmits&lt;{ (e: 'change', value: string): void }&gt;()</code> 声明触发的事件。返回值分别是 props 对象和 emit 函数，TypeScript 泛型写法能提供完整的类型推导。</p>
+<h3 id="104-transition-transitiongroup">104. 什么是 <code>&lt;Transition&gt;</code> 和 <code>&lt;TransitionGroup&gt;</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>&lt;Transition&gt;</code> 用于单个元素/组件进入或离开时的过渡效果，通过自动添加 <code>-enter-active</code>、<code>-leave-to</code> 等 CSS 类名与动画配合；<code>&lt;TransitionGroup&gt;</code> 用于列表元素的增删过渡，支持 <code>v-move</code> 实现 FLIP 动画。两者也支持 JavaScript 钩子实现精细控制。</p>
+<h3 id="105-v-model-vue-3">105. <code>v-model</code> 在 Vue 3 中有哪些变化？</h3>
+<p><strong>答案：</strong><br>
+Vue 3 中 <code>v-model</code> 默认 prop 从 <code>value</code> 改为 <code>modelValue</code>，事件从 <code>input</code> 改为 <code>update:modelValue</code>；支持自定义参数名 <code>v-model:title</code>；支持多个 <code>v-model</code>（<code>v-model:title</code> + <code>v-model:content</code>）替代 Vue 2 的 <code>.sync</code> 修饰符，语义更统一。</p>
+<h3 id="106-defineexpose">106. 什么是 <code>defineExpose</code>？</h3>
+<p><strong>答案：</strong><br>
+在 <code>&lt;script setup&gt;</code> 中，组件内部所有变量默认不对外暴露。<code>defineExpose({ method, data })</code> 用于显式声明父组件通过 <code>ref</code> 可访问的属性和方法，提供精确的封装控制，相当于 Options API 中手动 <code>return</code> 的作用。</p>
+<h3 id="107-vue-3-markraw">107. Vue 3 中 <code>markRaw</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>markRaw</code> 标记一个对象，使其永远不被 Vue 转换为响应式代理。适合第三方库实例（如地图、图表实例）或不需要响应式追踪的大型对象，避免 Proxy 包装带来的性能开销和意外副作用。</p>
+<h3 id="108-vue-3-appuse">108. 什么是 Vue 3 的 <code>app.use</code> 和插件机制？</h3>
+<p><strong>答案：</strong><br>
+<code>app.use(plugin)</code> 安装插件，插件可以是有 <code>install</code> 方法的对象或函数。插件通常用于：注册全局组件、添加全局指令、通过 <code>provide</code> 注入全局服务、挂载 <code>app.config.globalProperties</code>。常见插件有 Vue Router、Pinia、Element Plus 等。</p>
+<h3 id="109-vue-3-vue-2">109. Vue 3 相比 Vue 2 在性能上有哪些提升？</h3>
+<p><strong>答案：</strong><br>
+① 响应式系统用 <code>Proxy</code> 替代 <code>Object.defineProperty</code>，支持数组索引和属性新增监听，无需 <code>Vue.set</code>；② 编译器优化：静态节点提升（hoisting）、Block Tree 跳过静态子树；③ 更好的 Tree Shaking，未使用的内置功能不会打包；④ <code>Fragment</code>、<code>Teleport</code>、<code>Suspense</code> 等新能力；⑤ 更小的核心体积。</p>
+<h3 id="110-vue-watcheffect-vs-watch">110. 什么是 Vue 的 <code>watchEffect</code> vs <code>watch</code> 的最佳实践选择？</h3>
+<p><strong>答案：</strong><br>
+<code>watchEffect</code> 适合：自动追踪依赖、逻辑和依赖紧耦合、立即执行的场景，代码更简洁。<code>watch</code> 适合：需要访问变化前后的值（<code>oldVal</code>、<code>newVal</code>）、精确控制监听来源、避免首次执行的场景，控制更精确。两者都支持 <code>onCleanup</code> 做副作用清理。</p>
+<h2 id="_7">总结</h2>
+<p>这些题目覆盖了 Vue 的基础语法、响应式原理、组件通信、生命周期、路由、状态管理、性能优化与工程实践，以及 Vue 3 进阶特性，适合作为系统化面试复习资料。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-vue-qa.md</div>
+</div>
 </body>
 </html>

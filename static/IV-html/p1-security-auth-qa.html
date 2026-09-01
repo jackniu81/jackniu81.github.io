@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安全与鉴权 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>安全与鉴权</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="_1">安全与认证 常见面试题（附答案）</h1>
+<h2 id="_2">认证与授权基础</h2>
+<h3 id="1-authenticationauthorization">1. 认证（Authentication）和授权（Authorization）的区别？</h3>
+<p><strong>答案：</strong><br>
+- <strong>认证（AuthN）</strong>：验证"你是谁"，如用户名+密码登录、指纹识别<br>
+- <strong>授权（AuthZ）</strong>：验证"你能做什么"，如检查用户是否有管理员权限</p>
+<p>流程：先认证（确定身份），再授权（检查权限）。常见错误：将二者混淆，403 Forbidden 是授权失败，401 Unauthorized 是认证失败（未登录或 Token 无效）。</p>
+<h3 id="2-cookie-session-token">2. Cookie-Session 和 Token 认证的区别？</h3>
+<p><strong>答案：</strong><br>
+| 维度 | Cookie-Session | Token（JWT） |<br>
+|------|---------------|-------------|<br>
+| <strong>存储</strong> | Session 存服务端，Cookie 存 SessionId | Token 存客户端（localStorage/Cookie） |<br>
+| <strong>扩展性</strong> | 多实例需共享 Session 存储（Redis） | 无状态，天然支持水平扩展 |<br>
+| <strong>安全性</strong> | SessionId 被盗可通过服务端失效 | Token 被盗无法主动失效（除非加黑名单） |<br>
+| <strong>跨域</strong> | Cookie 跨域受限 | 请求头 Bearer Token，跨域友好 |<br>
+| <strong>适用</strong> | 传统 Web、对安全要求高 | SPA、移动端、微服务 |</p>
+<h2 id="jwt">JWT</h2>
+<h3 id="3-jwt">3. JWT 的结构是什么？如何工作？</h3>
+<p><strong>答案：</strong><br>
+JWT（JSON Web Token）由三部分组成，<code>.</code> 分隔：</p>
+<pre><code>Header.Payload.Signature
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJleHAiOjE3MDAwMDB9.abc123
+</code></pre>
+<ul>
+<li><strong>Header</strong>：算法和类型（<code>{"alg":"HS256","typ":"JWT"}</code>），Base64URL 编码</li>
+<li><strong>Payload</strong>：声明（Claims），如 <code>sub</code>（用户ID）、<code>exp</code>（过期时间）、自定义字段，Base64URL 编码（<strong>非加密，可被解码</strong>）</li>
+<li><strong>Signature</strong>：<code>HMAC(Header + "." + Payload, 密钥)</code> 防止篡改</li>
+</ul>
+<p>工作流程：登录 → 服务端生成 JWT → 客户端存储 → 每次请求携带（<code>Authorization: Bearer &lt;token&gt;</code>） → 服务端验证签名</p>
+<h3 id="4-jwt">4. JWT 的优势和劣势？</h3>
+<p><strong>答案：</strong><br>
+<strong>优势</strong>：<br>
+- 无状态，服务端不存储，天然支持水平扩展<br>
+- 跨域友好（请求头传递）<br>
+- Payload 携带信息，减少数据库查询<br>
+- 跨服务共享（多个服务用同一密钥验证）</p>
+<p><strong>劣势</strong>：<br>
+- <strong>无法主动失效</strong>：Token 发出后到过期前无法撤销（用户改密码、注销后旧 Token 仍有效）<br>
+- <strong>体积较大</strong>：比 SessionId 大<br>
+- <strong>密钥泄露</strong>：所有 Token 失效，需轮换密钥</p>
+<h3 id="5-jwt">5. 如何解决 JWT 无法主动失效的问题？</h3>
+<p><strong>答案：</strong><br>
+- <strong>Token 黑名单</strong>：注销时将 Token 存入 Redis 黑名单（jti 声明），验证时检查黑名单（引入服务端状态）<br>
+- <strong>短过期时间 + 刷新 Token</strong>：Access Token 5-15 分钟过期，Refresh Token 长期有效，过期后用 Refresh Token 换新 Access Token；安全问题时撤销 Refresh Token<br>
+- <strong>版本号（Token Version）</strong>：用户改密码时递增版本号，Token 中携带版本号，不一致则拒绝（需数据库查询）</p>
+<h3 id="6-access-token-refresh-token">6. Access Token 和 Refresh Token 的区别？</h3>
+<p><strong>答案：</strong><br>
+- <strong>Access Token</strong>：短期有效（分钟级），用于访问 API，存在内存（不存 localStorage，防 XSS）<br>
+- <strong>Refresh Token</strong>：长期有效（天/周级），只用于换取新 Access Token，存 HttpOnly Cookie（防 XSS）</p>
+<p>Refresh Token 轮换：每次使用 Refresh Token 换 Access Token 时，同时颁发新的 Refresh Token，旧的失效（检测令牌重用攻击）。</p>
+<h2 id="oauth2-oidc">OAuth2 与 OIDC</h2>
+<h3 id="7-oauth2">7. 什么是 OAuth2？解决什么问题？</h3>
+<p><strong>答案：</strong><br>
+OAuth2 是授权框架，解决"第三方应用代表用户访问受保护资源"的问题，<strong>不涉及用户认证</strong>（只是授权）。</p>
+<p>场景：使用微信登录某 APP，APP 不需要知道你的微信密码，只需要微信授权访问你的头像和昵称。</p>
+<p>四个角色：<br>
+- <strong>Resource Owner（资源所有者）</strong>：用户<br>
+- <strong>Client（客户端）</strong>：第三方 APP<br>
+- <strong>Authorization Server（授权服务器）</strong>：颁发 Token（如微信授权服务器）<br>
+- <strong>Resource Server（资源服务器）</strong>：提供受保护资源（如微信 API）</p>
+<h3 id="8-oauth2">8. OAuth2 的四种授权模式？</h3>
+<p><strong>答案：</strong><br>
+- <strong>Authorization Code（授权码模式）</strong>：最安全，适合有服务端的 Web 应用。用户授权后，客户端获得授权码，再用授权码换 Token（Token 不经过浏览器）<br>
+- <strong>Authorization Code + PKCE</strong>：授权码+代码挑战，适合 SPA 和移动端（无服务端）<br>
+- <strong>Client Credentials（客户端凭证）</strong>：机器对机器（M2M），如后端服务调用 API，无用户参与<br>
+- <strong>Device Code（设备码）</strong>：适合无浏览器设备（智能电视、CLI 工具）</p>
+<p>⚠️ <strong>Implicit（隐式模式）已废弃</strong>，Token 直接返回给浏览器不安全，用 PKCE 替代。</p>
+<h3 id="9-oidc-oauth2">9. 什么是 OIDC？与 OAuth2 的关系？</h3>
+<p><strong>答案：</strong><br>
+OIDC（OpenID Connect）是基于 OAuth2 的认证层，在 OAuth2 授权的基础上增加了<strong>用户身份认证</strong>。</p>
+<p>区别：OAuth2 解决<strong>授权</strong>（能做什么），OIDC 解决<strong>认证</strong>（你是谁）。</p>
+<p>OIDC 在 OAuth2 基础上新增：<br>
+- <strong>ID Token</strong>：JWT 格式，包含用户身份信息（sub、name、email 等）<br>
+- <strong>UserInfo 端点</strong>：获取更多用户信息<br>
+- <strong>标准 Claims</strong>：统一用户信息字段</p>
+<p>常见提供商：Google、Apple、Microsoft（Azure AD）、Keycloak、Auth0</p>
+<h2 id="web">常见 Web 攻击与防御</h2>
+<h3 id="10-xss">10. 什么是 XSS（跨站脚本攻击）？如何防御？</h3>
+<p><strong>答案：</strong><br>
+XSS 攻击者向网页注入恶意 JS，在用户浏览器中执行，窃取 Cookie、伪造请求。</p>
+<p>三种类型：<br>
+- <strong>存储型</strong>：恶意脚本存入数据库，所有用户看到时触发（最危险）<br>
+- <strong>反射型</strong>：恶意脚本在 URL 参数中，点击链接触发<br>
+- <strong>DOM型</strong>：前端 JS 不安全操作 DOM（如 <code>innerHTML = location.hash</code>）</p>
+<p>防御：<br>
+- <strong>输出编码</strong>：HTML 输出时转义特殊字符（<code>&lt;</code> → <code>&amp;lt;</code>），使用模板引擎（React JSX 默认转义）<br>
+- <strong>禁止 innerHTML</strong>：改用 <code>textContent</code>，必须使用时用 DOMPurify 清洗<br>
+- <strong>HttpOnly Cookie</strong>：防止 JS 读取 Cookie<br>
+- <strong>CSP（内容安全策略）</strong>：限制可执行的脚本来源<br>
+- <strong>输入验证</strong>：服务端过滤危险标签</p>
+<h3 id="11-csrf">11. 什么是 CSRF（跨站请求伪造）？如何防御？</h3>
+<p><strong>答案：</strong><br>
+CSRF 攻击者诱导用户访问恶意页面，该页面自动发送携带用户 Cookie 的请求（浏览器自动带 Cookie），冒充用户操作。</p>
+<pre><code class="language-html">&lt;!-- 攻击者的恶意页面 --&gt;
+&lt;img src=&quot;https://bank.com/transfer?to=attacker&amp;amount=1000&quot;&gt;
+</code></pre>
+<p>防御：<br>
+- <strong>CSRF Token</strong>：服务端生成随机 Token 放入表单/请求头，服务端验证（Cookie 无法跨域读取，但 CSRF Token 在请求体/Header 中）<br>
+- <strong>SameSite Cookie</strong>：<code>SameSite=Strict/Lax</code> 阻止跨站 Cookie 发送（现代浏览器默认 Lax）<br>
+- <strong>Origin/Referer 检查</strong>：服务端验证请求来源域名<br>
+- <strong>双重 Cookie 验证</strong>：请求同时携带 Cookie 和请求参数中的 Token（跨域无法读 Cookie）</p>
+<h3 id="12-sql">12. 什么是 SQL 注入？如何防御？</h3>
+<p><strong>答案：</strong><br>
+攻击者在输入中注入 SQL 语句片段，改变查询逻辑。</p>
+<pre><code class="language-sql">-- 攻击输入: ' OR '1'='1
+SELECT * FROM users WHERE name = '' OR '1'='1' -- 返回所有用户
+</code></pre>
+<p>防御：<br>
+- <strong>参数化查询（Parameterized Query）</strong>：使用 <code>?</code> 占位符，ORM 默认处理（最有效）<br>
+<code>csharp
+  cmd.CommandText = "SELECT * FROM users WHERE id = @id";
+  cmd.Parameters.Add("@id", userId);</code><br>
+- <strong>ORM</strong>：EF Core、Sequelize 等默认参数化<br>
+- <strong>输入验证</strong>：类型检查、长度限制<br>
+- <strong>最小权限原则</strong>：DB 账号只授予必要权限（不用 root）</p>
+<h3 id="13-clickjacking">13. 什么是点击劫持（Clickjacking）？如何防御？</h3>
+<p><strong>答案：</strong><br>
+攻击者将目标网站用透明 iframe 嵌入，诱导用户点击看不见的按钮（如"确认转账"）。</p>
+<p>防御：<br>
+- <strong>X-Frame-Options 响应头</strong>：<code>DENY</code>（禁止嵌入）或 <code>SAMEORIGIN</code>（只允许同源嵌入）<br>
+- <strong>CSP frame-ancestors</strong>：<code>Content-Security-Policy: frame-ancestors 'none'</code>（更现代的方式）</p>
+<h3 id="14-supply-chain-attack">14. 什么是供应链攻击（Supply Chain Attack）？前端如何防御？</h3>
+<p><strong>答案：</strong><br>
+攻击者通过污染 npm 包、CDN 资源等依赖链，将恶意代码注入到目标项目中。典型案例：<code>event-stream</code> 包被劫持、<code>colors.js</code> 恶意更新。</p>
+<p>防御：<br>
+- <strong>锁定版本</strong>：使用 <code>package-lock.json</code>/<code>pnpm-lock.yaml</code> 锁定精确版本<br>
+- <strong>npm audit</strong>：定期检查已知漏洞（<code>npm audit</code>）<br>
+- <strong>Subresource Integrity（SRI）</strong>：CDN 资源加 <code>integrity</code> 哈希校验<br>
+  ```html<br>
+<br>
+<script src="https://cdn.com/lib.js" integrity="sha256-xxx" crossorigin="anonymous"></script></p>
+<p><code>``
+- **最小权限**：只安装必要依赖，减少攻击面
+- **依赖扫描**：CI 中集成</code>snyk<code>、</code>dependabot` 自动检测漏洞</p>
+<h2 id="https-tls">HTTPS 与 TLS</h2>
+<h3 id="15-https">15. HTTPS 的工作原理？</h3>
+<p><strong>答案：</strong><br>
+HTTPS = HTTP + TLS 加密。核心步骤：<br>
+1. <strong>握手阶段</strong>：协商加密算法、交换密钥（非对称加密）<br>
+2. <strong>数据传输</strong>：使用握手协商的对称密钥加密数据（对称加密速度快）<br>
+3. <strong>证书验证</strong>：验证服务器证书是否由可信 CA 颁发（防中间人攻击）</p>
+<h3 id="16-tls">16. TLS 握手流程？</h3>
+<p><strong>答案：</strong><br>
+TLS 1.3 握手（简化版，只需 1-RTT）：<br>
+1. 客户端发送支持的加密套件、随机数、密钥协商参数<br>
+2. 服务端选择加密套件、发送证书、返回密钥协商参数<br>
+3. 客户端验证证书，双方根据密钥协商参数计算出对称密钥<br>
+4. 之后用对称密钥加密传输</p>
+<p>TLS 1.3 相比 1.2：减少了一次 RTT、移除了不安全算法、支持 0-RTT 恢复会话。</p>
+<h3 id="17-http">17. HTTP 常见安全响应头有哪些？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-http"># 强制 HTTPS（1年内不允许 HTTP 访问）
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# 防 XSS（现代浏览器用 CSP 替代）
+X-XSS-Protection: 1; mode=block
+
+# 防点击劫持
+X-Frame-Options: DENY
+
+# 防 MIME 嗅探
+X-Content-Type-Options: nosniff
+
+# 内容安全策略
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-xxx'
+
+# 控制 Referrer 信息
+Referrer-Policy: strict-origin-when-cross-origin
+</code></pre>
+<h2 id="_3">密码安全</h2>
+<h3 id="18">18. 密码如何安全存储？</h3>
+<p><strong>答案：</strong><br>
+<strong>绝对不能</strong>：明文存储、MD5/SHA1 哈希（可被彩虹表破解）、自研加密算法</p>
+<p>正确做法：使用<strong>慢哈希算法 + 盐</strong>：<br>
+- <strong>bcrypt</strong>：内置盐，工作因子可调（推荐，前端/Node.js）<br>
+- <strong>Argon2</strong>：内存密集型，最安全，抗 GPU 破解（推荐，2019年后新项目）<br>
+- <strong>PBKDF2</strong>：FIPS 认证，合规场景</p>
+<pre><code class="language-csharp">// C# BCrypt
+string hash = BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
+bool valid = BCrypt.Net.BCrypt.Verify(password, hash);
+</code></pre>
+<h3 id="19">19. 什么是彩虹表攻击？加盐如何防御？</h3>
+<p><strong>答案：</strong><br>
+彩虹表是预计算的哈希表（密码→哈希值），可快速反查哈希对应的明文。</p>
+<p><strong>加盐（Salt）</strong>：在密码哈希前拼接一段随机字符串，使相同密码产生不同哈希，使彩虹表失效（bcrypt/Argon2 自动处理加盐）。</p>
+<pre><code>bcrypt(&quot;password123&quot;, salt=&quot;abc&quot;) = &quot;$2b$12$abc...hash1&quot;
+bcrypt(&quot;password123&quot;, salt=&quot;xyz&quot;) = &quot;$2b$12$xyz...hash2&quot;  // 相同密码，不同哈希
+</code></pre>
+<h2 id="api">API 安全</h2>
+<h3 id="20-rate-limiting">20. 什么是速率限制（Rate Limiting）？如何实现？</h3>
+<p><strong>答案：</strong><br>
+限制单位时间内的请求次数，防止暴力破解、DDoS、爬虫。常见算法：<br>
+- <strong>固定窗口</strong>：每分钟最多 100 次，简单但有边界突破问题<br>
+- <strong>滑动窗口</strong>：基于 Redis 有序集合实现，平滑限流<br>
+- <strong>令牌桶</strong>：以固定速率填充令牌，突发流量可消耗积累的令牌（推荐）<br>
+- <strong>漏桶</strong>：严格匀速，不允许突发</p>
+<p>ASP.NET Core 8+ 内置 Rate Limiting：</p>
+<pre><code class="language-csharp">builder.Services.AddRateLimiter(options =&gt; {
+    options.AddFixedWindowLimiter(&quot;api&quot;, o =&gt; {
+        o.PermitLimit = 100;
+        o.Window = TimeSpan.FromMinutes(1);
+    });
+});
+</code></pre>
+<h3 id="21-cors">21. 什么是 CORS？如何正确配置？</h3>
+<p><strong>答案：</strong><br>
+CORS（跨源资源共享）是浏览器安全策略，阻止不同源的 JS 请求。</p>
+<p>正确配置原则（避免常见错误）：</p>
+<pre><code class="language-csharp">// ❌ 错误：生产环境允许所有来源 + 携带凭证
+app.UseCors(x =&gt; x.AllowAnyOrigin().AllowCredentials()); // 不合法，浏览器会报错
+
+// ✅ 正确：明确指定允许来源
+builder.Services.AddCors(options =&gt; {
+    options.AddPolicy(&quot;production&quot;, policy =&gt; {
+        policy.WithOrigins(&quot;https://app.example.com&quot;)
+              .AllowCredentials()
+              .WithMethods(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;)
+              .WithHeaders(&quot;Authorization&quot;, &quot;Content-Type&quot;);
+    });
+});
+</code></pre>
+<p>注意：<code>AllowAnyOrigin()</code> 和 <code>AllowCredentials()</code> 不能同时使用（浏览器安全限制）。</p>
+<h3 id="22-csp">22. 什么是 CSP（内容安全策略）？</h3>
+<p><strong>答案：</strong><br>
+CSP 通过 HTTP 响应头限制页面可加载的资源来源，有效防御 XSS：</p>
+<pre><code class="language-http">Content-Security-Policy:
+  default-src 'self';                 # 默认只允许同源
+  script-src 'self' 'nonce-abc123';  # 脚本只允许同源和带 nonce 的内联
+  style-src 'self' https://fonts.googleapis.com;
+  img-src 'self' data: https:;
+  connect-src 'self' https://api.example.com;
+  frame-ancestors 'none';             # 禁止被嵌入
+</code></pre>
+<p><code>nonce</code>：每次请求生成随机值，内联脚本需携带正确 <code>nonce</code> 才能执行，防止注入的内联脚本运行。</p>
+<h2 id="net">.NET 安全实践</h2>
+<h3 id="23-aspnet-core-jwt">23. ASP.NET Core 中如何实现 JWT 认证？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-csharp">// Program.cs
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =&gt; {
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = config[&quot;Jwt:Issuer&quot;],
+            ValidAudience = config[&quot;Jwt:Audience&quot;],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(config[&quot;Jwt:Key&quot;]!))
+        };
+    });
+
+// Controller
+[Authorize]
+[HttpGet(&quot;profile&quot;)]
+public IActionResult GetProfile() {
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    return Ok(userId);
+}
+</code></pre>
+<h3 id="24-aspnet-core">24. ASP.NET Core 中如何实现基于角色/策略的授权？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-csharp">// 角色授权
+[Authorize(Roles = &quot;Admin,Manager&quot;)]
+public IActionResult AdminAction() { ... }
+
+// 策略授权（更灵活）
+builder.Services.AddAuthorization(options =&gt; {
+    options.AddPolicy(&quot;RequireAdmin&quot;, policy =&gt;
+        policy.RequireRole(&quot;Admin&quot;).RequireClaim(&quot;department&quot;, &quot;IT&quot;));
+
+    options.AddPolicy(&quot;MinAge18&quot;, policy =&gt;
+        policy.Requirements.Add(new MinAgeRequirement(18)));
+});
+
+// 自定义需求
+public class MinAgeHandler : AuthorizationHandler&lt;MinAgeRequirement&gt; {
+    protected override Task HandleRequirementAsync(
+        AuthorizationHandlerContext ctx, MinAgeRequirement req) {
+        var birthDate = ctx.User.FindFirst(&quot;birthdate&quot;);
+        if (birthDate != null &amp;&amp; CalculateAge(birthDate.Value) &gt;= req.MinAge)
+            ctx.Succeed(req);
+        return Task.CompletedTask;
+    }
+}
+</code></pre>
+<h3 id="25-token">25. 前端如何安全存储 Token？</h3>
+<p><strong>答案：</strong><br>
+| 存储位置 | XSS 风险 | CSRF 风险 | 推荐场景 |<br>
+|---------|---------|---------|---------|<br>
+| <strong>localStorage</strong> | ❌ 高（JS 可读） | ✅ 无（需手动添加 Header） | 不推荐 |<br>
+| <strong>sessionStorage</strong> | ❌ 高（JS 可读） | ✅ 无 | 不推荐 |<br>
+| <strong>Cookie（HttpOnly）</strong> | ✅ 安全（JS 不可读） | ❌ 有（需加 SameSite） | ✅ 推荐 |<br>
+| <strong>内存（变量）</strong> | ✅ 安全（刷新消失） | ✅ 无 | Access Token 推荐 |</p>
+<p><strong>最佳实践</strong>：<br>
+- Access Token → 内存变量（<code>useState</code>）<br>
+- Refresh Token → <code>HttpOnly</code> + <code>SameSite=Strict</code> Cookie<br>
+- 页面刷新时用 Refresh Token 换取新 Access Token</p>
+<h2 id="_4">总结</h2>
+<p>这些题目覆盖了认证（Session/JWT/OAuth2/OIDC）、常见攻击（XSS/CSRF/SQL 注入/供应链）、HTTPS/TLS、密码安全、API 安全（限流/CORS/CSP）以及 .NET 安全实践，适合前后端安全方向面试系统复习。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-security-auth-qa.md</div>
+</div>
+</body>
+</html>

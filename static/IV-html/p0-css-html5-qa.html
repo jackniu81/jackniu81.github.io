@@ -1,413 +1,508 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p0 css html5 qa</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS & HTML5 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e74c3c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e74c3c;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>CSS / HTML5 常见面试题 100 道（附答案）</h1>
-<h2>HTML5 基础</h2>
-<h3>1. 什么是 HTML？</h3>
-<p><strong>答案：</strong>
-HTML 是超文本标记语言，用于定义网页的结构和语义。</p>
-<h3>2. 什么是 HTML5？</h3>
-<p><strong>答案：</strong>
-HTML5 是 HTML 的现代标准版本，增强了语义化、多媒体、表单和 Web API 能力。</p>
-<h3>3. 为什么要强调语义化标签？</h3>
-<p><strong>答案：</strong>
-语义化有助于提升可读性、可维护性、SEO 和无障碍访问能力。</p>
-<h3>4. 常见语义化标签有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>header</code>、<code>nav</code>、<code>main</code>、<code>section</code>、<code>article</code>、<code>aside</code>、<code>footer</code> 等。</p>
-<h3>5. <code>div</code> 和语义化标签的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>div</code> 只有结构作用，语义化标签还表达内容含义和页面角色。</p>
-<h3>6. 什么是块级元素和行内元素？</h3>
-<p><strong>答案：</strong>
-块级元素通常独占一行，行内元素通常不会独占一行，只包裹内容本身。</p>
-<h3>7. <code>img</code> 标签的 <code>alt</code> 属性有什么作用？</h3>
-<p><strong>答案：</strong>
-<code>alt</code> 用于图片无法显示时提供替代文本，也有助于无障碍和搜索引擎理解内容。</p>
-<h3>8. <code>meta viewport</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-它用于控制移动端页面视口宽度和缩放行为，是响应式布局基础配置之一。</p>
-<h3>9. <code>defer</code> 和 <code>async</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-两者都能异步下载脚本；<code>async</code> 下载完立即执行，顺序不可控；<code>defer</code> 会按顺序在 DOM 解析完成后执行。</p>
-<h3>10. 什么是无障碍访问？</h3>
-<p><strong>答案：</strong>
-无障碍访问是让残障用户也能顺畅使用网页，包括语义标签、键盘操作、对比度和屏幕阅读器支持等。</p>
-<h3>11. HTML5 新增了哪些表单能力？</h3>
-<p><strong>答案：</strong>
-新增了更多输入类型、占位符、校验属性和更好的移动端适配能力。</p>
-<h3>12. 常见 HTML5 输入类型有哪些？</h3>
-<p><strong>答案：</strong>
-如 <code>email</code>、<code>number</code>、<code>date</code>、<code>url</code>、<code>tel</code>、<code>range</code> 等。</p>
-<h3>13. <code>label</code> 标签为什么重要？</h3>
-<p><strong>答案：</strong>
-它能提升表单可用性和无障碍体验，点击标签即可聚焦关联控件。</p>
-<h3>14. <code>canvas</code> 和 <code>svg</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>canvas</code> 更适合像素级绘制和高频渲染；<code>svg</code> 更适合矢量图形和结构化图形场景。</p>
-<h3>15. <code>audio</code> 和 <code>video</code> 标签带来了什么？</h3>
-<p><strong>答案：</strong>
-它们让网页可以原生嵌入音视频，而不必依赖传统插件。</p>
-<h3>16. 什么是自定义数据属性？</h3>
-<p><strong>答案：</strong>
-自定义数据属性以 <code>data-</code> 开头，可用于在 DOM 上存储扩展信息。</p>
-<h3>17. <code>localStorage</code> 和 <code>sessionStorage</code> 属于 HTML5 哪类能力？</h3>
-<p><strong>答案：</strong>
-它们属于 Web Storage 本地存储能力。</p>
-<h3>18. 什么是拖拽 API？</h3>
-<p><strong>答案：</strong>
-HTML5 提供了拖拽相关事件和数据传递机制，用于实现元素拖放交互。</p>
-<h3>19. 什么是 Web Worker？</h3>
-<p><strong>答案：</strong>
-Web Worker 允许在后台线程执行脚本，避免阻塞主线程 UI。</p>
-<h3>20. 什么是 WebSocket？</h3>
-<p><strong>答案：</strong>
-WebSocket 提供浏览器与服务器之间的全双工长连接通信能力。</p>
-<h2>CSS 基础</h2>
-<h3>21. CSS 是什么？</h3>
-<p><strong>答案：</strong>
-CSS 是层叠样式表，用于控制网页的外观、布局和视觉表现。</p>
-<h3>22. CSS 的引入方式有哪些？</h3>
-<p><strong>答案：</strong>
-常见有行内样式、内部样式表和外部样式表，实际项目中多使用外部样式表。</p>
-<h3>23. 什么是选择器？</h3>
-<p><strong>答案：</strong>
-选择器用于指定样式作用的元素范围，如标签、类、ID 和属性选择器等。</p>
-<h3>24. 常见选择器有哪些？</h3>
-<p><strong>答案：</strong>
-常见有标签选择器、类选择器、ID 选择器、后代选择器、伪类、伪元素等。</p>
-<h3>25. 什么是伪类？</h3>
-<p><strong>答案：</strong>
-伪类用于描述元素的特殊状态，如 <code>:hover</code>、<code>:focus</code>、<code>:nth-child()</code>。</p>
-<h3>26. 什么是伪元素？</h3>
-<p><strong>答案：</strong>
-伪元素用于选中元素内容的特殊部分，如 <code>::before</code>、<code>::after</code>。</p>
-<h3>27. CSS 优先级如何计算？</h3>
-<p><strong>答案：</strong>
-一般比较内联样式、ID、类/属性/伪类、标签/伪元素的权重，权重高者优先。</p>
-<h3>28. <code>!important</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-它会强行提高声明优先级，但不应滥用，否则会降低样式可维护性。</p>
-<h3>29. 什么是继承？</h3>
-<p><strong>答案：</strong>
-继承指某些样式属性会从父元素传递给子元素，如字体和颜色等。</p>
-<h3>30. 什么是层叠？</h3>
-<p><strong>答案：</strong>
-层叠是指多个样式规则共同作用时，浏览器根据来源、优先级和顺序决定最终结果。</p>
-<h2>盒模型与布局</h2>
-<h3>31. 什么是盒模型？</h3>
-<p><strong>答案：</strong>
-盒模型描述元素由 <code>content</code>、<code>padding</code>、<code>border</code>、<code>margin</code> 组成。</p>
-<h3>32. 标准盒模型和怪异盒模型的区别是什么？</h3>
-<p><strong>答案：</strong>
-标准盒模型中宽高只包含内容区；怪异盒模型中宽高包含内容、内边距和边框。</p>
-<h3>33. <code>box-sizing: border-box</code> 有什么好处？</h3>
-<p><strong>答案：</strong>
-它让元素宽高计算更直观，更适合实际项目布局。</p>
-<h3>34. 什么是外边距塌陷？</h3>
-<p><strong>答案：</strong>
-垂直相邻块级元素的 <code>margin</code> 可能合并为一个更大的外边距，这种现象叫塌陷。</p>
-<h3>35. 如何解决外边距塌陷？</h3>
-<p><strong>答案：</strong>
-可通过创建 BFC、设置边框、内边距或改变布局方式来解决。</p>
-<h3>36. 什么是 BFC（Block Formatting Context）</h3>
-<p><strong>答案：</strong>
-BFC 是块级格式化上下文，可用于隔离布局影响、清除浮动和避免外边距塌陷等。</p>
-<h3>37. 如何触发 BFC</h3>
-<p><strong>答案：</strong>
-常见方式有设置 <code>display: flow-root</code>、 <code>overflow: hidden</code>、<code>float</code>、<code>position: absolute</code> 等。</p>
-<h3>38. <code>display</code> 常见取值有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>block</code>、<code>inline</code>、<code>inline-block</code>、<code>none</code>、<code>flex</code>、<code>grid</code>。</p>
-<h3>39. <code>position</code> 常见取值有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>static</code>、<code>relative</code>、<code>absolute</code>、<code>fixed</code>、<code>sticky</code>。</p>
-<h3>40. <code>relative</code> 和 <code>absolute</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>relative</code> 相对自身原位置偏移；<code>absolute</code> 脱离文档流并相对最近定位祖先定位。</p>
-<h3>41. <code>fixed</code> 的特点是什么？</h3>
-<p><strong>答案：</strong>
-<code>fixed</code> 元素相对视口定位，通常不随页面滚动而移动。</p>
-<h3>42. <code>sticky</code> 是什么？</h3>
-<p><strong>答案：</strong>
-<code>sticky</code> 是粘性定位，在达到阈值前表现像普通定位，达到后像固定定位。</p>
-<h3>43. 什么是浮动？</h3>
-<p><strong>答案：</strong>
-浮动最初用于文字环绕图片，也被早期大量用于布局，但现在常被 Flex 和 Grid 替代。</p>
-<h3>44. 如何清除浮动？</h3>
-<p><strong>答案：</strong>
-常见方式有清除元素、伪元素清除和触发 BFC。</p>
-<h3>45. Flex 布局适合什么场景？</h3>
-<p><strong>答案：</strong>
-适合一维布局，如横向或纵向排列、居中对齐和分布控制。</p>
-<h3>46. Grid 布局适合什么场景？</h3>
-<p><strong>答案：</strong>
-适合二维布局，如页面区域划分、表格式模块和复杂卡片排列。</p>
-<h3>47. Flex 中 <code>justify-content</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-它控制主轴方向上项目的对齐和分布方式。</p>
-<h3>48. Flex 中 <code>align-items</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-它控制交叉轴方向上项目的整体对齐方式。</p>
-<h3>49. 如何让元素水平垂直居中？</h3>
-<p><strong>答案：</strong>
-常见方式有 Flex 居中、Grid 居中、定位加变换等，现代项目最常用 Flex。</p>
-<h3>50. <code>gap</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-<code>gap</code> 用于控制 Flex 或 Grid 子项之间的间距，比手动设边距更统一。</p>
-<h2>响应式与视觉表现</h2>
-<h3>51. 什么是响应式设计？</h3>
-<p><strong>答案：</strong>
-响应式设计是让页面在不同设备和屏幕尺寸下都能良好展示和交互。</p>
-<h3>52. 什么是媒体查询？</h3>
-<p><strong>答案：</strong>
-媒体查询允许根据屏幕宽度、方向、分辨率等条件应用不同样式。</p>
-<h3>53. <code>max-width</code> 和 <code>min-width</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>max-width</code> 常用于桌面优先向下兼容；<code>min-width</code> 常用于移动优先逐步增强。</p>
-<h3>54. 什么是移动优先？</h3>
-<p><strong>答案：</strong>
-移动优先是先为小屏设备设计基础样式，再逐步增强到更大屏幕。</p>
-<h3>55. 相对单位有哪些？</h3>
-<p><strong>答案：</strong>
-常见有 <code>%</code>、<code>em</code>、<code>rem</code>、<code>vw</code>、<code>vh</code> 等。</p>
-<h3>56. <code>em</code> 和 <code>rem</code> 的区别是什么？</h3>
-<p><strong>答案：</strong>
-<code>em</code> 相对当前元素字体大小，<code>rem</code> 相对根元素字体大小。</p>
-<h3>57. <code>vw</code> 和 <code>vh</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-它们分别相对视口宽度和高度，常用于全屏布局和响应式尺寸控制。</p>
-<h3>58. 什么是 CSS 变量？</h3>
-<p><strong>答案：</strong>
-CSS 变量通过 <code>--name</code> 定义，可复用主题值、间距、颜色等设计令牌。</p>
-<h3>59. <code>calc()</code> 的作用是什么？</h3>
-<p><strong>答案：</strong>
-<code>calc()</code> 用于在 CSS 中进行简单计算，适合动态尺寸组合。</p>
-<h3>60. 什么是过渡 <code>transition</code>？</h3>
-<p><strong>答案：</strong>
-过渡用于让属性变化在一段时间内平滑完成。</p>
-<h3>61. 什么是动画 <code>animation</code>？</h3>
-<p><strong>答案：</strong>
-动画通过 <code>@keyframes</code> 定义关键帧，可实现更复杂的连续变化效果。</p>
-<h3>62. <code>transform</code> 常见用途有哪些？</h3>
-<p><strong>答案：</strong>
-常用于位移、旋转、缩放和倾斜，并且通常性能优于直接改布局属性。</p>
-<h3>63. 为什么动画常推荐用 <code>transform</code> 和 <code>opacity</code>？</h3>
-<p><strong>答案：</strong>
-因为它们通常更容易由浏览器进行合成层优化，性能更好。</p>
-<h3>64. 什么是层叠上下文？</h3>
-<p><strong>答案：</strong>
-层叠上下文决定元素的堆叠顺序和 <code>z-index</code> 生效范围。</p>
-<h3>65. <code>z-index</code> 为什么有时不生效？</h3>
-<p><strong>答案：</strong>
-因为元素可能不在同一层叠上下文中，或没有形成可定位上下文。</p>
-<h2>实战与工程化</h2>
-<h3>66. 什么是 CSS Reset？</h3>
-<p><strong>答案：</strong>
-CSS Reset 用于清除浏览器默认样式差异，建立统一的样式基线。</p>
-<h3>67. Normalize.css 和 Reset 的区别是什么？</h3>
-<p><strong>答案：</strong>
-Normalize 更偏保留合理默认样式并做统一，Reset 更倾向完全清空默认样式。</p>
-<h3>68. 什么是 CSS Modules？</h3>
-<p><strong>答案：</strong>
-CSS Modules 通过局部作用域避免类名冲突，适合组件化开发。</p>
-<h3>69. 什么是 BEM 命名规范？</h3>
-<p><strong>答案：</strong>
-BEM 是一种 CSS 类命名方法，通过 Block、Element、Modifier 提升可维护性。</p>
-<h3>70. 为什么大型项目需要命名规范？</h3>
-<p><strong>答案：</strong>
-因为规范能减少样式冲突、提升协作效率并增强代码可读性。</p>
-<h3>71. 什么是预处理器？</h3>
-<p><strong>答案：</strong>
-预处理器如 Sass、Less 提供变量、嵌套、混入等能力，提高样式开发效率。</p>
-<h3>72. Sass 的常见优势是什么？</h3>
-<p><strong>答案：</strong>
-它支持变量、嵌套、函数、混入和模块化能力，适合中大型样式工程。</p>
-<h3>73. 什么是后处理器？</h3>
-<p><strong>答案：</strong>
-后处理器在 CSS 编译后再做转换，如自动加前缀、压缩和兼容性处理。</p>
-<h3>74. Autoprefixer 的作用是什么？</h3>
-<p><strong>答案：</strong>
-它根据浏览器兼容配置自动补全厂商前缀。</p>
-<h3>75. 什么是 Tailwind CSS？</h3>
-<p><strong>答案：</strong>
-Tailwind CSS 是一种原子化 CSS 框架，通过大量工具类快速组合界面样式。</p>
-<h3>76. 原子化 CSS 的优缺点是什么？</h3>
-<p><strong>答案：</strong>
-优点是开发快、复用强、样式一致；缺点是类名较多，初学者阅读成本较高。</p>
-<h3>77. 什么是关键渲染路径？</h3>
-<p><strong>答案：</strong>
-关键渲染路径是浏览器从下载资源到生成可交互页面的核心流程。</p>
-<h3>78. 为什么 CSS 会阻塞渲染？</h3>
-<p><strong>答案：</strong>
-因为浏览器在构建渲染树前需要先拿到关键样式，避免页面闪烁和布局不稳定。</p>
-<h3>79. 如何优化 CSS 加载性能？</h3>
-<p><strong>答案：</strong>
-可以压缩、拆分、按需加载、减少冗余规则和提取关键 CSS。</p>
-<h3>80. 为什么要减少重排和重绘？</h3>
-<p><strong>答案：</strong>
-因为频繁布局和绘制会影响页面性能和交互流畅度。</p>
-<h3>81. 什么是重排？</h3>
-<p><strong>答案：</strong>
-重排是元素几何属性变化后，浏览器重新计算布局的过程。</p>
-<h3>82. 什么是重绘？</h3>
-<p><strong>答案：</strong>
-重绘是元素样式变化但不影响布局时，浏览器重新绘制视觉表现的过程。</p>
-<h3>83. 哪些操作更容易触发重排？</h3>
-<p><strong>答案：</strong>
-如修改宽高、位置、字体大小、插入删除节点和读取某些布局属性后再写入。</p>
-<h3>84. 什么是雪碧图？</h3>
-<p><strong>答案：</strong>
-雪碧图是把多个小图合并到一张图中，通过背景定位减少请求次数的优化方式。</p>
-<h3>85. 现代项目中雪碧图还常用吗？</h3>
-<p><strong>答案：</strong>
-使用频率下降了，很多场景已被 SVG、Icon Font 或组件化图标方案替代。</p>
-<h2>常见问题与面试表达</h2>
-<h3>86. 什么是 SEO 友好的 HTML 结构？</h3>
-<p><strong>答案：</strong>
-它通常具有清晰语义、合理标题层级、可读文本内容和规范元信息。</p>
-<h3>87. 为什么按钮操作应优先使用 <code>button</code> 而不是 <code>div</code>？</h3>
-<p><strong>答案：</strong>
-因为 <code>button</code> 自带语义、可聚焦和键盘交互支持，更符合无障碍和可维护性要求。</p>
-<h3>88. 图片懒加载有什么意义？</h3>
-<p><strong>答案：</strong>
-它能减少首屏资源加载压力，提升首屏速度和节省带宽。</p>
-<h3>89. 什么是响应式图片？</h3>
-<p><strong>答案：</strong>
-响应式图片通过不同资源和尺寸适配不同设备，常结合 <code>srcset</code>、<code>sizes</code> 使用。</p>
-<h3>90. <code>overflow: hidden</code> 常见用途有哪些？</h3>
-<p><strong>答案：</strong>
-可用于裁剪溢出内容、触发 BFC、隐藏滚动条区域外元素等。</p>
-<h3>91. 什么是文本溢出省略号？</h3>
-<p><strong>答案：</strong>
-通常通过 <code>overflow: hidden</code>、<code>text-overflow: ellipsis</code> 和 <code>white-space: nowrap</code> 实现单行省略。</p>
-<h3>92. 多行文本省略常见怎么做？</h3>
-<p><strong>答案：</strong>
-常见用 <code>-webkit-line-clamp</code> 配合弹性盒相关属性实现。</p>
-<h3>93. 什么是 <code>aspect-ratio</code>？</h3>
-<p><strong>答案：</strong>
-<code>aspect-ratio</code> 用于声明元素宽高比，简化图片和卡片比例控制。</p>
-<h3>94. 为什么样式抖动会影响体验？</h3>
-<p><strong>答案：</strong>
-因为布局突然变化会影响用户点击和阅读，增加 CLS 等体验指标风险。</p>
-<h3>95. 什么是 CLS？</h3>
-<p><strong>答案：</strong>
-CLS 是累计布局偏移指标，用于衡量页面加载过程中布局稳定性。</p>
-<h3>96. 如何减少布局偏移？</h3>
-<p><strong>答案：</strong>
-可以为图片和异步内容预留尺寸，避免后加载内容把页面挤动。</p>
-<h3>97. 面试中如何回答 Flex 和 Grid 的取舍？</h3>
-<p><strong>答案：</strong>
-可以说 Flex 更适合一维排列，Grid 更适合二维区域布局，实际项目往往搭配使用。</p>
-<h3>98. 面试中如何系统回答 CSS 问题？</h3>
-<p><strong>答案：</strong>
-可以按原理、布局模型、适用场景、兼容性和性能注意点来组织答案。</p>
-<h3>99. 面试中如何系统回答 HTML5 问题？</h3>
-<p><strong>答案：</strong>
-可以围绕语义化、表单、多媒体、存储、离线能力和 Web API 扩展来展开。</p>
-<h3>100. 如何总结 CSS / HTML5 的核心价值？</h3>
-<p><strong>答案：</strong>
-HTML5 负责结构和语义，CSS 负责表现和布局，二者共同决定页面的可读性、可用性和用户体验。</p>
-<h2>现代 CSS 特性</h2>
-<h3>101. 什么是 CSS 容器查询（Container Queries）？</h3>
-<p><strong>答案：</strong>
-容器查询允许根据父容器的尺寸（而不是视口）来应用样式，使用 <code>@container</code> 规则。父元素需声明 <code>container-type: inline-size</code>。比媒体查询粒度更细，让同一个组件在不同容器宽度下有不同表现，实现真正的组件级响应式，无需修改父级结构。</p>
-<h3>102. CSS <code>clamp()</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-<code>clamp(min, preferred, max)</code> 在最小值和最大值之间动态计算值。典型用法：<code>font-size: clamp(14px, 2vw, 20px)</code> 让字体随视口缩放但不超出范围，无需媒体查询。常用于响应式字号、间距和容器宽度，实现流体设计。</p>
-<h3>103. 什么是 CSS 逻辑属性？</h3>
-<p><strong>答案：</strong>
-逻辑属性用逻辑方向（<code>block</code>/<code>inline</code>、<code>start</code>/<code>end</code>）代替物理方向（<code>top</code>/<code>left</code>），如 <code>margin-inline-start</code> 代替 <code>margin-left</code>，<code>padding-block-end</code> 代替 <code>padding-bottom</code>。在多语言（LTR/RTL）场景自动适配书写方向，无需为不同语言单独覆盖物理方向样式。</p>
-<h3>104. 什么是 <code>:is()</code> 和 <code>:where()</code> 伪类？</h3>
-<p><strong>答案：</strong>
-<code>:is()</code> 接受选择器列表，匹配其中任一选择器的元素，优先级取参数中最高的选择器；<code>:where()</code> 功能相同但优先级始终为 0，不影响整体权重。二者都可简化重复选择器，如 <code>:is(h1, h2, h3) a</code> 代替三条重复规则。</p>
-<h3>105. 什么是 CSS Scroll Snap？</h3>
-<p><strong>答案：</strong>
-Scroll Snap 让滚动在特定位置自动吸附停止，在容器设 <code>scroll-snap-type</code>，子元素设 <code>scroll-snap-align</code>。无需 JavaScript 即可实现轮播、全屏分页滚动、横向卡片吸附等体验，性能比 JS 监听方案更好。</p>
-<h3>106. <code>display: contents</code> 有什么作用？</h3>
-<p><strong>答案：</strong>
-<code>display: contents</code> 让元素自身不生成盒子（相当于&quot;透明&quot;），但其子元素正常渲染。常用于在 Flex/Grid 容器中插入语义化包装元素而不影响布局，如 <code>&lt;ul&gt;</code> 加 <code>display: contents</code> 后其 <code>&lt;li&gt;</code> 直接参与外层 Grid 布局。</p>
-<h3>107. 什么是 CSS Subgrid？</h3>
-<p><strong>答案：</strong>
-Subgrid 允许子元素继承祖先 Grid 容器的行列轨道，通过 <code>grid-template-columns: subgrid</code> 声明。解决了嵌套 Grid 中内层元素难以与外层对齐的问题，常用于卡片列表中标题、内容、操作区跨卡片对齐的场景。</p>
-<h3>108. <code>aspect-ratio</code> 属性有什么用？</h3>
-<p><strong>答案：</strong>
-<code>aspect-ratio: 16/9</code> 声明元素固定宽高比，当设置宽度后高度自动按比例计算，无需传统的 padding-top 百分比黑客技巧。常用于图片占位、视频容器、头像框、卡片等需要固定比例的元素。</p>
-<h3>109. 什么是 CSS <code>@layer</code>（级联层）？</h3>
-<p><strong>答案：</strong>
-<code>@layer</code> 允许将样式分组到具名层中，并通过 <code>@layer base, components, utilities</code> 声明层的优先级顺序。高层级的样式总是覆盖低层级，无论选择器权重如何。解决了第三方库样式权重难以覆盖、工具类 vs 组件样式冲突等问题，是现代 CSS 架构的重要新工具。</p>
-<h3>110. CSS <code>color-scheme</code> 和深色模式适配有什么最佳实践？</h3>
-<p><strong>答案：</strong>
-通过媒体查询 <code>@media (prefers-color-scheme: dark)</code> 检测系统深色模式并应用变量：在 <code>:root</code> 定义亮色变量，在媒体查询内覆盖为深色值。结合 <code>color-scheme: light dark</code> 让表单控件、滚动条等浏览器原生元素也自动适配。也可配合 <code>data-theme</code> 属性实现手动切换。</p>
-<h2>总结</h2>
-<p>这些题目覆盖了 HTML5 语义化、表单与多媒体、CSS 基础、盒模型、布局、响应式、性能优化、工程实践以及现代 CSS 新特性，适合作为前端基础面试系统复习资料。</p>
-
+<div class="topbar">
+  <h1>CSS & HTML5</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P0 核心必考</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
   </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="css-html5-100">CSS / HTML5 常见面试题 100 道（附答案）</h1>
+<h2 id="html5">HTML5 基础</h2>
+<h3 id="1-html">1. 什么是 HTML？</h3>
+<p><strong>答案：</strong><br>
+HTML 是超文本标记语言，用于定义网页的结构和语义。</p>
+<h3 id="2-html5">2. 什么是 HTML5？</h3>
+<p><strong>答案：</strong><br>
+HTML5 是 HTML 的现代标准版本，增强了语义化、多媒体、表单和 Web API 能力。</p>
+<h3 id="3">3. 为什么要强调语义化标签？</h3>
+<p><strong>答案：</strong><br>
+语义化有助于提升可读性、可维护性、SEO 和无障碍访问能力。</p>
+<h3 id="4">4. 常见语义化标签有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>header</code>、<code>nav</code>、<code>main</code>、<code>section</code>、<code>article</code>、<code>aside</code>、<code>footer</code> 等。</p>
+<h3 id="5-div">5. <code>div</code> 和语义化标签的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>div</code> 只有结构作用，语义化标签还表达内容含义和页面角色。</p>
+<h3 id="6">6. 什么是块级元素和行内元素？</h3>
+<p><strong>答案：</strong><br>
+块级元素通常独占一行，行内元素通常不会独占一行，只包裹内容本身。</p>
+<h3 id="7-img-alt">7. <code>img</code> 标签的 <code>alt</code> 属性有什么作用？</h3>
+<p><strong>答案：</strong><br>
+<code>alt</code> 用于图片无法显示时提供替代文本，也有助于无障碍和搜索引擎理解内容。</p>
+<h3 id="8-meta-viewport">8. <code>meta viewport</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+它用于控制移动端页面视口宽度和缩放行为，是响应式布局基础配置之一。</p>
+<h3 id="9-defer-async">9. <code>defer</code> 和 <code>async</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+两者都能异步下载脚本；<code>async</code> 下载完立即执行，顺序不可控；<code>defer</code> 会按顺序在 DOM 解析完成后执行。</p>
+<h3 id="10">10. 什么是无障碍访问？</h3>
+<p><strong>答案：</strong><br>
+无障碍访问是让残障用户也能顺畅使用网页，包括语义标签、键盘操作、对比度和屏幕阅读器支持等。</p>
+<h3 id="11-html5">11. HTML5 新增了哪些表单能力？</h3>
+<p><strong>答案：</strong><br>
+新增了更多输入类型、占位符、校验属性和更好的移动端适配能力。</p>
+<h3 id="12-html5">12. 常见 HTML5 输入类型有哪些？</h3>
+<p><strong>答案：</strong><br>
+如 <code>email</code>、<code>number</code>、<code>date</code>、<code>url</code>、<code>tel</code>、<code>range</code> 等。</p>
+<h3 id="13-label">13. <code>label</code> 标签为什么重要？</h3>
+<p><strong>答案：</strong><br>
+它能提升表单可用性和无障碍体验，点击标签即可聚焦关联控件。</p>
+<h3 id="14-canvas-svg">14. <code>canvas</code> 和 <code>svg</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>canvas</code> 更适合像素级绘制和高频渲染；<code>svg</code> 更适合矢量图形和结构化图形场景。</p>
+<h3 id="15-audio-video">15. <code>audio</code> 和 <code>video</code> 标签带来了什么？</h3>
+<p><strong>答案：</strong><br>
+它们让网页可以原生嵌入音视频，而不必依赖传统插件。</p>
+<h3 id="16">16. 什么是自定义数据属性？</h3>
+<p><strong>答案：</strong><br>
+自定义数据属性以 <code>data-</code> 开头，可用于在 DOM 上存储扩展信息。</p>
+<h3 id="17-localstorage-sessionstorage-html5">17. <code>localStorage</code> 和 <code>sessionStorage</code> 属于 HTML5 哪类能力？</h3>
+<p><strong>答案：</strong><br>
+它们属于 Web Storage 本地存储能力。</p>
+<h3 id="18-api">18. 什么是拖拽 API？</h3>
+<p><strong>答案：</strong><br>
+HTML5 提供了拖拽相关事件和数据传递机制，用于实现元素拖放交互。</p>
+<h3 id="19-web-worker">19. 什么是 Web Worker？</h3>
+<p><strong>答案：</strong><br>
+Web Worker 允许在后台线程执行脚本，避免阻塞主线程 UI。</p>
+<h3 id="20-websocket">20. 什么是 WebSocket？</h3>
+<p><strong>答案：</strong><br>
+WebSocket 提供浏览器与服务器之间的全双工长连接通信能力。</p>
+<h2 id="css">CSS 基础</h2>
+<h3 id="21-css">21. CSS 是什么？</h3>
+<p><strong>答案：</strong><br>
+CSS 是层叠样式表，用于控制网页的外观、布局和视觉表现。</p>
+<h3 id="22-css">22. CSS 的引入方式有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有行内样式、内部样式表和外部样式表，实际项目中多使用外部样式表。</p>
+<h3 id="23">23. 什么是选择器？</h3>
+<p><strong>答案：</strong><br>
+选择器用于指定样式作用的元素范围，如标签、类、ID 和属性选择器等。</p>
+<h3 id="24">24. 常见选择器有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有标签选择器、类选择器、ID 选择器、后代选择器、伪类、伪元素等。</p>
+<h3 id="25">25. 什么是伪类？</h3>
+<p><strong>答案：</strong><br>
+伪类用于描述元素的特殊状态，如 <code>:hover</code>、<code>:focus</code>、<code>:nth-child()</code>。<br>
+li:nth-child(odd) 奇数行; nth: n-th</p>
+<h3 id="26">26. 什么是伪元素？</h3>
+<p><strong>答案：</strong><br>
+伪元素用于选中元素内容的特殊部分，如 <code>::before</code>、<code>::after</code>。</p>
+<h3 id="27-css">27. CSS 优先级如何计算？</h3>
+<p><strong>答案：</strong><br>
+一般比较内联样式、ID、类/属性/伪类、标签/伪元素的权重，权重高者优先。</p>
+<h3 id="28-important">28. <code>!important</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+它会强行提高声明优先级，但不应滥用，否则会降低样式可维护性。</p>
+<h3 id="29">29. 什么是继承？</h3>
+<p><strong>答案：</strong><br>
+继承指某些样式属性会从父元素传递给子元素，如字体和颜色等。</p>
+<h3 id="30">30. 什么是层叠？</h3>
+<p><strong>答案：</strong><br>
+层叠是指多个样式规则共同作用时，浏览器根据来源、优先级和顺序决定最终结果。</p>
+<h2 id="_1">盒模型与布局</h2>
+<h3 id="31">31. 什么是盒模型？</h3>
+<p><strong>答案：</strong><br>
+盒模型描述元素由 <code>content</code>、<code>padding</code>、<code>border</code>、<code>margin</code> 组成。</p>
+<h3 id="32">32. 标准盒模型和怪异盒模型的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+标准盒模型中宽高只包含内容区；怪异盒模型中宽高包含内容、内边距和边框。</p>
+<h3 id="33-box-sizing-border-box">33. <code>box-sizing: border-box</code> 有什么好处？</h3>
+<p><strong>答案：</strong><br>
+它让元素宽高计算更直观，更适合实际项目布局。</p>
+<h3 id="34">34. 什么是外边距塌陷？</h3>
+<p><strong>答案：</strong><br>
+垂直相邻块级元素的 <code>margin</code> 可能合并为一个更大的外边距，这种现象叫塌陷。</p>
+<h3 id="35">35. 如何解决外边距塌陷？</h3>
+<p><strong>答案：</strong><br>
+可通过创建 BFC、设置边框、内边距或改变布局方式来解决。</p>
+<h3 id="36-bfcblock-formatting-context">36. 什么是 BFC（Block Formatting Context）</h3>
+<p><strong>答案：</strong><br>
+BFC 是块级格式化上下文，可用于隔离布局影响、清除浮动和避免外边距塌陷等。</p>
+<h3 id="37-bfc">37. 如何触发 BFC</h3>
+<p><strong>答案：</strong><br>
+常见方式有设置 <code>display: flow-root</code>、 <code>overflow: hidden</code>、<code>float</code>、<code>position: absolute</code> 等。</p>
+<h3 id="38-display">38. <code>display</code> 常见取值有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>block</code>、<code>inline</code>、<code>inline-block</code>、<code>none</code>、<code>flex</code>、<code>grid</code>。</p>
+<h3 id="39-position">39. <code>position</code> 常见取值有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>static</code>、<code>relative</code>、<code>absolute</code>、<code>fixed</code>、<code>sticky</code>。</p>
+<h3 id="40-relative-absolute">40. <code>relative</code> 和 <code>absolute</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>relative</code> 相对自身原位置偏移；<code>absolute</code> 脱离文档流并相对最近定位祖先定位。</p>
+<h3 id="41-fixed">41. <code>fixed</code> 的特点是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>fixed</code> 元素相对视口定位，通常不随页面滚动而移动。</p>
+<h3 id="42-sticky">42. <code>sticky</code> 是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>sticky</code> 是粘性定位，在达到阈值前表现像普通定位，达到后像固定定位。</p>
+<h3 id="43">43. 什么是浮动？</h3>
+<p><strong>答案：</strong><br>
+浮动最初用于文字环绕图片，也被早期大量用于布局，但现在常被 Flex 和 Grid 替代。</p>
+<h3 id="44">44. 如何清除浮动？</h3>
+<p><strong>答案：</strong><br>
+常见方式有清除元素、伪元素清除和触发 BFC。</p>
+<h3 id="45-flex">45. Flex 布局适合什么场景？</h3>
+<p><strong>答案：</strong><br>
+适合一维布局，如横向或纵向排列、居中对齐和分布控制。</p>
+<h3 id="46-grid">46. Grid 布局适合什么场景？</h3>
+<p><strong>答案：</strong><br>
+适合二维布局，如页面区域划分、表格式模块和复杂卡片排列。</p>
+<h3 id="47-flex-justify-content">47. Flex 中 <code>justify-content</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+它控制主轴方向上项目的对齐和分布方式。</p>
+<h3 id="48-flex-align-items">48. Flex 中 <code>align-items</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+它控制交叉轴方向上项目的整体对齐方式。</p>
+<h3 id="49">49. 如何让元素水平垂直居中？</h3>
+<p><strong>答案：</strong><br>
+常见方式有 Flex 居中、Grid 居中、定位加变换等，现代项目最常用 Flex。</p>
+<h3 id="50-gap">50. <code>gap</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+<code>gap</code> 用于控制 Flex 或 Grid 子项之间的间距，比手动设边距更统一。</p>
+<h2 id="_2">响应式与视觉表现</h2>
+<h3 id="51">51. 什么是响应式设计？</h3>
+<p><strong>答案：</strong><br>
+响应式设计是让页面在不同设备和屏幕尺寸下都能良好展示和交互。</p>
+<h3 id="52">52. 什么是媒体查询？</h3>
+<p><strong>答案：</strong><br>
+媒体查询允许根据屏幕宽度、方向、分辨率等条件应用不同样式。</p>
+<h3 id="53-max-width-min-width">53. <code>max-width</code> 和 <code>min-width</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>max-width</code> 常用于桌面优先向下兼容；<code>min-width</code> 常用于移动优先逐步增强。</p>
+<h3 id="54">54. 什么是移动优先？</h3>
+<p><strong>答案：</strong><br>
+移动优先是先为小屏设备设计基础样式，再逐步增强到更大屏幕。</p>
+<h3 id="55">55. 相对单位有哪些？</h3>
+<p><strong>答案：</strong><br>
+常见有 <code>%</code>、<code>em</code>、<code>rem</code>、<code>vw</code>、<code>vh</code> 等。</p>
+<h3 id="56-em-rem">56. <code>em</code> 和 <code>rem</code> 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>em</code> 相对当前元素字体大小，<code>rem</code> 相对根元素字体大小。</p>
+<h3 id="57-vw-vh">57. <code>vw</code> 和 <code>vh</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+它们分别相对视口宽度和高度，常用于全屏布局和响应式尺寸控制。</p>
+<h3 id="58-css">58. 什么是 CSS 变量？</h3>
+<p><strong>答案：</strong><br>
+CSS 变量通过 <code>--name</code> 定义，可复用主题值、间距、颜色等设计令牌。</p>
+<h3 id="59-calc">59. <code>calc()</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>calc()</code> 用于在 CSS 中进行简单计算，适合动态尺寸组合。</p>
+<h3 id="60-transition">60. 什么是过渡 <code>transition</code>？</h3>
+<p><strong>答案：</strong><br>
+过渡用于让属性变化在一段时间内平滑完成。</p>
+<h3 id="61-animation">61. 什么是动画 <code>animation</code>？</h3>
+<p><strong>答案：</strong><br>
+动画通过 <code>@keyframes</code> 定义关键帧，可实现更复杂的连续变化效果。</p>
+<h3 id="62-transform">62. <code>transform</code> 常见用途有哪些？</h3>
+<p><strong>答案：</strong><br>
+常用于位移、旋转、缩放和倾斜，并且通常性能优于直接改布局属性。</p>
+<h3 id="63-transform-opacity">63. 为什么动画常推荐用 <code>transform</code> 和 <code>opacity</code>？</h3>
+<p><strong>答案：</strong><br>
+因为它们通常更容易由浏览器进行合成层优化，性能更好。</p>
+<h3 id="64">64. 什么是层叠上下文？</h3>
+<p><strong>答案：</strong><br>
+层叠上下文决定元素的堆叠顺序和 <code>z-index</code> 生效范围。</p>
+<h3 id="65-z-index">65. <code>z-index</code> 为什么有时不生效？</h3>
+<p><strong>答案：</strong><br>
+因为元素可能不在同一层叠上下文中，或没有形成可定位上下文。</p>
+<h2 id="_3">实战与工程化</h2>
+<h3 id="66-css-reset">66. 什么是 CSS Reset？</h3>
+<p><strong>答案：</strong><br>
+CSS Reset 用于清除浏览器默认样式差异，建立统一的样式基线。</p>
+<h3 id="67-normalizecss-reset">67. Normalize.css 和 Reset 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+Normalize 更偏保留合理默认样式并做统一，Reset 更倾向完全清空默认样式。</p>
+<h3 id="68-css-modules">68. 什么是 CSS Modules？</h3>
+<p><strong>答案：</strong><br>
+CSS Modules 通过局部作用域避免类名冲突，适合组件化开发。</p>
+<h3 id="69-bem">69. 什么是 BEM 命名规范？</h3>
+<p><strong>答案：</strong><br>
+BEM 是一种 CSS 类命名方法，通过 Block、Element、Modifier 提升可维护性。</p>
+<h3 id="70">70. 为什么大型项目需要命名规范？</h3>
+<p><strong>答案：</strong><br>
+因为规范能减少样式冲突、提升协作效率并增强代码可读性。</p>
+<h3 id="71">71. 什么是预处理器？</h3>
+<p><strong>答案：</strong><br>
+预处理器如 Sass、Less 提供变量、嵌套、混入等能力，提高样式开发效率。</p>
+<h3 id="72-sass">72. Sass 的常见优势是什么？</h3>
+<p><strong>答案：</strong><br>
+它支持变量、嵌套、函数、混入和模块化能力，适合中大型样式工程。</p>
+<h3 id="73">73. 什么是后处理器？</h3>
+<p><strong>答案：</strong><br>
+后处理器在 CSS 编译后再做转换，如自动加前缀、压缩和兼容性处理。</p>
+<h3 id="74-autoprefixer">74. Autoprefixer 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+它根据浏览器兼容配置自动补全厂商前缀。</p>
+<h3 id="75-tailwind-css">75. 什么是 Tailwind CSS？</h3>
+<p><strong>答案：</strong><br>
+Tailwind CSS 是一种原子化 CSS 框架，通过大量工具类快速组合界面样式。</p>
+<h3 id="76-css">76. 原子化 CSS 的优缺点是什么？</h3>
+<p><strong>答案：</strong><br>
+优点是开发快、复用强、样式一致；缺点是类名较多，初学者阅读成本较高。</p>
+<h3 id="77">77. 什么是关键渲染路径？</h3>
+<p><strong>答案：</strong><br>
+关键渲染路径是浏览器从下载资源到生成可交互页面的核心流程。</p>
+<h3 id="78-css">78. 为什么 CSS 会阻塞渲染？</h3>
+<p><strong>答案：</strong><br>
+因为浏览器在构建渲染树前需要先拿到关键样式，避免页面闪烁和布局不稳定。</p>
+<h3 id="79-css">79. 如何优化 CSS 加载性能？</h3>
+<p><strong>答案：</strong><br>
+可以压缩、拆分、按需加载、减少冗余规则和提取关键 CSS。</p>
+<h3 id="80">80. 为什么要减少重排和重绘？</h3>
+<p><strong>答案：</strong><br>
+因为频繁布局和绘制会影响页面性能和交互流畅度。</p>
+<h3 id="81">81. 什么是重排？</h3>
+<p><strong>答案：</strong><br>
+重排是元素几何属性变化后，浏览器重新计算布局的过程。</p>
+<h3 id="82">82. 什么是重绘？</h3>
+<p><strong>答案：</strong><br>
+重绘是元素样式变化但不影响布局时，浏览器重新绘制视觉表现的过程。</p>
+<h3 id="83">83. 哪些操作更容易触发重排？</h3>
+<p><strong>答案：</strong><br>
+如修改宽高、位置、字体大小、插入删除节点和读取某些布局属性后再写入。</p>
+<h3 id="84">84. 什么是雪碧图？</h3>
+<p><strong>答案：</strong><br>
+雪碧图是把多个小图合并到一张图中，通过背景定位减少请求次数的优化方式。</p>
+<h3 id="85">85. 现代项目中雪碧图还常用吗？</h3>
+<p><strong>答案：</strong><br>
+使用频率下降了，很多场景已被 SVG、Icon Font 或组件化图标方案替代。</p>
+<h2 id="_4">常见问题与面试表达</h2>
+<h3 id="86-seo-html">86. 什么是 SEO 友好的 HTML 结构？</h3>
+<p><strong>答案：</strong><br>
+它通常具有清晰语义、合理标题层级、可读文本内容和规范元信息。</p>
+<h3 id="87-button-div">87. 为什么按钮操作应优先使用 <code>button</code> 而不是 <code>div</code>？</h3>
+<p><strong>答案：</strong><br>
+因为 <code>button</code> 自带语义、可聚焦和键盘交互支持，更符合无障碍和可维护性要求。</p>
+<h3 id="88">88. 图片懒加载有什么意义？</h3>
+<p><strong>答案：</strong><br>
+它能减少首屏资源加载压力，提升首屏速度和节省带宽。</p>
+<h3 id="89">89. 什么是响应式图片？</h3>
+<p><strong>答案：</strong><br>
+响应式图片通过不同资源和尺寸适配不同设备，常结合 <code>srcset</code>、<code>sizes</code> 使用。</p>
+<h3 id="90-overflow-hidden">90. <code>overflow: hidden</code> 常见用途有哪些？</h3>
+<p><strong>答案：</strong><br>
+可用于裁剪溢出内容、触发 BFC、隐藏滚动条区域外元素等。</p>
+<h3 id="91">91. 什么是文本溢出省略号？</h3>
+<p><strong>答案：</strong><br>
+通常通过 <code>overflow: hidden</code>、<code>text-overflow: ellipsis</code> 和 <code>white-space: nowrap</code> 实现单行省略。</p>
+<h3 id="92">92. 多行文本省略常见怎么做？</h3>
+<p><strong>答案：</strong><br>
+常见用 <code>-webkit-line-clamp</code> 配合弹性盒相关属性实现。</p>
+<h3 id="93-aspect-ratio">93. 什么是 <code>aspect-ratio</code>？</h3>
+<p><strong>答案：</strong><br>
+<code>aspect-ratio</code> 用于声明元素宽高比，简化图片和卡片比例控制。</p>
+<h3 id="94">94. 为什么样式抖动会影响体验？</h3>
+<p><strong>答案：</strong><br>
+因为布局突然变化会影响用户点击和阅读，增加 CLS 等体验指标风险。</p>
+<h3 id="95-cls">95. 什么是 CLS？</h3>
+<p><strong>答案：</strong><br>
+CLS 是累计布局偏移指标，用于衡量页面加载过程中布局稳定性。</p>
+<h3 id="96">96. 如何减少布局偏移？</h3>
+<p><strong>答案：</strong><br>
+可以为图片和异步内容预留尺寸，避免后加载内容把页面挤动。</p>
+<h3 id="97-flex-grid">97. 面试中如何回答 Flex 和 Grid 的取舍？</h3>
+<p><strong>答案：</strong><br>
+可以说 Flex 更适合一维排列，Grid 更适合二维区域布局，实际项目往往搭配使用。</p>
+<h3 id="98-css">98. 面试中如何系统回答 CSS 问题？</h3>
+<p><strong>答案：</strong><br>
+可以按原理、布局模型、适用场景、兼容性和性能注意点来组织答案。</p>
+<h3 id="99-html5">99. 面试中如何系统回答 HTML5 问题？</h3>
+<p><strong>答案：</strong><br>
+可以围绕语义化、表单、多媒体、存储、离线能力和 Web API 扩展来展开。</p>
+<h3 id="100-css-html5">100. 如何总结 CSS / HTML5 的核心价值？</h3>
+<p><strong>答案：</strong><br>
+HTML5 负责结构和语义，CSS 负责表现和布局，二者共同决定页面的可读性、可用性和用户体验。</p>
+<h2 id="css_1">现代 CSS 特性</h2>
+<h3 id="101-css-container-queries">101. 什么是 CSS 容器查询（Container Queries）？</h3>
+<p><strong>答案：</strong><br>
+容器查询允许根据父容器的尺寸（而不是视口）来应用样式，使用 <code>@container</code> 规则。父元素需声明 <code>container-type: inline-size</code>。比媒体查询粒度更细，让同一个组件在不同容器宽度下有不同表现，实现真正的组件级响应式，无需修改父级结构。</p>
+<h3 id="102-css-clamp">102. CSS <code>clamp()</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+<code>clamp(min, preferred, max)</code> 在最小值和最大值之间动态计算值。典型用法：<code>font-size: clamp(14px, 2vw, 20px)</code> 让字体随视口缩放但不超出范围，无需媒体查询。常用于响应式字号、间距和容器宽度，实现流体设计。</p>
+<h3 id="103-css">103. 什么是 CSS 逻辑属性？</h3>
+<p><strong>答案：</strong><br>
+逻辑属性用逻辑方向（<code>block</code>/<code>inline</code>、<code>start</code>/<code>end</code>）代替物理方向（<code>top</code>/<code>left</code>），如 <code>margin-inline-start</code> 代替 <code>margin-left</code>，<code>padding-block-end</code> 代替 <code>padding-bottom</code>。在多语言（LTR/RTL）场景自动适配书写方向，无需为不同语言单独覆盖物理方向样式。</p>
+<h3 id="104-is-where">104. 什么是 <code>:is()</code> 和 <code>:where()</code> 伪类？</h3>
+<p><strong>答案：</strong><br>
+<code>:is()</code> 接受选择器列表，匹配其中任一选择器的元素，优先级取参数中最高的选择器；<code>:where()</code> 功能相同但优先级始终为 0，不影响整体权重。二者都可简化重复选择器，如 <code>:is(h1, h2, h3) a</code> 代替三条重复规则。</p>
+<h3 id="105-css-scroll-snap">105. 什么是 CSS Scroll Snap？</h3>
+<p><strong>答案：</strong><br>
+Scroll Snap 让滚动在特定位置自动吸附停止，在容器设 <code>scroll-snap-type</code>，子元素设 <code>scroll-snap-align</code>。无需 JavaScript 即可实现轮播、全屏分页滚动、横向卡片吸附等体验，性能比 JS 监听方案更好。</p>
+<h3 id="106-display-contents">106. <code>display: contents</code> 有什么作用？</h3>
+<p><strong>答案：</strong><br>
+<code>display: contents</code> 让元素自身不生成盒子（相当于"透明"），但其子元素正常渲染。常用于在 Flex/Grid 容器中插入语义化包装元素而不影响布局，如 <code>&lt;ul&gt;</code> 加 <code>display: contents</code> 后其 <code>&lt;li&gt;</code> 直接参与外层 Grid 布局。</p>
+<h3 id="107-css-subgrid">107. 什么是 CSS Subgrid？</h3>
+<p><strong>答案：</strong><br>
+Subgrid 允许子元素继承祖先 Grid 容器的行列轨道，通过 <code>grid-template-columns: subgrid</code> 声明。解决了嵌套 Grid 中内层元素难以与外层对齐的问题，常用于卡片列表中标题、内容、操作区跨卡片对齐的场景。</p>
+<h3 id="108-aspect-ratio">108. <code>aspect-ratio</code> 属性有什么用？</h3>
+<p><strong>答案：</strong><br>
+<code>aspect-ratio: 16/9</code> 声明元素固定宽高比，当设置宽度后高度自动按比例计算，无需传统的 padding-top 百分比黑客技巧。常用于图片占位、视频容器、头像框、卡片等需要固定比例的元素。</p>
+<h3 id="109-css-layer">109. 什么是 CSS <code>@layer</code>（级联层）？</h3>
+<p><strong>答案：</strong><br>
+<code>@layer</code> 允许将样式分组到具名层中，并通过 <code>@layer base, components, utilities</code> 声明层的优先级顺序。高层级的样式总是覆盖低层级，无论选择器权重如何。解决了第三方库样式权重难以覆盖、工具类 vs 组件样式冲突等问题，是现代 CSS 架构的重要新工具。</p>
+<h3 id="110-css-color-scheme">110. CSS <code>color-scheme</code> 和深色模式适配有什么最佳实践？</h3>
+<p><strong>答案：</strong><br>
+通过媒体查询 <code>@media (prefers-color-scheme: dark)</code> 检测系统深色模式并应用变量：在 <code>:root</code> 定义亮色变量，在媒体查询内覆盖为深色值。结合 <code>color-scheme: light dark</code> 让表单控件、滚动条等浏览器原生元素也自动适配。也可配合 <code>data-theme</code> 属性实现手动切换。</p>
+<h2 id="_5">总结</h2>
+<p>这些题目覆盖了 HTML5 语义化、表单与多媒体、CSS 基础、盒模型、布局、响应式、性能优化、工程实践以及现代 CSS 新特性，适合作为前端基础面试系统复习资料。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p0-css-html5-qa.md</div>
+</div>
 </body>
 </html>

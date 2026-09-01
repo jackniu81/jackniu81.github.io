@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDD 规格驱动开发 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>SDD 规格驱动开发</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="sddqa">SDD（规格驱动开发）QA</h1>
+<h2 id="_1">基础概念</h2>
+<h3 id="1-sddspec-driven-development">1. 什么是 SDD（Spec-Driven Development）？</h3>
+<p><strong>答案：</strong><br>
+SDD（规格驱动开发）是一种以<strong>规格文档（Spec）为核心</strong>驱动软件开发全流程的方法论。与传统 TDD（测试驱动）不同，SDD 在写代码和测试之前，先由 AI 生成可机读的需求规格，再基于规格生成实施计划，最后执行实现。</p>
+<p><strong>核心理念</strong>：<br>
+- 让 AI 先"理解需求"，再"生成代码"<br>
+- 规格是 AI 和人类之间的合约<br>
+- 通过强制规格-代码-测试的可追溯性保证质量</p>
+<p><strong>与传统方式的区别</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>传统开发</th>
+<th>TDD</th>
+<th>SDD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>起点</td>
+<td>直接写代码</td>
+<td>先写测试</td>
+<td>先写规格</td>
+</tr>
+<tr>
+<td>AI 角色</td>
+<td>代码补全</td>
+<td>实现使测试通过</td>
+<td>全流程驱动（规格→计划→实现）</td>
+</tr>
+<tr>
+<td>文档</td>
+<td>事后补充</td>
+<td>测试即文档</td>
+<td>规格作为源头文档</td>
+</tr>
+<tr>
+<td>可追溯性</td>
+<td>弱</td>
+<td>中</td>
+<td>强（FR→代码→测试矩阵）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-sdd">2. SDD 的核心工作流是什么？</h3>
+<p><strong>答案：</strong><br>
+SDD 的完整工作流分为三个阶段：</p>
+<p><strong>阶段一：一次性知识库构建</strong><br>
+- 运行 <code>/create-pod-knowledge</code> 分析代码库，生成 AI 可读的知识库（<code>ai/knowledge/</code>）</p>
+<p><strong>阶段二：规格交付循环（每个 JIRA 任务）</strong><br>
+1. <code>/create-specs &lt;JIRA-ID&gt;</code> — 从 JIRA 生成规格文档<br>
+2. <code>/create-plan &lt;JIRA-ID&gt;</code> — 从规格生成实施计划<br>
+3. <code>/execute &lt;JIRA-ID&gt;</code> — 执行实现（TDD + 提交 + MR）<br>
+4. <code>/wrap-up &lt;JIRA-ID&gt;</code> — 合并后收尾（发布 Confluence 文档）</p>
+<p><strong>阶段三：定期维护</strong><br>
+- <code>/update-knowledge</code> — 将已交付规格和新文档批量集成回知识库</p>
+<h3 id="3-sdd-aiknowledge">3. SDD 中的 <code>ai/knowledge/</code> 目录包含什么？</h3>
+<p><strong>答案：</strong><br>
+<code>ai/knowledge/</code> 是 SDD 的核心知识库，包含 AI 可读的项目规格：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POD.md</code></td>
+<td>执行级摘要：目的、子域、核心能力、业务实体、主要流程（必须存在）</td>
+</tr>
+<tr>
+<td><code>functional-spec.md</code></td>
+<td>功能规格</td>
+</tr>
+<tr>
+<td><code>technical-spec.md</code></td>
+<td>技术规格</td>
+</tr>
+<tr>
+<td><code>data-model-spec.md</code></td>
+<td>数据模型规格</td>
+</tr>
+<tr>
+<td><code>api-spec.md</code></td>
+<td>API 规格</td>
+</tr>
+<tr>
+<td><code>integration-spec.md</code></td>
+<td>集成规格（内部 + 外部）</td>
+</tr>
+<tr>
+<td><code>security-spec.md</code></td>
+<td>安全规格</td>
+</tr>
+<tr>
+<td><code>deployment-spec.md</code></td>
+<td>部署规格</td>
+</tr>
+<tr>
+<td><code>nfr-spec.md</code></td>
+<td>非功能需求规格</td>
+</tr>
+<tr>
+<td><code>CHANGELOG.md</code></td>
+<td>知识库每次变更的审计记录</td>
+</tr>
+</tbody>
+</table>
+<p>根目录还会生成 <code>AGENTS.md</code>（AI 行为约束）和 <code>LEARNINGS.md</code>（经验积累）。</p>
+<h3 id="4-sdd-spec">4. SDD 中的 Spec（规格文档）应该包含哪些内容？</h3>
+<p><strong>答案：</strong><br>
+一份合格的 SDD 规格文档包含：</p>
+<ul>
+<li><strong>功能需求（FR）</strong>：用户视角、技术无关、可测试的需求描述</li>
+<li><strong>验收标准（AC）</strong>：每条 FR 对应的可验证标准</li>
+<li><strong>成功标准</strong>：整体功能的量化验收指标</li>
+<li><strong>作用域</strong>：明确包含什么、不包含什么</li>
+<li><strong>开放问题</strong>：未解决的模糊点（必须在 <code>/create-plan</code> 前全部解决）</li>
+<li><strong>自动解决的假设</strong>：AI 自动填补的假设，附上依据</li>
+</ul>
+<p><strong>质量要求</strong>：<br>
+- 所有 FR 必须可测试<br>
+- 不能泄露实现细节（不写 DB 名、框架名、基础设施指标）<br>
+- 每条 FR 必须有来源（JIRA 原文或代码证据）<br>
+- 无孤立需求（每条 FR 都在作用域内）</p>
+<hr>
+<h2 id="_2">核心命令详解</h2>
+<h3 id="5-create-pod-knowledge">5. <code>/create-pod-knowledge</code> 命令的核心作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>/create-pod-knowledge</code> 是 SDD 的<strong>一次性启动命令</strong>，作用是将项目的人类文档和代码库转换为 AI 可高效读取的结构化知识。</p>
+<p><strong>执行内容</strong>：<br>
+1. 分析 <code>ai/raw/</code> 目录下的原始文档（设计文档、API 文档、会议记录等）<br>
+2. 静态分析代码库结构、依赖关系、核心流程<br>
+3. 生成 <code>POD.md</code> 和 8 个详细规格文件<br>
+4. 生成 <code>AGENTS.md</code>（AI 约束规则）和 <code>LEARNINGS.md</code></p>
+<p><strong>关键特点</strong>：每个项目只运行一次；之后通过 <code>/update-knowledge</code> 保持更新。</p>
+<p><strong>何时重新运行</strong>：代码库发生重大架构变更时。</p>
+<h3 id="6-create-specs">6. <code>/create-specs</code> 命令的"递归自答澄清"机制是什么？</h3>
+<p><strong>答案：</strong><br>
+递归自答澄清（Recursive Self-Answering Clarification）是 <code>/create-specs</code> 的核心质量机制，用于在生成规格前自动解决需求中的模糊之处。</p>
+<p><strong>工作流</strong>（3 次迭代循环）：</p>
+<pre><code>第1轮：识别 JIRA 中的模糊点 → 查询 POD 知识库 → 尝试解答
+第2轮：对未解决问题 → 分析代码库证据 → 再次尝试解答
+第3轮：对仍未解决问题 → 评估业务影响 → 记录假设或保留为开放问题
+</code></pre>
+<p><strong>上限规则</strong>：<br>
+- 超过 5 个开放问题时，按影响力排序保留前 5 个<br>
+- 其余标记为 <code>[AUTO-RESOLVED: OVERFLOW]</code>，附上解决假设</p>
+<p><strong>目的</strong>：减少人工往返确认，让 AI 在开始编码前就对需求有清晰认知。</p>
+<h3 id="7-create-plan">7. <code>/create-plan</code> 的"开放问题硬关卡"是什么？</h3>
+<p><strong>答案：</strong><br>
+硬关卡（Hard Gate）是 <code>/create-plan</code> 在生成计划前的强制检查：<strong>如果规格中还有任何未解决的开放问题或未确认的假设，计划生成直接阻断（Block）</strong>。</p>
+<p><strong>检查项</strong>：<br>
+- <code>specs.md</code> 中是否有未解决的 <code>[OPEN QUESTION]</code><br>
+- 是否有未验证的假设（无代码或文档依据的假设）<br>
+- <code>[AUTO-RESOLVED]</code> 标记的假设是否被人工确认</p>
+<p><strong>为何重要</strong>：<br>
+- 在模糊需求上生成的计划必然是错误的<br>
+- 提前暴露问题比在实现阶段修复成本低 10 倍<br>
+- 强制人工确认保证了人类对最终交付的知情权</p>
+<h3 id="8-execute">8. <code>/execute</code> 命令完整执行什么流程？</h3>
+<p><strong>答案：</strong><br>
+<code>/execute &lt;JIRA-ID&gt;</code> 是 SDD 中耗时最长的命令，完整的实施生命周期：</p>
+<p><strong>Step 1 — 实施前检查</strong><br>
+- 扫描规格和计划中的占位符、未解决问题、可追溯性缺口<br>
+- 任何问题都阻断执行</p>
+<p><strong>Step 2 — 准备</strong><br>
+- 将规格文件附加到 JIRA<br>
+- 在所有受影响的代码仓库和 <code>ai/</code> 仓库创建 <code>develop-{JIRA-ID}</code> 分支<br>
+- 将 JIRA 状态转换为"开发中"</p>
+<p><strong>Step 3 — TDD 实现</strong><br>
+- 先写测试（Red）→ 实现使测试通过（Green）→ 重构（Refactor）<br>
+- 构建验证 → 跨项目验证 → 自我代码审查<br>
+- 维护任务进度清单（<code>T-01</code>、<code>T-02</code>...）</p>
+<p><strong>Step 4 — 推送与 MR</strong><br>
+- 提交并推送所有受影响的分支<br>
+- 为每个受影响的源项目 + <code>ai/</code> 仓库各创建一个 GitLab MR<br>
+- 生成包含可追溯矩阵的 <code>change-summary.md</code></p>
+<p><strong>Step 5 — MR 审查修复（重新进入时）</strong><br>
+- 获取所有未解决的 MR 评论<br>
+- 对每条评论分析并实现修复，或提供拒绝理由<br>
+- 构建、推送、回复评论</p>
+<h3 id="9-wrap-up">9. <code>/wrap-up</code> 命令做什么？什么时候运行？</h3>
+<p><strong>答案：</strong><br>
+<code>/wrap-up &lt;JIRA-ID&gt;</code> 是 SDD 的<strong>合并后收尾命令</strong>，在所有 MR 合并后运行。</p>
+<p><strong>执行内容</strong>：<br>
+1. <strong>验证</strong>：确认所有 MR 都已合并（未合并则阻断）<br>
+2. <strong>清理</strong>：删除所有 <code>develop-{JIRA-ID}</code> 特性分支<br>
+3. <strong>JIRA 更新</strong>：发布编码摘要到 JIRA，添加 <code>AI-Delivered</code> 标签，转换状态为 Complete<br>
+4. <strong>Confluence 发布</strong>：生成并发布完整的功能文档页面（强制步骤，缺少凭据则提示）</p>
+<p><strong>注意</strong>：<code>/wrap-up</code> 不更新 <code>ai/knowledge/</code> 知识库。知识库更新需要单独运行 <code>/update-knowledge</code>。</p>
+<h3 id="10-update-knowledge">10. <code>/update-knowledge</code> 的两种触发源是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>/update-knowledge</code> 监听两种输入：</p>
+<p><strong>触发源 1 — 已交付的规格</strong>：<br>
+- 扫描 <code>ai/specs/*/</code>，找到有 <code>change-summary.md</code> 但无 <code>.knowledge-integrated</code> 标记的目录<br>
+- 将这些已实现的规格中的新知识集成到 <code>ai/knowledge/</code></p>
+<p><strong>触发源 2 — 新的或修改的原始文档</strong>：<br>
+- 扫描 <code>ai/raw/**</code> 目录<br>
+- 使用 SHA-256 哈希对比 <code>ai/knowledge/.raw-integrated.log</code> 检测变更<br>
+- 将新增或修改的人类文档集成到知识库</p>
+<p><strong>任一触发源都可单独触发运行</strong>。更新内容包括 <code>POD.md</code>、所有 8 个规格、<code>AGENTS.md</code>、<code>LEARNINGS.md</code>，以及向 <code>CHANGELOG.md</code> 追加条目。</p>
+<hr>
+<h2 id="ai">AI 模型选择策略</h2>
+<h3 id="11-sdd-claude-sonnet">11. SDD 中哪些步骤适合使用 Claude Sonnet（开启扩展思考）？</h3>
+<p><strong>答案：</strong><br>
+<strong>Claude Sonnet + 扩展思考（Extended Thinking）</strong>适用于需要<strong>深度推理和严谨分析</strong>的步骤：</p>
+<p><strong>推荐步骤</strong>：<br>
+- <strong><code>/create-specs</code></strong>：递归澄清循环需要反复推敲需求逻辑，识别隐含矛盾，评估假设质量<br>
+- <strong><code>/create-plan</code></strong>：宪法/治理合规检查需要逐条比对，跨工件一致性验证需要深度推理</p>
+<p><strong>原因</strong>：<br>
+- 扩展思考让模型在生成最终答案前进行"内部草稿"式推理<br>
+- 对于识别规格中的逻辑漏洞、模糊约束、遗漏边界条件，思考过程明显提升准确性<br>
+- 递归澄清本身就是一个多层推理链，扩展思考天然契合</p>
+<h3 id="12-sdd-claude-opus">12. SDD 中哪些步骤适合使用 Claude Opus（不开启思考）？</h3>
+<p><strong>答案：</strong><br>
+<strong>Claude Opus（无扩展思考）</strong>适用于需要<strong>大上下文理解和综合代码生成</strong>的步骤：</p>
+<p><strong>推荐步骤</strong>：<br>
+- <strong><code>/create-pod-knowledge</code></strong>：需要同时处理大量原始文档和代码库文件，Opus 更大的知识广度和上下文理解能力更有优势<br>
+- <strong><code>/execute</code></strong>：实际编写代码、理解跨文件依赖、生成 MR 描述和 change-summary，需要原始的代码生成能力而非反复推敲<br>
+- <strong><code>/wrap-up</code></strong>：撰写 Confluence 文档、JIRA 摘要，是综合信息的输出任务，不需要深度推理</p>
+<p><strong>原因</strong>：<br>
+- Opus 在不开启思考时速度更快，适合大批量生成场景<br>
+- 代码生成任务的质量瓶颈通常在"知识广度"而非"推理深度"<br>
+- 扩展思考的 token 成本高，用在不需要反复推敲的任务上是浪费</p>
+<h3 id="13-sonnet-with-thinking-vs-opus-without-thinking">13. Sonnet with thinking vs Opus without thinking：成本相同时如何选择？</h3>
+<p><strong>答案：</strong><br>
+两者价格相近时，核心决策标准是<strong>任务性质</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>任务性质</th>
+<th>选择</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分析、推理、识别矛盾</td>
+<td>Sonnet + 思考</td>
+<td>思考过程提升推理质量</td>
+</tr>
+<tr>
+<td>生成、综合、代码实现</td>
+<td>Opus（无思考）</td>
+<td>更强的知识广度和生成能力</td>
+</tr>
+<tr>
+<td>大上下文（&gt;100K token）</td>
+<td>Opus（无思考）</td>
+<td>更好的长文档理解</td>
+</tr>
+<tr>
+<td>复杂约束检查</td>
+<td>Sonnet + 思考</td>
+<td>思考链帮助遍历所有约束</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SDD 实践建议</strong>：</p>
+<pre><code>create-specs   → Sonnet + 思考  (规格质量是核心)
+create-plan    → Sonnet + 思考  (架构决策需要推理)
+create-pod-knowledge → Opus    (大量文档/代码分析)
+execute        → Opus           (代码生成为主)
+wrap-up        → Opus           (综合输出)
+update-knowledge → Opus        (批量集成)
+</code></pre>
+<hr>
+<h2 id="_3">规格质量与最佳实践</h2>
+<h3 id="14-implementation-leakage">14. 什么是"实现泄漏"（Implementation Leakage）？为何要避免？</h3>
+<p><strong>答案：</strong><br>
+实现泄漏是指规格文档中出现了<strong>具体实现细节</strong>，例如数据库表名、框架 API、Redis key 命名、Kafka topic 名等。</p>
+<p><strong>示例</strong>：</p>
+<pre><code>❌ 泄漏的规格：
+&quot;系统应将用户数据存储到 Cassandra 的 user_profile 表&quot;
+
+✅ 正确的规格：
+&quot;系统应持久化用户个人资料，支持按用户 ID 查询，响应时间 &lt; 50ms&quot;
+</code></pre>
+<p><strong>为何避免</strong>：<br>
+- 规格是<strong>需求</strong>，不是<strong>设计</strong>；实现细节属于 <code>plan.md</code> 的工作<br>
+- 绑定实现细节使规格难以在技术栈变更时复用<br>
+- AI 生成计划时会依赖规格，实现泄漏会限制 AI 的方案选择空间<br>
+- 违反 SDD 的"技术无关、用户视角"原则</p>
+<h3 id="15-sdd">15. SDD 中的"可追溯矩阵"是什么？</h3>
+<p><strong>答案：</strong><br>
+可追溯矩阵（Traceability Matrix）是 SDD 的质量保证核心，记录了<strong>每条功能需求（FR）→ 对应文件变更 → 对应测试用例</strong>的映射关系。</p>
+<p><strong>示例</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>FR</th>
+<th>文件变更</th>
+<th>测试用例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01: 用户可按价格区间过滤商品</td>
+<td><code>PriceFilter.cs</code>, <code>FilterMapper.cs</code></td>
+<td><code>PriceFilter_with_valid_range_returns_products</code></td>
+</tr>
+<tr>
+<td>FR-02: 价格区间为空时返回所有商品</td>
+<td><code>PriceFilter.cs</code></td>
+<td><code>PriceFilter_with_empty_range_returns_all</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>作用</strong>：<br>
+- 确保没有遗漏实现（每条 FR 都有代码）<br>
+- 确保没有遗漏测试（每条 AC 都有测试用例）<br>
+- 代码审查时 reviewer 可以对照矩阵检验完整性</p>
+<h3 id="16-sdd-agentsmd">16. SDD 中 <code>AGENTS.md</code> 的作用是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>AGENTS.md</code> 是放在工作区根目录的 AI 行为规范文件，定义了<strong>AI Agent 在该项目中必须遵守的约束和惯例</strong>。</p>
+<p><strong>典型内容</strong>：<br>
+- 技术栈约束（使用的语言、框架、版本）<br>
+- 代码风格规范（命名惯例、文件组织）<br>
+- 禁止行为（如：禁止直接修改数据库 schema）<br>
+- 测试要求（覆盖率目标、测试框架）<br>
+- 分支和提交规范</p>
+<p><strong>与 Cursor Rules 的区别</strong>：<br>
+- <code>AGENTS.md</code> 是 SDD 框架内的标准文件，面向所有支持的 AI 工具<br>
+- Cursor Rules（<code>.cursor/rules/</code>）是 Cursor IDE 专有的规则文件<br>
+- 两者功能类似，<code>AGENTS.md</code> 更具普适性</p>
+<h3 id="17-sdd-constitutionmd">17. SDD 中的 <code>CONSTITUTION.md</code> 是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>CONSTITUTION.md</code>（位于 <code>ai/harness/</code>）是 SDD 框架的<strong>治理宪法</strong>，定义了整个开发团队的核心原则、质量门禁和功能开发标准。</p>
+<p><strong>核心内容</strong>：<br>
+- 团队的架构原则（如：微服务边界、数据所有权）<br>
+- 质量门禁（代码覆盖率、性能指标、安全标准）<br>
+- 功能开发标准（feature flag 使用规范、API 向后兼容要求等）<br>
+- 合规要求（数据隐私、审计日志）</p>
+<p><strong>何时被使用</strong>：<code>/create-plan</code> 在生成计划时会读取 <code>CONSTITUTION.md</code>，对规格进行合规检查，违反核心原则则阻断计划生成。</p>
+<p><strong>注意</strong>：技术栈对齐检查在 <code>AGENTS.md</code> 中，不在 <code>CONSTITUTION.md</code> 中。</p>
+<h3 id="18-change-summarymd">18. <code>change-summary.md</code> 包含什么内容？</h3>
+<p><strong>答案：</strong><br>
+<code>change-summary.md</code>（位于 <code>ai/specs/{JIRA-ID}/</code>）是每次 <code>/execute</code> 后生成的交付总结：</p>
+<ul>
+<li><strong>MR 链接</strong>：所有已创建的 GitLab MR URL</li>
+<li><strong>可追溯矩阵</strong>：FR → 文件变更 → 测试用例的完整映射</li>
+<li><strong>任务进度清单</strong>：<code>T-01</code>、<code>T-02</code>... 每个实现任务的完成状态</li>
+<li><strong>已测试的场景</strong>：覆盖的测试用例列表</li>
+<li><strong>已知限制</strong>：实现中的已知边界或遗留问题</li>
+</ul>
+<p><strong>用途</strong>：<br>
+- MR reviewer 的参考材料<br>
+- <code>/wrap-up</code> 生成 Confluence 文档的数据源<br>
+- <code>/update-knowledge</code> 将已实现功能集成回知识库的依据</p>
+<hr>
+<h2 id="_4">工作流与协作</h2>
+<h3 id="19-sdd-tdd">19. SDD 与 TDD（测试驱动开发）有什么本质区别？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>TDD</th>
+<th>SDD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>起点</td>
+<td>失败的测试</td>
+<td>AI 可读的规格</td>
+</tr>
+<tr>
+<td>驱动力</td>
+<td>让测试通过</td>
+<td>实现规格中的 FR</td>
+</tr>
+<tr>
+<td>需求来源</td>
+<td>开发者自行理解</td>
+<td>从 JIRA + 知识库提炼</td>
+</tr>
+<tr>
+<td>AI 角色</td>
+<td>辅助编写代码</td>
+<td>全程驱动（分析→规格→计划→实现→文档）</td>
+</tr>
+<tr>
+<td>文档</td>
+<td>测试即文档</td>
+<td>规格 + Confluence 文档</td>
+</tr>
+<tr>
+<td>可追溯性</td>
+<td>测试覆盖率</td>
+<td>FR-代码-测试三层矩阵</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键点</strong>：SDD 包含 TDD，<code>/execute</code> 内部就是以 TDD 方式实现规格（先写测试，再实现）。</p>
+<h3 id="20-podproject-oriented-development">20. 什么是 POD（Project-Oriented Development）？</h3>
+<p><strong>答案：</strong><br>
+POD（Project-Oriented Development）是 SDD 框架中的项目组织单元，代表一个<strong>具有清晰业务边界的代码仓库或服务</strong>。</p>
+<p><strong>POD 的核心要素</strong>（定义在 <code>POD.md</code>）：<br>
+- <strong>Purpose</strong>：该 POD 解决什么业务问题<br>
+- <strong>Sub-domain</strong>：属于哪个业务子域<br>
+- <strong>Capabilities</strong>：提供哪些核心能力<br>
+- <strong>Business Entities</strong>：操作的核心业务实体<br>
+- <strong>Primary Flows</strong>：主要业务流程</p>
+<p><strong>实践意义</strong>：<br>
+- AI 在处理任何任务前先读取 <code>POD.md</code>，快速建立项目背景<br>
+- 减少 AI 对项目架构的猜测，提高首次生成的准确率<br>
+- 新团队成员通过 <code>POD.md</code> 快速上手项目</p>
+<h3 id="21-sdd">21. SDD 适合什么规模的团队和项目？</h3>
+<p><strong>答案：</strong><br>
+<strong>最适合场景</strong>：<br>
+- 团队规模 3-10 人的中型项目<br>
+- 需求来源明确（有 JIRA 等工单系统）<br>
+- 代码库有一定复杂度（跨文件、跨模块交互）<br>
+- 团队希望将 AI 用于整个开发流程，而非仅代码补全</p>
+<p><strong>不太适合场景</strong>：<br>
+- 个人 Side Project（流程太重）<br>
+- 极小型 MVP（无需规格文档）<br>
+- 纯前端静态页面（逻辑简单，SDD 收益低）<br>
+- 探索性研究项目（需求本身未定义）</p>
+<p><strong>扩展性</strong>：<br>
+- 大型团队（20+ 人）可将 SDD 用于模块级而非全项目级<br>
+- 与现有 Scrum/Kanban 工作流兼容</p>
+<h3 id="22-sdd-aiknowledge">22. SDD 的知识库（<code>ai/knowledge/</code>）应该放在哪里？</h3>
+<p><strong>答案：</strong><br>
+<code>ai/knowledge/</code> 目录通常放在一个<strong>独立的子模块仓库</strong>（git submodule），而非主代码仓库中。</p>
+<p><strong>推荐结构</strong>：</p>
+<pre><code>主代码仓库 (unified-deals)
+└── ai/ (submodule → ai-knowledge 仓库)
+    ├── knowledge/        # 知识库规格
+    │   ├── POD.md
+    │   ├── functional-spec.md
+    │   └── ...
+    ├── specs/            # 每个 JIRA 的规格和计划
+    │   └── UD-123/
+    │       ├── specs.md
+    │       ├── plan.md
+    │       └── change-summary.md
+    ├── raw/              # 原始人类文档
+    └── harness/          # CONSTITUTION.md 等框架文件
+</code></pre>
+<p><strong>好处</strong>：<br>
+- 知识库变更与代码变更分开 review<br>
+- 知识库可被多个仓库共享<br>
+- <code>/wrap-up</code> 会为知识库单独创建 MR</p>
+<hr>
+<h2 id="_5">进阶问题</h2>
+<h3 id="23-sdd">23. 如何处理 SDD 规格与实际代码不一致的情况？</h3>
+<p><strong>答案：</strong><br>
+规格-代码不一致是 SDD 中的常见问题，处理原则：</p>
+<p><strong>类型一：规格正确，代码有误</strong><br>
+- 修改代码使其符合规格<br>
+- 更新 <code>change-summary.md</code> 中的任务状态</p>
+<p><strong>类型二：代码正确，规格有误（需求理解偏差）</strong><br>
+- 人工更新 <code>specs.md</code> 中的相关 FR/AC<br>
+- 记录修改原因<br>
+- 重新运行受影响的 <code>/create-plan</code> 步骤</p>
+<p><strong>类型三：规格过时（需求已变更）</strong><br>
+- 创建新的 JIRA 任务描述变更<br>
+- 运行 <code>/create-specs</code> 生成变更规格<br>
+- 不直接修改旧规格</p>
+<p><strong>预防</strong>：在 MR 代码审查时，要求 reviewer 对照 <code>change-summary.md</code> 的可追溯矩阵检查。</p>
+<h3 id="24-sdd-destructive-command-blocked">24. SDD 中的"破坏性命令被阻断"（Destructive Command Blocked）是什么保护机制？</h3>
+<p><strong>答案：</strong><br>
+SDD 框架对某些高风险命令有内置保护，在特定条件下会阻断执行：</p>
+<p><strong>常见阻断场景</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>阻断原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/wrap-up</code> 时有 MR 未合并</td>
+<td>防止遗漏代码导致分支删除后丢失变更</td>
+</tr>
+<tr>
+<td><code>/create-plan</code> 时有开放问题</td>
+<td>防止在模糊需求上生成错误计划</td>
+</tr>
+<tr>
+<td><code>/execute</code> 时规格有占位符</td>
+<td>防止执行不完整的规格</td>
+</tr>
+<tr>
+<td>在非 <code>develop</code> 分支运行 <code>/update-knowledge</code></td>
+<td>防止知识库被特性分支的未经验证内容污染</td>
+</tr>
+</tbody>
+</table>
+<p><strong>设计思想</strong>：SDD 宁愿"提前失败、明确失败"，也不要"悄悄生成错误结果"。</p>
+<h3 id="25-sdd-learningsmd">25. SDD 的 <code>LEARNINGS.md</code> 存什么内容？</h3>
+<p><strong>答案：</strong><br>
+<code>LEARNINGS.md</code>（位于工作区根目录）是一个<strong>经验积累文件</strong>，记录项目开发过程中发现的规律、陷阱和改进建议。</p>
+<p><strong>典型内容</strong>：<br>
+- 某类任务的最佳实现模式（如："所有外部 API 调用需要熔断器"）<br>
+- 踩过的坑及解决方案（如："Cassandra 写入超时需设置 ConsistencyLevel.ONE"）<br>
+- AI 常见误判的场景（如："AI 会错误地复用旧的 DTO，需要在规格中明确"）<br>
+- 规格写作的注意事项（项目特有的领域知识）</p>
+<p><strong>更新时机</strong>：<code>/update-knowledge</code> 运行时自动更新；开发人员也可手动追加。</p>
+<p><strong>作用</strong>：让 AI 在未来任务中避免重复犯同类错误，是 SDD 的"项目级记忆"。</p>
+<h3 id="26-sdd">26. 如何评估一个 SDD 实施是否成功？</h3>
+<p><strong>答案：</strong><br>
+SDD 实施成功的衡量维度：</p>
+<p><strong>过程指标</strong>：<br>
+- 规格通过 8 点质量检查清单的比例（目标 &gt;90%）<br>
+- 开放问题在进入 <code>/create-plan</code> 前的解决率（目标 100%）<br>
+- 可追溯矩阵的完整率（每条 FR 都有对应测试）</p>
+<p><strong>质量指标</strong>：<br>
+- MR 中与"需求理解偏差"相关的审查评论数量（目标趋近 0）<br>
+- 规格-代码不一致导致的返工次数<br>
+- 生产环境 bug 中"规格遗漏场景"占比</p>
+<p><strong>效率指标</strong>：<br>
+- 从 JIRA 任务到 MR 提交的周期时间<br>
+- 代码审查通过率（一次通过 vs 多轮返修）</p>
+<p><strong>文档指标</strong>：<br>
+- Confluence 文档的自动生成覆盖率<br>
+- 知识库更新的及时性</p>
+<h3 id="27-sdd-airaw">27. SDD 框架的 <code>ai/raw/</code> 目录放什么文件？</h3>
+<p><strong>答案：</strong><br>
+<code>ai/raw/</code> 存放<strong>人类编写的原始文档</strong>，是 SDD 知识库的原始素材来源：</p>
+<p><strong>典型文件</strong>：<br>
+- 产品需求文档（PRD）<br>
+- API 接口文档（OpenAPI/Swagger）<br>
+- 架构设计文档（Architecture Decision Records, ADR）<br>
+- 会议记录（技术评审、Grooming 会议记录）<br>
+- 现有系统的技术说明书<br>
+- 数据字典</p>
+<p><strong>注意</strong>：<br>
+- <code>ai/raw/</code> 中的文件不直接被 AI 在任务执行中读取，而是先经过 <code>/create-pod-knowledge</code> 或 <code>/update-knowledge</code> 转换为结构化知识<br>
+- <code>/update-knowledge</code> 使用 SHA-256 哈希追踪文件变更，只处理新增或修改的文件</p>
+<h3 id="28-sdd-gitlab-cicd">28. SDD 如何与 GitLab CI/CD 集成？</h3>
+<p><strong>答案：</strong><br>
+SDD 在 CI/CD 层面的集成点：</p>
+<p><strong>代码仓库层</strong>：<br>
+- 每个受影响项目都有独立的 <code>develop-{JIRA-ID}</code> 分支和 MR<br>
+- <code>ai/</code> 知识库仓库有单独的 MR，与代码 MR 并行审查</p>
+<p><strong>CI/CD 流水线</strong>：<br>
+- <code>/execute</code> 完成后会检查各仓库的 CI/CD Pipeline 状态<br>
+- Pipeline 失败时，AI 会分析失败原因并修复<br>
+- <code>change-summary.md</code> 中记录每个 MR 的 Pipeline 状态</p>
+<p><strong>合规检查</strong>：<br>
+- 可在 MR Pipeline 中加入规格格式验证<br>
+- 可验证 <code>change-summary.md</code> 中可追溯矩阵的完整性</p>
+<p><strong>建议集成</strong>：<br>
+- 在 Pipeline 中运行 <code>dotnet test</code> / <code>npm test</code> 确保所有测试通过<br>
+- 可通过 MR Label（如 <code>AI-Delivered</code>）过滤 AI 生成的变更用于单独追踪</p>
+<h3 id="29-sdd-ai-self-review">29. SDD 中 AI 的"自我代码审查"（Self-Review）机制如何工作？</h3>
+<p><strong>答案：</strong><br>
+<code>/execute</code> 在提交代码前会进行一轮 AI 自我审查：</p>
+<p><strong>检查内容</strong>：<br>
+1. <strong>规格对齐</strong>：每条 FR 是否都有对应实现<br>
+2. <strong>测试覆盖</strong>：每条 AC 是否都有对应测试用例<br>
+3. <strong>代码质量</strong>：是否符合 <code>AGENTS.md</code> 中的编码规范<br>
+4. <strong>边界条件</strong>：是否处理了所有边界情况<br>
+5. <strong>错误处理</strong>：是否有适当的异常处理和日志<br>
+6. <strong>潜在 Bug</strong>：是否存在明显的逻辑错误<br>
+7. <strong>安全性</strong>：是否有输入验证缺失等安全问题<br>
+8. <strong>实现泄漏</strong>：新代码是否引入了不该在规格层出现的耦合</p>
+<p><strong>工作方式</strong>：AI 模拟一个资深工程师视角逐项检查，发现问题则在提交前自动修复，无法自动修复的问题记录到 <code>change-summary.md</code> 的"已知限制"中。</p>
+<h3 id="30-sdd">30. 如何从现有项目迁移到 SDD 工作流？</h3>
+<p><strong>答案：</strong><br>
+迁移路径（渐进式）：</p>
+<p><strong>第一步：建立知识库</strong><br>
+- 收集已有文档到 <code>ai/raw/</code><br>
+- 运行 <code>/create-pod-knowledge</code> 生成初始知识库<br>
+- 人工审查 <code>POD.md</code> 和 8 个规格，修正不准确的描述</p>
+<p><strong>第二步：试点新需求</strong><br>
+- 选择 1-2 个中等复杂度的新功能需求作为试点<br>
+- 走完完整的 SDD 流程（specs → plan → execute → wrap-up）<br>
+- 评估规格质量和代码生成准确率</p>
+<p><strong>第三步：团队培训</strong><br>
+- 培训团队如何审查 <code>specs.md</code>（而非直接看代码）<br>
+- 建立规格审查流程（POD Lead 负责确认开放问题）<br>
+- 制定 <code>AGENTS.md</code> 中的团队规范</p>
+<p><strong>第四步：全面推广</strong><br>
+- 所有新需求走 SDD 流程<br>
+- 历史缺陷修复可选择性使用（简单缺陷可跳过规格步骤）<br>
+- 定期运行 <code>/update-knowledge</code> 保持知识库最新</p>
+<p><strong>注意</strong>：存量代码无需重构，SDD 主要针对新增功能。</p>
+<hr>
+<h2 id="spec-kit-speckitorg">Spec Kit 工具最佳实践（speckit.org）</h2>
+<h3 id="31-spec-kit-sdd">31. Spec Kit 是什么？与 SDD 方法论的关系是什么？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 是 SDD（规格驱动开发）方法论的<strong>开源工具实现</strong>，提供 CLI 工具（<code>specify</code>）和标准化的斜杠命令，让开发者可以在任意 AI 编码助手中使用 SDD 工作流。</p>
+<p><strong>关系</strong>：<br>
+- <strong>SDD</strong> 是方法论（思想）：规格 → 计划 → 实现<br>
+- <strong>Spec Kit</strong> 是工具（实践）：将 SDD 工作流编码为可执行命令</p>
+<p><strong>安装方式</strong>：</p>
+<pre><code class="language-bash"># 安装 Specify CLI
+npm install -g @speckit/cli
+
+# 在项目中初始化
+specify init
+</code></pre>
+<p><strong>初始化后</strong>，AI Agent 会自动获得 Spec Kit 的所有斜杠命令能力。</p>
+<h3 id="32-spec-kit-sdd">32. Spec Kit 的完整命令集是什么？与 SDD 命令如何对应？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 提供以下核心斜杠命令：</p>
+<table>
+<thead>
+<tr>
+<th>Spec Kit 命令</th>
+<th>SDD 等价</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/constitution</code></td>
+<td><code>CONSTITUTION.md</code> 配置</td>
+<td>建立项目治理原则和质量门禁</td>
+</tr>
+<tr>
+<td><code>/specify</code></td>
+<td><code>/create-specs</code></td>
+<td>从需求描述生成规格文档</td>
+</tr>
+<tr>
+<td><code>/clarify</code></td>
+<td>递归自答澄清机制</td>
+<td>解决规格中的模糊点</td>
+</tr>
+<tr>
+<td><code>/plan</code></td>
+<td><code>/create-plan</code></td>
+<td>从规格生成技术实施计划</td>
+</tr>
+<tr>
+<td><code>/tasks</code></td>
+<td>任务分解（T-01、T-02...）</td>
+<td>将计划分解为可执行的原子任务</td>
+</tr>
+<tr>
+<td><code>/analyze</code></td>
+<td>代码库分析</td>
+<td>分析代码库结构，生成 POD 知识</td>
+</tr>
+<tr>
+<td><code>/implement</code></td>
+<td><code>/execute</code></td>
+<td>执行 TDD 实现</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意</strong>：Codex CLI 不支持斜杠命令的自定义参数（平台限制），其他 AI 助手均完整支持。</p>
+<h3 id="33-spec-kit">33. Spec Kit 的两阶段开发工作流是什么？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 将开发工作流标准化为两个阶段：</p>
+<p><strong>阶段一：Foundation（基础建立）</strong><br>
+1. <strong>Constitution</strong>：运行 <code>/constitution</code> 确立项目原则、质量门禁、架构约束<br>
+2. <strong>Specification</strong>：运行 <code>/specify</code> 明确地定义需求（描述"做什么"，而非"怎么做"）<br>
+3. <strong>Clarification</strong>：运行 <code>/clarify</code> 解决规格中的所有歧义</p>
+<p><strong>阶段二：Implementation（实施执行）</strong><br>
+1. <strong>Planning</strong>：运行 <code>/plan</code> 选择技术栈和架构方案<br>
+2. <strong>Tasks</strong>：运行 <code>/tasks</code> 分解为可执行的原子任务<br>
+3. <strong>Implementation</strong>：运行 <code>/implement</code> 自动生成可工作的代码</p>
+<p><strong>核心原则</strong>：Phase 1 不能混入实现细节，Phase 2 必须严格基于 Phase 1 的产出。</p>
+<h3 id="34-spec-kit-focus-on-what">34. Spec Kit 的"Focus on What"原则是什么？</h3>
+<p><strong>答案：</strong><br>
+"Focus on What"是 Spec Kit 的核心哲学：<strong>定义你要构建什么、以及为什么构建，而不是定义技术实现细节</strong>。</p>
+<p><strong>传统开发的问题</strong>：<br>
+- 规格只是"脚手架"，编码开始后就被丢弃<br>
+- 开发者和产品之间的需求误解导致返工<br>
+- 代码即文档，技术债务积累</p>
+<p><strong>Spec Kit 的解法</strong>：<br>
+- 规格成为"可执行的"，直接驱动代码生成<br>
+- AI Agent 负责"怎么做"（技术选型、实现细节）<br>
+- 人类专注于"做什么"（业务场景、功能边界）</p>
+<p><strong>实践例子</strong>：</p>
+<pre><code>❌ 错误（混入技术细节）：
+&quot;使用 Redis 缓存用户 session，TTL 设置为 30 分钟，key 格式为 session:{userId}&quot;
+
+✅ 正确（聚焦业务场景）：
+&quot;用户登录后的会话应持久化，支持在会话过期前重新验证身份，非活跃用户的会话应自动失效&quot;
+</code></pre>
+<h3 id="35-spec-kit-ai-agent">35. Spec Kit 支持哪些 AI Agent？选择建议是什么？</h3>
+<p><strong>答案：</strong><br>
+Spec Kit 支持主流 AI 编码助手：</p>
+<table>
+<thead>
+<tr>
+<th>AI Agent</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>规格理解能力最强，多语言支持，上下文感知</td>
+<td>复杂规格项目，首选</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>VS Code 原生集成，企业安全，GitHub 生态</td>
+<td>企业项目，已有 GitHub 工作流</td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>AI-first 编辑器，性能好，直觉化集成</td>
+<td>日常开发，快速迭代</td>
+</tr>
+<tr>
+<td><strong>Gemini CLI</strong></td>
+<td>推理能力强，语言支持全面</td>
+<td>需要强推理的复杂规格</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>实时协作，智能代码生成</td>
+<td>团队协作开发</td>
+</tr>
+<tr>
+<td><strong>Codex CLI</strong></td>
+<td>OpenAI Codex，有平台限制</td>
+<td>不推荐用于 Spec Kit（不支持自定义参数）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其他支持</strong>：Qwen Code、opencode、Kilo Code、Auggie CLI、Roo Code</p>
+<p><strong>选择建议</strong>：对于 SDD 工作流，<strong>Claude Code</strong> 因其卓越的规格理解能力和上下文感知编程能力，是最推荐的选择。</p>
+<h3 id="36-clarify">36. <code>/clarify</code> 命令的最佳使用时机是什么？</h3>
+<p><strong>答案：</strong><br>
+<code>/clarify</code> 是 Spec Kit 独立的澄清命令，不同于 SDD 的"递归自答澄清"（内嵌在 <code>/create-specs</code> 中），<code>/clarify</code> 是<strong>按需调用</strong>的：</p>
+<p><strong>触发时机</strong>：<br>
+1. 运行 <code>/specify</code> 后，规格中出现超过 3 个开放问题时<br>
+2. 人工审查规格后，发现需求描述存在歧义<br>
+3. <code>/plan</code> 被硬关卡阻断（有未解决开放问题）时</p>
+<p><strong>使用方式</strong>：</p>
+<pre><code>/clarify &quot;用户的&quot;活跃会话&quot;如何定义？是指最近30天有登录，还是当前有效的 JWT token？&quot;
+</code></pre>
+<p><strong>最佳实践</strong>：<br>
+- 每次 <code>/clarify</code> 聚焦单个问题，避免多问题混合<br>
+- 澄清后立即更新规格，不要积攒多个澄清再一起更新<br>
+- 澄清结果应记录决策依据，而非仅仅是答案</p>
+<h3 id="37-spec-kit-tasks">37. Spec Kit 的 <code>/tasks</code> 命令与直接实现有什么区别？为何不跳过？</h3>
+<p><strong>答案：</strong><br>
+<code>/tasks</code> 将 <code>/plan</code> 的技术计划分解为<strong>原子级可执行任务</strong>，是实现前的关键步骤：</p>
+<p><strong><code>/tasks</code> 的产出</strong>：</p>
+<pre><code>T-01: 创建 UserSession 数据模型（含字段定义和验证规则）
+T-02: 实现 SessionRepository 的 CRUD 接口
+T-03: 编写 T-01 和 T-02 的单元测试
+T-04: 集成 SessionService 到认证中间件
+T-05: 端到端测试：登录→会话创建→会话验证→会话过期
+</code></pre>
+<p><strong>跳过 <code>/tasks</code> 的风险</strong>：<br>
+- AI 直接从计划实现，容易遗漏任务，无法追踪进度<br>
+- 测试不完整（没有 T-XX 粒度的任务就没有对应测试用例）<br>
+- 无法从中断点恢复（不知道已完成哪些任务）</p>
+<p><strong>最佳实践</strong>：每个 Task 应该是独立可测试的，且完成所有 Task 后规格的所有 FR 都应有覆盖。</p>
+<h3 id="38-spec-kit">38. 如何用 Spec Kit 处理"探索性需求"（需求不清晰的情况）？</h3>
+<p><strong>答案：</strong><br>
+探索性需求（需求本身未定义清楚）是 Spec Kit 的边界场景，推荐策略：</p>
+<p><strong>策略一：先用 <code>/analyze</code> 建立基线</strong><br>
+- 运行 <code>/analyze</code> 分析现有代码库，生成技术上下文<br>
+- 基于上下文和 AI 对话，逐步澄清需求边界<br>
+- 形成初步规格后再运行 <code>/specify</code></p>
+<p><strong>策略二：写"探索性规格"（Spike Spec）</strong><br>
+- 明确标记规格为探索性（<code>[SPIKE]</code> 标签）<br>
+- 降低规格质量要求（允许更多假设）<br>
+- 实现后根据实际结果更新规格</p>
+<p><strong>策略三：分阶段规格</strong></p>
+<pre><code>Phase A 规格: 核心功能（确定需求）→ /specify → /plan → /implement
+Phase B 规格: 扩展功能（待探索）→ 持续用 /clarify 补充
+</code></pre>
+<p><strong>不建议</strong>：在需求完全不清晰时强行运行 <code>/implement</code>，会导致大量返工。</p>
+<h3 id="39-spec-kit">39. Spec Kit 最佳实践：规格文档应该多详细？</h3>
+<p><strong>答案：</strong><br>
+规格的详细程度遵循"<strong>足够但不过度</strong>"原则：</p>
+<p><strong>最低合格标准</strong>：<br>
+- 每条 FR 有明确的验收标准（AC）<br>
+- 没有未解决的 <code>[OPEN QUESTION]</code><br>
+- 不包含实现细节（无框架名、DB 名、API 路径）<br>
+- 作用域清晰（明确"不包含什么"）</p>
+<p><strong>过度详细的反模式</strong>：</p>
+<pre><code>❌ 过度规格化（限制 AI 的实现空间）：
+&quot;使用 Repository 模式，接口命名为 IUserRepository，
+方法名为 GetByIdAsync，返回类型为 Task&lt;UserEntity&gt;&quot;
+
+✅ 适当的规格：
+&quot;系统应能按用户 ID 检索用户信息，响应时间 &lt; 100ms，
+不存在时返回明确的错误信息&quot;
+</code></pre>
+<p><strong>黄金法则</strong>：规格应让一个不了解技术栈的产品经理能够理解，但让工程师无法从规格中推断出实现方案。</p>
+<h3 id="40-spec-kit-constitution">40. Spec Kit 的 <code>/constitution</code> 命令应该定义哪些内容？</h3>
+<p><strong>答案：</strong><br>
+<code>/constitution</code> 建立项目的<strong>治理宪法</strong>，内容应覆盖：</p>
+<p><strong>必须定义</strong>：<br>
+- <strong>架构原则</strong>：如"服务间通信只通过 API，不共享数据库"<br>
+- <strong>质量门禁</strong>：如"单元测试覆盖率 &gt; 80%，P0 功能 &gt; 95%"<br>
+- <strong>安全标准</strong>：如"所有外部输入必须验证，无硬编码凭据"<br>
+- <strong>向后兼容</strong>：如"公开 API 变更必须保持向后兼容，通过版本号管理破坏性变更"</p>
+<p><strong>可选定义</strong>：<br>
+- <strong>性能基线</strong>：核心接口响应时间上限<br>
+- <strong>合规要求</strong>：数据隐私、审计日志要求<br>
+- <strong>技术债务管控</strong>：如"不允许引入新的循环依赖"</p>
+<p><strong>最佳实践</strong>：<br>
+- Constitution 应由团队 Tech Lead 制定，不是由 AI 生成<br>
+- 尽量精简（10-15 条原则），避免变成"规则手册"<br>
+- 每次重大架构变更后审查并更新</p>
+<hr>
+<p>这些题目覆盖了 SDD 的核心概念、工作流程、命令详解、AI 模型选择策略、规格质量标准和最佳实践，适合作为 AI 原生开发方法论的系统学习资料。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-sdd-qa.md</div>
+</div>
+</body>
+</html>

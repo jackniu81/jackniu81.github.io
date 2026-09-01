@@ -1,162 +1,354 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p1 nodejs qa</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 28px; margin-bottom: 20px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-    h2 { font-size: 22px; margin: 30px 0 15px; color: #34495e; }
-    h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
-    h4 { font-size: 16px; margin: 15px 0 8px; color: #666; }
-    p { margin-bottom: 12px; }
-    ul, ol { margin: 10px 0 10px 25px; }
-    li { margin-bottom: 6px; }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 14px;
-      color: #e74c3c;
-    }
-    pre {
-      background: #2c3e50;
-      color: #ecf0f1;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      margin: 15px 0;
-    }
-    pre code {
-      background: none;
-      padding: 0;
-      color: #ecf0f1;
-    }
-    blockquote {
-      border-left: 4px solid #3498db;
-      padding-left: 15px;
-      margin: 15px 0;
-      color: #7f8c8d;
-    }
-    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #3498db; color: #fff; }
-    tr:nth-child(even) { background: #f9f9f9; }
-    strong { color: #2c3e50; }
-    a { color: #3498db; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Node.js — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Node.js 常见面试题（附答案）</h1>
-<h2>基础与运行原理</h2>
-<h3>1. Node.js 是什么？核心特点有哪些？</h3>
-<p><strong>答案：</strong>
-Node.js 是基于 Chrome V8 引擎的 JavaScript 运行时，让 JS 能在服务端运行。核心特点：① 单线程 + 事件驱动；② 非阻塞 I/O（异步）；③ 高并发处理能力（适合 I/O 密集型）；④ npm 生态极其丰富；⑤ 前后端同语言，利于全栈开发。不适合 CPU 密集型任务（会阻塞事件循环）。</p>
-<h3>2. Node.js 的事件循环与浏览器有什么区别？</h3>
-<p><strong>答案：</strong>
-Node.js 事件循环（基于 libuv）有多个阶段（按顺序）：① timers（<code>setTimeout</code>/<code>setInterval</code> 回调）；② pending callbacks（I/O 错误回调）；③ idle/prepare（内部使用）；④ poll（等待 I/O 事件）；⑤ check（<code>setImmediate</code> 回调）；⑥ close callbacks（关闭事件）。特有 API：<code>process.nextTick</code>（优先级最高，在当前操作完成后、下一阶段前执行）；<code>setImmediate</code>（check 阶段，晚于 <code>setTimeout(fn, 0)</code>）。</p>
-<h3>3. <code>process.nextTick</code> 和 <code>setImmediate</code> 的区别？</h3>
-<p><strong>答案：</strong>
-<code>process.nextTick</code> 在当前事件循环阶段结束时立即执行（在所有 I/O 和微任务之前），优先级最高，滥用可能饿死 I/O；<code>setImmediate</code> 在事件循环的 check 阶段执行，在 I/O 回调之后。执行顺序：<code>process.nextTick</code> &gt; Promise 微任务 &gt; <code>setImmediate</code> &gt; <code>setTimeout(fn, 0)</code>（在 I/O 回调中 <code>setImmediate</code> 总是先于 <code>setTimeout</code>）。</p>
-<h3>4. Node.js 如何处理高并发？</h3>
-<p><strong>答案：</strong>
-Node.js 用单线程 + 非阻塞 I/O + 事件循环处理并发：I/O 操作（文件、网络、数据库）交由 libuv 线程池或操作系统异步处理，主线程继续处理其他请求；I/O 完成后将回调加入事件队列。因此大量并发 I/O 请求不会互相阻塞。但 CPU 密集操作会阻塞事件循环，需用 <code>worker_threads</code> 或子进程处理。</p>
-<h3>5. Node.js 的模块系统有哪些？有什么区别？</h3>
-<p><strong>答案：</strong>
-① <strong>CommonJS</strong>（默认，<code>.js</code> 文件）：<code>require</code>/<code>module.exports</code>，同步加载，运行时解析，<code>require</code> 有缓存（首次加载后缓存）；② <strong>ES Module</strong>（<code>.mjs</code> 或 <code>package.json</code> 中 <code>&quot;type&quot;: &quot;module&quot;</code>）：<code>import</code>/<code>export</code>，异步静态分析，支持 Tree Shaking，是未来标准。现代 Node.js（16+）支持 ESM，但与 CJS 互操作有限制（不能在 CJS 中 <code>require</code> ESM）。</p>
-<h3>6. CommonJS 的模块缓存机制是什么？</h3>
-<p><strong>答案：</strong>
-Node.js 在首次 <code>require</code> 一个模块时，将其导出对象缓存在 <code>require.cache</code> 中。后续 <code>require</code> 同一模块路径直接返回缓存，不重新执行模块代码。这意味着模块中的状态（变量、连接）是单例的，单元测试时可能需要清除缓存（<code>delete require.cache[modulePath]</code>）。循环依赖时会返回部分加载的对象。</p>
-<h2>核心模块</h2>
-<h3>7. <code>fs</code> 模块有哪些常用 API？同步和异步如何选择？</h3>
-<p><strong>答案：</strong>
-常用 API：<code>fs.readFile</code>/<code>writeFile</code>/<code>appendFile</code>/<code>unlink</code>/<code>mkdir</code>/<code>stat</code>/<code>readdir</code>（异步回调版），加 <code>Sync</code> 后缀为同步版，<code>fs.promises.*</code> 为 Promise 版。选择原则：<strong>服务端代码用异步</strong>（避免阻塞事件循环）；脚本/CLI 工具可用同步（代码更简洁，无并发压力）。推荐 <code>fs.promises</code> + <code>async/await</code> 组合。</p>
-<h3>8. <code>path</code> 模块的常用方法有哪些？</h3>
-<p><strong>答案：</strong></p>
+<div class="topbar">
+  <h1>Node.js</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="nodejs">Node.js 常见面试题（附答案）</h1>
+<h2 id="_1">基础与运行原理</h2>
+<h3 id="1-nodejs">1. Node.js 是什么？核心特点有哪些？</h3>
+<p><strong>答案：</strong><br>
+Node.js 是基于 Chrome V8 引擎的 JavaScript 运行时，让 JS 能在服务端运行。核心特点：<br>
+- 单线程 + 事件驱动<br>
+- 非阻塞 I/O（异步）<br>
+- 高并发处理能力（适合 I/O 密集型）<br>
+- npm 生态极其丰富<br>
+- 前后端同语言，利于全栈开发</p>
+<p>不适合 CPU 密集型任务（会阻塞事件循环）。</p>
+<h3 id="2-nodejs">2. Node.js 的事件循环与浏览器有什么区别？</h3>
+<p><strong>答案：</strong><br>
+Node.js 事件循环（基于 libuv）有多个阶段（按顺序）：<br>
+- timers（<code>setTimeout</code>/<code>setInterval</code> 回调）<br>
+- pending callbacks（I/O 错误回调）<br>
+- idle/prepare（内部使用）<br>
+- poll（等待 I/O 事件）<br>
+- check（<code>setImmediate</code> 回调）<br>
+- close callbacks（关闭事件）</p>
+<p>特有 API：<code>process.nextTick</code>（优先级最高，在当前操作完成后、下一阶段前执行）；<code>setImmediate</code>（check 阶段，晚于 <code>setTimeout(fn, 0)</code>）。</p>
+<p><strong>Node.js 事件循环解释</strong></p>
+<p>Node.js 事件循环是单线程的异步处理机制，基于 libuv 实现，通过六个阶段循环处理 I/O 操作：</p>
+<p>六个阶段（按顺序）</p>
+<ol>
+<li><strong>timers</strong>：执行 setTimeout/setInterval 到期的回调</li>
+<li><strong>pending callbacks</strong>：执行上一轮未完成的 I/O 错误回调</li>
+<li><strong>idle/prepare</strong>：内部使用</li>
+<li><strong>poll</strong>：核心阶段，执行 I/O 回调，等待新 I/O 事件</li>
+<li><strong>check</strong>：执行 setImmediate 回调</li>
+<li><strong>close callbacks</strong>：执行关闭事件回调</li>
+</ol>
+<h2 id="_2">特殊队列</h2>
 <ul>
-<li><code>path.join(...segments)</code>：拼接路径（自动处理斜杠）</li>
-<li><code>path.resolve(...segments)</code>：解析为绝对路径（从右向左解析）</li>
-<li><code>path.dirname(p)</code>：获取目录部分</li>
-<li><code>path.basename(p, ext)</code>：获取文件名部分</li>
-<li><code>path.extname(p)</code>：获取扩展名</li>
-<li><code>path.parse(p)</code> / <code>path.format(obj)</code>：路径字符串与对象互转</li>
-<li><code>__dirname</code>（CJS）/ <code>import.meta.dirname</code>（ESM）：当前文件目录</li>
+<li><strong>process.nextTick</strong>：优先级最高，当前操作结束后立即执行</li>
+<li><strong>微任务队列</strong>：Promise.then，每个阶段结束后执行</li>
 </ul>
-<h3>9. <code>stream</code> 流有哪些类型？什么场景使用？</h3>
-<p><strong>答案：</strong>
-四种类型：① Readable（可读流，如 <code>fs.createReadStream</code>）；② Writable（可写流，如 <code>fs.createWriteStream</code>）；③ Duplex（双工流，如 TCP socket）；④ Transform（转换流，如 zlib 压缩/解密）。适用场景：处理大文件（避免一次性加载进内存）、HTTP 请求/响应、管道数据处理（<code>readable.pipe(transform).pipe(writable)</code>）。<code>stream.pipeline</code> 比 <code>pipe</code> 更安全（自动处理错误和清理）。</p>
-<h3>10. <code>EventEmitter</code> 的使用和注意事项？</h3>
-<p><strong>答案：</strong></p>
-<pre><code class="language-javascript">const EventEmitter = require(&#39;events&#39;);
-const emitter = new EventEmitter();
-emitter.on(&#39;data&#39;, handler);
-emitter.emit(&#39;data&#39;, payload);
-emitter.once(&#39;close&#39;, handler); // 只触发一次
-emitter.off(&#39;data&#39;, handler);  // 移除监听
+<h2 id="_3">执行顺序</h2>
+<pre><code>同步代码
+    ↓
+process.nextTick 队列（清空）
+    ↓
+微任务队列（清空）
+    ↓
+进入事件循环各阶段（执行宏任务）
+    ↓
+timers 阶段 → 执行 setTimeout/setInterval 宏任务
+    ↓
+pending callbacks 阶段 → 执行 I/O 错误回调宏任务
+    ↓
+idle/prepare 阶段 → 内部使用
+    ↓
+poll 阶段 → 执行 I/O 回调宏任务（核心）
+    ↓
+check 阶段 → 执行 setImmediate 宏任务
+    ↓
+close callbacks 阶段 → 执行关闭事件宏任务
+    ↓
+回到 timers，继续循环
+
+
+## 总结
+宏任务执行时机：
+
+- 在事件循环的各个阶段按顺序执行
+- 每个阶段执行该阶段的所有宏任务
+- 阶段之间会清空微任务队列
+
+同步 → nextTick → 微任务 → timers 宏任务 → nextTick → 微任务 → pending callbacks 宏任务 → nextTick → 微任务 → ... → 循环
 </code></pre>
-<p>注意：① 默认最多 10 个监听器（超出警告，用 <code>setMaxListeners</code> 调整）；② 必须监听 <code>error</code> 事件，否则会抛出未捕获异常；③ 同步触发（<code>emit</code> 时同步执行所有监听器）；④ 内存泄漏常见原因：监听器未移除。</p>
-<h3>11. <code>http</code> 模块如何创建服务器？</h3>
+<h2 id="_4">核心优势</h2>
+<p>单线程 + 非阻塞 I/O，适合高并发场景。I/O 操作由线程池处理，主线程继续处理其他请求，不会互相阻塞。</p>
+<p>需要立即执行 → process.nextTick<br>
+需要让出控制权 → setImmediate<br>
+避免阻塞 I/O → setImmediate<br>
+初始化回调 → process.nextTick</p>
+<h3 id="3-processnexttick-setimmediate">3. <code>process.nextTick</code> 和 <code>setImmediate</code> 的区别？</h3>
+<p><strong>答案：</strong><br>
+<code>process.nextTick</code> 在当前事件循环阶段结束时立即执行（在所有 I/O 和微任务之前），优先级最高，滥用可能饿死 I/O；<code>setImmediate</code> 在事件循环的 check 阶段执行，在 I/O 回调之后。执行顺序：<code>process.nextTick</code> &gt; Promise 微任务 &gt; <code>setImmediate</code> &gt; <code>setTimeout(fn, 0)</code>（在 I/O 回调中 <code>setImmediate</code> 总是先于 <code>setTimeout</code>）。</p>
+<h3 id="4-nodejs">4. Node.js 如何处理高并发？</h3>
+<p><strong>答案：</strong><br>
+Node.js 用单线程 + 非阻塞 I/O + 事件循环处理并发：I/O 操作（文件、网络、数据库）交由 libuv 线程池或操作系统异步处理，主线程继续处理其他请求；I/O 完成后将回调加入事件队列。因此大量并发 I/O 请求不会互相阻塞。但 CPU 密集操作会阻塞事件循环，需用 <code>worker_threads</code> 或子进程处理。</p>
+<h3 id="5-nodejs">5. Node.js 的模块系统有哪些？有什么区别？</h3>
+<p><strong>答案：</strong><br>
+- <strong>CommonJS</strong>（默认，<code>.js</code> 文件）：<code>require</code>/<code>module.exports</code>，同步加载，运行时解析，<code>require</code> 有缓存（首次加载后缓存）<br>
+- <strong>ES Module</strong>（<code>.mjs</code> 或 <code>package.json</code> 中 <code>"type": "module"</code>）：<code>import</code>/<code>export</code>，异步静态分析，支持 Tree Shaking，是未来标准</p>
+<p>现代 Node.js（16+）支持 ESM，但与 CJS 互操作有限制（不能在 CJS 中 <code>require</code> ESM）。</p>
+<h3 id="6-commonjs">6. CommonJS 的模块缓存机制是什么？</h3>
+<p><strong>答案：</strong><br>
+Node.js 在首次 <code>require</code> 一个模块时，将其导出对象缓存在 <code>require.cache</code> 中。后续 <code>require</code> 同一模块路径直接返回缓存，不重新执行模块代码。这意味着模块中的状态（变量、连接）是单例的，单元测试时可能需要清除缓存（<code>delete require.cache[modulePath]</code>）。循环依赖时会返回部分加载的对象。</p>
+<h2 id="_5">核心模块</h2>
+<h3 id="7-fs-api">7. <code>fs</code> 模块有哪些常用 API？同步和异步如何选择？</h3>
+<p><strong>答案：</strong><br>
+常用 API：<code>fs.readFile</code>/<code>writeFile</code>/<code>appendFile</code>/<code>unlink</code>/<code>mkdir</code>/<code>stat</code>/<code>readdir</code>（异步回调版），加 <code>Sync</code> 后缀为同步版，<code>fs.promises.*</code> 为 Promise 版。选择原则：<strong>服务端代码用异步</strong>（避免阻塞事件循环）；脚本/CLI 工具可用同步（代码更简洁，无并发压力）。推荐 <code>fs.promises</code> + <code>async/await</code> 组合。</p>
+<h3 id="8-path">8. <code>path</code> 模块的常用方法有哪些？</h3>
+<p><strong>答案：</strong><br>
+- <code>path.join(...segments)</code>：拼接路径（自动处理斜杠）<br>
+- <code>path.resolve(...segments)</code>：解析为绝对路径（从右向左解析）<br>
+- <code>path.dirname(p)</code>：获取目录部分<br>
+- <code>path.basename(p, ext)</code>：获取文件名部分<br>
+- <code>path.extname(p)</code>：获取扩展名<br>
+- <code>path.parse(p)</code> / <code>path.format(obj)</code>：路径字符串与对象互转<br>
+- <code>__dirname</code>（CJS）/ <code>import.meta.dirname</code>（ESM）：当前文件目录</p>
+<h3 id="9-stream">9. <code>stream</code> 流有哪些类型？什么场景使用？</h3>
+<p><strong>答案：</strong><br>
+四种类型：<br>
+- Readable（可读流，如 <code>fs.createReadStream</code>）<br>
+- Writable（可写流，如 <code>fs.createWriteStream</code>）<br>
+- Duplex（双工流，如 TCP socket）<br>
+- Transform（转换流，如 zlib 压缩/解密）</p>
+<p>适用场景：处理大文件（避免一次性加载进内存）、HTTP 请求/响应、管道数据处理（<code>readable.pipe(transform).pipe(writable)</code>）。<code>stream.pipeline</code> 比 <code>pipe</code> 更安全（自动处理错误和清理）。</p>
+<h3 id="10-eventemitter">10. <code>EventEmitter</code> 的使用和注意事项？</h3>
 <p><strong>答案：</strong></p>
-<pre><code class="language-javascript">const http = require(&#39;http&#39;);
+<pre><code class="language-javascript">const EventEmitter = require('events');
+const emitter = new EventEmitter();
+emitter.on('data', handler);
+emitter.emit('data', payload);
+emitter.once('close', handler); // 只触发一次
+emitter.off('data', handler);  // 移除监听
+</code></pre>
+<p>注意：<br>
+- 默认最多 10 个监听器（超出警告，用 <code>setMaxListeners</code> 调整）<br>
+- 必须监听 <code>error</code> 事件，否则会抛出未捕获异常<br>
+- 同步触发（<code>emit</code> 时同步执行所有监听器）<br>
+- 内存泄漏常见原因：监听器未移除</p>
+<h3 id="11-http">11. <code>http</code> 模块如何创建服务器？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-javascript">const http = require('http');
 const server = http.createServer((req, res) =&gt; {
   const { method, url, headers } = req;
-  let body = &#39;&#39;;
-  req.on(&#39;data&#39;, chunk =&gt; body += chunk);
-  req.on(&#39;end&#39;, () =&gt; {
-    res.writeHead(200, { &#39;Content-Type&#39;: &#39;application/json&#39; });
+  let body = '';
+  req.on('data', chunk =&gt; body += chunk);
+  req.on('end', () =&gt; {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ method, url, body }));
   });
 });
-server.listen(3000, () =&gt; console.log(&#39;Server running on port 3000&#39;));
+server.listen(3000, () =&gt; console.log('Server running on port 3000'));
 </code></pre>
 <p>实际项目通常用 Express/Fastify/Koa 封装，而非直接使用原生 <code>http</code>。</p>
-<h3>12. 什么是 Buffer？什么时候用？</h3>
-<p><strong>答案：</strong>
-Buffer 是 Node.js 处理二进制数据的核心类，类似 <code>Uint8Array</code>。用于处理 TCP 流、文件系统操作、加密、图片处理等二进制场景。常用：<code>Buffer.from(&#39;hello&#39;, &#39;utf8&#39;)</code>（字符串转 Buffer）、<code>buf.toString(&#39;utf8&#39;)</code>（Buffer 转字符串）、<code>Buffer.alloc(size)</code>（创建指定大小的零填充 Buffer）。注意 <code>Buffer.allocUnsafe</code> 速度快但不清零，不安全用于密码学。</p>
-<h2>框架与工程</h2>
-<h3>13. Express 的中间件机制是什么？</h3>
-<p><strong>答案：</strong>
-Express 中间件是函数，签名 <code>(req, res, next) =&gt; void</code>。请求到达时按注册顺序依次执行，每个中间件通过调用 <code>next()</code> 传递控制权，或直接发送响应终止链。错误中间件签名为 <code>(err, req, res, next)</code>，<code>next(err)</code> 触发。常见中间件：日志（morgan）、解析请求体（express.json）、鉴权、CORS、静态文件。洋葱模型：Koa 使用 <code>async/await</code> 的&quot;洋葱圈&quot;模型（中间件可以在请求前后执行代码）。</p>
-<h3>14. Express 和 Koa 的区别是什么？</h3>
-<p><strong>答案：</strong>
-Express：同步中间件（回调风格），内置路由和多种功能，生态最成熟，入门简单；错误处理需传 <code>next(err)</code>。Koa：由 Express 原班人马创作，精简内核（无内置路由等），中间件基于 <code>async/await</code>，洋葱模型（<code>await next()</code> 后可执行后续逻辑），错误处理更优雅（try/catch + ctx.app.emit(&#39;error&#39;)）。NestJS 是在 Express/Fastify 上的完整框架，提供 IoC、模块化、装饰器等能力，适合大型项目。</p>
-<h3>15. 什么是 NestJS？它的核心概念有哪些？</h3>
-<p><strong>答案：</strong>
-NestJS 是基于 TypeScript 的渐进式 Node.js 框架，深受 Angular 启发。核心概念：① <strong>Module</strong>（模块，组织代码边界）；② <strong>Controller</strong>（路由处理，<code>@Get</code>/<code>@Post</code> 等装饰器）；③ <strong>Service</strong>（业务逻辑，通过 DI 注入）；④ <strong>Provider</strong>（注入的任何服务/仓库）；⑤ <strong>Guard</strong>（权限守卫）；⑥ <strong>Interceptor</strong>（拦截器，类似 Axios 拦截器）；⑦ <strong>Pipe</strong>（数据转换和验证，class-validator）；⑧ <strong>Middleware</strong>（与 Express 中间件兼容）。</p>
-<h3>16. 如何在 Node.js 中进行错误处理？</h3>
-<p><strong>答案：</strong>
-① 同步代码：<code>try/catch</code>；② 异步回调：回调第一个参数约定为 <code>err</code>；③ Promise：<code>.catch()</code> 或 <code>async/await</code> + <code>try/catch</code>；④ 全局未捕获：<code>process.on(&#39;uncaughtException&#39;, handler)</code>（严重错误，记录日志后应退出进程）；<code>process.on(&#39;unhandledRejection&#39;, handler)</code>（Promise 未捕获）；⑤ Express 错误中间件：<code>(err, req, res, next)</code>；⑥ 生产建议：用 PM2/cluster + 进程守护，异常时自动重启。</p>
-<h3>17. Node.js 中如何使用环境变量？</h3>
-<p><strong>答案：</strong>
-通过 <code>process.env.VAR_NAME</code> 访问。开发时使用 <code>.env</code> 文件配合 <code>dotenv</code> 库（<code>require(&#39;dotenv&#39;).config()</code>）加载。生产环境通过系统环境变量、Docker ENV、Kubernetes ConfigMap 注入，不应将 <code>.env</code> 提交到版本库（加入 <code>.gitignore</code>）。<code>@nestjs/config</code> 封装了 NestJS 中的配置管理。</p>
-<h2>性能与部署</h2>
-<h3>18. 如何利用多核 CPU？</h3>
-<p><strong>答案：</strong>
-Node.js 单进程单线程，默认只用一个 CPU 核。利用多核方案：① <strong>cluster 模块</strong>：主进程 fork 多个子进程（一般等于 CPU 核数），共享端口，各自处理请求；② <strong>worker_threads</strong>：在同一进程内创建线程，共享内存（SharedArrayBuffer），适合 CPU 密集任务；③ <strong>PM2</strong>：生产环境常用进程管理器，<code>pm2 start app.js -i max</code> 自动按 CPU 核数启动集群。</p>
-<h3>19. 如何排查 Node.js 内存泄漏？</h3>
-<p><strong>答案：</strong>
-① 监控内存：<code>process.memoryUsage()</code> 或 PM2 监控面板；② 生成堆快照：<code>v8.writeHeapSnapshot()</code> 或 Chrome DevTools（连接 <code>--inspect</code>）；③ 对比多次堆快照，找到持续增长的对象；④ 常见原因：全局变量积累、闭包引用、事件监听器未移除、定时器未清理、缓存无限增长；⑤ 工具：<code>clinic.js</code>（诊断）、<code>heapdump</code>、<code>memwatch-next</code>。</p>
-<h3>20. PM2 有哪些常用命令和特性？</h3>
+<h3 id="12-buffer">12. 什么是 Buffer？什么时候用？</h3>
+<p><strong>答案：</strong><br>
+Buffer 是 Node.js 处理二进制数据的核心类，类似 <code>Uint8Array</code>。用于处理 TCP 流、文件系统操作、加密、图片处理等二进制场景。常用：<code>Buffer.from('hello', 'utf8')</code>（字符串转 Buffer）、<code>buf.toString('utf8')</code>（Buffer 转字符串）、<code>Buffer.alloc(size)</code>（创建指定大小的零填充 Buffer）。注意 <code>Buffer.allocUnsafe</code> 速度快但不清零，不安全用于密码学。</p>
+<h2 id="_6">框架与工程</h2>
+<h3 id="13-express">13. Express 的中间件机制是什么？</h3>
+<p><strong>答案：</strong><br>
+Express 中间件是函数，签名 <code>(req, res, next) =&gt; void</code>。请求到达时按注册顺序依次执行，每个中间件通过调用 <code>next()</code> 传递控制权，或直接发送响应终止链。错误中间件签名为 <code>(err, req, res, next)</code>，<code>next(err)</code> 触发。常见中间件：日志（morgan）、解析请求体（express.json）、鉴权、CORS、静态文件。洋葱模型：Koa 使用 <code>async/await</code> 的"洋葱圈"模型（中间件可以在请求前后执行代码）。</p>
+<p>洋葱：请求从外层进入，经过所有中间件，响应从内层返回，再经过所有中间件（反向顺序）</p>
+<h3 id="14-express-koa">14. Express 和 Koa 的区别是什么？</h3>
+<p><strong>答案：</strong><br>
+Express：同步中间件（回调风格），内置路由和多种功能，生态最成熟，入门简单；错误处理需传 <code>next(err)</code>。Koa：由 Express 原班人马创作，精简内核（无内置路由等），中间件基于 <code>async/await</code>，洋葱模型（<code>await next()</code> 后可执行后续逻辑），错误处理更优雅（try/catch + ctx.app.emit('error')）。NestJS 是在 Express/Fastify 上的完整框架，提供 IoC、模块化、装饰器等能力，适合大型项目。</p>
+<h3 id="15-nestjs">15. 什么是 NestJS？它的核心概念有哪些？</h3>
+<p><strong>答案：</strong><br>
+NestJS 是基于 TypeScript 的渐进式 Node.js 框架，深受 Angular 启发。核心概念：<br>
+- <strong>Module</strong>（模块，组织代码边界）<br>
+- <strong>Controller</strong>（路由处理，<code>@Get</code>/<code>@Post</code> 等装饰器）<br>
+- <strong>Service</strong>（业务逻辑，通过 DI 注入）<br>
+- <strong>Provider</strong>（注入的任何服务/仓库）<br>
+- <strong>Guard</strong>（权限守卫）<br>
+- <strong>Interceptor</strong>（拦截器，类似 Axios 拦截器）<br>
+- <strong>Pipe</strong>（数据转换和验证，class-validator）<br>
+- <strong>Middleware</strong>（与 Express 中间件兼容）</p>
+<h3 id="16-nodejs">16. 如何在 Node.js 中进行错误处理？</h3>
+<p><strong>答案：</strong><br>
+- 同步代码：<code>try/catch</code><br>
+- 异步回调：回调第一个参数约定为 <code>err</code><br>
+- Promise：<code>.catch()</code> 或 <code>async/await</code> + <code>try/catch</code><br>
+- 全局未捕获：<code>process.on('uncaughtException', handler)</code>（严重错误，记录日志后应退出进程）<br>
+- <code>process.on('unhandledRejection', handler)</code>（Promise 未捕获）<br>
+- Express 错误中间件：<code>(err, req, res, next)</code><br>
+- 生产建议：用 PM2/cluster + 进程守护，异常时自动重启</p>
+<h3 id="17-nodejs">17. Node.js 中如何使用环境变量？</h3>
+<p><strong>答案：</strong><br>
+通过 <code>process.env.VAR_NAME</code> 访问。开发时使用 <code>.env</code> 文件配合 <code>dotenv</code> 库（<code>require('dotenv').config()</code>）加载。生产环境通过系统环境变量、Docker ENV、Kubernetes ConfigMap 注入，不应将 <code>.env</code> 提交到版本库（加入 <code>.gitignore</code>）。<code>@nestjs/config</code> 封装了 NestJS 中的配置管理。</p>
+<h2 id="_7">性能与部署</h2>
+<h3 id="18-cpu">18. 如何利用多核 CPU？</h3>
+<p><strong>答案：</strong><br>
+Node.js 单进程单线程，默认只用一个 CPU 核。利用多核方案：<br>
+- <strong>cluster 模块</strong>：主进程 fork 多个子进程（一般等于 CPU 核数），共享端口，各自处理请求<br>
+- <strong>worker_threads</strong>：在同一进程内创建线程，共享内存（SharedArrayBuffer），适合 CPU 密集任务<br>
+- <strong>PM2</strong>：生产环境常用进程管理器，<code>pm2 start app.js -i max</code> 自动按 CPU 核数启动集群</p>
+<h3 id="19-nodejs">19. 如何排查 Node.js 内存泄漏？</h3>
+<p><strong>答案：</strong><br>
+- 监控内存：<code>process.memoryUsage()</code> 或 PM2 监控面板<br>
+- 生成堆快照：<code>v8.writeHeapSnapshot()</code> 或 Chrome DevTools（连接 <code>--inspect</code>）<br>
+- 对比多次堆快照，找到持续增长的对象<br>
+- 常见原因：全局变量积累、闭包引用、事件监听器未移除、定时器未清理、缓存无限增长<br>
+- 工具：<code>clinic.js</code>（诊断）、<code>heapdump</code>、<code>memwatch-next</code></p>
+<h3 id="20-pm2">20. PM2 有哪些常用命令和特性？</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-bash">pm2 start app.js --name myapp   # 启动
 pm2 start app.js -i max         # 集群模式（按 CPU 核数）
@@ -168,13 +360,13 @@ pm2 startup                      # 设置开机自启
 pm2 save                         # 保存当前进程列表
 </code></pre>
 <p>特性：进程守护（崩溃自动重启）、日志管理、集群管理、热重载（<code>pm2 reload</code>，零停机更新）、监控面板。</p>
-<h3>21. 什么是 Node.js 的 <code>--inspect</code> 调试模式？</h3>
-<p><strong>答案：</strong>
+<h3 id="21-nodejs-inspect">21. 什么是 Node.js 的 <code>--inspect</code> 调试模式？</h3>
+<p><strong>答案：</strong><br>
 启动时加 <code>--inspect</code> 或 <code>--inspect-brk</code>（在第一行暂停）开启调试端口（默认 9229）。然后可以用 Chrome DevTools（<code>chrome://inspect</code>）或 VSCode 连接，进行断点调试、内存分析、CPU 性能分析。<code>--inspect-brk</code> 适合调试启动时的问题。生产环境谨慎开启，注意端口安全。</p>
-<h3>22. 如何实现 Node.js 的优雅退出（Graceful Shutdown）？</h3>
+<h3 id="22-nodejs-graceful-shutdown">22. 如何实现 Node.js 的优雅退出（Graceful Shutdown）？</h3>
 <p><strong>答案：</strong></p>
-<pre><code class="language-javascript">process.on(&#39;SIGTERM&#39;, async () =&gt; {
-  console.log(&#39;Received SIGTERM, graceful shutdown...&#39;);
+<pre><code class="language-javascript">process.on('SIGTERM', async () =&gt; {
+  console.log('Received SIGTERM, graceful shutdown...');
   server.close(async () =&gt; {      // 停止接受新连接
     await db.disconnect();         // 关闭数据库连接
     await redis.quit();            // 关闭 Redis 连接
@@ -185,19 +377,27 @@ pm2 save                         # 保存当前进程列表
 });
 </code></pre>
 <p>优雅退出：收到信号后停止接受新请求，等待进行中的请求完成，清理资源（DB 连接、消息队列），然后退出。Kubernetes 部署时 <code>SIGTERM</code> 是 Pod 终止信号，必须处理。</p>
-<h2>生态与工具</h2>
-<h3>23. npm、yarn、pnpm 的区别？</h3>
-<p><strong>答案：</strong>
-<strong>npm</strong>：Node.js 官方包管理器，v7+ 支持 workspaces，但 <code>node_modules</code> 扁平化有幽灵依赖问题；<strong>yarn（v1）</strong>：并行下载更快，有 <code>yarn.lock</code>，目前维护模式；<strong>yarn（v2/3/4）</strong>：PnP（Plug&#39;n&#39;Play）模式，无 <code>node_modules</code>，启动极快；<strong>pnpm</strong>：硬链接 + 符号链接共享依赖，节省磁盘，严格依赖隔离（无幽灵依赖），monorepo 支持好，现代项目首选。</p>
-<h3>24. 什么是 Monorepo？常用工具有哪些？</h3>
-<p><strong>答案：</strong>
-Monorepo 是将多个项目/包放在同一 Git 仓库的管理方式。优点：跨包共享代码、统一构建流程、原子化提交（多包联动修改一次提交）、便于重构。常用工具：① <strong>pnpm workspaces</strong>（包管理）；② <strong>Turborepo</strong>（任务编排、构建缓存，最快）；③ <strong>Nx</strong>（功能更丰富，有代码生成器、依赖图分析）；④ <strong>Lerna</strong>（较老，现配合 nx 使用）。</p>
-<h3>25. Node.js 中如何处理大文件上传？</h3>
-<p><strong>答案：</strong>
-① 流式处理：直接 pipe 到存储，不在内存中积累完整文件（<code>multer</code> 的 <code>diskStorage</code>、或自定义 <code>busboy</code> 流处理）；② 分片上传：前端将文件切分为小块（File.slice()）分别上传，服务端接收后合并，支持断点续传；③ 直传云存储：服务端生成预签名 URL，前端直接上传到 OSS/S3，减轻服务器压力。注意设置请求体大小限制（<code>express.json({ limit: &#39;10mb&#39; })</code>）。</p>
-<h2>总结</h2>
+<h2 id="_8">生态与工具</h2>
+<h3 id="23-npmyarnpnpm">23. npm、yarn、pnpm 的区别？</h3>
+<p><strong>答案：</strong><br>
+<strong>npm</strong>：Node.js 官方包管理器，v7+ 支持 workspaces，但 <code>node_modules</code> 扁平化有幽灵依赖问题；<strong>yarn（v1）</strong>：并行下载更快，有 <code>yarn.lock</code>，目前维护模式；<strong>yarn（v2/3/4）</strong>：PnP（Plug'n'Play）模式，无 <code>node_modules</code>，启动极快；<strong>pnpm</strong>：硬链接 + 符号链接共享依赖，节省磁盘，严格依赖隔离（无幽灵依赖），monorepo 支持好，现代项目首选。</p>
+<h3 id="24-monorepo">24. 什么是 Monorepo？常用工具有哪些？</h3>
+<p><strong>答案：</strong><br>
+Monorepo 是将多个项目/包放在同一 Git 仓库的管理方式。优点：跨包共享代码、统一构建流程、原子化提交（多包联动修改一次提交）、便于重构。常用工具：<br>
+- <strong>pnpm workspaces</strong>（包管理）<br>
+- <strong>Turborepo</strong>（任务编排、构建缓存，最快）<br>
+- <strong>Nx</strong>（功能更丰富，有代码生成器、依赖图分析）<br>
+- <strong>Lerna</strong>（较老，现配合 nx 使用）</p>
+<h3 id="25-nodejs">25. Node.js 中如何处理大文件上传？</h3>
+<p><strong>答案：</strong><br>
+- 流式处理：直接 pipe 到存储，不在内存中积累完整文件（<code>multer</code> 的 <code>diskStorage</code>、或自定义 <code>busboy</code> 流处理）<br>
+- 分片上传：前端将文件切分为小块（File.slice()）分别上传，服务端接收后合并，支持断点续传<br>
+- 直传云存储：服务端生成预签名 URL，前端直接上传到 OSS/S3，减轻服务器压力</p>
+<p>注意设置请求体大小限制（<code>express.json({ limit: '10mb' })</code>）。</p>
+<h2 id="_9">总结</h2>
 <p>这些题目覆盖了 Node.js 运行原理、事件循环、核心模块、框架（Express/Koa/NestJS）、错误处理、性能优化、部署和生态工具，适合作为 Node.js 后端面试系统复习资料。</p>
-
   </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-nodejs-qa.md</div>
+</div>
 </body>
 </html>

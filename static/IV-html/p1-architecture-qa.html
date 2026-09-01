@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统架构设计 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>系统架构设计</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <h1 id="_1">系统架构 常见面试题（附答案）</h1>
+<h2 id="_2">系统设计基础</h2>
+<h3 id="1">1. 系统设计面试考察哪些核心维度？</h3>
+<p><strong>答案：</strong><br>
+- <strong>需求分析</strong>：功能需求、非功能需求（QPS、存储量、延迟要求）<br>
+- <strong>容量估算</strong>：DAU、读写比例、峰值 QPS、存储规模<br>
+- <strong>高层架构</strong>：核心组件拆分、数据流向<br>
+- <strong>数据库设计</strong>：数据模型、选型（SQL vs NoSQL）、索引<br>
+- <strong>扩展性设计</strong>：水平/垂直扩展、缓存、分库分表<br>
+- <strong>高可用设计</strong>：冗余、故障转移、监控告警</p>
+<h3 id="2-cap">2. 什么是 CAP 定理？</h3>
+<p><strong>答案：</strong><br>
+分布式系统无法同时满足以下三点，最多满足两项：<br>
+- <strong>C（一致性 Consistency）</strong>：所有节点同一时刻数据一致<br>
+- <strong>A（可用性 Availability）</strong>：系统始终可响应请求<br>
+- <strong>P（分区容错性 Partition Tolerance）</strong>：网络分区时系统仍能工作</p>
+<p>由于网络分区在生产环境不可避免，实际只能在 CP 和 AP 间取舍：<br>
+- <strong>CP 系统</strong>（如 Zookeeper、HBase）：保证一致性，牺牲部分可用性<br>
+- <strong>AP 系统</strong>（如 Cassandra、DynamoDB）：保证可用性，数据最终一致</p>
+<h3 id="3-base">3. 什么是 BASE 理论？</h3>
+<p><strong>答案：</strong><br>
+BASE 是 CAP 中 AP 方向的延伸，适用于高可用分布式系统：<br>
+- <strong>BA（Basically Available，基本可用）</strong>：核心功能可用，非核心可降级<br>
+- <strong>S（Soft State，软状态）</strong>：允许中间状态（数据同步中）<br>
+- <strong>E（Eventually Consistent，最终一致）</strong>：数据最终达到一致，允许暂时不一致</p>
+<p>对比 ACID：ACID 是强一致性（数据库事务），BASE 是弱一致性（分布式系统）。</p>
+<h3 id="4">4. 水平扩展和垂直扩展的区别？</h3>
+<p><strong>答案：</strong><br>
+- <strong>垂直扩展（Scale Up）</strong>：提升单机配置（CPU、内存、硬盘），简单但有上限，成本高<br>
+- <strong>水平扩展（Scale Out）</strong>：增加服务器数量，理论上无上限，需要无状态架构支持</p>
+<p>现代云原生系统优先水平扩展，通过无状态设计（Session 外置到 Redis）、负载均衡实现弹性扩容。</p>
+<h3 id="5">5. 什么是负载均衡？常见算法有哪些？</h3>
+<p><strong>答案：</strong><br>
+负载均衡将流量分发到多台服务器，避免单点压力过大。常见算法：<br>
+- <strong>轮询（Round Robin）</strong>：依次分发，适合同构服务器<br>
+- <strong>加权轮询</strong>：按服务器权重分发，适合异构服务器<br>
+- <strong>最少连接（Least Connections）</strong>：分发给当前连接数最少的服务器<br>
+- <strong>IP 哈希（IP Hash）</strong>：同一 IP 总分发到同一服务器（有状态服务）<br>
+- <strong>一致性哈希</strong>：节点增减时只迁移少量数据（适合缓存集群）</p>
+<h2 id="_3">缓存策略</h2>
+<h3 id="6">6. 缓存有哪些常见读写策略？</h3>
+<p><strong>答案：</strong><br>
+- <strong>Cache-Aside（旁路缓存）</strong>：应用直接管理缓存，读时先查缓存，未命中再查 DB 并回填；写时先更新 DB，再删除缓存。最常用。<br>
+- <strong>Write-Through</strong>：写操作同时写缓存和 DB，一致性好但写延迟高<br>
+- <strong>Write-Behind（Write-Back）</strong>：只写缓存，异步刷新到 DB，写性能好但有数据丢失风险<br>
+- <strong>Read-Through</strong>：缓存自动回填，应用只与缓存交互</p>
+<h3 id="7">7. 什么是缓存穿透、击穿、雪崩？</h3>
+<p><strong>答案：</strong><br>
+- <strong>缓存穿透</strong>：查询不存在的 Key，每次都打到 DB。解决：空值缓存（短 TTL）或布隆过滤器<br>
+- <strong>缓存击穿</strong>：热点 Key 过期瞬间，大量请求同时打到 DB。解决：互斥锁（只允许一个请求回填）或逻辑过期（异步刷新）<br>
+- <strong>缓存雪崩</strong>：大量 Key 同时过期，DB 压力骤增。解决：随机 TTL 偏移、多级缓存、限流降级</p>
+<h3 id="8-redis">8. Redis 适合哪些使用场景？</h3>
+<p><strong>答案：</strong><br>
+- <strong>缓存</strong>：降低 DB 压力（最常用）<br>
+- <strong>Session 存储</strong>：分布式系统共享会话<br>
+- <strong>分布式锁</strong>：<code>SET key value NX PX timeout</code> 实现互斥<br>
+- <strong>限流</strong>：滑动窗口计数器<br>
+- <strong>消息队列</strong>：<code>List</code>（LPUSH/BRPOP）或 <code>Stream</code>（持久化 MQ）<br>
+- <strong>排行榜</strong>：<code>ZSet</code> 有序集合<br>
+- <strong>发布订阅</strong>：<code>Pub/Sub</code>（不推荐，消息不持久化）</p>
+<h2 id="_4">微服务架构</h2>
+<h3 id="9">9. 微服务架构与单体架构的区别？</h3>
+<p><strong>答案：</strong><br>
+| 维度 | 单体架构 | 微服务架构 |<br>
+|------|---------|-----------|<br>
+| <strong>部署</strong> | 整体部署 | 独立部署 |<br>
+| <strong>技术栈</strong> | 统一 | 各服务自选 |<br>
+| <strong>扩展</strong> | 整体扩展 | 按服务扩展 |<br>
+| <strong>故障影响</strong> | 全局 | 局部隔离 |<br>
+| <strong>复杂度</strong> | 低（初期） | 高（分布式） |<br>
+| <strong>适合阶段</strong> | 初创、小团队 | 成熟、大团队 |</p>
+<h3 id="10">10. 微服务架构的核心挑战有哪些？</h3>
+<p><strong>答案：</strong><br>
+- <strong>分布式事务</strong>：跨服务数据一致性（Saga/TCC）<br>
+- <strong>服务发现</strong>：动态注册和发现（Consul、Nacos）<br>
+- <strong>网络延迟</strong>：服务间 HTTP 调用比本地调用慢<br>
+- <strong>分布式追踪</strong>：链路追踪（Jaeger、Zipkin）<br>
+- <strong>运维复杂度</strong>：大量服务的部署、监控、日志聚合<br>
+- <strong>数据管理</strong>：每个服务独立 DB，跨服务查询困难</p>
+<h3 id="11-api-api-gateway">11. 什么是 API 网关（API Gateway）？</h3>
+<p><strong>答案：</strong><br>
+API 网关是微服务的统一入口，承担以下职责：<br>
+- <strong>路由转发</strong>：根据路径/域名路由到对应微服务<br>
+- <strong>身份认证</strong>：统一 Token 验证，无需每个服务重复实现<br>
+- <strong>限流熔断</strong>：保护后端服务<br>
+- <strong>协议转换</strong>：HTTP → gRPC、REST → GraphQL<br>
+- <strong>日志监控</strong>：统一记录请求日志<br>
+- <strong>API 聚合</strong>：合并多个服务的响应（减少前端请求数）</p>
+<p>常见实现：Kong、AWS API Gateway、Nginx + Lua、ASP.NET Core Ocelot、Node.js BFF</p>
+<h3 id="12">12. 什么是服务注册与发现？</h3>
+<p><strong>答案：</strong><br>
+微服务实例启动时，向注册中心注册自己的地址；调用方查询注册中心获取目标服务的地址列表，再负载均衡选取一个调用。注册中心维护服务健康状态，自动剔除不健康实例。<br>
+- <strong>常用工具</strong>：Consul、Nacos（阿里，支持配置中心）、Eureka（Netflix）、Etcd<br>
+- <strong>两种模式</strong>：客户端发现（调用方自己查询+负载均衡）vs 服务端发现（负载均衡器查询）</p>
+<h3 id="13">13. 微服务间通信方式有哪些？如何选择？</h3>
+<p><strong>答案：</strong><br>
+- <strong>同步通信</strong>：<br>
+  - <strong>REST/HTTP</strong>：简单，生态好，适合跨语言、外部 API<br>
+  - <strong>gRPC</strong>：高性能（二进制、HTTP/2 多路复用），强类型（Protobuf），适合内部高频调用<br>
+- <strong>异步通信</strong>：<br>
+  - <strong>消息队列</strong>（Kafka、RabbitMQ）：解耦、削峰、最终一致，适合不需要即时响应的场景</p>
+<p>选择原则：需要即时响应用 REST/gRPC；需要解耦/削峰用消息队列。</p>
+<h3 id="14-circuit-breaker">14. 什么是熔断器（Circuit Breaker）？</h3>
+<p><strong>答案：</strong><br>
+熔断器防止下游服务故障级联扩散。三种状态：<br>
+- <strong>Closed（关闭）</strong>：正常调用，统计失败率<br>
+- <strong>Open（打开）</strong>：失败率超阈值，直接拒绝请求（快速失败），等待冷却时间<br>
+- <strong>Half-Open（半开）</strong>：冷却后允许少量请求试探，成功则恢复关闭，失败则重新打开</p>
+<p>实现：.NET 用 Polly，Java 用 Resilience4j，Node.js 用 opossum。</p>
+<h3 id="15-saga">15. 什么是 Saga 模式？如何处理分布式事务？</h3>
+<p><strong>答案：</strong><br>
+Saga 将分布式事务拆分为一系列本地事务，每步成功才执行下一步，失败则执行补偿事务回滚。<br>
+- <strong>编排式（Choreography）</strong>：各服务通过事件触发，无中心协调，适合简单流程<br>
+- <strong>协调式（Orchestration）</strong>：有中心 Saga Orchestrator 协调步骤，逻辑清晰，适合复杂流程</p>
+<p>示例：下单 → 扣库存 → 扣余额 → 通知，任一失败则触发补偿（恢复库存、退款）。</p>
+<h2 id="_5">消息队列</h2>
+<h3 id="16">16. 消息队列适合哪些场景？</h3>
+<p><strong>答案：</strong><br>
+- <strong>异步解耦</strong>：发送方不需要等待接收方处理，如发送邮件通知<br>
+- <strong>削峰填谷</strong>：突发流量缓冲（如秒杀），消费方按能力消费<br>
+- <strong>事件驱动</strong>：业务事件通知（订单创建 → 通知多个下游服务）<br>
+- <strong>顺序保证</strong>：Kafka 分区内消息有序<br>
+- <strong>延迟队列</strong>：定时任务（如15分钟未支付自动取消）</p>
+<p>常用：Kafka（高吞吐、持久化）、RabbitMQ（功能丰富、易用）、RocketMQ（阿里云）</p>
+<h3 id="17-kafka">17. Kafka 为什么吞吐量高？</h3>
+<p><strong>答案：</strong><br>
+- <strong>顺序写磁盘</strong>：磁盘顺序 I/O 比随机 I/O 快 100 倍，Kafka 消息追加写<br>
+- <strong>零拷贝（Zero Copy）</strong>：<code>sendfile</code> 系统调用直接内核态传输，减少 CPU 拷贝<br>
+- <strong>批量发送</strong>：生产者批量打包消息，减少网络往返<br>
+- <strong>分区并行</strong>：Topic 分多个 Partition，消费者组并行消费<br>
+- <strong>Page Cache</strong>：利用操作系统页缓存，减少磁盘 I/O</p>
+<h3 id="18">18. 消息队列如何保证消息不丢失？</h3>
+<p><strong>答案：</strong><br>
+从生产、存储、消费三个环节保证：<br>
+- <strong>生产端</strong>：发送后等待 ACK 确认（同步发送或回调确认）<br>
+- <strong>存储端</strong>：消息持久化到磁盘（Kafka 默认持久化），多副本复制<br>
+- <strong>消费端</strong>：消费后手动 ACK，未 ACK 的消息重新投递；消费逻辑幂等处理（防重复消费）</p>
+<h2 id="_6">微前端</h2>
+<h3 id="19">19. 什么是微前端？核心价值是什么？</h3>
+<p><strong>答案：</strong><br>
+微前端将大型前端应用拆分为多个独立子应用，每个子应用可独立开发、部署、技术栈自选。核心价值：<br>
+- <strong>独立部署</strong>：子应用单独发布，不影响其他应用<br>
+- <strong>技术无关</strong>：不同子应用可用 React、Vue、Angular<br>
+- <strong>团队自治</strong>：各团队独立开发，减少协作冲突<br>
+- <strong>渐进迁移</strong>：老应用逐步拆分，无需大重构</p>
+<h3 id="20">20. 微前端的常见实现方案？</h3>
+<p><strong>答案：</strong><br>
+| 方案 | 原理 | 代表 | 优劣 |<br>
+|------|------|------|------|<br>
+| <strong>iframe</strong> | 天然隔离 | - | 隔离好但体验差（路由、弹窗、通信） |<br>
+| <strong>qiankun</strong> | JS 沙箱 + CSS 隔离 | 阿里 | 接入成本低，国内主流 |<br>
+| <strong>Module Federation</strong> | Webpack 运行时共享 | Webpack 5 | 共享依赖，无运行时框架 |<br>
+| <strong>single-spa</strong> | 路由注册 | single-spa | 基础框架，qiankun 基于它 |<br>
+| <strong>Web Components</strong> | 浏览器原生 | - | 天然隔离，兼容性一般 |<br>
+| <strong>NPM 包</strong> | 构建时集成 | - | 最简单，但不独立部署 |</p>
+<h3 id="21-qiankun">21. qiankun 的核心原理是什么？</h3>
+<p><strong>答案：</strong><br>
+- <strong>JS 沙箱</strong>：<br>
+  - <code>SnapshotSandbox</code>：切换时快照/恢复 <code>window</code> 属性（不支持并发）<br>
+  - <code>ProxySandbox</code>：用 Proxy 代理 <code>window</code>，每个子应用有独立的全局作用域（推荐）<br>
+- <strong>CSS 隔离</strong>：<br>
+  - <code>shadowDOM</code>：浏览器原生隔离（兼容性问题）<br>
+  - <code>scoped</code>：给所有 CSS 选择器加前缀（<code>data-qiankun</code> 属性）<br>
+- <strong>生命周期</strong>：子应用需导出 <code>bootstrap</code>、<code>mount</code>、<code>unmount</code> 三个生命周期函数，主应用按需调用</p>
+<h3 id="22">22. 微前端如何实现跨应用通信？</h3>
+<p><strong>答案：</strong><br>
+- <strong>全局状态（Props）</strong>：主应用通过 <code>props</code> 传递数据给子应用（适合父→子单向传递）<br>
+- <strong>CustomEvent</strong>：浏览器原生自定义事件，发布/订阅（适合兄弟应用）<br>
+- <strong>共享 Store</strong>：主应用维护全局状态，通过 <code>props</code> 共享给子应用<br>
+- <strong>URL 参数/路由</strong>：通过 URL 传递状态<br>
+- <strong>localStorage/sessionStorage</strong>：同域下共享存储</p>
+<h3 id="23">23. 微前端样式隔离如何处理？</h3>
+<p><strong>答案：</strong><br>
+- <strong>CSS Modules</strong>：编译时给类名加哈希（<code>Button_abc123</code>），防止命名冲突<br>
+- <strong>BEM 命名规范</strong>：<code>.app-name-component-element</code> 约定命名<br>
+- <strong>CSS-in-JS</strong>：Styled-Components 生成唯一 className<br>
+- <strong>Shadow DOM</strong>：真正的 CSS 隔离（Web Components）<br>
+- <strong>qiankun scoped</strong>：自动给子应用 CSS 加属性选择器前缀<br>
+- <strong>CSS 变量命名空间</strong>：<code>--app1-primary-color</code> 防止全局变量冲突</p>
+<h2 id="bff">BFF 与渲染模式</h2>
+<h3 id="24-bffbackend-for-frontend">24. 什么是 BFF（Backend For Frontend）？</h3>
+<p><strong>答案：</strong><br>
+BFF 是专门为前端设计的后端服务，作为前端和微服务之间的适配层：<br>
+- <strong>数据聚合</strong>：合并多个微服务的数据，减少前端请求次数<br>
+- <strong>格式转换</strong>：将后端数据格式转为前端需要的结构<br>
+- <strong>鉴权处理</strong>：统一处理 Token 验证<br>
+- <strong>端适配</strong>：不同端（PC/Mobile/小程序）各有专属 BFF，返回适配数据</p>
+<p>Node.js 天然适合做 BFF（I/O 密集、JSON 处理、前端团队熟悉）。</p>
+<h3 id="25-ssrcsrssgisr">25. SSR、CSR、SSG、ISR 的区别？如何选型？</h3>
+<p><strong>答案：</strong><br>
+| 模式 | 全称 | 原理 | 优势 | 劣势 | 适用 |<br>
+|------|------|------|------|------|------|<br>
+| <strong>CSR</strong> | 客户端渲染 | 浏览器执行 JS 渲染 | 交互体验好 | 首屏慢、SEO 差 | 管理后台、内部系统 |<br>
+| <strong>SSR</strong> | 服务端渲染 | 服务器生成 HTML 返回 | 首屏快、SEO 好 | 服务器压力大 | 电商、新闻、SEO 要求高 |<br>
+| <strong>SSG</strong> | 静态生成 | 构建时生成 HTML | 极快、CDN 友好 | 数据静态、需重新构建 | 博客、文档、营销页 |<br>
+| <strong>ISR</strong> | 增量静态再生 | 后台定时/按需重新生成 | 兼顾静态速度和动态数据 | 实现复杂 | 产品详情、内容频繁更新 |</p>
+<p>Next.js 支持所有四种模式，可以按页面混用。</p>
+<h3 id="26-server-componentsreact-server-components">26. 什么是 Server Components（React Server Components）？</h3>
+<p><strong>答案：</strong><br>
+RSC 是 React 18+ 引入的新渲染模式，服务端组件在服务器执行，客户端组件在浏览器执行：<br>
+- <strong>Server Components</strong>：直接访问数据库/文件系统，不发送 JS 到客户端，无 State/Effect<br>
+- <strong>Client Components</strong>：有交互（<code>useState</code>、<code>useEffect</code>），需要在浏览器运行（加 <code>'use client'</code>）</p>
+<p>优势：零 Bundle 大小（服务端组件不打包到客户端）、直接数据获取、流式 HTML 传输。Next.js 13+ App Router 默认使用 RSC。</p>
+<h2 id="ddd">DDD 领域驱动设计</h2>
+<h3 id="27-ddd">27. 什么是 DDD？核心思想是什么？</h3>
+<p><strong>答案：</strong><br>
+DDD（Domain-Driven Design）是以业务领域为核心驱动软件设计的方法论。核心思想：<br>
+- <strong>统一语言（Ubiquitous Language）</strong>：开发和业务使用同一套术语，减少理解偏差<br>
+- <strong>领域模型</strong>：用代码精确表达业务概念（实体、值对象、聚合）<br>
+- <strong>限界上下文（Bounded Context）</strong>：划定业务边界，不同上下文内的同一词汇含义不同</p>
+<p>适用：复杂业务域（电商、金融、ERP），不适合 CRUD 简单业务。</p>
+<h3 id="28-ddd">28. DDD 的核心构件有哪些？</h3>
+<p><strong>答案：</strong><br>
+- <strong>实体（Entity）</strong>：有唯一标识的业务对象（如 Order，有 orderId）<br>
+- <strong>值对象（Value Object）</strong>：无唯一标识、通过属性定义（如 Money、Address），不可变<br>
+- <strong>聚合（Aggregate）</strong>：一组相关实体和值对象的边界，有聚合根（Aggregate Root）作为唯一入口<br>
+- <strong>领域服务（Domain Service）</strong>：不属于某个实体的业务逻辑<br>
+- <strong>仓储（Repository）</strong>：聚合的持久化接口（隐藏数据库细节）<br>
+- <strong>领域事件（Domain Event）</strong>：领域中发生的重要业务事件（如 <code>OrderPlaced</code>）</p>
+<h3 id="29-cqrs">29. 什么是 CQRS？</h3>
+<p><strong>答案：</strong><br>
+CQRS（Command Query Responsibility Segregation）将读（Query）和写（Command）分离：<br>
+- <strong>Command（命令）</strong>：修改状态，不返回数据（如 <code>PlaceOrder</code>、<code>UpdateUser</code>）<br>
+- <strong>Query（查询）</strong>：只读数据，不修改状态（如 <code>GetOrderById</code>、<code>ListProducts</code>）</p>
+<p>分离后可以：读库和写库独立优化、读库可做视图聚合（读性能）、写库专注业务规则（写正确性）。常与 Event Sourcing 结合使用。</p>
+<h3 id="30-event-sourcing">30. 什么是 Event Sourcing？</h3>
+<p><strong>答案：</strong><br>
+Event Sourcing 不存储当前状态，而是存储所有历史事件序列，当前状态由事件回放得出。<br>
+- <strong>优势</strong>：完整审计日志、可时间回溯、事件可发布给其他系统<br>
+- <strong>劣势</strong>：查询复杂（需物化视图）、事件 Schema 演化困难</p>
+<p>示例：银行账户不存 <code>balance = 100</code>，而存 <code>[Deposit(50), Deposit(80), Withdraw(30)]</code>，回放得到 100。</p>
+<h2 id="_7">前端架构模式</h2>
+<h3 id="31">31. 大型前端项目如何组织架构？</h3>
+<p><strong>答案：</strong><br>
+常见分层架构（以 React 项目为例）：</p>
+<pre><code>src/
+├── app/           # 路由、全局 Provider
+├── features/      # 按功能模块（Feature-Sliced Design）
+│   ├── orders/
+│   │   ├── api/       # API 请求（React Query/SWR）
+│   │   ├── model/     # 状态管理（Zustand/Redux Slice）
+│   │   ├── ui/        # 组件
+│   │   └── lib/       # 工具函数
+├── shared/        # 跨模块共享
+│   ├── ui/        # 通用组件（Button、Modal）
+│   ├── lib/       # 通用工具
+│   └── api/       # HTTP 客户端配置
+└── entities/      # 业务实体（User、Product 类型和基础操作）
+</code></pre>
+<p>核心原则：<strong>高内聚低耦合</strong>，按功能而非技术类型分包。</p>
+<h3 id="32">32. 什么是状态管理？如何选型？</h3>
+<p><strong>答案：</strong><br>
+- <strong>组件状态（useState/useReducer）</strong>：局部状态，不需要共享时首选<br>
+- <strong>Context API</strong>：主题、语言、用户信息等低频全局状态<br>
+- <strong>Zustand</strong>：轻量，无样板代码，适合中小型项目<br>
+- <strong>Redux Toolkit</strong>：功能完整，RTK Query 内置数据获取，适合复杂状态<br>
+- <strong>Jotai/Recoil</strong>：原子化状态，细粒度订阅，适合高频更新<br>
+- <strong>React Query/SWR</strong>：服务端状态（缓存、刷新、乐观更新），替代大部分 Redux 数据获取场景</p>
+<p>原则：<strong>服务端状态</strong>用 React Query/SWR，<strong>客户端状态</strong>用 Zustand/Context。</p>
+<h2 id="net">.NET 微服务架构</h2>
+<h3 id="33-net">33. .NET 微服务常用的架构组件有哪些？</h3>
+<p><strong>答案：</strong><br>
+- <strong>ASP.NET Core</strong>：Web API 框架<br>
+- <strong>Ocelot</strong>：.NET API 网关（路由、限流、鉴权）<br>
+- <strong>Polly</strong>：弹性策略（重试、熔断、超时、降级）<br>
+- <strong>MediatR</strong>：CQRS + 中介者模式实现<br>
+- <strong>gRPC</strong>：高性能内部服务通信<br>
+- <strong>Entity Framework Core</strong>：ORM，支持多数据库<br>
+- <strong>Health Checks</strong>：<code>AddHealthChecks()</code> 内置健康检查<br>
+- <strong>Serilog/Seq</strong>：结构化日志<br>
+- <strong>OpenTelemetry</strong>：分布式追踪和指标</p>
+<h3 id="34-aspnet-core">34. ASP.NET Core 如何实现水平扩展？</h3>
+<p><strong>答案：</strong><br>
+- <strong>无状态设计</strong>：不使用 InMemory Session，改用 Redis 或 JWT<br>
+- <strong>分布式缓存</strong>：<code>IDistributedCache</code> + Redis，不用内存缓存<br>
+- <strong>数据保护</strong>：<code>DataProtection</code> Keys 存 Redis/Azure Blob（多实例共享加密密钥）<br>
+- <strong>SignalR 扩展</strong>：<code>AddStackExchangeRedisBackplane()</code> 让多实例 WebSocket 消息同步<br>
+- <strong>Docker + Kubernetes</strong>：容器化部署，Pod 水平扩展（HPA 自动伸缩）<br>
+- <strong>健康检查</strong>：<code>/health</code> 端点供 K8s readiness/liveness 探针使用</p>
+<h2 id="_8">总结</h2>
+<p>这些题目覆盖了系统设计基础（CAP/BASE）、缓存策略、微服务架构（API 网关、服务发现、熔断）、消息队列、微前端（qiankun、Module Federation）、DDD、CQRS/Event Sourcing、渲染模式（SSR/CSR/SSG）以及 .NET 微服务实践，适合前后端架构面试系统复习。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-architecture-qa.md</div>
+</div>
+</body>
+</html>
