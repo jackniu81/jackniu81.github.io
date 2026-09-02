@@ -160,15 +160,15 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="_1">数据结构与算法 前端面试题（附答案）</h1>
-<h2 id="_2">时间复杂度与空间复杂度</h2>
+    <p>﻿# 数据结构与算法 前端题目（附答案）</p>
+<h2 id="_1">时间复杂度与空间复杂度</h2>
 <h3 id="1">1. 什么是时间复杂度和空间复杂度？</h3>
 <p><strong>答案：</strong><br>
 <strong>时间复杂度</strong>：描述算法执行时间随输入规模增长的变化趋势，用大 O 符号表示（如 O(n)、O(log n)、O(n²)）。<strong>空间复杂度</strong>：描述算法运行所需额外内存的增长趋势。常见复杂度从优到劣：O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)。面试中分析复杂度时关注最坏情况（Big O），忽略常数和低阶项。</p>
 <h3 id="2">2. 如何快速判断算法的时间复杂度？</h3>
 <p><strong>答案：</strong><br>
 经验规则：① 单层循环：O(n)；② 嵌套循环：O(n²)（或更高）；③ 每次缩小一半（二分）：O(log n)；④ 递归树展开：O(分支数^深度)；⑤ 排序算法：比较排序下界 O(n log n)。Map/Set 的增删查：O(1)均摊；数组按索引访问 O(1)、查找 O(n)；二叉搜索树均衡时 O(log n)。</p>
-<h2 id="_3">数组与字符串</h2>
+<h2 id="_2">数组与字符串</h2>
 <h3 id="3-leetcode-1">3. 两数之和（LeetCode 1）</h3>
 <p><strong>题目：</strong> 给定整数数组和目标值，返回两数之和等于目标值的下标。<br>
 <strong>答案：</strong></p>
@@ -234,7 +234,7 @@
 }
 // 前缀和 + 哈希表，时间 O(n)，空间 O(n)。
 </code></pre>
-<h2 id="_4">链表</h2>
+<h2 id="_3">链表</h2>
 <h3 id="8-leetcode-206">8. 反转链表（LeetCode 206）</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-javascript">function reverseList(head) {
@@ -289,7 +289,7 @@
 }
 // 哨兵节点简化边界，时间 O(m+n)，空间 O(1)。
 </code></pre>
-<h2 id="_5">树</h2>
+<h2 id="_4">树</h2>
 <h3 id="12">12. 二叉树的三种遍历（前中后序）</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-javascript">// 中序遍历（左-根-右），递归版
@@ -373,7 +373,7 @@ function flatTree(nodes, result = []) {
   return result;
 }
 </code></pre>
-<h2 id="_6">动态规划</h2>
+<h2 id="_5">动态规划</h2>
 <h3 id="17-leetcode-70">17. 爬楼梯（LeetCode 70）</h3>
 <p><strong>题目：</strong> n 阶楼梯，每次爬 1 或 2 阶，有多少种方法？<br>
 <strong>答案：</strong></p>
@@ -418,7 +418,7 @@ function knapsack(weights, values, W) {
 }
 // 二维 DP，时间 O(m*n)，空间 O(m*n)。
 </code></pre>
-<h2 id="_7">排序算法</h2>
+<h2 id="_6">排序算法</h2>
 <h3 id="20">20. 常见排序算法对比？</h3>
 <p><strong>答案：</strong><br>
 | 算法 | 平均时间 | 最坏时间 | 空间 | 稳定性 |<br>
@@ -451,7 +451,7 @@ function partition(arr, left, right) {
 }
 // 平均 O(n log n)，注意随机选 pivot 避免最坏情况。
 </code></pre>
-<h2 id="_8">栈与队列</h2>
+<h2 id="_7">栈与队列</h2>
 <h3 id="22-leetcode-232">22. 用两个栈实现队列（LeetCode 232）</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-javascript">class MyQueue {
@@ -497,7 +497,7 @@ function partition(arr, left, right) {
 }
 // 利用 Map 的有序性，get/put 均 O(1)。前端可用于实现接口缓存层。
 </code></pre>
-<h2 id="_9">双指针</h2>
+<h2 id="_8">双指针</h2>
 <h3 id="24-leetcode-283">24. 移动零（LeetCode 283）</h3>
 <p><strong>答案：</strong></p>
 <pre><code class="language-javascript">function moveZeroes(nums) {
@@ -526,7 +526,7 @@ const unique4 = arr =&gt; {
   return arr.filter(v =&gt; seen.hasOwnProperty(v) ? false : (seen[v] = true));
 };
 </code></pre>
-<h2 id="_10">总结</h2>
+<h2 id="_9">总结</h2>
 <p>这些题目覆盖了时间复杂度分析、数组/字符串、链表、树、动态规划、排序和栈队列，兼顾 LeetCode 高频题和前端实际场景（树形数据、LRU 缓存、数组去重）。</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p2-algorithm-qa.md</div>

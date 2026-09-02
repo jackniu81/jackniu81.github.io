@@ -160,8 +160,8 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="_1">设计模式 常见面试题（附答案）</h1>
-<h2 id="_2">设计模式基础</h2>
+    <p>﻿# 设计模式 常见题目（附答案）</p>
+<h2 id="_1">设计模式基础</h2>
 <h3 id="1">1. 什么是设计模式？有哪些分类？</h3>
 <p><strong>答案：</strong><br>
 设计模式是针对软件设计中常见问题的可复用解决方案，由 GoF（Gang of Four）整理为 23 种。三大分类：① <strong>创建型</strong>（对象创建方式）：单例、工厂、抽象工厂、建造者、原型；② <strong>结构型</strong>（类和对象的组合方式）：适配器、装饰器、代理、外观、桥接、组合、享元；③ <strong>行为型</strong>（对象间的通信和职责分配）：观察者、策略、命令、迭代器、状态、模板方法、责任链、中介者、备忘录、访问者、解释器。</p>
@@ -173,7 +173,7 @@
 - <strong>I</strong>（接口隔离）：接口应细化，客户端不应依赖不需要的接口<br>
 - <strong>D</strong>（依赖倒置）：高层模块不依赖低层模块，都依赖抽象；抽象不依赖细节，细节依赖抽象</p>
 <hr>
-<h2 id="_3">创建型模式</h2>
+<h2 id="_2">创建型模式</h2>
 <h3 id="3">3. 什么是单例模式？前端有哪些应用？</h3>
 <p><strong>答案：</strong><br>
 保证一个类只有一个实例，提供全局访问点。实现：</p>
@@ -227,7 +227,7 @@ const query = new QueryBuilder().from('users').where('age &gt; 18').limitTo(10).
 </code></pre>
 <p>前端应用：复杂表单配置、查询参数构建、测试数据 Builder、Axios 请求封装。</p>
 <hr>
-<h2 id="_4">结构型模式</h2>
+<h2 id="_3">结构型模式</h2>
 <h3 id="6">6. 什么是代理模式？前端有哪些应用？</h3>
 <p><strong>答案：</strong><br>
 代理对象控制对真实对象的访问，可以在访问前后添加额外逻辑（权限、缓存、日志）。</p>
@@ -317,7 +317,7 @@ class StorageFacade {
 </code></pre>
 <p>前端应用：SDK 对外 API 设计、复杂工具库的简化封装（如封装 Axios 的请求工厂）。</p>
 <hr>
-<h2 id="_5">行为型模式</h2>
+<h2 id="_4">行为型模式</h2>
 <h3 id="10">10. 什么是观察者模式？和发布订阅的区别？</h3>
 <p><strong>答案：</strong><br>
 <strong>观察者模式</strong>：Subject（主题）直接持有 Observer 列表，状态变化时直接通知：</p>
@@ -444,7 +444,7 @@ class CSVProcessor extends DataProcessor {
 }
 </code></pre>
 <hr>
-<h2 id="_6">前端特有模式</h2>
+<h2 id="_5">前端特有模式</h2>
 <h3 id="16-flux-redux">16. 什么是 Flux / Redux 模式？</h3>
 <p><strong>答案：</strong><br>
 Flux 是单向数据流架构模式：<code>Action → Dispatcher → Store → View → Action...</code>。Redux 是 Flux 的改进实现：单一 <code>Store</code>，纯函数 <code>Reducer</code>（<code>(state, action) =&gt; newState</code>），不可变数据。核心价值：状态变化可预测、可追踪（时间旅行调试）、易于测试。适合复杂状态管理，简单应用过度设计。</p>
@@ -516,7 +516,7 @@ class UserService {
 const service = new UserService(new MockDatabase());
 // NestJS 中由 IoC 容器自动注入
 </code></pre>
-<h2 id="_7">总结</h2>
+<h2 id="_6">总结</h2>
 <p>这些设计模式题目覆盖了 SOLID 原则、创建型/结构型/行为型经典模式，以及前端特有的 HOC、Render Props、组合模式和依赖注入，注重与实际前端框架的关联，适合面试系统复习。</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p2-design-patterns-qa.md</div>

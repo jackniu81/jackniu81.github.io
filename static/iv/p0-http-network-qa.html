@@ -160,7 +160,7 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="http">计算机网络 / HTTP 常见面试题（附答案）</h1>
+    <p>﻿# 计算机网络 / HTTP 常见题目（附答案）</p>
 <h2 id="_1">网络基础</h2>
 <h3 id="1-osi-tcpip">1. OSI 七层模型和 TCP/IP 四层模型分别是什么？</h3>
 <p><strong>答案：</strong><br>
@@ -183,7 +183,7 @@ DNS（域名系统）将域名解析为 IP 地址。解析过程：① 查浏览
 <h3 id="7-cdn">7. 什么是 CDN？它的工作原理是什么？</h3>
 <p><strong>答案：</strong><br>
 CDN（内容分发网络）通过在全球部署边缘节点，将静态资源缓存到距用户最近的节点，减少延迟和源站压力。用户请求时 DNS 返回最近节点 IP（通过 GSLB 智能调度）；节点缓存命中直接返回，未命中则回源拉取并缓存。适合图片、CSS/JS、视频等静态资源。</p>
-<h2 id="http_1">HTTP 协议</h2>
+<h2 id="http">HTTP 协议</h2>
 <h3 id="8-http-https">8. HTTP 和 HTTPS 的区别是什么？</h3>
 <p><strong>答案：</strong><br>
 HTTP 是明文传输协议，不加密，默认端口 80；HTTPS 在 HTTP 下加入 TLS/SSL 加密层，提供数据加密、身份认证和完整性校验，默认端口 443。HTTPS 会有握手开销，但现代 TLS 1.3 大幅减少握手次数，配合 HTTP/2 性能不逊色 HTTP。</p>
@@ -214,7 +214,7 @@ GET：语义为获取资源，参数在 URL 中（受浏览器/服务器长度�
 <h3 id="15-content-type">15. 什么是 <code>Content-Type</code>？常见值有哪些？</h3>
 <p><strong>答案：</strong><br>
 <code>Content-Type</code> 声明请求体或响应体的 MIME 类型。常见值：<code>application/json</code>（JSON 数据）、<code>application/x-www-form-urlencoded</code>（表单编码）、<code>multipart/form-data</code>（文件上传）、<code>text/html</code>、<code>text/plain</code>、<code>image/png</code>、<code>application/octet-stream</code>（二进制流）。前端发 POST 请求时注意 <code>Content-Type</code> 与实际数据格式一致。</p>
-<h2 id="http_2">HTTP 缓存</h2>
+<h2 id="http_1">HTTP 缓存</h2>
 <h3 id="16">16. 什么是强缓存？</h3>
 <p><strong>答案：</strong><br>
 强缓存命中时浏览器直接从本地读取资源，不发请求到服务器。控制字段：<code>Cache-Control: max-age=3600</code>（相对时间，优先）和 <code>Expires: Wed, 21 Oct 2025 07:28:00 GMT</code>（绝对时间，旧方式）。命中强缓存状态码为 200（from disk cache / from memory cache）。</p>

@@ -160,8 +160,8 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="_1">前端工程化 常见面试题（附答案）</h1>
-<h2 id="_2">构建工具</h2>
+    <p>﻿# 前端工程化 常见题目（附答案）</p>
+<h2 id="_1">构建工具</h2>
 <h3 id="1-vite-webpack">1. Vite 和 Webpack 的核心区别是什么？</h3>
 <p><strong>答案：</strong><br>
 <strong>开发环境</strong>：Vite 利用浏览器原生 ESM，按需编译模块（秒级启动，不随项目大小增加）；Webpack 需要打包所有模块，项目大时启动几十秒。<strong>热更新（HMR）</strong>：Vite 只更新变化的模块，毫秒级；Webpack 需重新打包相关模块，较慢。<strong>生产构建</strong>：Vite 底层用 Rollup（Tree Shaking 更彻底）；Webpack 自有生态更成熟，插件生态更丰富。选型建议：新项目优先 Vite；现有 Webpack 大型项目迁移成本较高。</p>
@@ -186,7 +186,7 @@ Tree Shaking 静态分析模块导入导出关系，移除未使用的代码（d
 <h3 id="8-module-federation">8. 什么是 Module Federation（模块联邦）？</h3>
 <p><strong>答案：</strong><br>
 Webpack 5 引入，允许多个独立构建的应用之间共享模块，实现真正的微前端运行时共享。一个应用可以作为 Host（消费其他应用暴露的模块），也可以作为 Remote（暴露模块给其他应用使用）。共享依赖（如 React）只加载一次，无需重复打包。适合大型企业级微前端架构。</p>
-<h2 id="_3">包管理与依赖</h2>
+<h2 id="_2">包管理与依赖</h2>
 <h3 id="9-packagejson-dependencies-devdependencies">9. <code>package.json</code> 中 <code>dependencies</code> 和 <code>devDependencies</code> 的区别？</h3>
 <p><strong>答案：</strong><br>
 <code>dependencies</code>：生产运行所需的依赖（如 React、Axios），会打包进产物或随项目部署；<code>devDependencies</code>：只在开发时需要的依赖（如 Vite、TypeScript、ESLint、测试框架），不进入生产产物。<code>npm install --production</code> 只安装 <code>dependencies</code>。区分清楚可减小生产镜像体积，加快部署。</p>
@@ -208,7 +208,7 @@ Webpack 5 引入，允许多个独立构建的应用之间共享模块，实现�
 }
 </code></pre>
 <p>执行 <code>npm run build</code> 时自动依次运行 <code>prelint → build → postbuild</code>，适合串联步骤。</p>
-<h2 id="_4">代码质量</h2>
+<h2 id="_3">代码质量</h2>
 <h3 id="13-eslint">13. ESLint 的作用和配置方式？</h3>
 <p><strong>答案：</strong><br>
 ESLint 是 JS/TS 静态代码分析工具，检查代码质量和风格问题，可自动修复部分问题（<code>--fix</code>）。配置文件（<code>.eslintrc.json</code> 或 <code>eslint.config.js</code>）中配置：<code>parser</code>（如 <code>@typescript-eslint/parser</code>）、<code>plugins</code>、<code>extends</code>（规则集，如 <code>eslint:recommended</code>、<code>@typescript-eslint/recommended</code>、<code>plugin:react/recommended</code>）、<code>rules</code>（自定义规则）。配合 VSCode ESLint 插件实现实时提示。</p>
@@ -265,7 +265,7 @@ jobs:
 <h3 id="20-semantic-versioning">20. 什么是语义化版本（Semantic Versioning）？</h3>
 <p><strong>答案：</strong><br>
 版本格式 <code>MAJOR.MINOR.PATCH</code>：<strong>MAJOR</strong>（重大版本）：有破坏性变更（Breaking Change），不兼容旧版；<strong>MINOR</strong>（次版本）：新增功能，向后兼容；<strong>PATCH</strong>（修订版）：Bug 修复，向后兼容。<code>package.json</code> 依赖版本前缀：<code>^1.2.3</code>（允许 MINOR 和 PATCH 升级）、<code>~1.2.3</code>（只允许 PATCH 升级）、无前缀（锁定精确版本）。</p>
-<h2 id="_5">环境配置</h2>
+<h2 id="_4">环境配置</h2>
 <h3 id="21-env">21. <code>.env</code> 文件的使用规范是什么？</h3>
 <p><strong>答案：</strong></p>
 <pre><code>.env              # 所有环境通用的默认值
@@ -285,7 +285,7 @@ jobs:
 { &quot;extends&quot;: [&quot;@company/eslint-config&quot;] }
 </code></pre>
 <p>包管理器 workspace 让内部包可像普通 npm 包一样引用，无需发布到 registry。</p>
-<h2 id="_6">前端监控</h2>
+<h2 id="_5">前端监控</h2>
 <h3 id="23">23. 前端错误监控应该捕获哪些错误？</h3>
 <p><strong>答案：</strong><br>
 ① <code>window.onerror</code>：JS 运行时错误（语法错误、引用错误等）；② <code>window.addEventListener('unhandledrejection')</code>：未处理的 Promise rejection；③ <code>try/catch</code> 手动捕获：业务关键路径错误；④ React <code>ErrorBoundary</code> / Vue <code>app.config.errorHandler</code>：组件渲染错误；⑤ Axios 响应拦截器：API 错误；⑥ 资源加载错误：<code>window.addEventListener('error', handler, true)</code>（捕获阶段）。</p>
@@ -308,7 +308,7 @@ observer.observe({ type: 'largest-contentful-paint', buffered: true });
 <h3 id="25">25. 什么是前端灰度发布？</h3>
 <p><strong>答案：</strong><br>
 灰度发布（Canary Release）是将新版本先发布给一小部分用户，观察指标（错误率、性能、业务转化），无问题再全量推进。前端实现方式：① CDN 版本控制（不同用户返回不同版本的 HTML/JS）；② Feature Flag（特性开关，通过配置服务控制功能开关，如 LaunchDarkly）；③ Nginx 按 Cookie/IP/比例路由不同版本。灰度发布降低发布风险，出问题可快速回滚。</p>
-<h2 id="_7">总结</h2>
+<h2 id="_6">总结</h2>
 <p>这些题目覆盖了构建工具（Vite/Webpack）、包管理、代码质量（ESLint/Prettier/Husky）、CI/CD（GitHub Actions）、环境配置和前端监控，适合作为前端工程化面试系统复习资料。</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p1-engineering-qa.md</div>

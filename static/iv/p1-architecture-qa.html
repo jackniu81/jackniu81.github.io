@@ -160,8 +160,8 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="_1">系统架构 常见面试题（附答案）</h1>
-<h2 id="_2">系统设计基础</h2>
+    <p>﻿# 系统架构 常见题目（附答案）</p>
+<h2 id="_1">系统设计基础</h2>
 <h3 id="1">1. 系统设计面试考察哪些核心维度？</h3>
 <p><strong>答案：</strong><br>
 - <strong>需求分析</strong>：功能需求、非功能需求（QPS、存储量、延迟要求）<br>
@@ -199,7 +199,7 @@ BASE 是 CAP 中 AP 方向的延伸，适用于高可用分布式系统：<br>
 - <strong>最少连接（Least Connections）</strong>：分发给当前连接数最少的服务器<br>
 - <strong>IP 哈希（IP Hash）</strong>：同一 IP 总分发到同一服务器（有状态服务）<br>
 - <strong>一致性哈希</strong>：节点增减时只迁移少量数据（适合缓存集群）</p>
-<h2 id="_3">缓存策略</h2>
+<h2 id="_2">缓存策略</h2>
 <h3 id="6">6. 缓存有哪些常见读写策略？</h3>
 <p><strong>答案：</strong><br>
 - <strong>Cache-Aside（旁路缓存）</strong>：应用直接管理缓存，读时先查缓存，未命中再查 DB 并回填；写时先更新 DB，再删除缓存。最常用。<br>
@@ -220,7 +220,7 @@ BASE 是 CAP 中 AP 方向的延伸，适用于高可用分布式系统：<br>
 - <strong>消息队列</strong>：<code>List</code>（LPUSH/BRPOP）或 <code>Stream</code>（持久化 MQ）<br>
 - <strong>排行榜</strong>：<code>ZSet</code> 有序集合<br>
 - <strong>发布订阅</strong>：<code>Pub/Sub</code>（不推荐，消息不持久化）</p>
-<h2 id="_4">微服务架构</h2>
+<h2 id="_3">微服务架构</h2>
 <h3 id="9">9. 微服务架构与单体架构的区别？</h3>
 <p><strong>答案：</strong><br>
 | 维度 | 单体架构 | 微服务架构 |<br>
@@ -275,7 +275,7 @@ Saga 将分布式事务拆分为一系列本地事务，每步成功才执行下
 - <strong>编排式（Choreography）</strong>：各服务通过事件触发，无中心协调，适合简单流程<br>
 - <strong>协调式（Orchestration）</strong>：有中心 Saga Orchestrator 协调步骤，逻辑清晰，适合复杂流程</p>
 <p>示例：下单 → 扣库存 → 扣余额 → 通知，任一失败则触发补偿（恢复库存、退款）。</p>
-<h2 id="_5">消息队列</h2>
+<h2 id="_4">消息队列</h2>
 <h3 id="16">16. 消息队列适合哪些场景？</h3>
 <p><strong>答案：</strong><br>
 - <strong>异步解耦</strong>：发送方不需要等待接收方处理，如发送邮件通知<br>
@@ -297,7 +297,7 @@ Saga 将分布式事务拆分为一系列本地事务，每步成功才执行下
 - <strong>生产端</strong>：发送后等待 ACK 确认（同步发送或回调确认）<br>
 - <strong>存储端</strong>：消息持久化到磁盘（Kafka 默认持久化），多副本复制<br>
 - <strong>消费端</strong>：消费后手动 ACK，未 ACK 的消息重新投递；消费逻辑幂等处理（防重复消费）</p>
-<h2 id="_6">微前端</h2>
+<h2 id="_5">微前端</h2>
 <h3 id="19">19. 什么是微前端？核心价值是什么？</h3>
 <p><strong>答案：</strong><br>
 微前端将大型前端应用拆分为多个独立子应用，每个子应用可独立开发、部署、技术栈自选。核心价值：<br>
@@ -391,7 +391,7 @@ Event Sourcing 不存储当前状态，而是存储所有历史事件序列，�
 - <strong>优势</strong>：完整审计日志、可时间回溯、事件可发布给其他系统<br>
 - <strong>劣势</strong>：查询复杂（需物化视图）、事件 Schema 演化困难</p>
 <p>示例：银行账户不存 <code>balance = 100</code>，而存 <code>[Deposit(50), Deposit(80), Withdraw(30)]</code>，回放得到 100。</p>
-<h2 id="_7">前端架构模式</h2>
+<h2 id="_6">前端架构模式</h2>
 <h3 id="31">31. 大型前端项目如何组织架构？</h3>
 <p><strong>答案：</strong><br>
 常见分层架构（以 React 项目为例）：</p>
@@ -439,7 +439,7 @@ Event Sourcing 不存储当前状态，而是存储所有历史事件序列，�
 - <strong>SignalR 扩展</strong>：<code>AddStackExchangeRedisBackplane()</code> 让多实例 WebSocket 消息同步<br>
 - <strong>Docker + Kubernetes</strong>：容器化部署，Pod 水平扩展（HPA 自动伸缩）<br>
 - <strong>健康检查</strong>：<code>/health</code> 端点供 K8s readiness/liveness 探针使用</p>
-<h2 id="_8">总结</h2>
+<h2 id="_7">总结</h2>
 <p>这些题目覆盖了系统设计基础（CAP/BASE）、缓存策略、微服务架构（API 网关、服务发现、熔断）、消息队列、微前端（qiankun、Module Federation）、DDD、CQRS/Event Sourcing、渲染模式（SSR/CSR/SSG）以及 .NET 微服务实践，适合前后端架构面试系统复习。</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p1-architecture-qa.md</div>

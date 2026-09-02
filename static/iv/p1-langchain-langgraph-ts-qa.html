@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LangChain & LangGraph TypeScript — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>LangChain & LangGraph TypeScript</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <p>﻿# LangChain &amp; LangGraph TypeScript 题目（附答案）</p>
+<blockquote>
+<p>覆盖 LangChain LCEL、RAG、工具调用、LangGraph StateGraph、Agent 循环、条件边、多 Agent 模式等核心主题，语言为 TypeScript/JavaScript。</p>
+</blockquote>
+<hr>
+<h2 id="langchain">一、LangChain 基础</h2>
+<h3 id="1-langchain">1. LangChain 的核心抽象有哪些？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>抽象</th>
+<th>作用</th>
+<th>TypeScript 导入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ChatModel</strong></td>
+<td>封装各种 LLM</td>
+<td><code>@langchain/openai</code></td>
+</tr>
+<tr>
+<td><strong>PromptTemplate</strong></td>
+<td>管理和复用 Prompt</td>
+<td><code>@langchain/core/prompts</code></td>
+</tr>
+<tr>
+<td><strong>OutputParser</strong></td>
+<td>解析 LLM 输出</td>
+<td><code>@langchain/core/output_parsers</code></td>
+</tr>
+<tr>
+<td><strong>Retriever</strong></td>
+<td>从向量库检索文档</td>
+<td><code>@langchain/core/retrievers</code></td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>封装外部能力</td>
+<td><code>@langchain/core/tools</code></td>
+</tr>
+<tr>
+<td><strong>Runnable</strong></td>
+<td>所有组件的基类，支持 <code>.pipe()</code> 串联</td>
+<td><code>@langchain/core/runnables</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="2-lcellangchain-expression-language">2. 什么是 LCEL（LangChain Expression Language）？</h3>
+<p><strong>答案：</strong><br>
+LCEL 是 LangChain 的链式组合语法，用 <code>.pipe()</code> 将组件串联，每个组件的输出作为下一个组件的输入：</p>
+<pre><code class="language-typescript">import { ChatOpenAI } from &quot;@langchain/openai&quot;;
+import { ChatPromptTemplate } from &quot;@langchain/core/prompts&quot;;
+import { StringOutputParser } from &quot;@langchain/core/output_parsers&quot;;
+
+const model = new ChatOpenAI({ model: &quot;gpt-4o&quot; });
+const parser = new StringOutputParser();
+
+// prompt → model → parser 串联成一条链
+const chain = ChatPromptTemplate.fromMessages([
+  [&quot;system&quot;, &quot;你是一个技术助手&quot;],
+  [&quot;human&quot;, &quot;{question}&quot;],
+]).pipe(model).pipe(parser);
+
+const result = await chain.invoke({ question: &quot;什么是 LangGraph？&quot; });
+console.log(result);
+</code></pre>
+<p><strong>LCEL 的优势：</strong><br>
+- 所有组件实现 <code>Runnable</code> 接口，可以自由组合<br>
+- 原生支持流式输出（<code>.stream()</code>）<br>
+- 支持并行执行（<code>RunnableParallel</code>）<br>
+- 支持透传（<code>RunnablePassthrough</code>）</p>
+<hr>
+<h3 id="3-runnableparallel-runnablepassthrough">3. RunnableParallel 和 RunnablePassthrough 有什么用？</h3>
+<p><strong>答案：</strong></p>
+<p><strong>RunnableParallel（并行执行）：</strong></p>
+<pre><code class="language-typescript">import { RunnableParallel, RunnablePassthrough } from &quot;@langchain/core/runnables&quot;;
+
+// 同时执行多个分支，结果合并为对象
+const parallel = RunnableParallel.from({
+  context: retriever.pipe(formatDocs),   // 检索文档
+  question: new RunnablePassthrough(),   // 原样透传问题
+});
+
+// 输入：字符串问题
+// 输出：{ context: &quot;...&quot;, question: &quot;...&quot; }
+const chain = parallel.pipe(ragPrompt).pipe(model).pipe(parser);
+</code></pre>
+<p><strong>RunnablePassthrough（透传）：</strong></p>
+<pre><code class="language-typescript">// 不对输入做任何处理，直接传递给下一步
+const chain = RunnableSequence.from([
+  {
+    context: retriever.pipe(formatDocs),
+    question: new RunnablePassthrough(),  // ← 原样传递
+  },
+  ragPrompt,
+  model,
+  parser,
+]);
+</code></pre>
+<hr>
+<h3 id="4-langchain-tool">4. 如何定义 LangChain 工具（Tool）？</h3>
+<p><strong>答案：</strong><br>
+使用 <code>tool()</code> 函数 + Zod schema 定义工具：</p>
+<pre><code class="language-typescript">import { tool } from &quot;@langchain/core/tools&quot;;
+import { z } from &quot;zod&quot;;
+
+// 定义计算器工具
+const calculatorTool = tool(
+  async ({ a, b, op }) =&gt; {
+    const ops = {
+      add: a + b,
+      subtract: a - b,
+      multiply: a * b,
+      divide: b !== 0 ? a / b : &quot;除数不能为 0&quot;,
+    };
+    return `${a} ${op} ${b} = ${ops[op]}`;
+  },
+  {
+    name: &quot;calculator&quot;,
+    description: &quot;执行四则运算，当需要精确计算时使用&quot;,
+    schema: z.object({
+      a: z.number().describe(&quot;第一个数字&quot;),
+      b: z.number().describe(&quot;第二个数字&quot;),
+      op: z.enum([&quot;add&quot;, &quot;subtract&quot;, &quot;multiply&quot;, &quot;divide&quot;]).describe(&quot;运算类型&quot;),
+    }),
+  }
+);
+
+// 直接调用（不经过 LLM）
+const result = await calculatorTool.invoke({ a: 10, b: 3, op: &quot;multiply&quot; });
+console.log(result); // &quot;10 multiply 3 = 30&quot;
+</code></pre>
+<hr>
+<h3 id="5-langchain">5. LangChain 如何实现流式输出？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">import { ChatOpenAI } from &quot;@langchain/openai&quot;;
+import { ChatPromptTemplate } from &quot;@langchain/core/prompts&quot;;
+import { StringOutputParser } from &quot;@langchain/core/output_parsers&quot;;
+
+const chain = ChatPromptTemplate.fromMessages([
+  [&quot;human&quot;, &quot;{question}&quot;],
+]).pipe(new ChatOpenAI({ model: &quot;gpt-4o&quot; })).pipe(new StringOutputParser());
+
+// 方式 1：stream() - 逐 token 输出
+const stream = await chain.stream({ question: &quot;解释 LangGraph&quot; });
+for await (const chunk of stream) {
+  process.stdout.write(chunk);  // 实时打印每个 token
+}
+
+// 方式 2：streamEvents() - 详细事件流
+const eventStream = chain.streamEvents({ question: &quot;解释 LangGraph&quot; }, { version: &quot;v2&quot; });
+for await (const event of eventStream) {
+  if (event.event === &quot;on_chat_model_stream&quot;) {
+    process.stdout.write(event.data.chunk.content);
+  }
+}
+</code></pre>
+<hr>
+<h2 id="rag">二、RAG（检索增强生成）</h2>
+<h3 id="6-langchain-rag">6. 如何用 LangChain 构建完整的 RAG 链？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">import { MemoryVectorStore } from &quot;langchain/vectorstores/memory&quot;;
+import { OpenAIEmbeddings } from &quot;@langchain/openai&quot;;
+import { Document } from &quot;@langchain/core/documents&quot;;
+import { ChatPromptTemplate } from &quot;@langchain/core/prompts&quot;;
+import { RunnablePassthrough, RunnableSequence } from &quot;@langchain/core/runnables&quot;;
+import { StringOutputParser } from &quot;@langchain/core/output_parsers&quot;;
+import { ChatOpenAI } from &quot;@langchain/openai&quot;;
+
+// 1. 创建向量库
+const vectorStore = await MemoryVectorStore.fromDocuments(
+  [
+    new Document({ pageContent: &quot;LangGraph 是图编排框架&quot;, metadata: { source: &quot;docs&quot; } }),
+    new Document({ pageContent: &quot;RAG 流程包括检索和生成&quot;, metadata: { source: &quot;docs&quot; } }),
+  ],
+  new OpenAIEmbeddings()
+);
+
+// 2. 创建检索器
+const retriever = vectorStore.asRetriever({ k: 2 });
+
+// 3. 格式化文档
+function formatDocs(docs: Document[]) {
+  return docs.map((d, i) =&gt; `[${i + 1}] ${d.pageContent}`).join(&quot;\n&quot;);
+}
+
+// 4. RAG Prompt
+const ragPrompt = ChatPromptTemplate.fromMessages([
+  [&quot;system&quot;, &quot;仅根据以下上下文回答问题：\n\n{context}&quot;],
+  [&quot;human&quot;, &quot;{question}&quot;],
+]);
+
+// 5. 组装 RAG 链
+const ragChain = RunnableSequence.from([
+  {
+    context: retriever.pipe(formatDocs),
+    question: new RunnablePassthrough(),
+  },
+  ragPrompt,
+  new ChatOpenAI({ model: &quot;gpt-4o&quot; }),
+  new StringOutputParser(),
+]);
+
+const answer = await ragChain.invoke(&quot;LangGraph 是什么？&quot;);
+</code></pre>
+<hr>
+<h3 id="7-rag">7. RAG 如何保留对话历史？</h3>
+<p><strong>答案：</strong><br>
+手动管理历史消息，每轮追加到 messages：</p>
+<pre><code class="language-typescript">const chatHistory: { role: string; content: string }[] = [];
+
+async function chatWithRAG(question: string): Promise&lt;string&gt; {
+  // 检索相关文档
+  const docs = await retriever.invoke(question);
+  const context = formatDocs(docs);
+
+  // 构建包含历史的 prompt
+  const historyStr = chatHistory
+    .map(m =&gt; `${m.role === &quot;human&quot; ? &quot;用户&quot; : &quot;助手&quot;}: ${m.content}`)
+    .join(&quot;\n&quot;);
+
+  const prompt = ChatPromptTemplate.fromMessages([
+    [&quot;system&quot;, `你是助手，根据上下文回答：\n${context}\n${historyStr ? `对话历史：\n${historyStr}` : &quot;&quot;}`],
+    [&quot;human&quot;, &quot;{question}&quot;],
+  ]);
+
+  const chain = prompt.pipe(model).pipe(new StringOutputParser());
+  const answer = await chain.invoke({ question });
+
+  // 更新历史
+  chatHistory.push({ role: &quot;human&quot;, content: question });
+  chatHistory.push({ role: &quot;assistant&quot;, content: answer });
+
+  return answer;
+}
+</code></pre>
+<hr>
+<h2 id="langgraph">三、LangGraph 基础</h2>
+<h3 id="8-langgraph">8. LangGraph 的核心概念是什么？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>StateGraph</strong></td>
+<td>有向状态图，整个工作流的容器</td>
+<td><code>new StateGraph({ channels: state })</code></td>
+</tr>
+<tr>
+<td><strong>State</strong></td>
+<td>节点间共享的数据结构，每个字段有 reducer</td>
+<td><code>{ messages: { value: (x,y) =&gt; [...x,...y] } }</code></td>
+</tr>
+<tr>
+<td><strong>Node</strong></td>
+<td>执行具体逻辑的函数，接收 state 返回部分更新</td>
+<td><code>workflow.addNode("agent", agentFn)</code></td>
+</tr>
+<tr>
+<td><strong>Edge</strong></td>
+<td>节点间的连接，控制执行顺序</td>
+<td><code>workflow.addEdge("a", "b")</code></td>
+</tr>
+<tr>
+<td><strong>Conditional Edge</strong></td>
+<td>根据 state 动态决定下一节点</td>
+<td><code>workflow.addConditionalEdges("a", routeFn, {...})</code></td>
+</tr>
+<tr>
+<td><strong>EntryPoint</strong></td>
+<td>图的起始节点</td>
+<td><code>workflow.setEntryPoint("agent")</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-typescript">import { StateGraph, END } from &quot;@langchain/langgraph&quot;;
+
+const state = {
+  question: { value: (_, y) =&gt; y ?? _, default: () =&gt; &quot;&quot; },
+  answer: { value: (_, y) =&gt; y ?? _, default: () =&gt; &quot;&quot; },
+  steps: { value: (x, y) =&gt; [...x, ...y], default: () =&gt; [] },
+};
+
+const workflow = new StateGraph({ channels: state });
+workflow.addNode(&quot;analyze&quot;, analyzeNode);
+workflow.addNode(&quot;generate&quot;, generateNode);
+workflow.setEntryPoint(&quot;analyze&quot;);
+workflow.addEdge(&quot;analyze&quot;, &quot;generate&quot;);
+workflow.addEdge(&quot;generate&quot;, END);
+
+const app = workflow.compile();
+const result = await app.invoke({ question: &quot;什么是 LangGraph？&quot; });
+</code></pre>
+<hr>
+<h3 id="9-state-reducer">9. State 中的 reducer 函数有什么作用？</h3>
+<p><strong>答案：</strong><br>
+Reducer 定义当节点返回新值时，如何将新值与旧值合并：</p>
+<pre><code class="language-typescript">const state = {
+  // 新值覆盖旧值（忽略旧值）
+  answer: { value: (_, y) =&gt; y, default: () =&gt; &quot;&quot; },
+
+  // 保留旧值（如果新值为 null/undefined）
+  question: { value: (x, y) =&gt; y ?? x, default: () =&gt; &quot;&quot; },
+
+  // 数组追加合并（消息历史）
+  messages: { value: (x, y) =&gt; [...x, ...y], default: () =&gt; [] },
+
+  // 对象合并（Worker 输出）
+  workerOutputs: { value: (x, y) =&gt; ({ ...x, ...y }), default: () =&gt; ({}) },
+
+  // 计数器累加
+  iteration: { value: (x, y) =&gt; y ?? x, default: () =&gt; 0 },
+};
+</code></pre>
+<p><strong>注意：</strong> 节点名称不能与 State 字段名称相同，否则会报错：</p>
+<pre><code>Error: answer is already being used as a state attribute, cannot also be used as a node name.
+</code></pre>
+<hr>
+<h3 id="10-agent-react">10. 如何构建 Agent 循环（ReAct 模式）？</h3>
+<p><strong>答案：</strong><br>
+核心是两个节点（agent + tools）+ 条件边 + tools→agent 的回环：</p>
+<pre><code class="language-typescript">import { StateGraph, END } from &quot;@langchain/langgraph&quot;;
+import { ToolNode } from &quot;@langchain/langgraph/prebuilt&quot;;
+import { HumanMessage } from &quot;@langchain/core/messages&quot;;
+import { ChatOpenAI } from &quot;@langchain/openai&quot;;
+
+const tools = [calculatorTool, weatherTool];
+const toolNode = new ToolNode(tools);
+const model = new ChatOpenAI({ model: &quot;gpt-4o&quot; }).bindTools(tools);
+
+const agentState = {
+  messages: { value: (x, y) =&gt; x.concat(y), default: () =&gt; [] },
+  iteration: { value: (_, y) =&gt; y ?? _, default: () =&gt; 0 },
+};
+
+// Agent 节点：调用 LLM 决策
+async function agentNode(state) {
+  const iter = state.iteration + 1;
+  const response = await model.invoke(state.messages);
+  return { messages: [response], iteration: iter };
+}
+
+// 路由函数：根据 LLM 输出决定下一步
+function routeAfterAgent(state) {
+  if (state.iteration &gt;= 10) return END;  // 防止无限循环
+  const lastMsg = state.messages.at(-1);
+  return lastMsg.tool_calls?.length ? &quot;tools&quot; : END;
+}
+
+const workflow = new StateGraph({ channels: agentState });
+workflow.addNode(&quot;agent&quot;, agentNode);
+workflow.addNode(&quot;tools&quot;, toolNode);
+workflow.setEntryPoint(&quot;agent&quot;);
+workflow.addConditionalEdges(&quot;agent&quot;, routeAfterAgent, {
+  tools: &quot;tools&quot;,
+  [END]: END,
+});
+workflow.addEdge(&quot;tools&quot;, &quot;agent&quot;);  // tools 完成后回到 agent（循环）
+
+const app = workflow.compile();
+const result = await app.invoke({
+  messages: [new HumanMessage(&quot;计算 123 × 456&quot;)],
+});
+</code></pre>
+<hr>
+<h3 id="11-conditional-edges">11. 如何实现条件边（Conditional Edges）？</h3>
+<p><strong>答案：</strong><br>
+<code>addConditionalEdges</code> 接受三个参数：源节点、路由函数、路由映射表：</p>
+<pre><code class="language-typescript">// 场景：智能客服根据用户意图路由到不同处理节点
+function routeByIntent(state) {
+  const intent = state.intent;
+  const routes = {
+    technical: &quot;technical_support&quot;,
+    billing: &quot;billing&quot;,
+    complaint: &quot;complaint&quot;,
+    other: &quot;general&quot;,
+  };
+  return routes[intent] ?? &quot;general&quot;;
+}
+
+workflow.addConditionalEdges(&quot;classify&quot;, routeByIntent, {
+  // 路由函数返回值 → 目标节点名称
+  technical_support: &quot;technical_support&quot;,
+  billing: &quot;billing&quot;,
+  complaint: &quot;complaint&quot;,
+  general: &quot;general&quot;,
+});
+</code></pre>
+<p><strong>路由函数返回值与映射表的关系：</strong></p>
+<pre><code class="language-typescript">// 左边（key）：路由函数的返回值
+// 右边（value）：实际执行的节点名
+{
+  &quot;report&quot;: &quot;report&quot;,   // 返回 &quot;report&quot; → 执行 report 节点
+  [END]: END,           // 返回 END → 结束图
+}
+</code></pre>
+<hr>
+<h3 id="12-langgraph-stream">12. LangGraph 的流式运行（stream）如何使用？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">// 方式 1：streamMode: &quot;values&quot; - 每个节点执行后推送完整 state
+const stream = app.stream(
+  { messages: [new HumanMessage(&quot;北京天气怎样？&quot;)] },
+  { streamMode: &quot;values&quot; }
+);
+
+for await (const state of await stream) {
+  const last = state.messages.at(-1);
+  console.log(`消息类型: ${last.constructor.name}`);
+  if (last.content) console.log(`内容: ${last.content}`);
+  if (last.tool_calls?.length) console.log(`工具调用: ${JSON.stringify(last.tool_calls)}`);
+}
+
+// 方式 2：streamMode: &quot;updates&quot; - 只推送每次节点的更新部分
+const updateStream = app.stream(input, { streamMode: &quot;updates&quot; });
+for await (const update of await updateStream) {
+  const nodeName = Object.keys(update)[0];
+  const nodeOutput = update[nodeName];
+  console.log(`节点 [${nodeName}] 更新:`, nodeOutput);
+}
+</code></pre>
+<hr>
+<h2 id="_1">四、高级模式</h2>
+<h3 id="13-reflection-agent">13. 什么是 Reflection Agent？如何实现？</h3>
+<p><strong>答案：</strong><br>
+Reflection Agent（反思智能体）= 生成 → 批评 → 改进的迭代循环，通过自我批评提升输出质量：</p>
+<pre><code class="language-typescript">const state = {
+  task: { value: (_, y) =&gt; y, default: () =&gt; &quot;&quot; },
+  draft: { value: (_, y) =&gt; y, default: () =&gt; &quot;&quot; },
+  critique: { value: (_, y) =&gt; y, default: () =&gt; &quot;&quot; },
+  iteration: { value: (_, y) =&gt; y, default: () =&gt; 0 },
+  maxIterations: { value: (_, y) =&gt; y, default: () =&gt; 3 },
+  accepted: { value: (_, y) =&gt; y, default: () =&gt; false },
+};
+
+// 节点 1：生成内容
+async function generateNode(state) {
+  const isFirst = state.iteration === 0;
+  const prompt = isFirst
+    ? ChatPromptTemplate.fromMessages([[&quot;human&quot;, &quot;完成任务：{task}&quot;]])
+    : ChatPromptTemplate.fromMessages([
+        [&quot;human&quot;, &quot;任务：{task}\n\n上一版：{draft}\n\n批评：{critique}\n\n请改进：&quot;],
+      ]);
+
+  const draft = await prompt.pipe(model).pipe(parser).invoke(state);
+  return { draft, iteration: state.iteration + 1 };
+}
+
+// 节点 2：批评/评估
+async function critiqueNode(state) {
+  const prompt = ChatPromptTemplate.fromMessages([
+    [&quot;system&quot;, &quot;你是严格的评审员，最后必须写'决定：接受'或'决定：需要改进'&quot;],
+    [&quot;human&quot;, &quot;任务：{task}\n\n内容：{draft}&quot;],
+  ]);
+  const critique = await prompt.pipe(model).pipe(parser).invoke(state);
+  const accepted = critique.includes(&quot;接受&quot;) || state.iteration &gt;= state.maxIterations;
+  return { critique, accepted };
+}
+
+// 路由：是否继续迭代
+function routeAfterCritique(state) {
+  return state.accepted ? END : &quot;generate&quot;;
+}
+
+const workflow = new StateGraph({ channels: state });
+workflow.addNode(&quot;generate&quot;, generateNode);
+workflow.addNode(&quot;critique&quot;, critiqueNode);
+workflow.setEntryPoint(&quot;generate&quot;);
+workflow.addEdge(&quot;generate&quot;, &quot;critique&quot;);
+workflow.addConditionalEdges(&quot;critique&quot;, routeAfterCritique, {
+  generate: &quot;generate&quot;,
+  [END]: END,
+});
+</code></pre>
+<hr>
+<h3 id="14-supervisor-agent">14. 什么是 Supervisor Agent 模式？</h3>
+<p><strong>答案：</strong><br>
+一个主管 LLM 协调多个专业 Worker Agent，按序分配任务，最终聚合输出：</p>
+<pre><code class="language-typescript">const workers = {
+  researcher: { systemPrompt: &quot;你是技术研究员...&quot; },
+  writer: { systemPrompt: &quot;你是技术写作专家...&quot; },
+  coder: { systemPrompt: &quot;你是资深工程师...&quot; },
+};
+
+// Supervisor 节点：决定下一个 Worker
+async function supervisorNode(state) {
+  const done = Object.keys(state.workerOutputs);
+  const remaining = Object.keys(workers).filter(w =&gt; !done.includes(w));
+
+  if (remaining.length === 0) return { currentWorker: &quot;FINISH&quot; };
+  return { currentWorker: remaining[0] };
+}
+
+// Worker 节点工厂（动态创建）
+function createWorkerNode(workerName: string) {
+  return async (state) =&gt; {
+    const worker = workers[workerName];
+    const output = await prompt.pipe(model).pipe(parser).invoke({ task: state.task });
+    return { workerOutputs: { [workerName]: output } };
+  };
+}
+
+// 路由：根据 Supervisor 的决定路由到对应 Worker
+function routeBySupervisor(state) {
+  if (state.currentWorker === &quot;FINISH&quot;) return &quot;report&quot;;
+  return state.currentWorker in workers ? state.currentWorker : &quot;report&quot;;
+}
+
+// 注册所有 Worker 节点
+for (const name of Object.keys(workers)) {
+  workflow.addNode(name, createWorkerNode(name));
+  workflow.addEdge(name, &quot;supervisor&quot;);  // 每个 Worker 完成后回到 Supervisor
+}
+</code></pre>
+<hr>
+<h3 id="15-agent">15. 如何实现多 Agent 并行执行？</h3>
+<p><strong>答案：</strong><br>
+在一个节点中用 <code>Promise.all()</code> 并发执行多个 Agent：</p>
+<pre><code class="language-typescript">// 并行执行节点（在单个 LangGraph 节点中并发）
+async function parallelReviewNode(state) {
+  const start = Date.now();
+
+  const [secResult, perfResult, styleResult] = await Promise.all([
+    securityAgent(state),     // 安全审查
+    performanceAgent(state),  // 性能审查
+    styleAgent(state),        // 代码风格审查
+  ]);
+
+  console.log(`并行完成，耗时 ${Date.now() - start}ms`);
+
+  return {
+    securityResult: secResult.securityResult,
+    performanceResult: perfResult.performanceResult,
+    styleResult: styleResult.styleResult,
+    severity: secResult.severity,
+  };
+}
+
+// 串行 vs 并行时间对比：
+// 串行：3 × 2s = 6s
+// 并行：max(2s, 2s, 2s) = 2s ← 节省 2/3 时间
+</code></pre>
+<hr>
+<h2 id="_2">五、工程实践</h2>
+<h3 id="16-langchain-chatmodel-llm">16. LangChain 中 ChatModel 如何切换不同 LLM 提供商？</h3>
+<p><strong>答案：</strong><br>
+LangChain 通过统一接口屏蔽不同 LLM 的差异，切换只需更换导入：</p>
+<pre><code class="language-typescript">// OpenAI
+import { ChatOpenAI } from &quot;@langchain/openai&quot;;
+const model = new ChatOpenAI({ model: &quot;gpt-4o&quot;, temperature: 0 });
+
+// Anthropic Claude
+import { ChatAnthropic } from &quot;@langchain/anthropic&quot;;
+const model = new ChatAnthropic({ model: &quot;claude-opus-4-5&quot; });
+
+// Ollama（本地）
+import { ChatOllama } from &quot;@langchain/ollama&quot;;
+const model = new ChatOllama({ model: &quot;qwen2:7b&quot;, baseUrl: &quot;http://localhost:11434&quot; });
+
+// 兼容 OpenAI 格式的第三方（SiliconFlow、智谱、月之暗面等）
+import { ChatOpenAI } from &quot;@langchain/openai&quot;;
+const model = new ChatOpenAI({
+  model: &quot;Qwen/Qwen2.5-72B-Instruct&quot;,
+  configuration: {
+    baseURL: &quot;https://api.siliconflow.cn/v1&quot;,
+    apiKey: process.env.SILICONFLOW_KEY,
+  },
+});
+
+// 之后使用方式完全相同
+const result = await model.invoke(&quot;你好&quot;);
+</code></pre>
+<hr>
+<h3 id="17-messagesannotation">17. 如何使用 MessagesAnnotation 简化消息状态？</h3>
+<p><strong>答案：</strong><br>
+<code>MessagesAnnotation</code> 是 LangGraph 的内置注解，自动处理消息数组的合并逻辑：</p>
+<pre><code class="language-typescript">import { MessagesAnnotation, StateGraph, END } from &quot;@langchain/langgraph&quot;;
+import { HumanMessage } from &quot;@langchain/core/messages&quot;;
+
+// 传统写法（手动定义）
+const state = {
+  messages: {
+    value: (x, y) =&gt; x.concat(y),
+    default: () =&gt; [],
+  },
+};
+
+// 简化写法（使用 MessagesAnnotation）
+const workflow = new StateGraph(MessagesAnnotation)
+  .addNode(&quot;agent&quot;, agentNode)
+  .addEdge(&quot;__start__&quot;, &quot;agent&quot;)
+  .addEdge(&quot;agent&quot;, END);
+
+// 调用时直接传入 messages
+const result = await app.invoke({
+  messages: [new HumanMessage(&quot;你好&quot;)],
+});
+</code></pre>
+<hr>
+<h3 id="18-langgraph-checkpointing">18. LangGraph 如何实现持久化（Checkpointing）？</h3>
+<p><strong>答案：</strong><br>
+Checkpointing 允许图在任意节点暂停并恢复，支持长期对话和 Human-in-the-Loop：</p>
+<pre><code class="language-typescript">import { MemorySaver } from &quot;@langchain/langgraph&quot;;
+
+// 使用内存 Checkpointer（生产环境用 PostgresSaver 或 RedisSaver）
+const checkpointer = new MemorySaver();
+const app = workflow.compile({ checkpointer });
+
+// 运行时提供 thread_id（会话 ID）
+const config = { configurable: { thread_id: &quot;user-123-session-1&quot; } };
+
+// 第一轮对话
+await app.invoke(
+  { messages: [new HumanMessage(&quot;我叫张三&quot;)] },
+  config
+);
+
+// 第二轮对话（自动恢复上下文）
+const result = await app.invoke(
+  { messages: [new HumanMessage(&quot;我叫什么名字？&quot;)] },
+  config  // 相同的 thread_id
+);
+// LLM 会记得&quot;张三&quot;
+</code></pre>
+<hr>
+<h3 id="19-human-in-the-loop">19. 如何实现 Human-in-the-Loop（人机协同）？</h3>
+<p><strong>答案：</strong><br>
+使用 LangGraph 的 <code>interrupt</code> 在关键节点暂停，等待人工确认：</p>
+<pre><code class="language-typescript">import { interrupt, MemorySaver } from &quot;@langchain/langgraph&quot;;
+
+// 在高风险操作前插入人工确认
+async function deleteNode(state) {
+  const { targetFile } = state;
+
+  // 暂停图执行，等待人工确认
+  const approval = interrupt({
+    question: `确认删除文件：${targetFile}？`,
+    data: { targetFile },
+  });
+
+  if (approval !== &quot;yes&quot;) {
+    return { result: &quot;操作已取消&quot; };
+  }
+
+  // 执行实际删除
+  await deleteFile(targetFile);
+  return { result: `已删除 ${targetFile}` };
+}
+
+// 恢复执行（提供人工确认结果）
+const config = { configurable: { thread_id: &quot;session-1&quot; } };
+
+// 第一次运行，会在 deleteNode 暂停
+await app.invoke({ targetFile: &quot;data.json&quot; }, config);
+
+// 人工审查后，传入确认结果恢复
+await app.invoke(new Command({ resume: &quot;yes&quot; }), config);
+</code></pre>
+<hr>
+<h3 id="20-langgraph">20. LangGraph 如何调试和可视化图结构？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-typescript">// 1. 打印图的 JSON 结构
+const app = workflow.compile();
+console.log(app.getGraph().toJSON());
+// 输出节点和边的列表
+
+// 2. 生成 Mermaid 图（可在 mermaid.live 渲染）
+const mermaidStr = app.getGraph().drawMermaid();
+console.log(mermaidStr);
+// 输出如：
+// graph TD
+//   __start__ --&gt; analyze
+//   analyze --&gt; generate
+//   generate --&gt; __end__
+
+// 3. 流式运行观察每个节点的输出
+const stream = app.stream(input, { streamMode: &quot;updates&quot; });
+for await (const update of await stream) {
+  const nodeName = Object.keys(update)[0];
+  console.log(`→ 节点 [${nodeName}] 完成`, update[nodeName]);
+}
+
+// 4. 使用 LangSmith 追踪（需配置环境变量）
+// LANGCHAIN_TRACING_V2=true
+// LANGCHAIN_API_KEY=your-key
+// 之后所有调用自动追踪到 LangSmith 控制台
+</code></pre>
+<hr>
+<h2 id="_3">六、常见题目对比</h2>
+<h3 id="21-invoke-vs-stream-vs-streamevents">21. invoke() vs stream() vs streamEvents() 的区别？</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>返回</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoke()</code></td>
+<td>最终结果（一次性）</td>
+<td>等待完整输出</td>
+</tr>
+<tr>
+<td><code>stream()</code></td>
+<td>异步迭代器，逐步推送</td>
+<td>流式展示给用户</td>
+</tr>
+<tr>
+<td><code>streamEvents()</code></td>
+<td>详细事件流（token 级别）</td>
+<td>需要精细控制每个事件</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-typescript">// invoke：等待全部完成
+const result = await chain.invoke({ question: &quot;...&quot; });
+
+// stream：逐步输出
+for await (const chunk of await chain.stream({ question: &quot;...&quot; })) {
+  process.stdout.write(chunk);
+}
+
+// streamEvents：细粒度事件
+for await (const event of chain.streamEvents({ question: &quot;...&quot; }, { version: &quot;v2&quot; })) {
+  if (event.event === &quot;on_chat_model_stream&quot;) {
+    process.stdout.write(event.data.chunk.content);
+  }
+}
+</code></pre>
+<hr>
+<h3 id="22-addedge-vs-addconditionaledges">22. addEdge() vs addConditionalEdges() 的区别？</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addEdge(from, to)</code></td>
+<td>固定边，无条件执行</td>
+<td>顺序固定的流程</td>
+</tr>
+<tr>
+<td><code>addConditionalEdges(from, routeFn, map)</code></td>
+<td>条件边，根据路由函数动态决定</td>
+<td>需要分支逻辑的流程</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-typescript">// 固定边：analyze 总是连接到 generate
+workflow.addEdge(&quot;analyze&quot;, &quot;generate&quot;);
+
+// 条件边：根据 state.intent 动态路由
+workflow.addConditionalEdges(&quot;classify&quot;, routeByIntent, {
+  technical: &quot;technical_node&quot;,
+  billing: &quot;billing_node&quot;,
+  [END]: END,
+});
+</code></pre>
+<hr>
+<h3 id="23-langchain-chain-langgraph-graph">23. LangChain Chain 和 LangGraph Graph 如何选择？</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>LangChain Chain</th>
+<th>LangGraph Graph</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>执行流程</strong></td>
+<td>线性，固定顺序</td>
+<td>有向图，支持循环/分支</td>
+</tr>
+<tr>
+<td><strong>状态管理</strong></td>
+<td>隐式，每步传递</td>
+<td>显式 State，节点共享</td>
+</tr>
+<tr>
+<td><strong>适合场景</strong></td>
+<td>RAG、简单问答、文档摘要</td>
+<td>Agent 循环、多 Agent、Human-in-the-Loop</td>
+</tr>
+<tr>
+<td><strong>调试难度</strong></td>
+<td>简单</td>
+<td>较复杂，需要图可视化工具</td>
+</tr>
+<tr>
+<td><strong>持久化</strong></td>
+<td>不支持</td>
+<td>原生支持 Checkpointing</td>
+</tr>
+<tr>
+<td><strong>学习曲线</strong></td>
+<td>低</td>
+<td>中等</td>
+</tr>
+</tbody>
+</table>
+<p><strong>选择原则：</strong><br>
+- 流程固定、无循环 → <strong>LangChain Chain</strong><br>
+- 需要动态决策、循环、暂停恢复 → <strong>LangGraph</strong><br>
+- 生产级复杂 Agent → <strong>LangGraph</strong></p>
+<hr>
+<h3 id="24-typescript-langchainlanggraph">24. 如何在 TypeScript 项目中安装和配置 LangChain/LangGraph？</h3>
+<pre><code class="language-bash"># 安装核心包
+npm install @langchain/core @langchain/langgraph
+
+# 安装模型提供商（按需选择）
+npm install @langchain/openai        # OpenAI / Azure OpenAI
+npm install @langchain/anthropic     # Anthropic Claude
+npm install @langchain/ollama        # Ollama 本地模型
+
+# 安装向量存储（RAG 场景）
+npm install langchain                # 含 MemoryVectorStore 等
+
+# 安装工具库
+npm install zod                      # Schema 验证（定义工具 schema）
+</code></pre>
+<p><strong>package.json 配置（支持 ES Module）：</strong></p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@langchain/core&quot;: &quot;^0.3.0&quot;,
+    &quot;@langchain/langgraph&quot;: &quot;^0.2.0&quot;,
+    &quot;@langchain/openai&quot;: &quot;^0.3.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.0&quot;
+  }
+}
+</code></pre>
+<p><strong>tsconfig.json 推荐配置：</strong></p>
+<pre><code class="language-json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2022&quot;,
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;bundler&quot;,
+    &quot;strict&quot;: true,
+    &quot;outDir&quot;: &quot;./dist&quot;
+  }
+}
+</code></pre>
+<p><strong>运行 TypeScript 文件：</strong></p>
+<pre><code class="language-bash"># 开发环境（推荐）
+npx tsx src/agent.ts
+
+# 或安装 tsx 全局
+npm install -g tsx
+tsx src/agent.ts
+</code></pre>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-langchain-langgraph-ts-qa.md</div>
+</div>
+</body>
+</html>

@@ -160,8 +160,8 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="_1">安全与认证 常见面试题（附答案）</h1>
-<h2 id="_2">认证与授权基础</h2>
+    <p>﻿# 安全与认证 常见题目（附答案）</p>
+<h2 id="_1">认证与授权基础</h2>
 <h3 id="1-authenticationauthorization">1. 认证（Authentication）和授权（Authorization）的区别？</h3>
 <p><strong>答案：</strong><br>
 - <strong>认证（AuthN）</strong>：验证"你是谁"，如用户名+密码登录、指纹识别<br>
@@ -329,7 +329,7 @@ Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-xxx'
 # 控制 Referrer 信息
 Referrer-Policy: strict-origin-when-cross-origin
 </code></pre>
-<h2 id="_3">密码安全</h2>
+<h2 id="_2">密码安全</h2>
 <h3 id="18">18. 密码如何安全存储？</h3>
 <p><strong>答案：</strong><br>
 <strong>绝对不能</strong>：明文存储、MD5/SHA1 哈希（可被彩虹表破解）、自研加密算法</p>
@@ -458,7 +458,7 @@ public class MinAgeHandler : AuthorizationHandler&lt;MinAgeRequirement&gt; {
 - Access Token → 内存变量（<code>useState</code>）<br>
 - Refresh Token → <code>HttpOnly</code> + <code>SameSite=Strict</code> Cookie<br>
 - 页面刷新时用 Refresh Token 换取新 Access Token</p>
-<h2 id="_4">总结</h2>
+<h2 id="_3">总结</h2>
 <p>这些题目覆盖了认证（Session/JWT/OAuth2/OIDC）、常见攻击（XSS/CSRF/SQL 注入/供应链）、HTTPS/TLS、密码安全、API 安全（限流/CORS/CSP）以及 .NET 安全实践，适合前后端安全方向面试系统复习。</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p1-security-auth-qa.md</div>

@@ -160,8 +160,8 @@
 </div>
 <div class="container">
   <div class="content">
-    <h1 id="_1">前端测试 常见面试题（附答案）</h1>
-<h2 id="_2">测试基础</h2>
+    <p>﻿# 前端测试 常见题目（附答案）</p>
+<h2 id="_1">测试基础</h2>
 <h3 id="1">1. 为什么需要写测试？</h3>
 <p><strong>答案：</strong><br>
 ① 捕获回归问题：修改代码时自动发现破坏的功能；② 提升重构信心：有测试保障才敢大胆重构；③ 活文档：测试用例本身就是对代码行为的描述；④ 强迫好设计：可测试的代码往往设计更解耦；⑤ 减少手动测试成本：CI 自动运行，节省 QA 时间。</p>
@@ -171,7 +171,7 @@
 <h3 id="3-tdd">3. 什么是 TDD（测试驱动开发）？</h3>
 <p><strong>答案：</strong><br>
 TDD 遵循 Red-Green-Refactor 循环：① <strong>Red</strong>：先写一个会失败的测试；② <strong>Green</strong>：写最少代码让测试通过；③ <strong>Refactor</strong>：在测试保护下重构代码。好处：强制明确需求、避免过度设计、测试覆盖率高。挑战：初期效率较低，需要团队纪律。</p>
-<h2 id="_3">单元测试</h2>
+<h2 id="_2">单元测试</h2>
 <h3 id="4-vitest-jest">4. Vitest 和 Jest 的区别是什么？</h3>
 <p><strong>答案：</strong><br>
 Jest 是 Meta 出品的成熟测试框架，生态最丰富，配置复杂度较高，Vite 项目需要额外配置（ESM/TS 转换）。Vitest 是专为 Vite 设计的测试框架，复用 Vite 配置，开箱即用（无需额外 Babel/Transform 配置），速度更快（利用 Vite 的 HMR），API 与 Jest 兼容（迁移成本低）。新 Vite 项目推荐 Vitest，现有 Jest 项目迁移成本较低。</p>
@@ -254,7 +254,7 @@ it('debounce fires after delay', () =&gt; {
 - <strong>Branch Coverage</strong>：分支覆盖率（if/else 每个分支）<br>
 - <strong>Function Coverage</strong>：函数覆盖率</p>
 <p>覆盖率不等于质量，100% 覆盖率不代表没有 Bug（测试断言可能不够）。合理目标：核心业务逻辑 &gt;80%，工具函数 &gt;90%，不强追 100%（边际收益递减）。</p>
-<h2 id="_4">组件测试</h2>
+<h2 id="_3">组件测试</h2>
 <h3 id="9-react-testing-library">9. 什么是 React Testing Library？它的设计理念是什么？</h3>
 <p><strong>答案：</strong><br>
 React Testing Library（RTL）是以用户角度测试组件的库，核心理念：<strong>"测试你的软件像用户使用它一样"</strong>，即通过用户可见的元素和行为（而非内部实现细节）来测试。提倡：用 <code>getByRole</code>/<code>getByText</code>/<code>getByLabelText</code> 而非 <code>getByTestId</code>（前者更接近用户视角）；测试组件的输出和副作用，不测试组件内部状态。</p>
@@ -346,7 +346,7 @@ test.describe('用户登录流程', () =&gt; {
 <h3 id="15-e2e">15. E2E 测试如何处理测试数据隔离？</h3>
 <p><strong>答案：</strong><br>
 ① <strong>每个测试独立准备数据</strong>：<code>test.beforeEach</code> 中调用 API 创建测试用户，<code>afterEach</code> 清理；② <strong>使用唯一前缀/ID</strong>：测试数据用时间戳或 UUID 标记，避免冲突；③ <strong>测试数据库</strong>：E2E 测试连接独立的测试数据库，测试后重置；④ <strong>数据快照</strong>：每次测试前恢复数据库到固定快照；⑤ <strong>Mock API</strong>：E2E 层也可以用 MSW 拦截 API，不真实请求后端（牺牲一些真实性换取稳定）。</p>
-<h2 id="_5">总结</h2>
+<h2 id="_4">总结</h2>
 <p>这些题目覆盖了单元测试（Vitest/Jest）、Mock 策略、组件测试（RTL）、API Mock（MSW）和 E2E 测试（Playwright/Cypress），适合作为前端测试面试复习资料。</p>
   </div>
   <div class="footer">IV Notes &nbsp;·&nbsp; p3-testing-qa.md</div>
