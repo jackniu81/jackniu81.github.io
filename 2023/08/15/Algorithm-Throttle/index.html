@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目实现一个节流函数 throttle(fn, wait)：  事件被频繁触发时，每 wait 毫秒最多执行一次 fn。 与防抖不同：节流不要求「安静下来」，而是给执行限速，保证一段时间内至少&#x2F;至多按节奏跑。 保留正确的 this 与参数。  典型场景：滚动加载、拖拽、游戏连续射击、鼠标 mousemove 计算、大屏 resize。 示例: 12滚动页面每 5ms 触发一次 sc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 节流 (Throttle) 手写实现">
+<meta property="og:url" content="https://jackniu81.github.io/2023/08/15/Algorithm-Throttle/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目实现一个节流函数 throttle(fn, wait)：  事件被频繁触发时，每 wait 毫秒最多执行一次 fn。 与防抖不同：节流不要求「安静下来」，而是给执行限速，保证一段时间内至少&#x2F;至多按节奏跑。 保留正确的 this 与参数。  典型场景：滚动加载、拖拽、游戏连续射击、鼠标 mousemove 计算、大屏 resize。 示例: 12滚动页面每 5ms 触发一次 sc">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-08-15T12:12:07.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:38:49.613Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2023/08/15/Algorithm-Throttle/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2023/08/15/Algorithm-Throttle/","path":"2023/08/15/Algorithm-Throttle/","title":"算法 - 节流 (Throttle) 手写实现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 节流 (Throttle) 手写实现 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%97%B6%E9%97%B4%E6%88%B3%E7%89%88%EF%BC%88%E4%BF%9D%E8%AF%81%E9%97%B4%E9%9A%94%EF%BC%8C%E5%8F%AF%E8%83%BD%E4%B8%A2%E5%A4%B1%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 时间戳版（保证间隔，可能丢失最后一次）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%AE%9A%E6%97%B6%E5%99%A8%E7%89%88%EF%BC%88%E4%BF%9D%E8%AF%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E4%BC%9A%E6%89%A7%E8%A1%8C%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 定时器版（保证最后一次会执行）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E7%BB%93%E5%90%88%E7%89%88%EF%BC%88leading-trailing%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 结合版（leading + trailing）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E6%97%B6%E9%97%B4%E6%88%B3%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 时间戳版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E5%AE%9A%E6%97%B6%E5%99%A8%E7%89%88"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 定时器版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E7%BB%93%E5%90%88%E7%89%88%EF%BC%88leading-trailing%EF%BC%8C%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 结合版（leading + trailing，推荐）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2023/08/15/Algorithm-Throttle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 节流 (Throttle) 手写实现 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 节流 (Throttle) 手写实现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-08-15 20:12:07" itemprop="dateCreated datePublished" datetime="2023-08-15T20:12:07+08:00">2023-08-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个节流函数 <code>throttle(fn, wait)</code>：</p>
+<ul>
+<li>事件被频繁触发时，<strong>每 <code>wait</code> 毫秒最多执行一次</strong> <code>fn</code>。</li>
+<li>与防抖不同：节流不要求「安静下来」，而是给执行<strong>限速</strong>，保证一段时间内至少&#x2F;至多按节奏跑。</li>
+<li>保留正确的 <code>this</code> 与参数。</li>
+</ul>
+<p>典型场景：滚动加载、拖拽、游戏连续射击、鼠标 <code>mousemove</code> 计算、大屏 resize。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">滚动页面每 5ms 触发一次 scroll</span><br><span class="line">throttle(onScroll, 200)  -&gt;  每 200ms 才真正执行一次</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>节流有两种主流实现，各自优缺点分明，面试最好都会写。</p>
+<h2 id="2-1-时间戳版（保证间隔，可能丢失最后一次）"><a href="#2-1-时间戳版（保证间隔，可能丢失最后一次）" class="headerlink" title="2.1 时间戳版（保证间隔，可能丢失最后一次）"></a>2.1 时间戳版（保证间隔，可能丢失最后一次）</h2><p>记录上次执行时间 <code>last</code>。每次触发比较 <code>now - last &gt;= wait</code>：满足就执行并更新 <code>last</code>；否则这次丢弃。</p>
+<ul>
+<li>优点：首次触发立即执行（leading）。</li>
+<li>缺点：如果最后一次触发落在间隔内，会被丢弃，即「尾巴」不执行（trailing 缺失）。</li>
+</ul>
+<h2 id="2-2-定时器版（保证最后一次会执行）"><a href="#2-2-定时器版（保证最后一次会执行）" class="headerlink" title="2.2 定时器版（保证最后一次会执行）"></a>2.2 定时器版（保证最后一次会执行）</h2><p>用 <code>timer</code> 作为「是否处于执行中」的锁。触发时若空闲，延迟 <code>wait</code> 后执行并上锁；执行完释放锁。这样停手后仍会把最后一次补执行一次。</p>
+<ul>
+<li>优点：保证 trailing 执行。</li>
+<li>缺点：首次不是立即执行，而是延迟 <code>wait</code>。</li>
+</ul>
+<h2 id="2-3-结合版（leading-trailing）"><a href="#2-3-结合版（leading-trailing）" class="headerlink" title="2.3 结合版（leading + trailing）"></a>2.3 结合版（leading + trailing）</h2><p>时间戳 + 定时器合体：既保证首次立即执行，又保证最后一次停止触发后一定收尾。这是 lodash 的行为。</p>
+<ul>
+<li>时间复杂度：每次触发 <code>O(1)</code>。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-时间戳版"><a href="#3-1-时间戳版" class="headerlink" title="3.1 时间戳版"></a>3.1 时间戳版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> throttleTimestamp&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(</span><br><span class="line">    <span class="attr">fn</span>: T,</span><br><span class="line">    <span class="attr">wait</span>: <span class="built_in">number</span></span><br><span class="line">) &#123;</span><br><span class="line">    <span class="keyword">let</span> last = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> now = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line">        <span class="keyword">if</span> (now - last &gt;= wait) &#123;</span><br><span class="line">            last = now;</span><br><span class="line">            fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-定时器版"><a href="#3-2-定时器版" class="headerlink" title="3.2 定时器版"></a>3.2 定时器版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> throttleTimer&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(</span><br><span class="line">    <span class="attr">fn</span>: T,</span><br><span class="line">    <span class="attr">wait</span>: <span class="built_in">number</span></span><br><span class="line">) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">timer</span>: <span class="title class_">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="built_in">setTimeout</span>&gt; | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) <span class="keyword">return</span>; <span class="comment">// 执行中，丢弃</span></span><br><span class="line">        timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            timer = <span class="literal">null</span>;</span><br><span class="line">            fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;, wait);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-结合版（leading-trailing，推荐）"><a href="#3-3-结合版（leading-trailing，推荐）" class="headerlink" title="3.3 结合版（leading + trailing，推荐）"></a>3.3 结合版（leading + trailing，推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> throttle&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(<span class="attr">fn</span>: T, <span class="attr">wait</span>: <span class="built_in">number</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">timer</span>: <span class="title class_">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="built_in">setTimeout</span>&gt; | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">let</span> last = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> now = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line">        <span class="keyword">const</span> remaining = wait - (now - last);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (remaining &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 到点了：立即执行</span></span><br><span class="line">            <span class="keyword">if</span> (timer !== <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">                timer = <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            last = now;</span><br><span class="line">            fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (timer === <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 没到点且没有排队：挂一个定时器保证最后一次执行</span></span><br><span class="line">            timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                last = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line">                timer = <span class="literal">null</span>;</span><br><span class="line">                fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">            &#125;, remaining);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用法</span></span><br><span class="line"><span class="keyword">const</span> onScroll = <span class="title function_">throttle</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;handle scroll&quot;</span>), <span class="number">200</span>);</span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;scroll&quot;</span>, onScroll);</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>节流 vs 防抖 一句话</strong>：节流是「匀速放行」，防抖是「攒一波再放」；打字联想用防抖，滚动&#x2F;射击用节流。</li>
+<li><strong><code>requestAnimationFrame</code> 节流</strong>：滚动&#x2F;resize 类视觉更新用 <code>rAF</code> 对齐浏览器帧率比 <code>setTimeout</code> 更流畅省电。</li>
+<li><strong><code>passive: true</code></strong>：给 <code>scroll</code>&#x2F;<code>touch</code> 监听加被动选项，配合节流进一步消除卡顿，全栈性能考点。</li>
+<li>lodash <code>throttle</code> 本质就是 <code>debounce(fn, wait, { leading: true, trailing: true })</code> 的特例，理解这层关系能秒杀追问。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 前端手写题必考 | 性能优化基本功</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/03/Algorithm-Debounce/" rel="prev" title="算法 - 防抖 (Debounce) 手写实现">
+                  <i class="fa fa-angle-left"></i> 算法 - 防抖 (Debounce) 手写实现
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/10/30/Algorithm-Promise-All/" rel="next" title="算法 - 手写 Promise.all">
+                  算法 - 手写 Promise.all <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

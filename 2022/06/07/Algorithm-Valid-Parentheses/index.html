@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目给定一个只包含 &#39;(&#39;、&#39;)&#39;、&#39;{&#39;、&#39;}&#39;、&#39;[&#39;、&#39;]&#39; 的字符串 s，判断字符串是否有效。 有效字符串需满足：  左括号必须用相同类型闭合。 左括号必须以正确的顺序闭合。 每个右括号都有一个对应的相同类型左括号。  示例: 12345&quot;()&quot;        -&amp;gt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 有效的括号 (Valid Parentheses)">
+<meta property="og:url" content="https://jackniu81.github.io/2022/06/07/Algorithm-Valid-Parentheses/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目给定一个只包含 &#39;(&#39;、&#39;)&#39;、&#39;{&#39;、&#39;}&#39;、&#39;[&#39;、&#39;]&#39; 的字符串 s，判断字符串是否有效。 有效字符串需满足：  左括号必须用相同类型闭合。 左括号必须以正确的顺序闭合。 每个右括号都有一个对应的相同类型左括号。  示例: 12345&quot;()&quot;        -&amp;gt">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-07T13:33:12.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:35:33.744Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2022/06/07/Algorithm-Valid-Parentheses/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2022/06/07/Algorithm-Valid-Parentheses/","path":"2022/06/07/Algorithm-Valid-Parentheses/","title":"算法 - 有效的括号 (Valid Parentheses)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 有效的括号 (Valid Parentheses) | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2022/06/07/Algorithm-Valid-Parentheses/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 有效的括号 (Valid Parentheses) | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 有效的括号 (Valid Parentheses)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-06-07 21:33:12" itemprop="dateCreated datePublished" datetime="2022-06-07T21:33:12+08:00">2022-06-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个只包含 <code>&#39;(&#39;</code>、<code>&#39;)&#39;</code>、<code>&#39;{&#39;</code>、<code>&#39;}&#39;</code>、<code>&#39;[&#39;</code>、<code>&#39;]&#39;</code> 的字符串 <code>s</code>，判断字符串是否有效。</p>
+<p>有效字符串需满足：</p>
+<ol>
+<li>左括号必须用<strong>相同类型</strong>闭合。</li>
+<li>左括号必须以<strong>正确的顺序</strong>闭合。</li>
+<li>每个右括号都有一个对应的相同类型左括号。</li>
+</ol>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;()&quot;        -&gt; true</span><br><span class="line">&quot;()[]&#123;&#125;&quot;    -&gt; true</span><br><span class="line">&quot;(]&quot;        -&gt; false</span><br><span class="line">&quot;([)]&quot;      -&gt; false</span><br><span class="line">&quot;&#123;[]&#125;&quot;      -&gt; true</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>括号匹配是<strong>栈</strong>的招牌应用场景。核心规律：最近打开的括号，必须最先被闭合（后进先出）。</p>
+<p>遍历字符串：</p>
+<ul>
+<li>遇到<strong>左括号</strong>，压栈。</li>
+<li>遇到<strong>右括号</strong>，看栈顶：<ul>
+<li>栈为空 → 没有可匹配的左括号，<code>false</code>。</li>
+<li>栈顶不是对应的左括号 → 顺序或类型错误，<code>false</code>。</li>
+<li>匹配成功 → 弹出栈顶。</li>
+</ul>
+</li>
+<li>全部遍历结束后，栈必须为空（所有左括号都被闭合），否则 <code>false</code>。</li>
+</ul>
+<p>一个常见优化技巧：<strong>遇到右括号时，如果它应该匹配的左括号不在栈顶，立即失败</strong>，无需额外判断。</p>
+<ul>
+<li>时间复杂度：<code>O(n)</code>。</li>
+<li>空间复杂度：<code>O(n)</code>，最坏全是左括号。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">isValid</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">pairs</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="built_in">string</span>&gt; = &#123;</span><br><span class="line">        <span class="string">&#x27;)&#x27;</span>: <span class="string">&#x27;(&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;]&#x27;</span>: <span class="string">&#x27;[&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;&#125;&#x27;</span>: <span class="string">&#x27;&#123;&#x27;</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">stack</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> ch <span class="keyword">of</span> s) &#123;</span><br><span class="line">        <span class="comment">// 右括号：栈顶必须是对应的左括号</span></span><br><span class="line">        <span class="keyword">if</span> (ch <span class="keyword">in</span> pairs) &#123;</span><br><span class="line">            <span class="keyword">const</span> top = stack.<span class="title function_">pop</span>(); <span class="comment">// 空数组 pop 返回 undefined，天然处理空栈</span></span><br><span class="line">            <span class="keyword">if</span> (top !== pairs[ch]) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 左括号：入栈</span></span><br><span class="line">            stack.<span class="title function_">push</span>(ch);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> stack.<span class="property">length</span> === <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">isValid</span>(<span class="string">&quot;&#123;[]&#125;&quot;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">isValid</span>(<span class="string">&quot;([)]&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">isValid</span>(<span class="string">&quot;(&quot;</span>));    <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>最长有效括号（LeetCode 32）</strong> 用栈记录下标，求长度；进阶可用 DP，是难题级别。</li>
+<li><strong>括号生成（22 题）</strong> 是回溯：维护左右括号计数，<code>left &lt; n</code> 加左括号、<code>right &lt; left</code> 加右括号。</li>
+<li><strong>有效括号 III &#x2F; 通配符（1047 删重复）</strong> 等都用栈，掌握「遇右查栈顶」这一招就能举一反三。</li>
+<li>扩展字符集（如标签嵌套 <code>&lt;div&gt;</code>）时，把 <code>Record</code> 换成 <code>Map</code> 支持多字符 key 即可。</li>
+</ul>
+<blockquote>
+<p>难度：简单 | LeetCode 20 题 | 栈应用第一课</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/28/Algorithm-LRU-Cache/" rel="prev" title="算法 - LRU 缓存机制 (LRU Cache) ⭐全栈必考">
+                  <i class="fa fa-angle-left"></i> 算法 - LRU 缓存机制 (LRU Cache) ⭐全栈必考
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/19/Algorithm-Maximum-Depth-of-Binary-Tree/" rel="next" title="算法 - 二叉树的最大深度">
+                  算法 - 二叉树的最大深度 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目实现一个防抖函数 debounce(fn, wait, immediate)：  在事件被频繁触发时，只有在停止触发 wait 毫秒后，fn 才真正执行一次。 每次新触发都会「重新计时」（把上一次的待执行取消）。 immediate &#x3D; true 时，首次触发立即执行一次，之后的连续触发不再执行，直到静默 wait 后重新武装。 要求保留正确的 this 与参数，并提供 cancel 方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 防抖 (Debounce) 手写实现">
+<meta property="og:url" content="https://jackniu81.github.io/2023/06/03/Algorithm-Debounce/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目实现一个防抖函数 debounce(fn, wait, immediate)：  在事件被频繁触发时，只有在停止触发 wait 毫秒后，fn 才真正执行一次。 每次新触发都会「重新计时」（把上一次的待执行取消）。 immediate &#x3D; true 时，首次触发立即执行一次，之后的连续触发不再执行，直到静默 wait 后重新武装。 要求保留正确的 this 与参数，并提供 cancel 方">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-03T02:41:29.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:38:49.423Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2023/06/03/Algorithm-Debounce/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2023/06/03/Algorithm-Debounce/","path":"2023/06/03/Algorithm-Debounce/","title":"算法 - 防抖 (Debounce) 手写实现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 防抖 (Debounce) 手写实现 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E6%A0%87%E5%87%86%E7%89%88%EF%BC%88%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C%EF%BC%8C%E6%9C%80%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 标准版（延迟执行，最常用）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%94%AF%E6%8C%81-immediate%EF%BC%88%E9%A6%96%E6%AC%A1%E7%AB%8B%E5%8D%B3%E6%89%A7%E8%A1%8C%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 支持 immediate（首次立即执行）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2023/06/03/Algorithm-Debounce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 防抖 (Debounce) 手写实现 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 防抖 (Debounce) 手写实现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-03 10:41:29" itemprop="dateCreated datePublished" datetime="2023-06-03T10:41:29+08:00">2023-06-03</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个防抖函数 <code>debounce(fn, wait, immediate)</code>：</p>
+<ul>
+<li>在事件被频繁触发时，只有在<strong>停止触发 <code>wait</code> 毫秒后</strong>，<code>fn</code> 才真正执行一次。</li>
+<li>每次新触发都会「重新计时」（把上一次的待执行取消）。</li>
+<li><code>immediate = true</code> 时，首次触发立即执行一次，之后的连续触发不再执行，直到静默 <code>wait</code> 后重新武装。</li>
+<li>要求保留正确的 <code>this</code> 与参数，并提供 <code>cancel</code> 方法取消待执行。</li>
+</ul>
+<p>典型场景：搜索框输入联想、窗口 resize 重排、按钮防连点、滚动监听。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户连续输入 &quot;typescript&quot;（每 50ms 一个字符）</span><br><span class="line">debounce(search, 300)  -&gt;  停止输入 300ms 后才发一次请求</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>一句话：<strong>用一个闭包持有的定时器 ID，每次触发先 <code>clearTimeout</code> 再重新 <code>setTimeout</code></strong>。这样只有「最后一次触发」的定时器能活到时间并执行回调。</p>
+<p>要点：</p>
+<ol>
+<li><code>timer</code> 存在闭包里，外界看不见，只在函数内部读写。</li>
+<li>执行回调时用 <code>fn.apply(this, args)</code>，保证 <code>this</code> 指向调用方（比如事件绑定的 DOM），参数也原样透传。</li>
+<li><code>immediate</code> 版本：若已立即执行过，就把 <code>timer</code> 设为一个哨兵值表示「冷却中」，静默期结束后置空以重新武装。</li>
+<li><code>cancel</code>：清掉当前定时器并把状态复位。</li>
+</ol>
+<ul>
+<li>时间复杂度：每次触发 <code>O(1)</code>。</li>
+<li>空间：闭包一份。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-标准版（延迟执行，最常用）"><a href="#3-1-标准版（延迟执行，最常用）" class="headerlink" title="3.1 标准版（延迟执行，最常用）"></a>3.1 标准版（延迟执行，最常用）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> debounce&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(</span><br><span class="line">    <span class="attr">fn</span>: T,</span><br><span class="line">    <span class="attr">wait</span>: <span class="built_in">number</span></span><br><span class="line">): (<span class="function">(<span class="params">...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) =&gt;</span> <span class="built_in">void</span>) &amp; &#123; <span class="attr">cancel</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span> &#125; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">timer</span>: <span class="title class_">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="built_in">setTimeout</span>&gt; | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> debounced = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">ThisParameterType</span>&lt;T&gt;, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            timer = <span class="literal">null</span>;</span><br><span class="line">            fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;, wait);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    debounced.<span class="property">cancel</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">            timer = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> debounced;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-支持-immediate（首次立即执行）"><a href="#3-2-支持-immediate（首次立即执行）" class="headerlink" title="3.2 支持 immediate（首次立即执行）"></a>3.2 支持 immediate（首次立即执行）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> debounceImmediate&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(</span><br><span class="line">    <span class="attr">fn</span>: T,</span><br><span class="line">    <span class="attr">wait</span>: <span class="built_in">number</span>,</span><br><span class="line">    immediate = <span class="literal">false</span></span><br><span class="line">) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">timer</span>: <span class="title class_">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="built_in">setTimeout</span>&gt; | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="comment">// 用 timer 是否存在判断「是否处于冷却」</span></span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (immediate) &#123;</span><br><span class="line">            <span class="keyword">const</span> callNow = timer === <span class="literal">null</span>; <span class="comment">// 首次或冷却结束</span></span><br><span class="line">            timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                timer = <span class="literal">null</span>; <span class="comment">// 重新武装</span></span><br><span class="line">            &#125;, wait);</span><br><span class="line">            <span class="keyword">if</span> (callNow) fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                timer = <span class="literal">null</span>;</span><br><span class="line">                fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">            &#125;, wait);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用法</span></span><br><span class="line"><span class="keyword">const</span> onSearch = <span class="title function_">debounce</span>(<span class="function">(<span class="params"><span class="attr">kw</span>: <span class="built_in">string</span></span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;fetch:&quot;</span>, kw), <span class="number">300</span>);</span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;input&quot;</span>, <span class="function">() =&gt;</span> <span class="title function_">onSearch</span>(<span class="string">&quot;abc&quot;</span>));</span><br><span class="line"><span class="comment">// 组件卸载 / 不再需要时：</span></span><br><span class="line">onSearch.<span class="title function_">cancel</span>();</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>防抖 vs 节流</strong>：防抖「等安静了再执行一次」，节流「固定频率最多执行一次」。二者常一起考，见下一篇 [节流]。</li>
+<li><strong>带返回值怎么办？</strong> 防抖天然会推迟结果，直接 return 拿不到。工程做法：返回 Promise，或用回调；能讲清这个取舍很加分。</li>
+<li><strong>leading &#x2F; trailing 配置</strong>：lodash 的 <code>debounce</code> 有 <code>leading</code>（是否先行执行）、<code>maxWait</code>（最长等待，防止永远不执行，此时退化为带节流的防抖）。</li>
+<li>React 中要配合 <code>useMemo</code>&#x2F;<code>useRef</code> 保存同一个 debounce 实例，否则每次渲染都新建、定时器互相打架。</li>
+</ul>
+<blockquote>
+<p>难度：简单 | 前端手写题必考 | 事件频率控制基石</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/04/21/Algorithm-Flatten-Array/" rel="prev" title="算法 - 数组扁平化 (Flatten Array)">
+                  <i class="fa fa-angle-left"></i> 算法 - 数组扁平化 (Flatten Array)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/15/Algorithm-Throttle/" rel="next" title="算法 - 节流 (Throttle) 手写实现">
+                  算法 - 节流 (Throttle) 手写实现 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

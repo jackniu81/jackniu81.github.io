@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Node.js 常见面试题（附答案）    :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;           --code-bg:#f6f8fa; --accent:#0969da; }   * { box-sizing: border-box; }   body { margin:0; backg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jack N @ GitHub">
+<meta property="og:url" content="https://jackniu81.github.io/static/i/p0-nodejs-qa.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="Node.js 常见面试题（附答案）    :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;           --code-bg:#f6f8fa; --accent:#0969da; }   * { box-sizing: border-box; }   body { margin:0; backg">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-23T13:57:16.856Z">
+<meta property="article:modified_time" content="2026-09-23T13:57:16.856Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="next.js, React, node.js,dotnet core, .Net, C#">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/static/i/p0-nodejs-qa">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/static/i/p0-nodejs-qa.html","path":"static/i/p0-nodejs-qa.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Jack N @ GitHub
+</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Node.js 常见面试题（附答案）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.1.</span> <span class="nav-text">基础与运行原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. Node.js 是什么？核心特点有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. Node.js 的事件循环与浏览器有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. process.nextTick 和 setImmediate 的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.4.</span> <span class="nav-text">4. Node.js 如何处理高并发？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.5.</span> <span class="nav-text">5. Node.js 的模块系统有哪些？有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.6.</span> <span class="nav-text">6. CommonJS 的模块缓存机制是什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.2.</span> <span class="nav-text">核心模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.1.</span> <span class="nav-text">7. fs 模块有哪些常用 API？同步和异步如何选择？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.2.</span> <span class="nav-text">8. path 模块的常用方法有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.3.</span> <span class="nav-text">9. stream 流有哪些类型？什么场景使用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.4.</span> <span class="nav-text">10. EventEmitter 的使用和注意事项？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.5.</span> <span class="nav-text">11. http 模块如何创建服务器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.6.</span> <span class="nav-text">12. 什么是 Buffer？什么时候用？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.3.</span> <span class="nav-text">框架与工程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.1.</span> <span class="nav-text">13. Express 的中间件机制是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.2.</span> <span class="nav-text">14. Express 和 Koa 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.3.</span> <span class="nav-text">15. 什么是 NestJS？它的核心概念有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.4.</span> <span class="nav-text">16. 如何在 Node.js 中进行错误处理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.5.</span> <span class="nav-text">17. Node.js 中如何使用环境变量？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.4.</span> <span class="nav-text">性能与部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.1.</span> <span class="nav-text">18. 如何利用多核 CPU？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.2.</span> <span class="nav-text">19. 如何排查 Node.js 内存泄漏？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.3.</span> <span class="nav-text">20. PM2 有哪些常用命令和特性？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.4.</span> <span class="nav-text">21. 什么是 Node.js 的 --inspect 调试模式？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.5.</span> <span class="nav-text">22. 如何实现 Node.js 的优雅退出（Graceful Shutdown）？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.5.</span> <span class="nav-text">生态与工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.1.</span> <span class="nav-text">23. npm、yarn、pnpm 的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.2.</span> <span class="nav-text">24. 什么是 Monorepo？常用工具有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.3.</span> <span class="nav-text">25. Node.js 中如何处理大文件上传？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.6.</span> <span class="nav-text">Node 22&#x2F;24&#x2F;26 新特性（2024–2026 热门）🆕</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.1.</span> <span class="nav-text">26. 🆕 当前 Node.js 的版本与 LTS 格局是怎样的（2026 年）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.2.</span> <span class="nav-text">27. 🆕 Node.js 原生运行 TypeScript：什么是 type stripping？版本与限制？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.3.</span> <span class="nav-text">28. 🆕 require(esm) 同步加载 ESM 的规则与边界是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.4.</span> <span class="nav-text">29. 🆕 内置测试框架 node:test 怎么用？与 Jest&#x2F;Vitest 对比？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.5.</span> <span class="nav-text">30. 🆕 node:sqlite 内置 SQLite 客户端现状如何？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.6.</span> <span class="nav-text">31. 🆕 Node.js 内置了哪些 Web 标准 API（fetch &#x2F; WebSocket &#x2F; Streams）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.7.</span> <span class="nav-text">32. 🆕 权限模型（Permission Model）解决什么问题？怎么用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.8.</span> <span class="nav-text">33. 🆕 如何取消 fetch 与异步操作？AbortController &#x2F; structuredClone 了解吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.9.</span> <span class="nav-text">34. 🆕 AsyncLocalStorage 如何在异步链路中透传请求上下文？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.10.</span> <span class="nav-text">35. 🆕 Node SEA（Single Executable Applications）打包单文件程序现状？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.11.</span> <span class="nav-text">36. 🆕 --watch、node --run 与原生 TS 带来了什么开发体验变化？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.12.</span> <span class="nav-text">37. 🆕 2026 年 ESM 现状如何？import attributes 是什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/i/">I</a></li>
+            <li>P0-NODEJS-QA</li>
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Node.js 常见面试题（附答案）</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;
+          --code-bg:#f6f8fa; --accent:#0969da; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+  <h1>Node.js 常见面试题（附答案）</h1>
+<blockquote>📌 <strong>版本说明（2026-09-16 核实）</strong>：文中标注版本的结论以当前 <strong>Node 24「Krypton」LTS</strong>（生产推荐）与 <strong>Node 26 Current</strong>（2026-10 将转 LTS）为准；Node 22「Jod」LTS 处于维护期，Node 20 已 EOL。</blockquote>
+<h2>基础与运行原理</h2>
+<h3>1. Node.js 是什么？核心特点有哪些？</h3>
+<p><strong>答案：</strong> Node.js 是基于 Chrome V8 引擎的 JavaScript 运行时，让 JS 能在服务端运行。核心特点：</p>
+<ul><li>单线程 + 事件驱动</li><li>非阻塞 I/O（异步）</li><li>高并发处理能力（适合 I/O 密集型）</li><li>npm 生态极其丰富</li><li>前后端同语言，利于全栈开发</li></ul>
+<p>不适合 CPU 密集型任务（会阻塞事件循环）。</p>
+<h3>2. Node.js 的事件循环与浏览器有什么区别？</h3>
+<p><strong>答案：</strong> Node.js 事件循环基于 libuv 实现，单线程运行，一轮循环按固定顺序经过六个阶段，每个阶段维护自己的宏任务队列：</p>
+<table><thead><tr><th>阶段</th><th>处理内容</th></tr></thead><tbody><tr><td>1. timers</td><td>到期的 <code>setTimeout</code>/<code>setInterval</code> 回调</td></tr><tr><td>2. pending callbacks</td><td>被推迟到下一轮的系统级回调（如 TCP <code>ECONNREFUSED</code>）</td></tr><tr><td>3. idle/prepare</td><td>内部使用</td></tr><tr><td>4. poll</td><td>检索并执行 I/O 回调；队列空时在此阻塞等待新 I/O，若有到期 timer 则跳回 timers</td></tr><tr><td>5. check</td><td>执行 <code>setImmediate</code> 回调</td></tr><tr><td>6. close callbacks</td><td>关闭事件回调（如 <code>socket.on(&#39;close&#39;)</code>）</td></tr></tbody></table>
+<p><strong>微任务（microtask）</strong>：每个回调执行完、以及每次阶段切换前都会清空微任务队列。微任务分两个子队列，<strong>nextTick 队列先于 Promise 队列，两者都清空后才继续</strong>：</p>
+<ul><li><code>process.nextTick</code> 注册的回调（nextTick 队列，优先级最高）</li><li>Promise 回调、<code>queueMicrotask</code>、<code>await</code> 后续（V8 promise 队列）</li></ul>
+<p><strong>与浏览器的区别</strong>：</p>
+<ul><li>浏览器没有 libuv 六阶段划分，宏任务由不同任务队列调度；Node 特有 <code>process.nextTick</code> 和 <code>setImmediate</code></li><li><code>setTimeout(fn, 0)</code> 与 <code>setImmediate</code> 在主模块顶层执行时顺序<strong>不保证</strong>（取决于事件循环启动时序）；但在 I/O 回调内（poll 之后），<code>setImmediate</code> 总是先执行</li><li>Node 的 I/O 由 libuv 线程池/操作系统异步完成，完成后把回调投递到 poll 阶段</li></ul>
+<p>最小示例（微任务相对顺序固定）：</p>
+<pre><code class="language-javascript">process.nextTick(() =&gt; console.log(&#39;nextTick&#39;));
+Promise.resolve().then(() =&gt; console.log(&#39;promise&#39;));
+queueMicrotask(() =&gt; console.log(&#39;microtask&#39;));
+console.log(&#39;sync&#39;);
+// 输出：
+// sync
+// nextTick   ← nextTick 队列先清空
+// promise    ← 再清空 promise 队列（按入队顺序）
+// microtask</code></pre>
+<p>I/O 回调内 <code>setImmediate</code> 必先于 <code>setTimeout</code>：</p>
+<pre><code class="language-javascript">const fs = require(&#39;node:fs&#39;);
+fs.readFile(__filename, () =&gt; {
+  setTimeout(() =&gt; console.log(&#39;timeout&#39;), 0);
+  setImmediate(() =&gt; console.log(&#39;immediate&#39;));
+});
+// 输出（固定顺序）：
+// immediate
+// timeout</code></pre>
+<p>实践建议：需要在当前操作完成后立即执行用 <code>process.nextTick</code>（但勿递归滥用，会饿死 I/O）；需要主动让出事件循环用 <code>setImmediate</code>。</p>
+<h3>3. <code>process.nextTick</code> 和 <code>setImmediate</code> 的区别？</h3>
+<p><strong>答案：</strong> <code>process.nextTick</code> 在当前事件循环阶段结束时立即执行（在所有 I/O 和微任务之前），优先级最高，滥用可能饿死 I/O；<code>setImmediate</code> 在事件循环的 check 阶段执行，在 I/O 回调之后。执行顺序：<code>process.nextTick</code> > Promise 微任务 > <code>setImmediate</code> > <code>setTimeout(fn, 0)</code>（在 I/O 回调中 <code>setImmediate</code> 总是先于 <code>setTimeout</code>）。</p>
+<blockquote>❌ <strong>更正（2026-09 核实）</strong>：两处表述需修正：① <code>process.nextTick</code> <strong>本身就属于微任务</strong>（nextTick 微任务队列），并非"在所有微任务之前"；准确说法是每个回调结束/阶段切换时，先清空 nextTick 队列，再清空 Promise 队列。② <code>setImmediate</code> 并非总是先于 <code>setTimeout(fn, 0)</code>——该顺序仅在 I/O 回调内成立，主模块顶层两者顺序不保证。详见第 2 题。</blockquote>
+<h3>4. Node.js 如何处理高并发？</h3>
+<p><strong>答案：</strong> Node.js 用单线程 + 非阻塞 I/O + 事件循环处理并发：I/O 操作（文件、网络、数据库）交由 libuv 线程池或操作系统异步处理，主线程继续处理其他请求；I/O 完成后将回调加入事件队列。因此大量并发 I/O 请求不会互相阻塞。但 CPU 密集操作会阻塞事件循环，需用 <code>worker_threads</code> 或子进程处理。</p>
+<h3>5. Node.js 的模块系统有哪些？有什么区别？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>CommonJS</strong>（默认，<code>.js</code> 文件）：<code>require</code>/<code>module.exports</code>，同步加载，运行时解析，<code>require</code> 有缓存（首次加载后缓存）</li><li><strong>ES Module</strong>（<code>.mjs</code> 或 <code>package.json</code> 中 <code>&quot;type&quot;: &quot;module&quot;</code>）：<code>import</code>/<code>export</code>，异步静态分析，支持 Tree Shaking，是未来标准</li></ul>
+<p>现代 Node.js（16+）支持 ESM，但与 CJS 互操作有限制（不能在 CJS 中 <code>require</code> ESM）。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>："不能在 CJS 中 <code>require</code> ESM" 已过时。Node <strong>20.19.0 / 22.12.0</strong> 起 <code>require()</code> 可同步加载 ESM（此前需 <code>--experimental-require-module</code>，Node 23 默认开启，<strong>25.4.0 起标记稳定并回移植到受支持的 LTS 线</strong>）。限制条件：① 被加载的 ESM 及其整条依赖图中<strong>不能含顶层 <code>await</code></strong>，否则抛 <code>ERR<em>REQUIRE</em>ASYNC<em>MODULE</code>，这种情况仍需用动态 <code>import()</code>；② 不支持跨 CJS/ESM 边界的循环依赖（<code>ERR</em>REQUIRE<em>CYCLE</em>MODULE</code>）。详见第 28 题。</blockquote>
+<h3>6. CommonJS 的模块缓存机制是什么？</h3>
+<p><strong>答案：</strong> Node.js 在首次 <code>require</code> 一个模块时，将其导出对象缓存在 <code>require.cache</code> 中。后续 <code>require</code> 同一模块路径直接返回缓存，不重新执行模块代码。这意味着模块中的状态（变量、连接）是单例的，单元测试时可能需要清除缓存（<code>delete require.cache[modulePath]</code>）。循环依赖时会返回部分加载的对象。</p>
+<h2>核心模块</h2>
+<h3>7. <code>fs</code> 模块有哪些常用 API？同步和异步如何选择？</h3>
+<p><strong>答案：</strong> 常用 API：<code>fs.readFile</code>/<code>writeFile</code>/<code>appendFile</code>/<code>unlink</code>/<code>mkdir</code>/<code>stat</code>/<code>readdir</code>（异步回调版），加 <code>Sync</code> 后缀为同步版，<code>fs.promises.*</code> 为 Promise 版。选择原则：<strong>服务端代码用异步</strong>（避免阻塞事件循环）；脚本/CLI 工具可用同步（代码更简洁，无并发压力）。推荐 <code>fs.promises</code> + <code>async/await</code> 组合。</p>
+<h3>8. <code>path</code> 模块的常用方法有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><code>path.join(...segments)</code>：拼接路径（自动处理斜杠）</li><li><code>path.resolve(...segments)</code>：解析为绝对路径（从右向左解析）</li><li><code>path.dirname(p)</code>：获取目录部分</li><li><code>path.basename(p, ext)</code>：获取文件名部分</li><li><code>path.extname(p)</code>：获取扩展名</li><li><code>path.parse(p)</code> / <code>path.format(obj)</code>：路径字符串与对象互转</li><li><code>__dirname</code>（CJS）/ <code>import.meta.dirname</code>（ESM）：当前文件目录</li></ul>
+<h3>9. <code>stream</code> 流有哪些类型？什么场景使用？</h3>
+<p><strong>答案：</strong> 四种类型：</p>
+<ul><li>Readable（可读流，如 <code>fs.createReadStream</code>）</li><li>Writable（可写流，如 <code>fs.createWriteStream</code>）</li><li>Duplex（双工流，如 TCP socket）</li><li>Transform（转换流，如 zlib 压缩/解密）</li></ul>
+<p>适用场景：处理大文件（避免一次性加载进内存）、HTTP 请求/响应、管道数据处理（<code>readable.pipe(transform).pipe(writable)</code>）。<code>stream.pipeline</code> 比 <code>pipe</code> 更安全（自动处理错误和清理）。</p>
+<h3>10. <code>EventEmitter</code> 的使用和注意事项？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-javascript">const EventEmitter = require(&#39;events&#39;);
+const emitter = new EventEmitter();
+emitter.on(&#39;data&#39;, handler);
+emitter.emit(&#39;data&#39;, payload);
+emitter.once(&#39;close&#39;, handler); // 只触发一次
+emitter.off(&#39;data&#39;, handler);  // 移除监听</code></pre>
+<p>注意：</p>
+<ul><li>默认最多 10 个监听器（超出警告，用 <code>setMaxListeners</code> 调整）</li><li>必须监听 <code>error</code> 事件，否则会抛出未捕获异常</li><li>同步触发（<code>emit</code> 时同步执行所有监听器）</li><li>内存泄漏常见原因：监听器未移除</li></ul>
+<h3>11. <code>http</code> 模块如何创建服务器？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-javascript">const http = require(&#39;http&#39;);
+const server = http.createServer((req, res) =&gt; {
+  const { method, url, headers } = req;
+  let body = &#39;&#39;;
+  req.on(&#39;data&#39;, chunk =&gt; body += chunk);
+  req.on(&#39;end&#39;, () =&gt; {
+    res.writeHead(200, { &#39;Content-Type&#39;: &#39;application/json&#39; });
+    res.end(JSON.stringify({ method, url, body }));
+  });
+});
+server.listen(3000, () =&gt; console.log(&#39;Server running on port 3000&#39;));</code></pre>
+<p>实际项目通常用 Express/Fastify/Koa 封装，而非直接使用原生 <code>http</code>。</p>
+<h3>12. 什么是 Buffer？什么时候用？</h3>
+<p><strong>答案：</strong> Buffer 是 Node.js 处理二进制数据的核心类，类似 <code>Uint8Array</code>。用于处理 TCP 流、文件系统操作、加密、图片处理等二进制场景。常用：<code>Buffer.from(&#39;hello&#39;, &#39;utf8&#39;)</code>（字符串转 Buffer）、<code>buf.toString(&#39;utf8&#39;)</code>（Buffer 转字符串）、<code>Buffer.alloc(size)</code>（创建指定大小的零填充 Buffer）。注意 <code>Buffer.allocUnsafe</code> 速度快但不清零，不安全用于密码学。</p>
+<h2>框架与工程</h2>
+<h3>13. Express 的中间件机制是什么？</h3>
+<p><strong>答案：</strong> Express 中间件是函数，签名 <code>(req, res, next) =&gt; void</code>。请求到达时按注册顺序依次执行，每个中间件通过调用 <code>next()</code> 传递控制权，或直接发送响应终止链。错误中间件签名为 <code>(err, req, res, next)</code>，<code>next(err)</code> 触发。常见中间件：日志（morgan）、解析请求体（express.json）、鉴权、CORS、静态文件。洋葱模型：Koa 使用 <code>async/await</code> 的"洋葱圈"模型（中间件可以在请求前后执行代码）。</p>
+<p>洋葱：请求从外层进入，经过所有中间件，响应从内层返回，再经过所有中间件（反向顺序）</p>
+<h3>14. Express 和 Koa 的区别是什么？</h3>
+<p><strong>答案：</strong> Express：同步中间件（回调风格），内置路由和多种功能，生态最成熟，入门简单；错误处理需传 <code>next(err)</code>。Koa：由 Express 原班人马创作，精简内核（无内置路由等），中间件基于 <code>async/await</code>，洋葱模型（<code>await next()</code> 后可执行后续逻辑），错误处理更优雅（try/catch + ctx.app.emit('error')）。NestJS 是在 Express/Fastify 上的完整框架，提供 IoC、模块化、装饰器等能力，适合大型项目。</p>
+<h3>15. 什么是 NestJS？它的核心概念有哪些？</h3>
+<p><strong>答案：</strong> NestJS 是基于 TypeScript 的渐进式 Node.js 框架，深受 Angular 启发。核心概念：</p>
+<ul><li><strong>Module</strong>（模块，组织代码边界）</li><li><strong>Controller</strong>（路由处理，<code>@Get</code>/<code>@Post</code> 等装饰器）</li><li><strong>Service</strong>（业务逻辑，通过 DI 注入）</li><li><strong>Provider</strong>（注入的任何服务/仓库）</li><li><strong>Guard</strong>（权限守卫）</li><li><strong>Interceptor</strong>（拦截器，类似 Axios 拦截器）</li><li><strong>Pipe</strong>（数据转换和验证，class-validator）</li><li><strong>Middleware</strong>（与 Express 中间件兼容）</li></ul>
+<h3>16. 如何在 Node.js 中进行错误处理？</h3>
+<p><strong>答案：</strong></p>
+<ul><li>同步代码：<code>try/catch</code></li><li>异步回调：回调第一个参数约定为 <code>err</code></li><li>Promise：<code>.catch()</code> 或 <code>async/await</code> + <code>try/catch</code></li><li>全局未捕获：<code>process.on(&#39;uncaughtException&#39;, handler)</code>（严重错误，记录日志后应退出进程）</li><li><code>process.on(&#39;unhandledRejection&#39;, handler)</code>（Promise 未捕获）</li><li>Express 错误中间件：<code>(err, req, res, next)</code></li><li>生产建议：用 PM2/cluster + 进程守护，异常时自动重启</li></ul>
+<h3>17. Node.js 中如何使用环境变量？</h3>
+<p><strong>答案：</strong> 通过 <code>process.env.VAR_NAME</code> 访问。开发时使用 <code>.env</code> 文件配合 <code>dotenv</code> 库（<code>require(&#39;dotenv&#39;).config()</code>）加载。生产环境通过系统环境变量、Docker ENV、Kubernetes ConfigMap 注入，不应将 <code>.env</code> 提交到版本库（加入 <code>.gitignore</code>）。<code>@nestjs/config</code> 封装了 NestJS 中的配置管理。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：Node <strong>20.6.0</strong> 起已内置 dotenv 能力，多数场景不再需要第三方 <code>dotenv</code> 包： - <code>node --env-file=.env app.js</code> 启动时加载；文件可能不存在时用 <code>--env-file-if-exists=.env</code>（不报错） - <strong>Node 22 起支持多个 <code>--env-file</code></strong>，后者覆盖前者：<code>node --env-file=.env --env-file=.env.production app.js</code> - 也可编程式加载：<code>process.loadEnvFile(&#39;.env&#39;)</code>（20.12.0+） - 优先级：进程已存在的环境变量高于文件中的值；所有值均为字符串，不做布尔/数字转换 需要变量展开（<code>${VAR}</code>）、复杂校验等高级特性时仍可使用 <code>dotenv</code>/<code>dotenv-expand</code>。</blockquote>
+<h2>性能与部署</h2>
+<h3>18. 如何利用多核 CPU？</h3>
+<p><strong>答案：</strong> Node.js 单进程单线程，默认只用一个 CPU 核。利用多核方案：</p>
+<ul><li><strong>cluster 模块</strong>：主进程 fork 多个子进程（一般等于 CPU 核数），共享端口，各自处理请求</li><li><strong>worker_threads</strong>：在同一进程内创建线程，共享内存（SharedArrayBuffer），适合 CPU 密集任务</li><li><strong>PM2</strong>：生产环境常用进程管理器，<code>pm2 start app.js -i max</code> 自动按 CPU 核数启动集群</li></ul>
+<h3>19. 如何排查 Node.js 内存泄漏？</h3>
+<p><strong>答案：</strong></p>
+<ul><li>监控内存：<code>process.memoryUsage()</code> 或 PM2 监控面板</li><li>生成堆快照：<code>v8.writeHeapSnapshot()</code> 或 Chrome DevTools（连接 <code>--inspect</code>）</li><li>对比多次堆快照，找到持续增长的对象</li><li>常见原因：全局变量积累、闭包引用、事件监听器未移除、定时器未清理、缓存无限增长</li><li>工具：<code>clinic.js</code>（诊断）、<code>heapdump</code>、<code>memwatch-next</code></li></ul>
+<h3>20. PM2 有哪些常用命令和特性？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-bash">pm2 start app.js --name myapp   # 启动
+pm2 start app.js -i max         # 集群模式（按 CPU 核数）
+pm2 list                         # 查看进程
+pm2 logs myapp                   # 查看日志
+pm2 restart/stop/delete myapp    # 重启/停止/删除
+pm2 monit                        # 实时监控
+pm2 startup                      # 设置开机自启
+pm2 save                         # 保存当前进程列表</code></pre>
+<p>特性：进程守护（崩溃自动重启）、日志管理、集群管理、热重载（<code>pm2 reload</code>，零停机更新）、监控面板。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：注意区分 Node 自带能力与 PM2 的定位： - <strong>多核利用</strong>：PM2 cluster 底层就是内置 <code>cluster</code> 模块，直接用 <code>cluster</code>（或 Fastify/NestJS 等框架的集群适配器）也能实现多进程共享端口 - <strong>开发热重启</strong>：用内置 <code>node --watch</code>（Node 22 起稳定，文件变更自动重启），无需 PM2/nodemon - <strong>生产守护</strong>：在裸机/虚拟机上 PM2 仍提供守护、日志聚合、<code>ecosystem.config.js</code> 声明式管理、监控面板等运维价值；但在 <strong>Docker/Kubernetes 环境</strong>中，主流做法是每容器跑单进程，由编排系统负责重启、水平扩展与滚动更新，通常不再引入 PM2。</blockquote>
+<h3>21. 什么是 Node.js 的 <code>--inspect</code> 调试模式？</h3>
+<p><strong>答案：</strong> 启动时加 <code>--inspect</code> 或 <code>--inspect-brk</code>（在第一行暂停）开启调试端口（默认 9229）。然后可以用 Chrome DevTools（<code>chrome://inspect</code>）或 VSCode 连接，进行断点调试、内存分析、CPU 性能分析。<code>--inspect-brk</code> 适合调试启动时的问题。生产环境谨慎开启，注意端口安全。</p>
+<h3>22. 如何实现 Node.js 的优雅退出（Graceful Shutdown）？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-javascript">process.on(&#39;SIGTERM&#39;, async () =&gt; {
+  console.log(&#39;Received SIGTERM, graceful shutdown...&#39;);
+  server.close(async () =&gt; {      // 停止接受新连接
+    await db.disconnect();         // 关闭数据库连接
+    await redis.quit();            // 关闭 Redis 连接
+    process.exit(0);
+  });
+  // 超时强制退出
+  setTimeout(() =&gt; process.exit(1), 30000);
+});</code></pre>
+<p>优雅退出：收到信号后停止接受新请求，等待进行中的请求完成，清理资源（DB 连接、消息队列），然后退出。Kubernetes 部署时 <code>SIGTERM</code> 是 Pod 终止信号，必须处理。</p>
+<h2>生态与工具</h2>
+<h3>23. npm、yarn、pnpm 的区别？</h3>
+<p><strong>答案：</strong> <strong>npm</strong>：Node.js 官方包管理器，v7+ 支持 workspaces，但 <code>node<em>modules</code> 扁平化有幽灵依赖问题；<strong>yarn（v1）</strong>：并行下载更快，有 <code>yarn.lock</code>，目前维护模式；<strong>yarn（v2/3/4）</strong>：PnP（Plug'n'Play）模式，无 <code>node</em>modules</code>，启动极快；<strong>pnpm</strong>：硬链接 + 符号链接共享依赖，节省磁盘，严格依赖隔离（无幽灵依赖），monorepo 支持好，现代项目首选。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>： - <strong>pnpm 现状</strong>：2026-04 发布 <strong>pnpm 11</strong>，要求 Node.js 22+，pnpm 自身转为纯 ESM；store 索引改用 SQLite 提升安装速度；默认开启供应链安全策略（新包发布满 1 天才解析 <code>minimumReleaseAge</code>、阻断异常子依赖等）；全局安装相互隔离；Node 24 LTS 配套的是 <strong>npm 11</strong>。 - <strong>Corepack 变化</strong>：Corepack 随 Node 14.19 起分发，但<strong>自 Node 25.0.0（2025-10）起已从官方发行包中移除</strong>（Node 25 已 EOL，Node 26 同样不自带）。在 Node 25+/26 上需 <code>npm install -g corepack</code> 单独安装；Node 22/24 LTS 仍内置，可继续用 <code>corepack enable</code> 按 <code>package.json</code> 的 <code>packageManager</code> 字段锁定 yarn/pnpm 版本。</blockquote>
+<h3>24. 什么是 Monorepo？常用工具有哪些？</h3>
+<p><strong>答案：</strong> Monorepo 是将多个项目/包放在同一 Git 仓库的管理方式。优点：跨包共享代码、统一构建流程、原子化提交（多包联动修改一次提交）、便于重构。常用工具：</p>
+<ul><li><strong>pnpm workspaces</strong>（包管理）</li><li><strong>Turborepo</strong>（任务编排、构建缓存，最快）</li><li><strong>Nx</strong>（功能更丰富，有代码生成器、依赖图分析）</li><li><strong>Lerna</strong>（较老，现配合 nx 使用）</li></ul>
+<h3>25. Node.js 中如何处理大文件上传？</h3>
+<p><strong>答案：</strong></p>
+<ul><li>流式处理：直接 pipe 到存储，不在内存中积累完整文件（<code>multer</code> 的 <code>diskStorage</code>、或自定义 <code>busboy</code> 流处理）</li><li>分片上传：前端将文件切分为小块（File.slice()）分别上传，服务端接收后合并，支持断点续传</li><li>直传云存储：服务端生成预签名 URL，前端直接上传到 OSS/S3，减轻服务器压力</li></ul>
+<p>注意设置请求体大小限制（<code>express.json({ limit: &#39;10mb&#39; })</code>）。</p>
+<h2>Node 22/24/26 新特性（2024–2026 热门）🆕</h2>
+<h3>26. 🆕 当前 Node.js 的版本与 LTS 格局是怎样的（2026 年）？</h3>
+<p><strong>答案：</strong> 截至 2026-09，各版本状态（发布节奏为每年 4 月/10 月各一个大版本，偶数版转 LTS）：</p>
+<table><thead><tr><th>版本</th><th>代号</th><th>状态（2026-09）</th><th>说明</th></tr></thead><tbody><tr><td>Node 26</td><td>—</td><td>Current（最新 26.8.x）</td><td>2026-05 发布，<strong>2026-10 将转 LTS</strong></td></tr><tr><td>Node 24</td><td>Krypton</td><td><strong>Active LTS</strong>（最新 24.21.x）</td><td>2025-05 发布，2025-10 转 LTS，生产首选</td></tr><tr><td>Node 22</td><td>Jod</td><td>维护期 LTS（2027-04 EOL）</td><td>2024-10 转 LTS，存量项目大量使用</td></tr><tr><td>Node 20</td><td>Iron</td><td><strong>已 EOL（2026-03/04）</strong></td><td>不再有安全更新，应尽快升级</td></tr><tr><td>Node 25</td><td>—</td><td>已 EOL（2026-03）</td><td>奇数版只存活 6 个月，不用于生产</td></tr></tbody></table>
+<p>另外，官方已宣布<strong>从 Node 27 起发布节奏改为每年一个大版本，且每个大版本都会进入 LTS</strong>（不再只有偶数版成为 LTS）。面试中的实用结论：生产环境应跑 Active/Maintenance LTS（24 或 22），库作者需同时兼容 24 LTS 与 26 Current。</p>
+<h3>27. 🆕 Node.js 原生运行 TypeScript：什么是 type stripping？版本与限制？</h3>
+<p><strong>答案：</strong> Node 内置了基于 Amaro 的 TypeScript 支持，无需 ts-node/tsx/预构建即可直接 <code>node app.ts</code>：</p>
+<ul><li><strong>22.6.0</strong>：新增 <code>--experimental-strip-types</code>（实验性）</li><li><strong>22.7.0</strong>：新增 <code>--experimental-transform-types</code>，支持需要转译的语法（<code>enum</code>、<code>namespace</code>、构造器参数属性等）</li><li><strong>23.6.0 / 22.18.0</strong>：类型擦除（type stripping）<strong>默认开启</strong>；24.3/22.18 起去掉实验警告</li><li><strong>24.12.0 / 25.2.0</strong>：类型擦除<strong>标记稳定</strong></li><li><strong>26.0.0</strong>：移除 <code>--experimental-transform-types</code> 标志</li></ul>
+<p>原理与限制：</p>
+<ul><li><strong>只擦除、不转译</strong>：把类型注解原地替换为空白，因此极快且不需要 source map；<strong>不做任何类型检查</strong>，类型错误不会阻断运行，CI 仍应跑 <code>tsc --noEmit</code></li><li><strong>不读取 <code>tsconfig.json</code></strong>：不支持 <code>paths</code> 路径映射、不做语法降级（target），相对导入必须带 <code>.ts</code> 扩展名，默认不处理 <code>node_modules</code> 内的 TS</li><li>仅支持"可擦除语法"（接口、类型注解、<code>as</code>、<code>import type</code> 等）；<code>enum</code>/<code>namespace</code>/参数属性/<code>&lt;T&gt;</code> 断言/<code>import =</code> 等带运行时语义的语法在 24/22 上需 transform-types flag</li></ul>
+<p>与 tsx/ts-node 的对比：tsx（esbuild）功能完整、支持 tsconfig 与各类边缘语法，仍是复杂项目首选；ts-node 已基本停止维护。原生方案零依赖、零构建，非常适合脚本、CLI、<code>node:test</code> 测试（<code>node --test &quot;**/*.test.ts&quot;</code>）与内部工具。</p>
+<h3>28. 🆕 <code>require(esm)</code> 同步加载 ESM 的规则与边界是什么？</h3>
+<p><strong>答案：</strong> CJS 中用 <code>require()</code> 加载原生 ESM 的能力演进：早期需 <code>--experimental-require-module</code> → <strong>20.19.0 / 22.12.0 默认开启</strong> → <strong>25.4.0（2026-01）标记稳定并回移植到受支持 LTS 线</strong>。规则：</p>
+<ul><li><strong>整个依赖图必须完全同步</strong>：被 require 的 ESM 及其任意依赖中都不能有顶层 <code>await</code>，否则抛 <code>ERR<em>REQUIRE</em>ASYNC_MODULE</code>（此时改用动态 <code>import()</code>）</li><li>目标必须是明确的 ESM：<code>.mjs</code> 扩展名，或最近的 <code>package.json</code> 含 <code>&quot;type&quot;: &quot;module&quot;</code></li><li><strong>不支持跨 CJS/ESM 边界的循环依赖</strong>，抛 <code>ERR<em>REQUIRE</em>CYCLE_MODULE</code>（纯 CJS 或纯 ESM 内部循环仍可）；常见解法是把其中一侧改为懒加载</li><li>返回值类似 <code>import()</code> 的命名空间对象（具名导出 + <code>default</code>）；ESM 可导出名为 <code>&#39;module.exports&#39;</code> 的值来模拟 CJS 默认导出</li><li>库作者可用 <code>&quot;module-sync&quot;</code> exports condition 同时支持 <code>require</code> 与 <code>import</code>；运行时用 <code>process.features.require_module</code> 检测能力</li></ul>
+<p>影响：曾长期存在的"ESM-only 包无法被 CJS require"痛点基本消除，越来越多新库（chalk、execa、nanoid 等）只发 ESM；但在包的 ESM 产物中引入顶层 await 对 CJS 用户仍是 semver-major 破坏。</p>
+<h3>29. 🆕 内置测试框架 <code>node:test</code> 怎么用？与 Jest/Vitest 对比？</h3>
+<p><strong>答案：</strong> <code>node:test</code> 是内置测试运行器：18.7 实验性引入，<strong>Node 20 起核心 API（<code>test</code>/<code>describe</code>/<code>it</code>/<code>before</code>/<code>after</code>）稳定</strong>，用 <code>node --test</code> 自动发现并以子进程隔离执行测试文件。</p>
+<pre><code class="language-javascript">import { describe, it, mock } from &#39;node:test&#39;;
+import assert from &#39;node:assert/strict&#39;;
+
+describe(&#39;math&#39;, () =&gt; {
+  it(&#39;adds&#39;, () =&gt; {
+    assert.equal(1 + 2, 3);
+  });
+
+  it(&#39;calls spy once&#39;, () =&gt; {
+    const fn = mock.fn();
+    fn();
+    assert.equal(fn.mock.callCount(), 1);
+  });
+});</code></pre>
+<ul><li>断言用内置 <code>node:assert/strict</code>；<code>mock.fn()</code>/<code>mock.method()</code>/<code>mock.timers</code> 提供 spy 与假定时器（模块级 mock <code>mock.module()</code> 仍实验性，需 <code>--experimental-test-module-mocks</code>）</li><li>覆盖率：<code>node --test --experimental-test-coverage</code>（Node 22 起支持 <code>--test-coverage-lines</code> 等阈值门禁）</li><li>快照测试需 <code>--experimental-test-snapshots</code>；reporter 支持 <code>spec</code>/<code>tap</code>/<code>dot</code>/<code>junit</code>/<code>lcov</code>；支持 <code>--watch</code> 与 glob</li><li>Node 22.18+/24 可配合类型擦除直接跑 <code>.ts</code> 测试（不带扩展转换，需 <code>tsc --noEmit</code> 兜底）</li></ul>
+<p>对比：优势是<strong>零依赖、零配置、与运行时同速迭代</strong>，适合库、CLI、后端服务；短板是无 jsdom/DOM 环境、无 JSX 转换、快照与匹配器生态不如 Jest/Vitest 丰富。涉及 React/DOM 的前端测试仍选 Vitest/Jest。</p>
+<h3>30. 🆕 <code>node:sqlite</code> 内置 SQLite 客户端现状如何？</h3>
+<p><strong>答案：</strong> <code>node:sqlite</code> 是内置的<strong>同步</strong> SQLite 客户端（SQLite C 库直接编译进 Node 二进制，无需 node-gyp/native 依赖）：</p>
+<ul><li><strong>22.5.0</strong> 加入，需 <code>--experimental-sqlite</code></li><li><strong>22.13.0 / 23.4.0</strong> 去掉 flag（仍为实验性）</li><li><strong>25.7.0 提升为 Release Candidate（Stability 1.2）</strong>；截至 2026-09，Node 26 当前文档仍标记为 RC（Node 24 LTS 各小版本以其随附文档标注的稳定性为准，24 早期版本仍显示实验性），API 基本冻结但尚未正式 stable</li></ul>
+<pre><code class="language-javascript">import { DatabaseSync } from &#39;node:sqlite&#39;;
+const db = new DatabaseSync(&#39;:memory:&#39;);
+db.exec(&#39;CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)&#39;);
+const insert = db.prepare(&#39;INSERT INTO users (name) VALUES (?)&#39;);
+insert.run(&#39;Alice&#39;);
+console.log(db.prepare(&#39;SELECT * FROM users WHERE name = ?&#39;).get(&#39;Alice&#39;));
+// { id: 1, name: &#39;Alice&#39; }</code></pre>
+<p>核心 API：<code>DatabaseSync</code>、<code>StatementSync</code> 的 <code>run()</code>/<code>get()</code>/<code>all()</code>/<code>iterate()</code>（懒迭代大结果集）、用户自定义函数、Session 扩展等。注意它<strong>只有同步 API</strong>：SQLite 嵌入式场景简单快速，但高并发服务器中的慢查询会阻塞事件循环；适合 CLI、测试、local-first/边缘场景，成熟的服务端方案仍是 better-sqlite3（同步 native 插件）或异步驱动。Web 标准层面的 Origin-Private File System / Web SQLite 仍在标准讨论中。</p>
+<h3>31. 🆕 Node.js 内置了哪些 Web 标准 API（fetch / WebSocket / Streams）？</h3>
+<p><strong>答案：</strong> 近年 Node 大量对齐浏览器 API（多数由 undici 提供），常见全局对象无需 require：</p>
+<ul><li><code>fetch</code>/<code>Request</code>/<code>Response</code>/<code>Headers</code>：<strong>18 引入（实验性），Node 21 起稳定</strong>（LTS 20 后期去除实验警告）；同时有 <code>FormData</code>、<code>Blob</code>、<code>File</code></li><li><strong>WebSocket 客户端</strong>：21 开始增强，<strong>Node 22 默认启用、22.4 标记稳定</strong>，可直接 <code>new WebSocket(&#39;wss://...&#39;)</code>；注意只有<strong>客户端</strong>，WebSocket 服务端仍需 <code>ws</code> 等库</li><li>Web Streams（<code>ReadableStream</code>/<code>WritableStream</code>/<code>TransformStream</code>）：Node 18+ 可用、21 稳定，且与 Node Stream 可通过 <code>Readable.fromWeb()</code>/<code>Readable.toWeb()</code> 互转</li><li>其他：<code>structuredClone</code>（17+）、<code>URL</code>/<code>URLSearchParams</code>、<code>TextEncoder</code>/<code>TextDecoder</code>、<code>atob</code>/<code>btoa</code>、<code>AbortController</code>、Web Crypto（<code>globalThis.crypto</code>）；<code>EventSource</code> 仍带实验 flag</li></ul>
+<p>意义：前后端可共享同一份 HTTP/流式代码，<code>node-fetch</code>、<code>cross-fetch</code>、客户端 <code>ws</code> 等依赖在新项目中大多可以去掉。可用 <code>process.versions.undici</code> 查看内置 undici 版本。</p>
+<h3>32. 🆕 权限模型（Permission Model）解决什么问题？怎么用？</h3>
+<p><strong>答案：</strong> 权限模型是进程级的"安全带"机制，限制 Node 进程运行时可访问的资源，适合运行第三方脚本、CLI 插件、供应链风险代码时做最小权限收敛。<strong>20.0 实验性引入，22.13.0 / 23.5.0 起转为稳定；Node 24 起启用 flag 定名为 <code>--permission</code></strong>（旧版为 <code>--experimental-permission</code>）。</p>
+<pre><code class="language-bash">node --permission \
+  --allow-fs-read=/app,/tmp \
+  --allow-fs-write=/tmp \
+  --allow-child-process \
+  --allow-worker \
+  app.js
+# Node 25+ 还支持 --allow-net 控制网络访问</code></pre>
+<ul><li>常用 flag：<code>--allow-fs-read</code>/<code>--allow-fs-write</code>（可按路径/glob 授权）、<code>--allow-child-process</code>、<code>--allow-worker</code>、<code>--allow-addons</code>、<code>--allow-inspector</code>、<code>--allow-net</code>（<strong>Node 25 新增</strong>）</li><li>运行时 API：<code>process.permission.has(&#39;fs.write&#39;, &#39;/tmp&#39;)</code> 查询；部分权限可在运行时 grant/revoke</li><li>Node 22.16+ 支持以 <code>node.config.json</code> 配置权限（经 <code>--experimental-config-file</code>/默认配置文件传入，配置文件能力本身仍在演进）</li></ul>
+<p>重要边界：官方明确它<strong>不防御恶意代码</strong>（恶意代码可绕过），定位是防止"受信任代码无意/被利用"访问未授权资源（seat belt），不能替代容器沙箱与 OS 级隔离。</p>
+<h3>33. 🆕 如何取消 fetch 与异步操作？AbortController / structuredClone 了解吗？</h3>
+<p><strong>答案：</strong> <code>AbortController</code> 自 Node 15 起为全局对象，<code>AbortSignal.timeout(ms)</code> 在 17.3+ 提供，可统一取消各类异步操作：</p>
+<pre><code class="language-javascript">// 给 fetch 设置 3 秒超时
+const res = await fetch(&#39;https://example.com/api&#39;, {
+  signal: AbortSignal.timeout(3000), // 超时自动 abort，抛 TimeoutError
+});
+
+// 手动取消多个操作
+const controller = new AbortController();
+const req = fetch(url, { signal: controller.signal });
+controller.abort(new Error(&#39;user cancelled&#39;));</code></pre>
+<p><code>signal</code> 选项被广泛支持：<code>fetch</code>、<code>timers/promises</code>（<code>setTimeout(..., { signal })</code>）、<code>child_process</code> spawn、<code>events.on(emitter, name, { signal })</code>、异步迭代、Node 内置 http client 等，是比"布尔标志位"更标准的取消方案；监听方用 <code>signal.addEventListener(&#39;abort&#39;, ...)</code> 或 <code>signal.reason</code> 取取消原因。</p>
+<p><code>structuredClone</code>（Node 17+ 全局）则用于<strong>深拷贝</strong>结构化数据（对象、数组、Map、Set、ArrayBuffer、Date 等），支持 Transferable 转移所有权；不能拷贝函数、原型链、WeakMap 等。它比 <code>JSON.parse(JSON.stringify())</code> 更正确（支持循环引用、类型不丢失），比 <code>_.cloneDeep</code> 零依赖。</p>
+<h3>34. 🆕 AsyncLocalStorage 如何在异步链路中透传请求上下文？</h3>
+<p><strong>答案：</strong> <code>node:async_hooks</code> 的 <code>AsyncLocalStorage</code>（ALS）提供跨异步调用链的上下文存储，可在不层层传参的情况下，让整条请求链路（await、定时器、回调）取到同一份数据，是 Node 服务端做请求 ID、日志链路追踪、多租户隔离的标准方案（cls-hooked 的官方替代，OpenTelemetry 底层也依赖 async hooks）：</p>
+<pre><code class="language-javascript">import { AsyncLocalStorage } from &#39;node:async_hooks&#39;;
+const als = new AsyncLocalStorage();
+
+// 中间件入口：为每个请求建立独立上下文
+app.use((req, res, next) =&gt; {
+  als.run({ traceId: req.headers[&#39;x-trace-id&#39;] }, next);
+});
+
+// 任意深层函数中直接读取，无需透传参数
+function log(msg) {
+  const { traceId } = als.getStore() ?? {};
+  console.log(`[${traceId}] ${msg}`);
+}</code></pre>
+<p>注意事项：</p>
+<ul><li>存储基于异步资源传播，<code>als.run(store, fn)</code> 内发起的所有 Promise/回调共享同一 store；误用 <code>enterWith</code> 易造成上下文泄漏，优先用 <code>run</code></li><li>有一定性能开销，勿在 store 中放大对象；Node 24 对 ALS 实现做了性能优化（基于 AsyncContextFrame 的新传播路径）</li><li>worker_threads 之间不共享；需要跨进程传播 traceId 时仍需通过 HTTP header / 消息体显式传递</li></ul>
+<h3>35. 🆕 Node SEA（Single Executable Applications）打包单文件程序现状？</h3>
+<p><strong>答案：</strong> SEA 把一个 JS 应用注入 <code>node</code> 二进制，生成<strong>无需目标机器安装 Node</strong> 的单个可执行文件（CLI/桌面工具/本地部署分发场景）。18.16/19.7 实验性引入，20.6 起支持 startup snapshot 与 V8 code cache 加速冷启动，<strong>25.5.0 新增 <code>--build-sea</code> 内置生成流程</strong>（免去手工 <code>postject</code> 注入）；截至 Node 26 仍标记为 Stability 1.1（active development）。</p>
+<p>传统流程：esbuild 把应用打包成单文件 → 写 <code>sea-config.json</code>（<code>main</code>/<code>assets</code>/<code>useCodeCache</code>/<code>useSnapshot</code>）→ <code>node --experimental-sea-config</code> 生成 blob → 复制 node 二进制并用 postject 注入。运行时可用 <code>node:sea</code> 的 <code>sea.isSea()</code>、<code>sea.getAsset()</code> 读取内嵌资源。</p>
+<p>局限与取舍：本质是"JS + 整个 Node 运行时"塞进一个文件，体积较大（数十 MB），并非编译成原生机器码；快照阶段触碰网络/文件系统/环境变量的代码会出问题；native addon（<code>.node</code>）需额外处理。与 <code>vercel/pkg</code>（已停止维护）、nexe 相比 SEA 是官方方案；Bun 的 <code>bun --compile</code> 产物更小；云服务/容器化部署场景下 Docker 镜像通常仍是更合适的分发方式。</p>
+<h3>36. 🆕 <code>--watch</code>、<code>node --run</code> 与原生 TS 带来了什么开发体验变化？</h3>
+<p><strong>答案：</strong> Node 近年把常见开发工具链"收编"进运行时，新项目可以少装很多 devDependencies：</p>
+<ul><li><strong><code>node --watch app.js</code></strong>：文件变更自动重启进程，<strong>Node 22 起稳定</strong>（可 <code>--watch-path</code> 指定监听目录），开发期可替代 nodemon/PM2 watch</li><li><strong><code>node --run &lt;script&gt;</code></strong>（Node 22.0 实验性引入，<strong>22.10 起稳定</strong>）：直接执行 <code>package.json</code> <code>scripts</code> 中的命令，不必经过 <code>npm run</code>（不注入 npm 的额外环境变量，启动更快，参数用 <code>--</code> 透传）</li><li><strong>原生 TypeScript</strong>：<code>node --watch app.ts</code> + 类型擦除 + <code>node --test &quot;**/*.test.ts&quot;</code> 组成零构建 TS 开发闭环；类型检查交给编辑器与 CI 的 <code>tsc --noEmit</code></li><li><strong>内置 <code>--env-file</code></strong>：开发环境变量也无需 dotenv（见第 17 题）</li><li>其他便利项：<code>fs.glob</code>/<code>globSync</code>（Node 22）、<code>import.meta.dirname</code>/<code>filename</code>、V8 编译缓存（<code>NODE<em>COMPILE</em>CACHE</code>，Node 22+ 可显著加速重复启动）</li></ul>
+<p>定位上仍有边界：<code>--watch</code> 只做重启不做热更新（HMR），复杂 bundling/转译（React、代码分割）仍需 Vite/esbuild/tsx。</p>
+<h3>37. 🆕 2026 年 ESM 现状如何？import attributes 是什么？</h3>
+<p><strong>答案：</strong> ESM 在 2026 年已是 Node 生态的事实主流：</p>
+<ul><li>大量新包（chalk v5、execa、nanoid v5、node-fetch v4 等）只发布 ESM；新库普遍以 <code>&quot;type&quot;: &quot;module&quot;</code> 为默认。配合 <code>require(esm)</code>（见第 28 题）稳定，CJS 用户也能消费同步 ESM，"双发布（dual package）"的必要性大幅下降，同时避免了双包的单例不一致风险（dual-package hazard）</li><li>仍建议库作者保持可被同步 require：ESM 产物的可达依赖图中避免顶层 <code>await</code></li><li><strong>Import attributes</strong>（导入断言）在 <strong>22.12 标记稳定</strong>，用于声明模块类型，最常见的是导入 JSON：</li></ul>
+<pre><code class="language-javascript">import config from &#39;./config.json&#39; with { type: &#39;json&#39; };
+const mod = await import(&#39;./wasm/greet.wasm&#39;, { with: { type: &#39;file&#39; } }); // WebAssembly 等</code></pre>
+<ul><li>其他成熟能力：顶层 <code>await</code>（Node 14.8+）、<code>import.meta.dirname</code>/<code>import.meta.filename</code>（20.11/21.2 起）、动态 <code>import()</code>、条件 exports（<code>import</code>/<code>require</code>/<code>node</code>/<code>default</code> conditions）</li><li>CJS→ESM 方向一直可用：ESM 中 <code>import pkg from &#39;cjs-pkg&#39;</code> 直接拿到其 <code>module.exports</code>；<code>createRequire(import.meta.url)</code> 可在 ESM 中应急使用 <code>require</code></li></ul>
+<h2>总结</h2>
+<p>这些题目覆盖了 Node.js 运行原理、事件循环、核心模块、框架（Express/Koa/NestJS）、错误处理、性能优化、部署和生态工具，并增补了 2024–2026 年的热门新特性（原生 TypeScript、require(esm)、node:test、node:sqlite、Web 平台 API、权限模型、AsyncLocalStorage、SEA、ESM 生态等），适合作为 Node.js 后端面试系统复习资料。版本相关结论已于 2026-09-16 核实，实际使用时以对应大版本官方文档为准。</p>
+</div>
+</body>
+</html>
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/i/">I</a></li>
+            <li>P0-NODEJS-QA</li>
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

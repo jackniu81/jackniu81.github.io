@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目实现一个通用柯里化函数 curry(fn)，把一个「需要 n 个参数」的函数，转换成可以一次传一部分参数、持续返回自身、直到收集够 n 个参数后才真正调用原函数的函数。 示例: 123456const add &#x3D; (a, b, c) &#x3D;&gt; a + b + c;const curried &#x3D; curry(add);curried(1)(2)(3);      &#x2F;&#x2F; 6curried(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 函数柯里化 (Currying)">
+<meta property="og:url" content="https://jackniu81.github.io/2025/07/24/Algorithm-Curry/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目实现一个通用柯里化函数 curry(fn)，把一个「需要 n 个参数」的函数，转换成可以一次传一部分参数、持续返回自身、直到收集够 n 个参数后才真正调用原函数的函数。 示例: 123456const add &#x3D; (a, b, c) &#x3D;&gt; a + b + c;const curried &#x3D; curry(add);curried(1)(2)(3);      &#x2F;&#x2F; 6curried(">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-24T08:05:33.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:57:37.991Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2025/07/24/Algorithm-Curry/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2025/07/24/Algorithm-Curry/","path":"2025/07/24/Algorithm-Curry/","title":"算法 - 函数柯里化 (Currying)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 函数柯里化 (Currying) | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E5%9F%BA%E7%A1%80%E7%89%88%EF%BC%88%E6%8C%89-arity-%E8%A7%A6%E5%8F%91%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 基础版（按 arity 触发）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%8D%A0%E4%BD%8D%E7%AC%A6%E7%89%88"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 占位符版</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E5%9F%BA%E7%A1%80%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 基础版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%94%AF%E6%8C%81%E5%8D%A0%E4%BD%8D%E7%AC%A6%E7%89%88"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 支持占位符版</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/07/24/Algorithm-Curry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 函数柯里化 (Currying) | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 函数柯里化 (Currying)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-07-24 16:05:33" itemprop="dateCreated datePublished" datetime="2025-07-24T16:05:33+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个通用柯里化函数 <code>curry(fn)</code>，把一个「需要 n 个参数」的函数，转换成可以<strong>一次传一部分参数、持续返回自身</strong>、直到收集够 n 个参数后才真正调用原函数的函数。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const add = (a, b, c) =&gt; a + b + c;</span><br><span class="line">const curried = curry(add);</span><br><span class="line"></span><br><span class="line">curried(1)(2)(3);      // 6</span><br><span class="line">curried(1, 2)(3);      // 6</span><br><span class="line">curried(1)(2, 3);      // 6</span><br></pre></td></tr></table></figure>
+
+<p>进阶要求：支持<strong>占位符</strong> <code>curry._</code>，允许跳过某参数稍后再填：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const _ = curry._;</span><br><span class="line">curried(_, 2)(1)(3);   // 6</span><br><span class="line">curried(1, _, 3)(2);   // 6</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>柯里化的本质是<strong>闭包累积参数</strong>。</p>
+<h2 id="2-1-基础版（按-arity-触发）"><a href="#2-1-基础版（按-arity-触发）" class="headerlink" title="2.1 基础版（按 arity 触发）"></a>2.1 基础版（按 arity 触发）</h2><ol>
+<li>用 <code>fn.length</code> 得到原函数所需参数个数 <code>n</code>。</li>
+<li>返回一个 <code>acc</code> 函数，每次调用把新参数并入已累积的 <code>args</code>（闭包持有）。</li>
+<li>若 <code>args.length &gt;= n</code>，用 <code>fn.apply(this, args)</code> 真正执行；否则返回一个把新参数继续累积的函数（保持链式）。</li>
+</ol>
+<p>判断「够了就执行、没够就返回函数」是核心。为了让 <code>curried(1)</code> 后还能 <code>curried(1)(2)</code>，返回的必须是函数——用 <code>function () { return acc(...args.concat(...arguments)); }</code> 包一层。</p>
+<h2 id="2-2-占位符版"><a href="#2-2-占位符版" class="headerlink" title="2.2 占位符版"></a>2.2 占位符版</h2><p>在累积参数后，做两步清洗：</p>
+<ul>
+<li>记录本次调用是否以「尾部实参」结束，用于决定何时可执行。</li>
+<li>只有当「非占位符参数数量 &gt;&#x3D; n」时才执行；执行前把参数按先前逻辑<strong>压缩</strong>（去掉多余的前导 <code>_</code>），保证位置对应。</li>
+</ul>
+<p>这部分逻辑较绕，面试能写基础版 + 口头讲清占位符思路已足够。</p>
+<ul>
+<li>时间复杂度：每次调用 O(已收集参数)。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-基础版"><a href="#3-1-基础版" class="headerlink" title="3.1 基础版"></a>3.1 基础版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">curry</span>(<span class="params"><span class="attr">fn</span>: <span class="title class_">Function</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> <span class="title function_">curried</span>(<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (args.<span class="property">length</span> &gt;= fn.<span class="property">length</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">...<span class="attr">rest</span>: <span class="built_in">any</span>[]</span>) =&gt;</span> curried.<span class="title function_">apply</span>(<span class="variable language_">this</span>, [...args, ...rest]);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>) =&gt; a + b + c;</span><br><span class="line"><span class="keyword">const</span> curriedAdd = <span class="title function_">curry</span>(add);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">curriedAdd</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">curriedAdd</span>(<span class="number">1</span>, <span class="number">2</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-支持占位符版"><a href="#3-2-支持占位符版" class="headerlink" title="3.2 支持占位符版"></a>3.2 支持占位符版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _ = <span class="title class_">Symbol</span>(<span class="string">&quot;placeholder&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">curryWithPlaceholder</span>(<span class="params"><span class="attr">fn</span>: <span class="title class_">Function</span></span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> judge = (...<span class="attr">args</span>: <span class="built_in">any</span>[]): <span class="function"><span class="params">any</span> =&gt;</span></span><br><span class="line">        <span class="comment">// 非占位符参数足够时执行</span></span><br><span class="line">        args.<span class="property">length</span> &gt;= fn.<span class="property">length</span> &amp;&amp;</span><br><span class="line">        args.<span class="title function_">slice</span>(<span class="number">0</span>, fn.<span class="property">length</span>).<span class="title function_">every</span>(<span class="function">(<span class="params">a</span>) =&gt;</span> a !== _)</span><br><span class="line">            ? <span class="title function_">fn</span>(...args.<span class="title function_">filter</span>(<span class="function">(<span class="params">a</span>) =&gt;</span> a !== _))</span><br><span class="line">            : <span class="function">(<span class="params"><span class="attr">arg</span>: <span class="built_in">any</span>, ...<span class="attr">rest</span>: <span class="built_in">any</span>[]</span>) =&gt;</span> <span class="title function_">judge</span>(...<span class="title function_">replace</span>(args, arg), ...rest);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用新传入的 arg 填补 args 中第一个占位符；没有则追加</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">replace</span>(<span class="params"><span class="attr">args</span>: <span class="built_in">any</span>[], <span class="attr">arg</span>: <span class="built_in">any</span></span>): <span class="built_in">any</span>[] &#123;</span><br><span class="line">        <span class="keyword">const</span> idx = args.<span class="title function_">indexOf</span>(_);</span><br><span class="line">        <span class="keyword">if</span> (idx !== -<span class="number">1</span> &amp;&amp; arg !== _) &#123;</span><br><span class="line">            <span class="keyword">const</span> copy = [...args];</span><br><span class="line">            copy[idx] = arg;</span><br><span class="line">            <span class="keyword">return</span> copy;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> [...args, arg];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> judge;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sum3</span> = (<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>) =&gt; a + b + c;</span><br><span class="line"><span class="keyword">const</span> c3 = <span class="title function_">curryWithPlaceholder</span>(sum3);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(_, <span class="number">2</span>)(<span class="number">1</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(<span class="number">1</span>, _, <span class="number">3</span>)(<span class="number">2</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));      <span class="comment">// 6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露占位符</span></span><br><span class="line">curryWithPlaceholder.<span class="property">_</span> = _;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>柯里化 vs 部分应用（partial）</strong>：柯里化把「多元函数」拆成「一连串一元函数」；部分应用是一次固定若干参数。JS 里 <code>bind</code> 天然就是部分应用：<code>fn.bind(null, 1)</code>。</li>
+<li><strong>实战价值</strong>：参数复用、延迟执行、函数组合（<code>compose/pipe</code> 需要一元函数）、创建更专用的小函数（如把通用的 <code>log(date, level, msg)</code> 柯里化成 <code>errorLog = log(now, &#39;error&#39;)</code>）。</li>
+<li><strong>TS 类型级柯里化</strong>是炫技加分项：用递归条件类型 <code>Curry&lt;F&gt;</code> 依据 <code>Parameters&lt;F&gt;</code> 推导出重载签名，展示你对类型体操的掌握。</li>
+<li>常见追问：为什么判断用 <code>&gt;=</code> 而非 <code>===</code>？（箭头函数&#x2F;默认参数会让 <code>fn.length</code> 变小，容错用 <code>&gt;=</code> 更稳）；<code>fn.length</code> 与 <code>arguments.length</code> 的区别是什么。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 函数式入门必考 | 闭包与参数复用</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/13/Algorithm-Instanceof/" rel="prev" title="算法 - 手写 instanceof">
+                  <i class="fa fa-angle-left"></i> 算法 - 手写 instanceof
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

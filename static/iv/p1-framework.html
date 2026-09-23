@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前端框架对比 — IV Notes    *, *::before, *::after { box-sizing: border-box; }   body {     font-family: &#39;Segoe UI&#39;, &#39;PingFang SC&#39;, &#39;Microsoft YaHei&#39;, Arial, sans-serif;     background: #f0f2f5;     mar">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jack N @ GitHub">
+<meta property="og:url" content="https://jackniu81.github.io/static/iv/p1-framework.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="前端框架对比 — IV Notes    *, *::before, *::after { box-sizing: border-box; }   body {     font-family: &#39;Segoe UI&#39;, &#39;PingFang SC&#39;, &#39;Microsoft YaHei&#39;, Arial, sans-serif;     background: #f0f2f5;     mar">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-23T13:18:59.437Z">
+<meta property="article:modified_time" content="2026-09-23T13:18:59.437Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="next.js, React, node.js,dotnet core, .Net, C#">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/static/iv/p1-framework">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/static/iv/p1-framework.html","path":"static/iv/p1-framework.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Jack N @ GitHub
+</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前端框架对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#_1"><span class="nav-number">1.1.</span> <span class="nav-text">国内主流技术栈组合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#_2"><span class="nav-number">1.1.1.</span> <span class="nav-text">核心框架</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ui"><span class="nav-number">1.2.</span> <span class="nav-text">UI 组件库（国内偏好）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ant-design-"><span class="nav-number">1.2.1.</span> <span class="nav-text">Ant Design - 国内首选</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arco-design-"><span class="nav-number">1.2.2.</span> <span class="nav-text">Arco Design - 字节跳动出品</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_3"><span class="nav-number">1.3.</span> <span class="nav-text">状态管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zustand-"><span class="nav-number">1.3.1.</span> <span class="nav-text">Zustand - 轻量级首选</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redux-toolkit-"><span class="nav-number">1.3.2.</span> <span class="nav-text">Redux Toolkit - 企业项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_4"><span class="nav-number">1.4.</span> <span class="nav-text">样式方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tailwind-css-"><span class="nav-number">1.4.1.</span> <span class="nav-text">Tailwind CSS - 现代选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css-modules-"><span class="nav-number">1.4.2.</span> <span class="nav-text">CSS Modules - 传统稳定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_5"><span class="nav-number">1.5.</span> <span class="nav-text">数据请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#axios-"><span class="nav-number">1.5.1.</span> <span class="nav-text">Axios - 国内绝对主流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tanstack-query-"><span class="nav-number">1.5.2.</span> <span class="nav-text">TanStack Query - 现代选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_6"><span class="nav-number">1.6.</span> <span class="nav-text">路由管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#react-router-"><span class="nav-number">1.6.1.</span> <span class="nav-text">React Router - 标准选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_7"><span class="nav-number">1.7.</span> <span class="nav-text">推荐的完整配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ant-design"><span class="nav-number">1.7.1.</span> <span class="nav-text">方案一：企业级（Ant Design）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tailwind-headless-ui"><span class="nav-number">1.7.2.</span> <span class="nav-text">方案二：现代轻量（Tailwind + Headless UI）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_8"><span class="nav-number">1.8.</span> <span class="nav-text">国内开发工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#_9"><span class="nav-number">1.8.1.</span> <span class="nav-text">代码编辑器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#_10"><span class="nav-number">1.8.2.</span> <span class="nav-text">浏览器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#_11"><span class="nav-number">1.8.3.</span> <span class="nav-text">包管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_12"><span class="nav-number">1.9.</span> <span class="nav-text">部署平台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#_13"><span class="nav-number">1.9.1.</span> <span class="nav-text">国内云服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cdn"><span class="nav-number">1.9.2.</span> <span class="nav-text">CDN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_14"><span class="nav-number">1.10.</span> <span class="nav-text">国内招聘市场偏好</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#_15"><span class="nav-number">1.10.1.</span> <span class="nav-text">高频技术栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#_16"><span class="nav-number">1.10.2.</span> <span class="nav-text">企业偏好</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#_17"><span class="nav-number">1.11.</span> <span class="nav-text">推荐方案</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/iv/">IV</a></li>
+            <li>P1-FRAMEWORK</li>
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端框架对比 — IV Notes</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+  .topbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .badge {
+    background: #e67e22;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .back-link {
+    color: #a8d8ff;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-link:hover { color: #fff; }
+  .container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px 60px;
+  }
+  .content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* Typography */
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #0f3460; padding-bottom: 12px; margin-top: 0; }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: #eef4ff;
+    border-left: 4px solid #0f3460;
+    border-radius: 0 6px 6px 0;
+  }
+  h3 {
+    font-size: 16px;
+    color: #1a1a2e;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #ddd;
+  }
+  h4 { font-size: 15px; color: #444; margin-top: 20px; }
+  p { margin: 10px 0; }
+  strong { color: #0f3460; }
+  /* Answer blocks: paragraphs after bold "答案：" */
+  blockquote {
+    border-left: 4px solid #e67e22;
+    background: #fff8f0;
+    margin: 12px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  /* Code */
+  code {
+    background: #f0f2f8;
+    color: #c0392b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88em;
+  }
+  pre {
+    background: #1e2340;
+    color: #e0e6ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,0.3);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  tr:hover td { background: #eef4ff; }
+  /* Lists */
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  /* Horizontal rule */
+  hr { border: none; border-top: 2px dashed #dde; margin: 36px 0; }
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>前端框架对比</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="badge">P1 重要进阶</span>
+    <a href="index.html" class="back-link">&#8592; 返回目录</a>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <p>﻿针对中国国内中小型项目，结合流行程度，推荐以下技术栈：</p>
+<h2 id="_1">国内主流技术栈组合</h2>
+<h3 id="_2"><strong>核心框架</strong></h3>
+<ul>
+<li><strong>React 19</strong> - 主流前端框架</li>
+<li><strong>Vite</strong> - 构建工具（国内普及率极高）</li>
+<li><strong>TypeScript</strong> - 类型安全</li>
+</ul>
+<h2 id="ui">UI 组件库（国内偏好）</h2>
+<h3 id="ant-design-"><strong>Ant Design</strong> - 国内首选</h3>
+<pre><code class="language-bash">npm install antd @ant-design/icons
+</code></pre>
+<p><strong>国内优势</strong>：<br>
+- 蚂蚁集团出品，国内认可度高<br>
+- 中文文档完善<br>
+- 企业级组件丰富<br>
+- 国内招聘市场常见</p>
+<h3 id="arco-design-"><strong>Arco Design</strong> - 字节跳动出品</h3>
+<pre><code class="language-bash">npm install @arco-design/web-react
+</code></pre>
+<p><strong>特点</strong>：<br>
+- 字节跳动开源<br>
+- 现代化设计<br>
+- 性能优秀</p>
+<h2 id="_3">状态管理</h2>
+<h3 id="zustand-"><strong>Zustand</strong> - 轻量级首选</h3>
+<pre><code class="language-bash">npm install zustand
+</code></pre>
+<p><strong>国内趋势</strong>：<br>
+- 简单易学<br>
+- 性能优秀<br>
+- 社区接受度高</p>
+<h3 id="redux-toolkit-"><strong>Redux Toolkit</strong> - 企业项目</h3>
+<ul>
+<li>大型项目首选</li>
+<li>国内企业使用广泛</li>
+</ul>
+<h2 id="_4">样式方案</h2>
+<h3 id="tailwind-css-"><strong>Tailwind CSS</strong> - 现代选择</h3>
+<pre><code class="language-bash">npm install -D tailwindcss postcss autoprefixer
+</code></pre>
+<p><strong>国内现状</strong>：<br>
+- 新项目采用率高<br>
+- 开发效率高</p>
+<h3 id="css-modules-"><strong>CSS Modules</strong> - 传统稳定</h3>
+<ul>
+<li>CRA 默认支持</li>
+<li>学习成本低</li>
+</ul>
+<h2 id="_5">数据请求</h2>
+<h3 id="axios-"><strong>Axios</strong> - 国内绝对主流</h3>
+<pre><code class="language-bash">npm install axios
+</code></pre>
+<p><strong>国内优势</strong>：<br>
+- 使用率最高<br>
+- 中文教程丰富<br>
+- 招聘要求常见</p>
+<h3 id="tanstack-query-"><strong>TanStack Query</strong> - 现代选择</h3>
+<pre><code class="language-bash">npm install @tanstack/react-query
+</code></pre>
+<h2 id="_6">路由管理</h2>
+<h3 id="react-router-"><strong>React Router</strong> - 标准选择</h3>
+<pre><code class="language-bash">npm install react-router-dom
+</code></pre>
+<h2 id="_7">推荐的完整配置</h2>
+<h3 id="ant-design"><strong>方案一：企业级（Ant Design）</strong></h3>
+<pre><code class="language-json">{
+  &quot;dependencies&quot;: {
+    &quot;react&quot;: &quot;^19.0.0&quot;,
+    &quot;react-dom&quot;: &quot;^19.0.0&quot;,
+    &quot;antd&quot;: &quot;^5.15.0&quot;,
+    &quot;@ant-design/icons&quot;: &quot;^5.2.0&quot;,
+    &quot;react-router-dom&quot;: &quot;^6.22.0&quot;,
+    &quot;zustand&quot;: &quot;^4.5.0&quot;,
+    &quot;axios&quot;: &quot;^1.6.0&quot;,
+    &quot;@tanstack/react-query&quot;: &quot;^5.0.0&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@vitejs/plugin-react&quot;: &quot;^4.2.0&quot;,
+    &quot;typescript&quot;: &quot;^5.4.0&quot;,
+    &quot;eslint&quot;: &quot;^8.57.0&quot;,
+    &quot;prettier&quot;: &quot;^3.2.0&quot;
+  }
+}
+</code></pre>
+<h3 id="tailwind-headless-ui"><strong>方案二：现代轻量（Tailwind + Headless UI）</strong></h3>
+<pre><code class="language-json">{
+  &quot;dependencies&quot;: {
+    &quot;react&quot;: &quot;^19.0.0&quot;,
+    &quot;react-dom&quot;: &quot;^19.0.0&quot;,
+    &quot;react-router-dom&quot;: &quot;^6.22.0&quot;,
+    &quot;zustand&quot;: &quot;^4.5.0&quot;,
+    &quot;axios&quot;: &quot;^1.6.0&quot;,
+    &quot;@tanstack/react-query&quot;: &quot;^5.0.0&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@vitejs/plugin-react&quot;: &quot;^4.2.0&quot;,
+    &quot;typescript&quot;: &quot;^5.4.0&quot;,
+    &quot;tailwindcss&quot;: &quot;^3.4.0&quot;,
+    &quot;autoprefixer&quot;: &quot;^10.4.0&quot;,
+    &quot;postcss&quot;: &quot;^8.4.0&quot;
+  }
+}
+</code></pre>
+<h2 id="_8">国内开发工具</h2>
+<h3 id="_9"><strong>代码编辑器</strong></h3>
+<ul>
+<li><strong>VS Code</strong> - 主流选择</li>
+<li><strong>WebStorm</strong> - 企业常用</li>
+</ul>
+<h3 id="_10"><strong>浏览器</strong></h3>
+<ul>
+<li><strong>Chrome DevTools</strong></li>
+<li><strong>微信开发者工具</strong>（小程序相关）</li>
+</ul>
+<h3 id="_11"><strong>包管理</strong></h3>
+<ul>
+<li><strong>pnpm</strong> - 性能优秀</li>
+<li><strong>npm</strong> - 标准选择</li>
+<li><strong>yarn</strong> - 传统项目</li>
+</ul>
+<h2 id="_12">部署平台</h2>
+<h3 id="_13"><strong>国内云服务</strong></h3>
+<ul>
+<li><strong>阿里云</strong></li>
+<li><strong>腾讯云</strong></li>
+<li><strong>华为云</strong></li>
+</ul>
+<h3 id="cdn"><strong>CDN</strong></h3>
+<ul>
+<li><strong>阿里云 CDN</strong></li>
+<li><strong>腾讯云 CDN</strong></li>
+</ul>
+<h2 id="_14">国内招聘市场偏好</h2>
+<h3 id="_15"><strong>高频技术栈</strong></h3>
+<ol>
+<li><strong>React + Ant Design + Redux</strong></li>
+<li><strong>React + Vite + TypeScript</strong></li>
+<li><strong>React + Axios + React Router</strong></li>
+</ol>
+<h3 id="_16"><strong>企业偏好</strong></h3>
+<ul>
+<li>大厂：Ant Design + Redux Toolkit</li>
+<li>中小厂：轻量级组件库 + Zustand</li>
+<li>新项目：Vite + TypeScript</li>
+</ul>
+<h2 id="_17">推荐方案</h2>
+<p><strong>国内中小型项目最佳实践</strong>：<br>
+- <strong>React 19 + Vite + TypeScript</strong><br>
+- <strong>Ant Design</strong>（企业认可度高）<br>
+- <strong>Zustand</strong>（简单高效）<br>
+- <strong>Axios</strong>（国内主流）<br>
+- <strong>React Router</strong>（标准路由）</p>
+<p>这个组合在国内招聘市场接受度高，学习资源丰富，适合中小型项目快速开发和维护。</p>
+  </div>
+  <div class="footer">IV Notes &nbsp;·&nbsp; p1-framework.md</div>
+</div>
+</body>
+</html>
+
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/iv/">IV</a></li>
+            <li>P1-FRAMEWORK</li>
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

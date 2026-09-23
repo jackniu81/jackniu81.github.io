@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="React 常见面试题 123 道（附答案，2026-09 更新）    :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;           --code-bg:#f6f8fa; --accent:#0969da; }   * { box-sizing: border-box; }   body {">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jack N @ GitHub">
+<meta property="og:url" content="https://jackniu81.github.io/static/i/p0-react-qa.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="React 常见面试题 123 道（附答案，2026-09 更新）    :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;           --code-bg:#f6f8fa; --accent:#0969da; }   * { box-sizing: border-box; }   body {">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-23T13:57:16.859Z">
+<meta property="article:modified_time" content="2026-09-23T13:57:16.859Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="next.js, React, node.js,dotnet core, .Net, C#">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/static/i/p0-react-qa">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/static/i/p0-react-qa.html","path":"static/i/p0-react-qa.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Jack N @ GitHub
+</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">React 常见面试题 123 道（附答案，2026-09 更新）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.1.</span> <span class="nav-text">1. 什么是 React？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.2.</span> <span class="nav-text">2. React 的核心特点有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.3.</span> <span class="nav-text">3. 什么是 JSX？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.4.</span> <span class="nav-text">4. 为什么 React 使用虚拟 DOM？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.5.</span> <span class="nav-text">5. 什么是组件？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.6.</span> <span class="nav-text">6. 函数组件和类组件的区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.7.</span> <span class="nav-text">7. 什么是 Props？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.8.</span> <span class="nav-text">8. 什么是 State？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.9.</span> <span class="nav-text">9. Props 和 State 的区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.10.</span> <span class="nav-text">10. 什么是单向数据流？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.11.</span> <span class="nav-text">11. 什么是受控组件？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.12.</span> <span class="nav-text">12. 什么是非受控组件？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.13.</span> <span class="nav-text">13. React 中 key 有什么作用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.14.</span> <span class="nav-text">14. 为什么不推荐把数组下标作为 key？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.15.</span> <span class="nav-text">15. 什么是事件绑定？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.16.</span> <span class="nav-text">16. React 中为什么要用 className 而不是 class？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.17.</span> <span class="nav-text">17. 什么是条件渲染？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.18.</span> <span class="nav-text">18. 什么是列表渲染？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.19.</span> <span class="nav-text">19. useState 是做什么的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.20.</span> <span class="nav-text">20. setState 或 setXxx 为什么是异步&#x2F;批量的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.21.</span> <span class="nav-text">21. useEffect 是做什么的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.22.</span> <span class="nav-text">22. useEffect 的依赖数组有什么作用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.23.</span> <span class="nav-text">23. useEffect 的清理函数有什么用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.24.</span> <span class="nav-text">24. useLayoutEffect 和 useEffect 的区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.25.</span> <span class="nav-text">25. 什么是 useRef？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.26.</span> <span class="nav-text">26. useMemo 的作用是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.27.</span> <span class="nav-text">27. useCallback 的作用是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.28.</span> <span class="nav-text">28. useMemo 和 useCallback 的区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.29.</span> <span class="nav-text">29. 什么是 React.memo？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.30.</span> <span class="nav-text">30. 什么情况下需要做记忆化优化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.31.</span> <span class="nav-text">31. 什么是高阶组件（HOC）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.32.</span> <span class="nav-text">32. 什么是 Render Props？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.33.</span> <span class="nav-text">33. 什么是 Context？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.34.</span> <span class="nav-text">34. useContext 的作用是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.35.</span> <span class="nav-text">35. 什么是 React Fragment？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.36.</span> <span class="nav-text">36. React 中如何进行父子组件通信？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.37.</span> <span class="nav-text">37. 什么是提升状态（Lifting State Up）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.38.</span> <span class="nav-text">38. React 中如何实现表单处理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.39.</span> <span class="nav-text">39. 什么是合成事件（SyntheticEvent）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.40.</span> <span class="nav-text">40. React 中如何防止组件重复渲染？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.41.</span> <span class="nav-text">41. 什么是受控输入延迟问题，怎么优化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.42.</span> <span class="nav-text">42. 什么是 React Router？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.43.</span> <span class="nav-text">43. React 中什么是懒加载（Lazy Loading）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.44.</span> <span class="nav-text">44. React.lazy 和 Suspense 怎么配合使用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.45.</span> <span class="nav-text">45. 什么是错误边界（Error Boundary）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.46.</span> <span class="nav-text">46. React 的生命周期有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.47.</span> <span class="nav-text">47. React 18 有哪些重要特性？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.48.</span> <span class="nav-text">48. 🆕 React 19 总览：这一大版本带来了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.49.</span> <span class="nav-text">49. 什么是 startTransition？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.50.</span> <span class="nav-text">50. React 中为什么强调不可变数据？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.51.</span> <span class="nav-text">51. React 项目中常见的性能优化手段有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.52.</span> <span class="nav-text">52. 什么是 Portal？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.53.</span> <span class="nav-text">53. 什么是 StrictMode？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.54.</span> <span class="nav-text">54. 为什么开发环境下 useEffect 可能执行两次？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.55.</span> <span class="nav-text">55. 什么是受控和非受控表单的取舍原则？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.56.</span> <span class="nav-text">56. 什么是状态提升的缺点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.57.</span> <span class="nav-text">57. React 中如何复用逻辑？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.58.</span> <span class="nav-text">58. 什么是自定义 Hook？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.59.</span> <span class="nav-text">59. 自定义 Hook 和普通函数有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.60.</span> <span class="nav-text">60. Hook 使用时有哪些规则？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.61.</span> <span class="nav-text">61. 为什么 Hook 不能放在条件语句中？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.62.</span> <span class="nav-text">62. React 中什么是闭包陷阱？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.63.</span> <span class="nav-text">63. 如何解决闭包导致的旧值问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.64.</span> <span class="nav-text">64. 什么是函数式更新？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.65.</span> <span class="nav-text">65. React 中如何共享全局状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.66.</span> <span class="nav-text">66. Context 是否适合所有全局状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.67.</span> <span class="nav-text">67. 什么是 Props Drilling？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.68.</span> <span class="nav-text">68. 如何避免 Props Drilling？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.69.</span> <span class="nav-text">69. 什么是组合优于继承？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.70.</span> <span class="nav-text">70. React 中什么是受控副作用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.71.</span> <span class="nav-text">71. 何时应该拆分组件？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.72.</span> <span class="nav-text">72. React 中什么是渲染阶段和提交阶段？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.73.</span> <span class="nav-text">73. 为什么不能在渲染阶段做副作用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.74.</span> <span class="nav-text">74. 什么是批处理更新？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.75.</span> <span class="nav-text">75. React 18 自动批处理有什么变化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.76.</span> <span class="nav-text">76. 什么是 flushSync？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.77.</span> <span class="nav-text">77. 什么是 useDeferredValue？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.78.</span> <span class="nav-text">78. startTransition 和 useDeferredValue 的区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.79.</span> <span class="nav-text">79. 什么是服务端渲染（SSR）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.80.</span> <span class="nav-text">80. SSR 的优缺点是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.81.</span> <span class="nav-text">81. 什么是 Hydration？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.82.</span> <span class="nav-text">82. 什么是 Hydration Mismatch？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.83.</span> <span class="nav-text">83. 🆕 什么是流式 SSR 与 Selective Hydration（选择性水合）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.84.</span> <span class="nav-text">84. React 中如何处理长列表性能问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.85.</span> <span class="nav-text">85. 什么是虚拟列表？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.86.</span> <span class="nav-text">86. React 中为什么要保持组件纯净？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.87.</span> <span class="nav-text">87. 什么是不可变更新？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.88.</span> <span class="nav-text">88. React 中如何更新对象状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.89.</span> <span class="nav-text">89. React 中如何更新数组状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.90.</span> <span class="nav-text">90. 什么是 key 冲突？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.91.</span> <span class="nav-text">91. React 中受控组件为什么更适合复杂表单？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.92.</span> <span class="nav-text">92. React 中如何做代码分割？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.93.</span> <span class="nav-text">93. 什么是 Suspense 的常见使用场景？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.94.</span> <span class="nav-text">94. React 中什么是错误恢复边界？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.95.</span> <span class="nav-text">95. React 中如何优化 Context 性能？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.96.</span> <span class="nav-text">96. 为什么内联对象和函数可能影响性能？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.97.</span> <span class="nav-text">97. 什么是受控渲染范围？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.98.</span> <span class="nav-text">98. React 中如何排查性能问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.99.</span> <span class="nav-text">99. React 项目中常见反模式有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.100.</span> <span class="nav-text">100. 什么是 React 的声明式编程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.101.</span> <span class="nav-text">101. React 为什么适合大型前端应用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.102.</span> <span class="nav-text">102. 面试中如何系统回答 React 问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.103.</span> <span class="nav-text">Hooks 进阶与模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.1.</span> <span class="nav-text">103. 什么是 useReducer？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.2.</span> <span class="nav-text">104. 什么是 useId？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.3.</span> <span class="nav-text">105. 什么是 forwardRef？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.4.</span> <span class="nav-text">106. 🆕 React 19 的 ref as prop 与 forwardRef 有什么区别？旧代码要迁移吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.5.</span> <span class="nav-text">107. 什么是 useImperativeHandle？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.6.</span> <span class="nav-text">108. 什么是 use Hook（React 19）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.7.</span> <span class="nav-text">109. 🆕 use 在 Suspense 数据获取中怎么用？有哪些坑？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.103.8.</span> <span class="nav-text">110. React 中如何避免 useEffect 中的竞态条件？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.104.</span> <span class="nav-text">React 19、Server Components 与全栈渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.104.1.</span> <span class="nav-text">111. 什么是 React Server Components（RSC）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.104.2.</span> <span class="nav-text">112. 🆕 RSC 深入：&quot;use client&quot;&#x2F;&quot;use server&quot; 边界、Server Actions 安全与缓存怎么理解？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.104.3.</span> <span class="nav-text">113. 🆕 React 19 Actions：form action、useActionState、useFormStatus 怎么用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.104.4.</span> <span class="nav-text">114. 🆕 useOptimistic 如何实现乐观更新？失败后怎么回滚？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.104.5.</span> <span class="nav-text">115. 🆕 React 19.1 &#x2F; 19.2 &#x2F; 19.3 各带来了什么新东西？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.105.</span> <span class="nav-text">渲染机制、性能与 React Compiler</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.105.1.</span> <span class="nav-text">116. React diff 算法的核心规则是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.105.2.</span> <span class="nav-text">117. 什么是 React 中的受控与非受控的对比？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.105.3.</span> <span class="nav-text">118. 🆕 什么是 React Compiler（React Forget）？以后还需要手写 useMemo&#x2F;useCallback 吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.106.</span> <span class="nav-text">状态管理、数据获取与组件模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.106.1.</span> <span class="nav-text">119. 什么是 React Query &#x2F; SWR？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.106.2.</span> <span class="nav-text">120. 什么是 Zustand？与 Redux 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.106.3.</span> <span class="nav-text">121. 🆕 2026 年 React 状态管理的格局是什么？Recoil 还能用吗？Signal 呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.106.4.</span> <span class="nav-text">122. 什么是 React 中的 Compound Components 模式？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.107.</span> <span class="nav-text">跨端与生态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.107.1.</span> <span class="nav-text">123. 🆕 React Native 的新架构（Fabric &#x2F; TurboModules &#x2F; Bridgeless）是什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.108.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/i/">I</a></li>
+            <li>P0-REACT-QA</li>
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React 常见面试题 123 道（附答案，2026-09 更新）</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;
+          --code-bg:#f6f8fa; --accent:#0969da; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+  <h1>React 常见面试题 123 道（附答案，2026-09 更新）</h1>
+<h2>1. 什么是 React？</h2>
+<p><strong>答案：</strong> React 是一个用于构建用户界面的 JavaScript 库，核心思想是组件化开发和声明式编程。它通过虚拟 DOM 提升更新效率，常用于构建单页应用。</p>
+<h2>2. React 的核心特点有哪些？</h2>
+<p><strong>答案：</strong></p>
+<ul><li>组件化</li><li>声明式 UI</li><li>虚拟 DOM</li><li>单向数据流</li><li>JSX 语法</li></ul>
+<h2>3. 什么是 JSX？</h2>
+<p><strong>答案：</strong> JSX 是 JavaScript 的语法扩展，允许你在 JavaScript 中编写类似 HTML 的代码。浏览器不能直接识别 JSX，需要通过 Babel 等工具编译成普通 JavaScript。</p>
+<h2>4. 为什么 React 使用虚拟 DOM？</h2>
+<p><strong>答案：</strong> 虚拟 DOM 是真实 DOM 的 JavaScript 表示。React 先比较新旧虚拟 DOM 的差异，再最小化更新真实 DOM，从而减少直接操作 DOM 的开销，提高性能。</p>
+<h2>5. 什么是组件？</h2>
+<p><strong>答案：</strong> 组件是 React 应用的基本构建单元。它把 UI 拆分成独立、可复用的部分，每个组件负责自己的结构和逻辑。</p>
+<h2>6. 函数组件和类组件的区别是什么？</h2>
+<p><strong>答案：</strong> 函数组件本质上是普通函数，使用 Hook 管理状态和副作用；类组件使用 <code>class</code> 定义，通过 <code>this.state</code> 和生命周期方法管理逻辑。现在实际开发中函数组件更常用。</p>
+<h2>7. 什么是 Props？</h2>
+<p><strong>答案：</strong> Props 是父组件向子组件传递数据的方式，是只读的。子组件不能直接修改 Props。</p>
+<h2>8. 什么是 State？</h2>
+<p><strong>答案：</strong> State 是组件内部维护的数据，状态变化会触发组件重新渲染。函数组件一般通过 <code>useState</code> 管理状态。</p>
+<h2>9. Props 和 State 的区别是什么？</h2>
+<p><strong>答案：</strong></p>
+<ul><li>Props：由父组件传入，只读</li><li>State：组件自身维护，可变</li><li>Props 主要用于组件通信，State 主要用于组件内部数据管理</li></ul>
+<h2>10. 什么是单向数据流？</h2>
+<p><strong>答案：</strong> React 中数据通常从父组件流向子组件，子组件通过 Props 接收数据，不能反向直接修改父组件状态。这让数据变化路径更清晰，更容易维护。</p>
+<h2>11. 什么是受控组件？</h2>
+<p><strong>答案：</strong> 受控组件是指表单元素的值由 React 状态控制。例如输入框的 <code>value</code> 来自 state，<code>onChange</code> 负责更新 state。</p>
+<h2>12. 什么是非受控组件？</h2>
+<p><strong>答案：</strong> 非受控组件是指表单数据由 DOM 本身管理，通常通过 <code>ref</code> 获取输入值。适合简单场景，但不如受控组件易管理。</p>
+<h2>13. React 中 <code>key</code> 有什么作用？</h2>
+<p><strong>答案：</strong> <code>key</code> 用于帮助 React 识别列表中哪些元素发生了变化，从而更高效地进行 diff 和更新。<code>key</code> 应该稳定且唯一，不推荐直接使用数组索引，除非列表不会变化。</p>
+<h2>14. 为什么不推荐把数组下标作为 <code>key</code>？</h2>
+<p><strong>答案：</strong> 如果列表顺序发生变化，使用索引会导致 React 错误复用组件，可能引发状态错乱和渲染异常。</p>
+<h2>15. 什么是事件绑定？</h2>
+<p><strong>答案：</strong> React 中通过驼峰命名方式绑定事件，例如 <code>onClick</code>、<code>onChange</code>。事件处理函数通常写成函数引用，而不是直接执行。</p>
+<h2>16. React 中为什么要用 <code>className</code> 而不是 <code>class</code>？</h2>
+<p><strong>答案：</strong> 因为 <code>class</code> 是 JavaScript 保留关键字，所以 JSX 中使用 <code>className</code> 表示 HTML 的类名。</p>
+<h2>17. 什么是条件渲染？</h2>
+<p><strong>答案：</strong> 条件渲染是根据条件决定渲染不同内容。常见写法有 <code>if</code>、三元表达式、逻辑与 <code>&amp;&amp;</code>。</p>
+<h2>18. 什么是列表渲染？</h2>
+<p><strong>答案：</strong> 列表渲染是通过 <code>map()</code> 遍历数组并返回一组 JSX 元素，通常需要配合 <code>key</code> 使用。</p>
+<h2>19. <code>useState</code> 是做什么的？</h2>
+<p><strong>答案：</strong> <code>useState</code> 是 React Hook，用于在函数组件中声明和更新状态。</p>
+<h2>20. <code>setState</code> 或 <code>setXxx</code> 为什么是异步/批量的？</h2>
+<p><strong>答案：</strong> React 为了性能会合并多次状态更新，减少不必要的重复渲染，因此状态更新通常不是立即同步反映到界面上的。</p>
+<h2>21. <code>useEffect</code> 是做什么的？</h2>
+<p><strong>答案：</strong> <code>useEffect</code> 用于处理副作用逻辑，例如请求数据、订阅事件、操作定时器、手动修改 DOM 等。</p>
+<h2>22. <code>useEffect</code> 的依赖数组有什么作用？</h2>
+<p><strong>答案：</strong> 依赖数组用于控制副作用执行时机：</p>
+<ul><li>不传：每次渲染后都执行</li><li>空数组 <code>[]</code>：只在首次挂载后执行一次</li><li><code>[a, b]</code>：当 <code>a</code> 或 <code>b</code> 变化时执行</li></ul>
+<h2>23. <code>useEffect</code> 的清理函数有什么用？</h2>
+<p><strong>答案：</strong> 清理函数用于在组件卸载前或下一次 effect 执行前清理副作用，如移除事件监听、清除定时器、取消订阅，防止内存泄漏。</p>
+<h2>24. <code>useLayoutEffect</code> 和 <code>useEffect</code> 的区别是什么？</h2>
+<p><strong>答案：</strong> <code>useLayoutEffect</code> 在 DOM 更新后、浏览器重绘前同步执行；<code>useEffect</code> 在页面重绘后异步执行。前者适合读取布局和避免闪烁，后者更常用。</p>
+<h2>25. 什么是 <code>useRef</code>？</h2>
+<p><strong>答案：</strong> <code>useRef</code> 用于保存一个可变引用，它的值在多次渲染之间保持不变。常见用途是获取 DOM 元素，或者保存不会触发重新渲染的数据。</p>
+<h2>26. <code>useMemo</code> 的作用是什么？</h2>
+<p><strong>答案：</strong> <code>useMemo</code> 用于记忆化计算结果，避免在每次渲染时重复执行昂贵计算。</p>
+<h2>27. <code>useCallback</code> 的作用是什么？</h2>
+<p><strong>答案：</strong> <code>useCallback</code> 用于记忆化函数本身，避免每次渲染都创建新的函数引用，常用于优化子组件渲染。</p>
+<h2>28. <code>useMemo</code> 和 <code>useCallback</code> 的区别是什么？</h2>
+<p><strong>答案：</strong></p>
+<ul><li><code>useMemo</code> 缓存的是计算结果</li><li><code>useCallback</code> 缓存的是函数本身</li></ul>
+<p>本质上 <code>useCallback(fn, deps)</code> 可以看作 <code>useMemo(() =&gt; fn, deps)</code>。</p>
+<h2>29. 什么是 <code>React.memo</code>？</h2>
+<p><strong>答案：</strong> <code>React.memo</code> 是高阶组件，用于缓存函数组件。当组件的 Props 没有变化时，React 可以跳过重新渲染。</p>
+<h2>30. 什么情况下需要做记忆化优化？</h2>
+<p><strong>答案：</strong> 当组件渲染频繁、计算昂贵、或者因为函数和对象引用变化导致子组件重复渲染时，可以考虑使用 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code>。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React Compiler 1.0 已于 2025-10-07 稳定发布，可在编译期自动完成大部分记忆化，新项目通常不再需要防御性地手写 <code>useMemo</code>/<code>useCallback</code>（详见第 118 题）。但这些 API 的原理与适用场景仍是面试基础，且未启用 Compiler 的项目依然需要它们。</blockquote>
+<h2>31. 什么是高阶组件（HOC）？</h2>
+<p><strong>答案：</strong> 高阶组件是一个函数，接收组件作为参数并返回一个新组件，用于复用组件逻辑，例如权限控制、日志埋点等。</p>
+<h2>32. 什么是 Render Props？</h2>
+<p><strong>答案：</strong> Render Props 是一种通过函数作为 Props 传递渲染逻辑的模式，用于实现逻辑复用。</p>
+<h2>33. 什么是 Context？</h2>
+<p><strong>答案：</strong> Context 提供了一种跨组件层级共享数据的方式，适合主题、语言、登录态等全局数据，避免层层 Props 传递。</p>
+<h2>34. <code>useContext</code> 的作用是什么？</h2>
+<p><strong>答案：</strong> <code>useContext</code> 用于在函数组件中读取 Context 提供的值。</p>
+<h2>35. 什么是 React Fragment？</h2>
+<p><strong>答案：</strong> Fragment 用于在不增加额外 DOM 节点的情况下返回多个元素，写法有 <code>&lt;React.Fragment&gt;</code> 或 <code>&lt;&gt;...&lt;/&gt;</code>。</p>
+<h2>36. React 中如何进行父子组件通信？</h2>
+<p><strong>答案：</strong></p>
+<ul><li>父传子：通过 Props</li><li>子传父：父组件传函数给子组件，子组件调用该函数</li><li>跨层级通信：通过 Context 或状态管理库</li></ul>
+<h2>37. 什么是提升状态（Lifting State Up）？</h2>
+<p><strong>答案：</strong> 当多个组件需要共享同一份数据时，把状态提到它们最近的共同父组件中进行统一管理，这就是状态提升。</p>
+<h2>38. React 中如何实现表单处理？</h2>
+<p><strong>答案：</strong> 一般通过受控组件实现：输入框的值绑定到 state，<code>onChange</code> 事件更新 state。复杂场景可结合表单库，如 React Hook Form。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React 19 起表单有了官方推荐的新写法——把异步函数直接传给 <code>&lt;form action&gt;</code>，配合 <code>useActionState</code>/<code>useFormStatus</code> 自动处理 pending、错误与表单重置，详见第 113 题。</blockquote>
+<h2>39. 什么是合成事件（SyntheticEvent）？</h2>
+<p><strong>答案：</strong> React 对原生浏览器事件进行了封装，形成跨浏览器兼容的合成事件。开发者通常直接使用 React 提供的事件对象即可。</p>
+<h2>40. React 中如何防止组件重复渲染？</h2>
+<p><strong>答案：</strong> 常见方法：</p>
+<ul><li>使用 <code>React.memo</code></li><li>使用 <code>useMemo</code> / <code>useCallback</code></li><li>合理拆分组件</li><li>避免每次渲染创建新对象和新函数</li><li>减少不必要的状态更新</li></ul>
+<h2>41. 什么是受控输入延迟问题，怎么优化？</h2>
+<p><strong>答案：</strong> 当输入框绑定的状态更新引发大量组件重渲染时，可能出现输入卡顿。可通过拆分组件、降低状态提升范围、使用 <code>useDeferredValue</code>、<code>memo</code> 等方式优化。</p>
+<h2>42. 什么是 React Router？</h2>
+<p><strong>答案：</strong> React Router 是 React 常用的路由库，用于实现前端页面切换、嵌套路由、动态路由、导航守卫等。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React Router v7 已于 2024 年底发布，它把 Remix 合并进了 <code>react-router</code> 一个包，提供三种模式：传统声明式路由（库模式）、Data 模式和 Framework 模式（Vite 插件，内置 SSR/SSG/SPA 渲染策略、类型安全的路由模块 <code>loader</code>/<code>action</code>、智能代码分割）。2026-06-17 又发布了 v8（当前最新为 8.3.x，年度大版本节奏），基线要求 Node 22.22+、React 19.2.7+、Vite 7+，包改为仅 ESM，RSC 支持在 v7.9 起以 <code>unstable</code> 形式提供、v8 中仍未稳定。新项目建议直接学习 v7/v8 的类型化路由 API，老的 v6 仍在维护期。</blockquote>
+<h2>43. React 中什么是懒加载（Lazy Loading）？</h2>
+<p><strong>答案：</strong> 懒加载是指按需加载组件，而不是一次性加载全部代码。React 中常用 <code>React.lazy</code> 和 <code>Suspense</code> 实现。</p>
+<h2>44. <code>React.lazy</code> 和 <code>Suspense</code> 怎么配合使用？</h2>
+<p><strong>答案：</strong> <code>React.lazy</code> 用于动态导入组件，<code>Suspense</code> 用于在组件加载完成前显示 fallback 内容。</p>
+<h2>45. 什么是错误边界（Error Boundary）？</h2>
+<p><strong>答案：</strong> 错误边界用于捕获其子组件树中的 JavaScript 渲染错误，并显示降级 UI。传统上通过类组件中的 <code>componentDidCatch</code> 和 <code>getDerivedStateFromError</code> 实现。</p>
+<h2>46. React 的生命周期有哪些？</h2>
+<p><strong>答案：</strong> 类组件常见生命周期包括：</p>
+<ul><li>挂载：<code>constructor</code>、<code>render</code>、<code>componentDidMount</code></li><li>更新：<code>render</code>、<code>componentDidUpdate</code></li><li>卸载：<code>componentWillUnmount</code></li></ul>
+<p>函数组件一般通过 Hook 模拟这些能力。</p>
+<h2>47. React 18 有哪些重要特性？</h2>
+<p><strong>答案：</strong> React 18 引入了并发渲染相关能力，例如自动批处理、<code>startTransition</code>、<code>useDeferredValue</code>、新的 <code>createRoot</code> API 等。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React 19 已于 <strong>2024-12-05</strong> 正式发布，自动批处理、并发渲染、<code>createRoot</code> 等在今天属于"上一代"基线能力。现行版本线为 19.0（2024-12）→ 19.1（2025 年）→ 19.2（2025-10）→ <strong>19.3（2026-09-09，当前最新）</strong>。面试中被问"React 新特性"时应以 React 19 为现行答案，见第 48 题及后文 React 19 专题。</blockquote>
+<h2>48. 🆕 React 19 总览：这一大版本带来了什么？</h2>
+<p><strong>答案：</strong> React 19（2024-12-05 稳定，当前最新为 2026-09-09 的 19.3）是自 Hook 以来最大的版本，核心变化有：</p>
+<ul><li><strong>Actions</strong>：<code>startTransition</code> 支持 async 函数，异步 mutation 的 pending、错误、乐观更新自动管理；<code>&lt;form action&gt;</code>/<code>formAction</code> 可直接接收函数，配合新增的 <code>useActionState</code>（RC 期原名 <code>useFormState</code>）和 <code>useFormStatus</code>。</li><li><strong>新 Hook/API</strong>：<code>useOptimistic</code>（乐观更新）、<code>use</code>（在渲染中读取 Promise/Context，可条件调用）。</li><li><strong>ref 简化</strong>：函数组件可直接把 <code>ref</code> 当 prop 接收，不再必须 <code>forwardRef</code>；ref 回调支持返回清理函数。</li><li><strong>Context 简化</strong>：可直接写 <code>&lt;Context value={...}&gt;</code> 作为 Provider。</li><li><strong>文档元数据与资源加载</strong>：组件树任意位置写 <code>&lt;title&gt;</code>、<code>&lt;meta&gt;</code>、<code>&lt;link&gt;</code> 会自动提升到 <code>&lt;head&gt;</code>；新增 <code>preload</code>、<code>preinit</code>、<code>preconnect</code>、<code>prefetchDNS</code>（以及 <code>preloadModule</code>/<code>preinitModule</code>）等资源预加载 API。</li><li><strong>RSC 稳定</strong>：Server Components、Server Functions（<code>&quot;use server&quot;</code>）相关协议正式稳定；新增 <code>prerender</code>/<code>prerenderToNodeStream</code> 静态 API。</li><li><strong>错误处理</strong>：未捕获的渲染错误改为上报 <code>reportError</code>，<code>createRoot</code>/<code>hydrateRoot</code> 新增 <code>onUncaughtError</code>、<code>onCaughtError</code> 选项。</li><li><strong>移除项</strong>：<code>propTypes</code>、函数组件 <code>defaultProps</code>、字符串 ref、<code>findDOMNode</code>、<code>ReactDOM.render</code>/<code>hydrate</code>、UMD 构建等；<code>act</code> 移到 <code>react</code> 包。</li></ul>
+<p>升级建议先升到 18.3.1 观察废弃警告再升 19。各特性的深入题见第 106、109、111-115、118 题。</p>
+<h2>49. 什么是 <code>startTransition</code>？</h2>
+<p><strong>答案：</strong> <code>startTransition</code> 用于标记某些更新为“低优先级更新”，让 React 优先处理更重要的交互更新，提高用户体验。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React 19 起 <code>startTransition</code> 可以接收 async 函数（即 Actions），<code>isPending</code> 会覆盖整个异步过程；React 19.3 还新增 <code>addTransitionType()</code> 用于给过渡打类型标签（如轮播的 <code>next</code>/<code>previous</code>），见第 115 题。</blockquote>
+<h2>50. React 中为什么强调不可变数据？</h2>
+<p><strong>答案：</strong> React 通常通过引用变化判断数据是否更新。如果直接修改原对象，React 可能无法正确识别变化；使用不可变更新更利于性能优化和状态追踪。</p>
+<h2>51. React 项目中常见的性能优化手段有哪些？</h2>
+<p><strong>答案：</strong></p>
+<ul><li>合理拆分组件</li><li>使用 <code>key</code></li><li>使用 <code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code></li><li>路由和组件懒加载</li><li>减少不必要的状态提升</li><li>避免重复请求</li><li>虚拟列表优化长列表</li><li>使用 Profiler 分析性能瓶颈</li></ul>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React Compiler 1.0 稳定后（见第 118 题），"手写记忆化"这一项正在被编译器自动化；2025 年后的性能排查还应包括 React DevTools 的 <strong>Performance Tracks</strong>（React 19.2 新增，见第 115 题）。</blockquote>
+<h2>52. 什么是 Portal？</h2>
+<p><strong>答案：</strong> Portal 允许把子组件渲染到父组件 DOM 层级之外的节点中，常用于弹窗、提示框、抽屉等浮层场景。</p>
+<h2>53. 什么是 StrictMode？</h2>
+<p><strong>答案：</strong> <code>StrictMode</code> 是开发环境下的辅助工具，用于提示潜在问题，例如不安全生命周期、重复副作用等，不会影响生产环境渲染结果。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 再确认）</strong>：StrictMode 的双调用（渲染、<code>useEffect</code> setup/cleanup、React 19 起还包括 ref 回调首次挂载）<strong>只在开发构建中发生，生产环境完全不生效</strong>，不会造成线上的双请求或双订阅。它的目的是暴露副作用不纯净、清理不完整的问题。</blockquote>
+<h2>54. 为什么开发环境下 <code>useEffect</code> 可能执行两次？</h2>
+<p><strong>答案：</strong> 在 React 18 的严格模式下，开发环境会故意重复执行部分生命周期和副作用，用来帮助你发现副作用不纯或清理不完整的问题。</p>
+<h2>55. 什么是受控和非受控表单的取舍原则？</h2>
+<p><strong>答案：</strong> 需要统一校验、联动和状态管理时优先使用受控组件；表单简单、只在提交时读取值时可以考虑非受控组件。</p>
+<h2>56. 什么是状态提升的缺点？</h2>
+<p><strong>答案：</strong> 状态提升会让父组件承担更多职责，导致 Props 传递链变长、组件耦合增强，过度使用会降低可维护性。</p>
+<h2>57. React 中如何复用逻辑？</h2>
+<p><strong>答案：</strong> 常见方式有自定义 Hook、Context、组合模式、Render Props 和 HOC。当前最主流的是自定义 Hook。</p>
+<h2>58. 什么是自定义 Hook？</h2>
+<p><strong>答案：</strong> 自定义 Hook 是把可复用的状态逻辑和副作用逻辑抽取到以 <code>use</code> 开头的函数中，便于多个组件共享逻辑。</p>
+<h2>59. 自定义 Hook 和普通函数有什么区别？</h2>
+<p><strong>答案：</strong> 自定义 Hook 可以调用其他 Hook，并遵守 Hook 规则；普通函数不能随意调用 Hook，也不参与 React 的状态管理流程。</p>
+<h2>60. Hook 使用时有哪些规则？</h2>
+<p><strong>答案：</strong> Hook 只能在函数组件或自定义 Hook 顶层调用，不能放在条件、循环、嵌套函数中，以保证调用顺序稳定。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React 19 新增的 <code>use</code> 是唯一例外——它虽然长得像 Hook，但允许在条件语句和循环中调用（见第 108、109 题）；其余 Hook 仍必须遵守本规则。</blockquote>
+<h2>61. 为什么 Hook 不能放在条件语句中？</h2>
+<p><strong>答案：</strong> 因为 React 依赖 Hook 的调用顺序来关联状态。如果条件分支导致调用顺序变化，就会出现状态错位。</p>
+<h2>62. React 中什么是闭包陷阱？</h2>
+<p><strong>答案：</strong> 在函数组件中，事件处理器或副作用可能捕获旧的状态值，导致读取到过期数据。这类问题通常与依赖项不完整或异步回调有关。</p>
+<h2>63. 如何解决闭包导致的旧值问题？</h2>
+<p><strong>答案：</strong> 可以补全依赖数组、使用函数式更新、使用 <code>useRef</code> 保存最新值，或重构代码避免在旧闭包中读取状态。React 19.2 起还可以用稳定的 <code>useEffectEvent</code> 解决"effect 只想读最新值却不想重订阅"的场景（见第 115 题）。</p>
+<h2>64. 什么是函数式更新？</h2>
+<p><strong>答案：</strong> 函数式更新是把更新函数传给 <code>setState</code>，例如 <code>setCount(prev =&gt; prev + 1)</code>，适合依赖前一个状态值的场景。</p>
+<h2>65. React 中如何共享全局状态？</h2>
+<p><strong>答案：</strong> 小型应用可以用 Context，中大型应用通常结合 Zustand、Redux Toolkit、Jotai 等状态管理库。2026 年的格局见第 121 题。</p>
+<h2>66. Context 是否适合所有全局状态？</h2>
+<p><strong>答案：</strong> 不适合。Context 更适合低频更新的共享数据；高频更新状态如果直接放入 Context，容易导致大量消费者重复渲染。</p>
+<h2>67. 什么是 Props Drilling？</h2>
+<p><strong>答案：</strong> Props Drilling 指数据必须层层通过中间组件传递给深层子组件，即使中间组件本身并不使用这些数据。</p>
+<h2>68. 如何避免 Props Drilling？</h2>
+<p><strong>答案：</strong> 可以使用 Context、状态管理库、组合模式，或者重新设计组件层级，减少不必要的数据穿透。</p>
+<h2>69. 什么是组合优于继承？</h2>
+<p><strong>答案：</strong> React 更推荐通过组件组合来复用 UI 和行为，而不是像传统 OOP 那样依赖继承层级，这样更灵活、更易维护。</p>
+<h2>70. React 中什么是受控副作用？</h2>
+<p><strong>答案：</strong> 指副作用的触发时机、依赖关系和清理逻辑都明确可控，避免无序请求、重复订阅和资源泄漏。</p>
+<h2>71. 何时应该拆分组件？</h2>
+<p><strong>答案：</strong> 当一个组件职责过多、状态复杂、复用性差或渲染范围过大时，应考虑拆分为更小、更清晰的组件。</p>
+<h2>72. React 中什么是渲染阶段和提交阶段？</h2>
+<p><strong>答案：</strong> 渲染阶段负责计算新 UI；提交阶段才真正修改 DOM。理解这两个阶段有助于判断副作用和性能问题。</p>
+<h2>73. 为什么不能在渲染阶段做副作用？</h2>
+<p><strong>答案：</strong> 因为渲染阶段应该保持纯函数特性，可能被中断或重复执行；副作用应放在 <code>useEffect</code> 等提交后阶段处理。</p>
+<h2>74. 什么是批处理更新？</h2>
+<p><strong>答案：</strong> 批处理更新指 React 会把同一轮事件中的多个状态更新合并处理，从而减少重复渲染，提升性能。</p>
+<h2>75. React 18 自动批处理有什么变化？</h2>
+<p><strong>答案：</strong> React 18 将自动批处理扩展到更多异步场景，比如 <code>Promise</code>、<code>setTimeout</code> 和原生事件回调中。</p>
+<h2>76. 什么是 <code>flushSync</code>？</h2>
+<p><strong>答案：</strong> <code>flushSync</code> 用于强制 React 立即同步刷新更新。只有在确实需要立刻拿到更新后 DOM 结果时才应谨慎使用。</p>
+<h2>77. 什么是 <code>useDeferredValue</code>？</h2>
+<p><strong>答案：</strong> <code>useDeferredValue</code> 用于把某个值的更新延后为低优先级更新，常用于优化搜索输入、大列表过滤等场景。</p>
+<h2>78. <code>startTransition</code> 和 <code>useDeferredValue</code> 的区别是什么？</h2>
+<p><strong>答案：</strong> <code>startTransition</code> 用于把一段状态更新标记为低优先级；<code>useDeferredValue</code> 用于延后某个值的消费，二者都服务于交互流畅性优化。</p>
+<h2>79. 什么是服务端渲染（SSR）？</h2>
+<p><strong>答案：</strong> SSR 是指先在服务端生成 HTML，再返回给浏览器。它有助于首屏速度、SEO 和弱网场景体验。</p>
+<h2>80. SSR 的优缺点是什么？</h2>
+<p><strong>答案：</strong> 优点是首屏快、SEO 友好；缺点是服务端压力更高、开发复杂度更大，还要处理水合一致性问题。</p>
+<h2>81. 什么是 Hydration？</h2>
+<p><strong>答案：</strong> Hydration 指浏览器在拿到服务端渲染的 HTML 后，把 React 事件和状态系统“挂载”到已有 DOM 上的过程。</p>
+<h2>82. 什么是 Hydration Mismatch？</h2>
+<p><strong>答案：</strong> 指服务端输出和客户端首次渲染结果不一致，React 会报警告甚至重新渲染，常见原因是时间、随机数和环境差异。React 19 起 mismatch 报错会附带差异内容的 diff，定位更容易。</p>
+<h2>83. 🆕 什么是流式 SSR 与 Selective Hydration（选择性水合）？</h2>
+<p><strong>答案：</strong> React 18 起 SSR 不再使用一次性阻塞的 <code>renderToString</code>，而是通过 <code>renderToPipeableStream</code> <strong>流式</strong>输出：页面被 <code>&lt;Suspense&gt;</code> 边界切成多个块，服务端先发送静态 shell，数据就绪的部分再以流式 HTML 连同 Flight 数据陆续推送。</p>
+<p><strong>Selective Hydration</strong> 指配合并发渲染器，水合过程可以被中断和重排：React 不必按 DOM 顺序一次性水合整棵树，而是优先水合用户正在交互（如点击、输入）的区域，其余部分稍后补做，从而显著缩短 TTI。React 19 还加入了 Suspense 兄弟节点预热（sibling pre-warming），19.2 对 SSR 的 Suspense 边界做了批处理并改用 Node Web Streams。</p>
+<p>工程落地上，Next.js 的 <strong>PPR（Partial Pre-Rendering）</strong> 把同一页面拆成构建期静态 shell + 请求期动态"洞"（用 Suspense 标记）；React 19.2 在 React DOM 层提供了 PPR 支持，Next.js 16（2025-10）则把实验性 PPR 演化为正式的 <strong>Cache Components</strong> 模型（<code>&quot;use cache&quot;</code> 指令、<code>cacheComponents</code> 显式开启）。</p>
+<h2>84. React 中如何处理长列表性能问题？</h2>
+<p><strong>答案：</strong> 可以使用虚拟列表、分页、懒加载、稳定的 <code>key</code> 和减少单项渲染复杂度等方式优化。</p>
+<h2>85. 什么是虚拟列表？</h2>
+<p><strong>答案：</strong> 虚拟列表只渲染可视区域附近的列表项，而不是一次性渲染全部数据，从而显著降低 DOM 数量和渲染开销。</p>
+<h2>86. React 中为什么要保持组件纯净？</h2>
+<p><strong>答案：</strong> 纯组件更容易预测、测试和优化。相同输入应产生相同输出，避免在渲染函数中偷偷修改外部状态。这也是 React Compiler 能安全自动优化的前提。</p>
+<h2>87. 什么是不可变更新？</h2>
+<p><strong>答案：</strong> 不可变更新指不直接修改原对象或数组，而是创建新引用返回，例如使用展开运算符、<code>map</code>、<code>filter</code> 等。</p>
+<h2>88. React 中如何更新对象状态？</h2>
+<p><strong>答案：</strong> 通常使用浅拷贝创建新对象，例如 <code>setUser(prev =&gt; ({ ...prev, name: &#39;Tom&#39; }))</code>，避免直接修改原对象。</p>
+<h2>89. React 中如何更新数组状态？</h2>
+<p><strong>答案：</strong> 使用 <code>map</code>、<code>filter</code>、<code>concat</code>、展开运算符等返回新数组，而不是直接 <code>push</code>、<code>splice</code> 修改原数组。</p>
+<h2>90. 什么是 key 冲突？</h2>
+<p><strong>答案：</strong> 当兄弟节点之间的 <code>key</code> 不唯一时，React 无法准确识别节点身份，可能导致错误复用和渲染异常。</p>
+<h2>91. React 中受控组件为什么更适合复杂表单？</h2>
+<p><strong>答案：</strong> 因为数据、校验、联动和提交都由 React 状态统一管理，更容易实现规则校验、格式转换和业务逻辑组合。</p>
+<h2>92. React 中如何做代码分割？</h2>
+<p><strong>答案：</strong> 可以通过动态导入、<code>React.lazy</code>、路由级懒加载和构建工具分包策略来减少首屏加载体积。</p>
+<h2>93. 什么是 Suspense 的常见使用场景？</h2>
+<p><strong>答案：</strong> 常见于懒加载组件的加载占位，也可用于配合特定数据获取方案展示统一 fallback。React 19 起 <code>use(promise)</code> 让 Suspense 正式支持数据获取场景（见第 109 题）。</p>
+<h2>94. React 中什么是错误恢复边界？</h2>
+<p><strong>答案：</strong> 它本质上还是 Error Boundary 的一种使用思路：当局部 UI 报错时，只让局部降级，而不是整个应用白屏。</p>
+<h2>95. React 中如何优化 Context 性能？</h2>
+<p><strong>答案：</strong> 可以拆分多个 Context、稳定 <code>value</code> 引用、减少无关数据放入同一个 Provider，必要时引入外部状态库。</p>
+<h2>96. 为什么内联对象和函数可能影响性能？</h2>
+<p><strong>答案：</strong> 因为它们每次渲染都会生成新引用，可能导致依赖比较失败，让子组件或副作用不必要地重新执行。</p>
+<h2>97. 什么是受控渲染范围？</h2>
+<p><strong>答案：</strong> 指通过组件拆分、局部状态、记忆化和上下文隔离，把状态变化影响限制在尽可能小的组件范围内。</p>
+<h2>98. React 中如何排查性能问题？</h2>
+<p><strong>答案：</strong> 可以借助 React DevTools Profiler、浏览器 Performance 面板、日志埋点和组件边界拆分来定位瓶颈。React 19.2 的 DevTools 还新增了 Performance Tracks，把调度、组件渲染等拆成独立时间轨道分析。</p>
+<h2>99. React 项目中常见反模式有哪些？</h2>
+<p><strong>答案：</strong> 包括直接修改 state、滥用 Context、过度记忆化、在渲染中做副作用、使用不稳定 <code>key</code>、过度提升状态等。</p>
+<h2>100. 什么是 React 的声明式编程？</h2>
+<p><strong>答案：</strong> 你只需要描述在某个状态下 UI 应该是什么样子，React 会负责把状态变化映射为界面更新，而不是手动操作 DOM。</p>
+<h2>101. React 为什么适合大型前端应用？</h2>
+<p><strong>答案：</strong> 因为它具备组件化、生态成熟、状态管理方案丰富、工程化能力强、可测试性和可维护性较高等优势。</p>
+<h2>102. 面试中如何系统回答 React 问题？</h2>
+<p><strong>答案：</strong> 可以按“概念定义、核心原理、使用场景、优缺点、常见坑、优化手段”这个结构回答，层次会更清晰。</p>
+<hr>
+<h2>Hooks 进阶与模式</h2>
+<h3>103. 什么是 <code>useReducer</code>？</h3>
+<p><strong>答案：</strong> <code>useReducer</code> 是管理复杂状态逻辑的 Hook，接收 <code>(state, action) =&gt; newState</code> 的 reducer 函数和初始状态，返回当前状态和 <code>dispatch</code>。适合多个子值相互依赖、状态变化逻辑复杂、需要集中管理的场景，比多个 <code>useState</code> 更清晰。本质上 <code>useState</code> 是 <code>useReducer</code> 的简化版。</p>
+<h3>104. 什么是 <code>useId</code>？</h3>
+<p><strong>答案：</strong> <code>useId</code> 是 React 18 新增的 Hook，用于生成在服务端和客户端之间稳定一致的唯一 ID，解决 SSR 水合时 ID 不匹配的问题。常用于 <code>aria</code> 属性（如 <code>aria-labelledby</code>）或表单 <code>label</code> 与控件的关联，不要用它生成列表 <code>key</code>。注意 React 19.1 起调整了 ID 的默认前缀格式（形如 <code>«r123»</code>，可直接用于 CSS 选择器），不要依赖对 ID 字符串的手工解析。</p>
+<h3>105. 什么是 <code>forwardRef</code>？</h3>
+<p><strong>答案：</strong> <code>forwardRef</code> 允许函数组件将接收到的 ref 转发给其内部的 DOM 节点或子组件。语法为 <code>React.forwardRef((props, ref) =&gt; &lt;input ref={ref} /&gt;)</code>。常用于封装表单控件库、需要父组件直接控制子组件 DOM（如聚焦、滚动）的场景。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React 19 起函数组件可以直接把 <code>ref</code> 当作普通 prop 接收（<code>function Input({ ref }) {}</code>），<strong>新代码不再必须使用 <code>forwardRef</code></strong>，对比见第 106 题。但 <code>forwardRef</code> <strong>并未被废弃</strong>：类组件、以及仍需兼容 React 18 及更早版本的组件库还要继续用它。React 19 真正标记废弃的是通过 <code>element.ref</code> 直接访问 ref 的写法。</blockquote>
+<h3>106. 🆕 React 19 的 ref as prop 与 forwardRef 有什么区别？旧代码要迁移吗？</h3>
+<p><strong>答案：</strong> React 19 中，函数组件的 <code>ref</code> 和 <code>className</code>、<code>onClick</code> 一样出现在 props 里：</p>
+<pre><code class="language-tsx">// React 19 新写法
+const MyInput = ({ ref }: { ref?: React.Ref&lt;HTMLInputElement&gt; }) =&gt; {
+  return &lt;input ref={ref} /&gt;;
+};</code></pre>
+<ul><li><strong>不需要 forwardRef 的场景</strong>：只支持 React 19+ 的应用代码、新写的内部组件，直接用 ref prop 更简单，TypeScript 类型也更自然。</li><li><strong>仍需 forwardRef 的场景</strong>：① 类组件（这次变化只针对函数组件）；② 组件库要兼容 React 16/17/18 用户；③ 配合泛型做可复用多态组件时，forwardRef 的写法目前类型支持更成熟。</li><li>相关变化：ref 回调现在可以<strong>返回清理函数</strong>，组件卸载或 ref 变更时执行（类似 effect cleanup），所以回调里不要再隐式 <code>return</code> 非函数值，TS 会报错；<code>useImperativeHandle</code> 照常可用。</li></ul>
+<p>迁移策略：应用代码在升级到 React 19 后逐步改写即可，不必一次性全换；对外发布的库建议保留 <code>forwardRef</code> 直到放弃 React 18。</p>
+<h3>107. 什么是 <code>useImperativeHandle</code>？</h3>
+<p><strong>答案：</strong> <code>useImperativeHandle</code> 配合 <code>forwardRef</code> 使用，允许自定义暴露给父组件 ref 的实例值，而不是暴露整个 DOM 节点。例如只暴露 <code>{ focus, reset }</code> 方法，隐藏其他 DOM 接口，实现更好的封装性。React 19 中也可以配合 ref as prop 使用，<code>forwardRef</code> 不是必需的，但这个 Hook 本身没有变化。</p>
+<h3>108. 什么是 <code>use</code> Hook（React 19）？</h3>
+<p><strong>答案：</strong> <code>use</code> 是 React 19 新增的 Hook，可以读取 Promise 或 Context 的值。读取 Promise 时，若未 resolve 会触发最近的 <code>&lt;Suspense&gt;</code> fallback；读取 Context 类似 <code>useContext</code>。与其他 Hook 不同，<code>use</code> 可以在条件语句中调用，使异步数据处理更灵活。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：表述正确并补充两点：① <code>use</code> 已在 <strong>React 19.0（2024-12-05）随稳定版正式发布</strong>，不是实验 API；② Promise 被 reject 时会冒泡到最近的错误边界；它是目前<strong>唯一</strong>允许写在条件/循环/提前 return 之后的 Hook 形式。深入用法与坑见第 109 题。</blockquote>
+<h3>109. 🆕 <code>use</code> 在 Suspense 数据获取中怎么用？有哪些坑？</h3>
+<p><strong>答案：</strong> 典型用法是由父组件或框架的 loader 创建 Promise，子组件用 <code>use</code> 读取，未就绪时被最近的 Suspense 接住：</p>
+<pre><code class="language-tsx">function Profile({ userPromise }: { userPromise: Promise&lt;User&gt; }) {
+  const user = use(userPromise); // pending 时挂起，reject 时冒泡到错误边界
+  return &lt;h1&gt;{user.name}&lt;/h1&gt;;
+}</code></pre>
+<p>关键细节：</p>
+<ul><li><strong>Promise 必须在调用 <code>use</code> 的组件外部创建</strong>（父组件渲染期、路由 loader 或数据缓存层）。在子组件渲染体内 <code>use(fetch(...))</code> 会每次渲染生成新 Promise，造成无限挂起。</li><li>工程上一般配合缓存使用（框架的 Data Loader、React Cache 等），React 19.2 还引入 <code>cacheSignal</code>，让预渲染中断时可以中止底层请求并在恢复后续传。</li><li><strong>读 Context 时</strong>，<code>use(ThemeContext)</code> 可与 <code>useContext</code> 等价使用，但优势是可以在条件分支或循环中读取<strong>不同的</strong> Context（动态选择），这是 <code>useContext</code> 做不到的。</li><li>与 Server Components 的分工：服务端组件可以直接 <code>async/await</code>；客户端组件要在渲染中消费异步资源时才用 <code>use</code>。</li></ul>
+<h3>110. React 中如何避免 <code>useEffect</code> 中的竞态条件？</h3>
+<p><strong>答案：</strong> 竞态条件发生在快速切换时多个请求并发，后发出的先返回导致数据错误。解决方案：① 在 <code>useEffect</code> 清理函数中用 <code>AbortController</code> 取消请求；② 设置 <code>let isCancelled = false</code> 标志，在回调中判断后再 <code>setState</code>；③ 使用 TanStack Query（React Query）、SWR 等数据获取库，它们内置了竞态处理。</p>
+<hr>
+<h2>React 19、Server Components 与全栈渲染</h2>
+<h3>111. 什么是 React Server Components（RSC）？</h3>
+<p><strong>答案：</strong> RSC 是 React 18+ 引入的新模式，允许在服务端渲染组件，不把相应的 JavaScript 发送到客户端，减少 bundle 体积。Server Components 可以直接访问数据库、文件系统、后端服务，但不能使用 state、effect 和浏览器 API。交互逻辑仍由 Client Components（加 <code>&quot;use client&quot;</code> 指令）承担，两者可以组合使用。</p>
+<blockquote>❌ <strong>更正（2026-09 核实）</strong>：原文“RSC 是 React 18+ 引入”的说法不准确。准确时间线是：RSC 2020 年公布原型演示，<strong>2022 年随 Next.js 13 的 App Router 基于 React canary/实验版本率先落地</strong>；而 <code>&quot;use client&quot;</code>/<code>&quot;use server&quot;</code> 指令、Server Components、Server Functions 的协议是在 <strong>React 19.0（2024-12-05）才正式稳定</strong>。React 18 的稳定版中并不能直接使用 RSC。此外 React 核心库本身不含路由与打包集成，<strong>目前仍必须通过框架使用</strong>（Next.js App Router、Waku、TanStack Start、Parcel，以及 React Router v7.9+ 的 unstable RSC 框架模式）。深入题见第 112 题。</blockquote>
+<h3>112. 🆕 RSC 深入：<code>&quot;use client&quot;</code>/<code>&quot;use server&quot;</code> 边界、Server Actions 安全与缓存怎么理解？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>边界是模块边界，不是渲染位置边界</strong>。带 <code>&quot;use client&quot;</code> 的组件仍会在服务端做 SSR 预渲染，只是它的 JS 会下发到客户端、可以使用 state/effect/浏览器 API；Server Component 默认零客户端 JS，可直接读数据库和密钥，但不能交互。指令作用于整个模块及其导入链。</li><li><strong>Server Actions（<code>&quot;use server&quot;</code>）</strong>：框架把 async 函数编译成一个 HTTP（POST）端点，参数必须可序列化。安全上要把它当成公网 API：<strong>服务端必须做鉴权和入参校验</strong>，不能依赖"入口藏得深"。不要在 <code>&quot;use server&quot;</code> 文件里手写硬编码密钥。</li><li><strong>渐进增强（Progressive Enhancement）</strong>：把 Server Action 传给 <code>&lt;form action&gt;</code> 时，即使客户端 JS 尚未加载或被禁用，表单也能原生提交；React 接管后再升级为异步提交。</li><li><strong>安全事件要知道</strong>：2025-12-03 披露的 CVE-2025-55182（CVSS 10.0，RSC Flight 反序列化 RCE）影响 19.0/19.1.0-19.1.1/19.2.0，修复于 19.0.1/19.1.2/19.2.1；12 月 11 日又公布 DoS 与源码暴露漏洞，修复于 19.0.4/19.1.5/19.2.4。使用 RSC 的项目应把 React 安全补丁视为强制更新。</li><li><strong>缓存与动态渲染（Next.js 现状）</strong>：Next.js 15 起 GET 类 <code>fetch</code> <strong>默认不再缓存</strong>，<code>cookies()</code>/<code>headers()</code>/<code>params</code> 全部异步化；Next.js 16（2025-10-21）Turbopack 成为默认稳定打包器、<code>middleware.ts</code> 更名 <code>proxy.ts</code>、内置 React Compiler 支持，缓存改为显式的 <strong>Cache Components</strong>（<code>&quot;use cache&quot;</code> 指令 + <code>cacheComponents</code> 开启），原 <code>experimental.ppr</code> 标志移除，PPR 能力并入该模型。</li></ul>
+<h3>113. 🆕 React 19 Actions：<code>form action</code>、<code>useActionState</code>、<code>useFormStatus</code> 怎么用？</h3>
+<p><strong>答案：</strong> Action 就是传给 transition 的 async 函数，React 自动管理 pending、错误和乐观更新三件套。表单场景的标准组合：</p>
+<pre><code class="language-tsx">async function updateName(prev: string | null, formData: FormData) {
+  const res = await saveName(formData.get(&#39;name&#39;));
+  if (!res.ok) return &#39;保存失败&#39;; // 通过返回值表达错误
+  return null;
+}
+
+function NameForm() {
+  const [error, formAction, isPending] = useActionState(updateName, null);
+  return (
+    &lt;form action={formAction}&gt;
+      &lt;input name=&quot;name&quot; /&gt;
+      &lt;SubmitButton /&gt;
+      {error &amp;&amp; &lt;p role=&quot;alert&quot;&gt;{error}&lt;/p&gt;}
+    &lt;/form&gt;
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus(); // 必须在 &lt;form&gt; 的子组件中调用
+  return &lt;button disabled={pending}&gt;{pending ? &#39;保存中…&#39; : &#39;保存&#39;}&lt;/button&gt;;
+}</code></pre>
+<p>要点：</p>
+<ul><li><code>useActionState(action, initialState, permalink?)</code> 返回 <code>[state, dispatch, isPending]</code>；它在 React 19 RC 阶段叫 <code>useFormState</code>，<strong>稳定版已更名</strong>，第三个参数用于无 JS 场景下的回跳链接。</li><li><code>&lt;form action={fn}&gt;</code> 成功后会自动重置非受控表单；多个提交按钮可用各自的 <code>formAction</code> 指向不同 Action。</li><li><code>useFormStatus</code>（来自 <code>react-dom</code>）在深层子组件中读取父表单的 <code>pending/data/method/action</code>，避免 props drilling。</li><li>pending 用于禁用按钮/显示进度；错误要么由 Action 返回 state，要么 throw 后交给错误边界；Action 抛出时配合 <code>useOptimistic</code> 的乐观值会自动回滚（见第 114 题）。</li></ul>
+<h3>114. 🆕 <code>useOptimistic</code> 如何实现乐观更新？失败后怎么回滚？</h3>
+<p><strong>答案：</strong> <code>useOptimistic(baseState, (current, optimisticValue) =&gt; nextState)</code> 返回"展示用状态"和一个更新函数。它只在 transition/Action 进行期间把基础状态临时替换为乐观状态：</p>
+<pre><code class="language-tsx">const [messages, addOptimistic] = useOptimistic(
+  serverMessages,
+  (cur, text: string) =&gt; [...cur, { id: crypto.randomUUID(), text, sending: true }]
+);
+
+async function send(formData: FormData) {
+  addOptimistic(formData.get(&#39;text&#39;) as string); // 立即显示
+  await postMessage(formData);                    // Action 完成后与真实数据对齐
+}</code></pre>
+<p>回滚机制是内置的：Action <strong>成功</strong>后，transition 提交，组件以真实 state 重新渲染；Action <strong>抛错</strong>时 transition 失败，乐观状态自动丢弃、回到基础值，无需手写 rollback。典型场景是点赞、消息发送、拖拽排序。注意乐观更新函数应是纯函数，不能在里面发请求等做副作用——副作用属于 Action 本身。</p>
+<h3>115. 🆕 React 19.1 / 19.2 / 19.3 各带来了什么新东西？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>React 19.1（2025 年）</strong>：① <strong>Owner Stacks</strong> 与 <code>captureOwnerStack()</code>——开发环境下给出"是谁渲染了这个组件"的责任链（区别于展示树形结构的组件栈），大幅改善错误定位；② Suspense 与水合调度优化，SSR 恢复时的无效渲染更少；③ <code>useId</code> 默认前缀格式调整。</li><li><strong>React 19.2（2025-10-01）</strong>：① <code>&lt;Activity mode=&quot;visible|hidden&quot;&gt;</code>——隐藏子树时卸载其 effect 并延迟更新，可预渲染用户可能进入的页面、返回时保留输入状态，是条件渲染之外的新原语；② <strong><code>useEffectEvent</code> 稳定</strong>——声明"Effect 事件"，它永远读到最新的 props/state 且<strong>不需要写进依赖数组</strong>，解决"为了读最新值却导致重订阅"的老问题；③ <code>cacheSignal</code>（预渲染中止/恢复）；④ DevTools 新增 <strong>Performance Tracks</strong> 性能轨道；⑤ React DOM 支持 <strong>Partial Pre-rendering</strong>；⑥ SSR 支持 Node Web Streams、批量处理 Suspense 边界；⑦ <code>eslint-plugin-react-hooks</code> 升级到 v6。</li><li><strong>React 19.3（2026-09-09，当前最新）</strong>：① <strong><code>&lt;ViewTransition&gt;</code> 与 <code>addTransitionType()</code></strong> 稳定，基于浏览器 View Transitions API，由 <code>startTransition</code>/Suspense 揭示/<code>useDeferredValue</code> 触发（普通 setState 不触发），支持 enter/exit/update/share 四类动画与同名元素 morph；② <strong>Fragment Refs</strong>——<code>&lt;Fragment ref={ref}&gt;</code> 可以拿到其包裹的一组 DOM 节点，不再为 ref 多套一层 <code>&lt;div&gt;</code>。</li></ul>
+<p>澄清一个常见误传：社区曾讨论的 "Static variant" <strong>并没有作为独立组件 API 发布</strong>，静态/预渲染能力最终以 React 19.2 的 PPR 支持和 Next.js Cache Components 的形式落地。</p>
+<hr>
+<h2>渲染机制、性能与 React Compiler</h2>
+<h3>116. React diff 算法的核心规则是什么？</h3>
+<p><strong>答案：</strong> React diff（协调算法）基于三个假设：① 跨层级移动忽略不计，只做同层比较；② 不同类型的元素生成不同树，直接替换；③ 通过 <code>key</code> 标识稳定的子元素身份。这使复杂度从 O(n³) 降到 O(n)。所以 <code>key</code> 的稳定性对性能至关重要，随机或索引 key 会破坏 diff 优化。</p>
+<h3>117. 什么是 React 中的受控与非受控的对比？</h3>
+<p><strong>答案：</strong> 受控组件：值由 React state 驱动，通过 <code>onChange</code> 同步，易于校验和联动，但代码量较多。非受控组件：值由 DOM 自身维护，通过 <code>ref</code> 读取，适合简单场景或集成第三方库。复杂表单（校验、联动、提交控制）推荐受控；简单表单或文件上传等场景可用非受控。补充：React 19 的 Actions + <code>&lt;form action&gt;</code> 提供了第三条路——非受控表单 + Action 自动管理，简单表单连 state 都不用写（见第 113 题）。</p>
+<h3>118. 🆕 什么是 React Compiler（React Forget）？以后还需要手写 useMemo/useCallback 吗？</h3>
+<p><strong>答案：</strong> React Compiler 是 React 官方的<strong>编译期自动记忆化</strong>工具（开发代号 React Forget）。它以 Babel 插件形式运行，把代码 lowering 成自研的 HIR 中间表示，通过多轮编译遍历来分析数据流与可变性，自动为组件和 Hook 插入细粒度 memo，甚至能做手写 Hook 无法实现的"条件路径记忆化"。</p>
+<ul><li><strong>现状</strong>：2024 年 beta，<strong>2025-10-07 在 React Conf 发布 1.0，已在 Meta 大规模生产验证、宣布 production-ready</strong>；Vite、Next.js（Next.js 16 内置稳定）、Expo（SDK 54+ 默认开启）的新项目模板默认启用；支持 React 17+（老版本借助 <code>react-compiler-runtime</code>），可用官方 healthcheck 工具和增量迁移指南逐步落地。</li><li><strong>lint 变化</strong>：Compiler 的校验规则已并入 <code>eslint-plugin-react-hooks</code> 的 <code>recommended</code>/<code>recommended-latest</code> 预设，旧的 <code>eslint-plugin-react-compiler</code> 包不再使用；违反 Rules of React 的组件会被编译器跳过（opt-out），极少数场景可用 <code>&quot;use no memo&quot;</code> 指令豁免。</li><li><strong>还需不需要手写 memo</strong>：默认情况下不再需要为了"防止重复渲染"而防御性地手写 <code>useMemo</code>/<code>useCallback</code>/<code>React.memo</code>。但 <code>useMemo</code> 用于表达"这就是一次昂贵计算的缓存"语义、以及某些库对引用稳定性的硬性要求时仍然合理。编译器不解决算法复杂度问题，也不缓存网络请求。</li><li><strong>优化思维转变</strong>：先保证组件纯净、规则合规（这决定了组件能否被编译优化），再谈手工调优；排查工具从"数 memo"转为 DevTools Profiler + Performance Tracks。</li></ul>
+<hr>
+<h2>状态管理、数据获取与组件模式</h2>
+<h3>119. 什么是 React Query / SWR？</h3>
+<p><strong>答案：</strong> 它们是专注于服务端状态管理的库。核心能力包括：自动缓存和去重请求、窗口聚焦时自动重新验证、后台刷新、加载/错误状态管理、分页和无限滚动支持。相比 <code>useEffect + useState</code>，大大减少数据获取的样板代码，并解决了竞态条件、请求重复等问题。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：React Query 已更名为 <strong>TanStack Query</strong>（v4 起包名统一为 <code>@tanstack/react-query</code>，TanStack 家族还包含 Router/Start/Table 等）。当前主流大版本 <strong>v5</strong> 的要点：① <code>useQuery</code> 等统一为单对象签名 <code>useQuery({ queryKey, queryFn })</code>；② <code>cacheTime</code> 更名为 <code>gcTime</code>；③ 状态 <code>loading</code> 改为 <code>pending</code>，<code>isLoading</code> 仅表示"首次加载中"；④ 移除了 <code>useQuery</code> 上的 <code>onSuccess/onError/onSettled</code> 回调（用 effect 替代，<code>useMutation</code> 仍保留）；⑤ <code>keepPreviousData</code> 改为 <code>placeholderData: keepPreviousData</code>，<code>useErrorBoundary</code> 改为 <code>throwOnError</code>；⑥ 提供 <code>useSuspenseQuery</code> 等 Suspense 原生 API。服务端状态用它/SWR，客户端 UI 状态再选 Zustand/Jotai 等，是 2026 年的主流分工。</blockquote>
+<h3>120. 什么是 Zustand？与 Redux 的区别是什么？</h3>
+<p><strong>答案：</strong> Zustand 是轻量级状态管理库，API 极简：通过 <code>create</code> 定义 store，直接在组件中 <code>useStore(state =&gt; state.count)</code> 使用。无需 Provider 包裹、无需 action/reducer 样板、支持订阅局部状态避免不必要渲染。Redux（Toolkit）更适合大型项目，有 devtools、时间旅行调试、严格的单向数据流。</p>
+<h3>121. 🆕 2026 年 React 状态管理的格局是什么？Recoil 还能用吗？Signal 呢？</h3>
+<p><strong>答案：</strong> 当前普遍按<strong>状态类型</strong>分层选型：</p>
+<ul><li><strong>服务端/异步状态</strong>：TanStack Query（v5）、SWR——缓存、重试、失效、后台刷新交给它们，不要塞进全局 store。</li><li><strong>客户端状态</strong>：① <strong>Zustand</strong>——store 模型、无 Provider、selector 精准订阅，是最常见的轻量默认选择；② <strong>Jotai</strong>——原子化（atom）模型、自底向上组合派生状态，是 Recoil 思路的健康延续；③ <strong>Redux Toolkit（含 RTK Query）</strong>——约定重、可审计，适合大团队大型应用；④ <strong>Valtio/MobX</strong>——基于 Proxy/响应式跟踪，按读取粒度更新。</li><li><strong>Recoil</strong>：Meta 实验仓库 <code>facebookexperimental/Recoil</code> 已于 <strong>2025-01 归档为只读</strong>，停止积极维护。存量项目可继续跑，但<strong>新项目不建议选用</strong>；喜欢 atom 模型的迁移到 Jotai（甚至有 <code>jotai-recoil-compat</code> 兼容层）。</li><li><strong>Signal 风格</strong>：SolidJS、<code>@preact/signals(-core)</code>、Vue 以及 Svelte 5 runes 都以信号实现细粒度订阅；React 团队的公开态度是：信号本质上是细粒度更新的性能手段，但 React 选择用 <strong>React Compiler 自动记忆化 + 并发渲染</strong>在现有编程模型内拿到类似收益，暂不把 signal 作为核心原语；信号/响应式库可以与 React 共存互操作，但不是官方方向。</li></ul>
+<h3>122. 什么是 React 中的 Compound Components 模式？</h3>
+<p><strong>答案：</strong> 复合组件模式是将多个相关组件组合使用，通过 Context 共享内部状态，对外提供灵活的组合 API。例如 <code>&lt;Select&gt;</code> 和 <code>&lt;Select.Option&gt;</code> 的关系。优点是 API 灵活，调用方可以自由排列子组件、插入自定义内容，而不需要通过大量 props 控制内部细节。React 19 起实现它更顺手：内部 Context 可直接 <code>&lt;Ctx.Provider&gt;</code> 简写为 <code>&lt;Ctx value={...}&gt;</code>，需要转发 ref 的子部件也不必再套 <code>forwardRef</code>。</p>
+<hr>
+<h2>跨端与生态</h2>
+<h3>123. 🆕 React Native 的新架构（Fabric / TurboModules / Bridgeless）是什么？</h3>
+<p><strong>答案：</strong> React Native 新架构是对内部通信与渲染层的彻底重写，用 JSI（JavaScript Interface，C++ 与 JS 直接互操作）取代旧的异步 JSON Bridge：</p>
+<ul><li><strong>Fabric</strong>：新一代渲染器，C++ 跨端共享核心，支持同步布局与测量、完整 Suspense 支持。</li><li><strong>TurboModules</strong>：原生模块按需懒加载、通过 JSI 直接调用，免去 bridge 的序列化开销，启动更快。</li><li><strong>Bridgeless Mode</strong>：运行时不再创建旧 Bridge。</li><li><strong>Hermes</strong>：RN 自研 JS 引擎；0.82 起实验性引入全面重写的 Hermes V1（编译器/VM/Hades GC 升级）。</li></ul>
+<p>版本节点：0.76（2024-11）新架构<strong>默认开启</strong>；旧架构 2025-06 冻结；<strong>0.82（2025-10-08）起新架构成为唯一架构</strong>，<code>newArchEnabled=false</code> 会被忽略，同版搭载 React 19.1.1 并新增 DOM Node APIs；Expo SDK 55（RN 0.83）起同样强制启用。迁移建议先在 0.81 / Expo SDK 54 上开启新架构并验证第三方库兼容性，再升 0.82；官方的 interop 互操作层短期内仍保留。</p>
+<hr>
+<h2>总结</h2>
+<p>这些题目覆盖了 React 面试中的基础概念、组件通信、Hooks、渲染机制、性能优化、并发特性、流式 SSR 与水合，并系统补充了 React 19（Actions、<code>use</code>、ref as prop、文档元数据）、React 19.1/19.2/19.3、React Compiler 1.0、RSC/Server Actions 与 Next.js 15/16、TanStack Query v5、2026 年状态管理格局以及 React Native 新架构等 2025-2026 热点，适合作为系统复习清单。</p>
+</div>
+</body>
+</html>
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/i/">I</a></li>
+            <li>P0-REACT-QA</li>
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

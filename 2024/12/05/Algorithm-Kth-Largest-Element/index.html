@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目给定整数数组 nums 和整数 k，返回数组中第 k 大的元素（排序后第 k 个位置的值，不是第 k 个不同元素）。 示例: 12345输入: nums &#x3D; [3,2,1,5,6,4], k &#x3D; 2输出: 5输入: nums &#x3D; [3,2,3,1,2,4,5,5,6], k &#x3D; 4输出: 4  2. 解题思路「第 K 大 &#x2F; Top K」是超高频题型，有三种主流套路，各有适用场">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 数组第 K 大元素 &#x2F; TopK 问题">
+<meta property="og:url" content="https://jackniu81.github.io/2024/12/05/Algorithm-Kth-Largest-Element/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目给定整数数组 nums 和整数 k，返回数组中第 k 大的元素（排序后第 k 个位置的值，不是第 k 个不同元素）。 示例: 12345输入: nums &#x3D; [3,2,1,5,6,4], k &#x3D; 2输出: 5输入: nums &#x3D; [3,2,3,1,2,4,5,5,6], k &#x3D; 4输出: 4  2. 解题思路「第 K 大 &#x2F; Top K」是超高频题型，有三种主流套路，各有适用场">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-05T11:41:08.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:52:42.071Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2024/12/05/Algorithm-Kth-Largest-Element/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2024/12/05/Algorithm-Kth-Largest-Element/","path":"2024/12/05/Algorithm-Kth-Largest-Element/","title":"算法 - 数组第 K 大元素 / TopK 问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 数组第 K 大元素 / TopK 问题 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%8E%92%E5%BA%8F%E6%B3%95-O-n-log-n"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 排序法 O(n log n)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%A4%A7%E5%B0%8F%E4%B8%BA-K-%E7%9A%84%E6%9C%80%E5%B0%8F%E5%A0%86-O-n-log-k-%E2%80%94%E2%80%94-%E6%B1%82-TopK-%E9%A6%96%E9%80%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 大小为 K 的最小堆 O(n log k) —— 求 TopK 首选</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9%EF%BC%88Quickselect%EF%BC%89%E5%B9%B3%E5%9D%87-O-n"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 快速选择（Quickselect）平均 O(n)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/12/05/Algorithm-Kth-Largest-Element/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 数组第 K 大元素 &#x2F; TopK 问题 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 数组第 K 大元素 / TopK 问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-12-05 19:41:08" itemprop="dateCreated datePublished" datetime="2024-12-05T19:41:08+08:00">2024-12-05</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定整数数组 <code>nums</code> 和整数 <code>k</code>，返回数组中第 <code>k</code> <strong>大</strong>的元素（排序后第 k 个位置的值，不是第 k 个不同元素）。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [3,2,1,5,6,4], k = 2</span><br><span class="line">输出: 5</span><br><span class="line"></span><br><span class="line">输入: nums = [3,2,3,1,2,4,5,5,6], k = 4</span><br><span class="line">输出: 4</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>「第 K 大 &#x2F; Top K」是超高频题型，有三种主流套路，各有适用场景。</p>
+<h2 id="2-1-排序法-O-n-log-n"><a href="#2-1-排序法-O-n-log-n" class="headerlink" title="2.1 排序法 O(n log n)"></a>2.1 排序法 O(n log n)</h2><p>直接排序后取 <code>nums[n - k]</code>。简单，但不是最优，面试可作为保底并说明「有更快的」。</p>
+<h2 id="2-2-大小为-K-的最小堆-O-n-log-k-——-求-TopK-首选"><a href="#2-2-大小为-K-的最小堆-O-n-log-k-——-求-TopK-首选" class="headerlink" title="2.2 大小为 K 的最小堆 O(n log k) —— 求 TopK 首选"></a>2.2 大小为 K 的最小堆 O(n log k) —— 求 TopK 首选</h2><p>维护一个<strong>只装 k 个元素的最小堆</strong>：</p>
+<ul>
+<li>遍历数组，堆大小 &lt; k 就入堆。</li>
+<li>否则若当前值 <code>&gt; 堆顶</code>（堆里最小的），弹出堆顶、压入当前值。</li>
+<li>遍历结束，堆顶就是第 k 大（堆里 k 个数中最小的那个，恰为整体第 k 大）。</li>
+</ul>
+<p>优势：天然适合<strong>数据流 &#x2F; 海量数据</strong>，内存只需 O(k)，不必一次性拿到全部数据，这也是「TopK」在工程里（如热点搜索词）的常见解法。</p>
+<h2 id="2-3-快速选择（Quickselect）平均-O-n"><a href="#2-3-快速选择（Quickselect）平均-O-n" class="headerlink" title="2.3 快速选择（Quickselect）平均 O(n)"></a>2.3 快速选择（Quickselect）平均 O(n)</h2><p>复用快排的 partition：每趟把基准放到最终位置 <code>p</code>，若 <code>p === n-k</code> 直接返回；否则只递归<strong>目标所在的那一半</strong>，平均线性、最坏 O(n²)（随机化 pivot 可高概率避免）。</p>
+<ul>
+<li>时间复杂度：平均 <code>O(n)</code>；空间 <code>O(1)</code>（原地）。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2.3 快速选择（原地，平均 O(n)）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">findKthLargest</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">k</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> target = nums.<span class="property">length</span> - k; <span class="comment">// 转成升序下标</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">partition</span>(<span class="params"><span class="attr">lo</span>: <span class="built_in">number</span>, <span class="attr">hi</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="comment">// 随机化，避免有序退化</span></span><br><span class="line">        <span class="keyword">const</span> rand = lo + <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (hi - lo + <span class="number">1</span>));</span><br><span class="line">        [nums[rand], nums[hi]] = [nums[hi], nums[rand]];</span><br><span class="line">        <span class="keyword">const</span> pivot = nums[hi];</span><br><span class="line">        <span class="keyword">let</span> i = lo;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = lo; j &lt; hi; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[j] &lt; pivot) &#123;</span><br><span class="line">                [nums[i], nums[j]] = [nums[j], nums[i]];</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        [nums[i], nums[hi]] = [nums[hi], nums[i]];</span><br><span class="line">        <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> lo = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> hi = nums.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> p = <span class="title function_">partition</span>(lo, hi);</span><br><span class="line">        <span class="keyword">if</span> (p === target) <span class="keyword">return</span> nums[p];</span><br><span class="line">        <span class="keyword">if</span> (p &lt; target) lo = p + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> hi = p - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.2 最小堆版（适合数据流 / 海量 TopK）</span></span><br><span class="line"><span class="comment">// 借助一个数值小顶堆：这里用极简实现演示思路</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MinHeap</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">h</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">size</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">h</span>.<span class="property">length</span>; &#125;</span><br><span class="line">    <span class="title function_">peek</span>(<span class="params"></span>) &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">h</span>[<span class="number">0</span>]; &#125;</span><br><span class="line">    <span class="title function_">push</span>(<span class="params"><span class="attr">v</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> h = <span class="variable language_">this</span>.<span class="property">h</span>;</span><br><span class="line">        h.<span class="title function_">push</span>(v);</span><br><span class="line">        <span class="keyword">let</span> i = h.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> p = (i - <span class="number">1</span>) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (h[p] &lt;= h[i]) <span class="keyword">break</span>;</span><br><span class="line">            [h[p], h[i]] = [h[i], h[p]];</span><br><span class="line">            i = p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">pop</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> h = <span class="variable language_">this</span>.<span class="property">h</span>;</span><br><span class="line">        <span class="keyword">const</span> top = h[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">const</span> last = h.<span class="title function_">pop</span>()!;</span><br><span class="line">        <span class="keyword">if</span> (h.<span class="property">length</span>) &#123;</span><br><span class="line">            h[<span class="number">0</span>] = last;</span><br><span class="line">            <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="keyword">const</span> l = <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">const</span> r = <span class="number">2</span> * i + <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">let</span> s = i;</span><br><span class="line">                <span class="keyword">if</span> (l &lt; h.<span class="property">length</span> &amp;&amp; h[l] &lt; h[s]) s = l;</span><br><span class="line">                <span class="keyword">if</span> (r &lt; h.<span class="property">length</span> &amp;&amp; h[r] &lt; h[s]) s = r;</span><br><span class="line">                <span class="keyword">if</span> (s === i) <span class="keyword">break</span>;</span><br><span class="line">                [h[s], h[i]] = [h[i], h[s]];</span><br><span class="line">                i = s;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> top;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">topKKthLargest</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">k</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> heap = <span class="keyword">new</span> <span class="title class_">MinHeap</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> x <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">if</span> (heap.<span class="property">size</span> &lt; k) heap.<span class="title function_">push</span>(x);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (x &gt; heap.<span class="title function_">peek</span>()) &#123;</span><br><span class="line">            heap.<span class="title function_">pop</span>();</span><br><span class="line">            heap.<span class="title function_">push</span>(x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> heap.<span class="title function_">peek</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">findKthLargest</span>([<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">4</span>], <span class="number">2</span>));     <span class="comment">// 5</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">topKKthLargest</span>([<span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">6</span>], <span class="number">4</span>)); <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>前 K 个高频元素（347）</strong>：先哈希统计频次，再对频次跑「大小 k 的小顶堆」或快速选择，是 TopK + 堆的经典组合。</li>
+<li><strong>海量数据（如 10 亿数取前 100）</strong>：绝不可能全放内存，答案就是<strong>大小为 k 的小顶堆</strong>分块处理，凸显堆相对于快选的优势。</li>
+<li><strong>第 K 小的元素 &#x2F; 有序矩阵第 K 小（378）</strong>：可加一条「二分答案」解法——在值域二分，用 <code>O(n)</code> 统计 <code>&lt;= mid</code> 的个数，<code>O(n log(range))</code>。</li>
+<li>一定要区分：快速选择<strong>平均</strong> O(n) 但会打乱原数组；堆法<strong>保证</strong> O(n log k) 且能处理流式数据。选型看是否可修改原数组、是否一次性数据。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 215 题 | 堆 &#x2F; 分治双高频</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/14/Algorithm-Number-of-Islands/" rel="prev" title="算法 - 岛屿数量 (Number of Islands)">
+                  <i class="fa fa-angle-left"></i> 算法 - 岛屿数量 (Number of Islands)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/01/19/Algorithm-KMP-String-Match/" rel="next" title="算法 - KMP 字符串匹配">
+                  算法 - KMP 字符串匹配 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

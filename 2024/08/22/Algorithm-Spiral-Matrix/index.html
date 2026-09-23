@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目给你一个 m × n 的矩阵 matrix，按照螺旋顺序返回矩阵中的所有元素（从外层到内层，顺时针）。 示例: 123456789输入: [[1,2,3],       [4,5,6],       [7,8,9]]输出: [1,2,3,6,9,8,7,4,5]输入: [[1,2,3,4],       [5,6,7,8],       [9,10,11,12]]输出: [1,2,3,4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 螺旋矩阵 (Spiral Matrix)">
+<meta property="og:url" content="https://jackniu81.github.io/2024/08/22/Algorithm-Spiral-Matrix/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目给你一个 m × n 的矩阵 matrix，按照螺旋顺序返回矩阵中的所有元素（从外层到内层，顺时针）。 示例: 123456789输入: [[1,2,3],       [4,5,6],       [7,8,9]]输出: [1,2,3,6,9,8,7,4,5]输入: [[1,2,3,4],       [5,6,7,8],       [9,10,11,12]]输出: [1,2,3,4">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-22T08:58:20.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:50:15.709Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2024/08/22/Algorithm-Spiral-Matrix/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2024/08/22/Algorithm-Spiral-Matrix/","path":"2024/08/22/Algorithm-Spiral-Matrix/","title":"算法 - 螺旋矩阵 (Spiral Matrix)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 螺旋矩阵 (Spiral Matrix) | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/08/22/Algorithm-Spiral-Matrix/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 螺旋矩阵 (Spiral Matrix) | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 螺旋矩阵 (Spiral Matrix)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-22 16:58:20" itemprop="dateCreated datePublished" datetime="2024-08-22T16:58:20+08:00">2024-08-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个 <code>m × n</code> 的矩阵 <code>matrix</code>，按照<strong>螺旋顺序</strong>返回矩阵中的所有元素（从外层到内层，顺时针）。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入: [[1,2,3],</span><br><span class="line">       [4,5,6],</span><br><span class="line">       [7,8,9]]</span><br><span class="line">输出: [1,2,3,6,9,8,7,4,5]</span><br><span class="line"></span><br><span class="line">输入: [[1,2,3,4],</span><br><span class="line">       [5,6,7,8],</span><br><span class="line">       [9,10,11,12]]</span><br><span class="line">输出: [1,2,3,4,8,12,11,10,9,5,6,7]</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>螺旋就是「右 → 下 → 左 → 上」四条边循环遍历，每走完一条边就把这条边界向内收缩一格。</p>
+<p>维护四个边界：<code>top</code>、<code>bottom</code>、<code>left</code>、<code>right</code>。循环执行：</p>
+<ol>
+<li><strong>向左到右</strong>遍历第 <code>top</code> 行，然后 <code>top++</code>（这一行用完）。</li>
+<li><strong>从上到下</strong>遍历第 <code>right</code> 列，然后 <code>right--</code>。</li>
+<li>若 <code>top &lt;= bottom</code>，<strong>从右到左</strong>遍历第 <code>bottom</code> 行，然后 <code>bottom--</code>。</li>
+<li>若 <code>left &lt;= right</code>，<strong>从下到上</strong>遍历第 <code>left</code> 列，然后 <code>left++</code>。</li>
+</ol>
+<p>关键：第 3、4 步在收缩后要<strong>再判断边界是否仍合法</strong>，否则单行&#x2F;单列矩阵会重复遍历回去。</p>
+<ul>
+<li>时间复杂度：<code>O(m × n)</code>，每个元素访问一次。</li>
+<li>空间复杂度：<code>O(1)</code>（不计输出）。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">spiralOrder</span>(<span class="params"><span class="attr">matrix</span>: <span class="built_in">number</span>[][]</span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">if</span> (matrix.<span class="property">length</span> === <span class="number">0</span>) <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> top = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> bottom = matrix.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = matrix[<span class="number">0</span>].<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (top &lt;= bottom &amp;&amp; left &lt;= right) &#123;</span><br><span class="line">        <span class="comment">// → 顶行</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> col = left; col &lt;= right; col++) res.<span class="title function_">push</span>(matrix[top][col]);</span><br><span class="line">        top++;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ↓ 右列</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> row = top; row &lt;= bottom; row++) res.<span class="title function_">push</span>(matrix[row][right]);</span><br><span class="line">        right--;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ← 底行（确保还有一行）</span></span><br><span class="line">        <span class="keyword">if</span> (top &lt;= bottom) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> col = right; col &gt;= left; col--) res.<span class="title function_">push</span>(matrix[bottom][col]);</span><br><span class="line">            bottom--;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ↑ 左列（确保还有一列）</span></span><br><span class="line">        <span class="keyword">if</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> row = bottom; row &gt;= top; row--) res.<span class="title function_">push</span>(matrix[row][left]);</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">spiralOrder</span>([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]]));</span><br><span class="line"><span class="comment">// [1,2,3,6,9,8,7,4,5]</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>生成螺旋矩阵 II（59 题）</strong>：反向操作，按螺旋顺序往空矩阵里填 1..n²，边界收缩逻辑复用。</li>
+<li><strong>方向数组写法</strong>：用 <code>dirs = [[0,1],[1,0],[0,-1],[-1,0]]</code> + 记录已访问 + 撞墙&#x2F;撞已访问就转向，是更通用的「螺旋&#x2F;蛇形」模板，扩展性强但需 O(mn) 的 visited。</li>
+<li>模拟类题目没有算法难度，考的是<strong>边界严谨性</strong>和代码条理性，务必手推 <code>1×n</code>、<code>n×1</code>、<code>1×1</code> 三种退化用例。</li>
+<li>相似题：<strong>旋转图像（48）</strong>、<strong>矩阵置零（73）</strong> 都在训练你在二维坐标下干净地操作边界。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 54 题 | 边界模拟</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/03/Algorithm-Binary-Search-Boundaries/" rel="prev" title="算法 - 二分查找（含左右边界版本）">
+                  <i class="fa fa-angle-left"></i> 算法 - 二分查找（含左右边界版本）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/11/Algorithm-Reverse-Words-in-a-String/" rel="next" title="算法 - 反转字符串中的单词">
+                  算法 - 反转字符串中的单词 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

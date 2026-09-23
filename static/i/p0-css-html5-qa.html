@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="CSS &#x2F; HTML5 常见面试题 124 道（附答案）    :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;           --code-bg:#f6f8fa; --accent:#0969da; }   * { box-sizing: border-box; }   body { margi">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jack N @ GitHub">
+<meta property="og:url" content="https://jackniu81.github.io/static/i/p0-css-html5-qa.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="CSS &#x2F; HTML5 常见面试题 124 道（附答案）    :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;           --code-bg:#f6f8fa; --accent:#0969da; }   * { box-sizing: border-box; }   body { margi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-23T13:57:16.854Z">
+<meta property="article:modified_time" content="2026-09-23T13:57:16.854Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="next.js, React, node.js,dotnet core, .Net, C#">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/static/i/p0-css-html5-qa">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/static/i/p0-css-html5-qa.html","path":"static/i/p0-css-html5-qa.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Jack N @ GitHub
+</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">CSS &#x2F; HTML5 常见面试题 124 道（附答案）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.1.</span> <span class="nav-text">HTML5 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 什么是 HTML？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 什么是 HTML5？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 为什么要强调语义化标签？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.4.</span> <span class="nav-text">4. 常见语义化标签有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.5.</span> <span class="nav-text">5. div 和语义化标签的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.6.</span> <span class="nav-text">6. 什么是块级元素和行内元素？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.7.</span> <span class="nav-text">7. img 标签的 alt 属性有什么作用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.8.</span> <span class="nav-text">8. meta viewport 的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.9.</span> <span class="nav-text">9. defer 和 async 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.10.</span> <span class="nav-text">10. 什么是无障碍访问？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.11.</span> <span class="nav-text">11. HTML5 新增了哪些表单能力？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.12.</span> <span class="nav-text">12. 常见 HTML5 输入类型有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.13.</span> <span class="nav-text">13. label 标签为什么重要？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.14.</span> <span class="nav-text">14. canvas 和 svg 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.15.</span> <span class="nav-text">15. audio 和 video 标签带来了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.16.</span> <span class="nav-text">16. 什么是自定义数据属性？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.17.</span> <span class="nav-text">17. localStorage 和 sessionStorage 属于 HTML5 哪类能力？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.18.</span> <span class="nav-text">18. 什么是拖拽 API？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.19.</span> <span class="nav-text">19. 什么是 Web Worker？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.20.</span> <span class="nav-text">20. 什么是 WebSocket？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.2.</span> <span class="nav-text">CSS 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.1.</span> <span class="nav-text">21. CSS 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.2.</span> <span class="nav-text">22. CSS 的引入方式有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.3.</span> <span class="nav-text">23. 什么是选择器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.4.</span> <span class="nav-text">24. 常见选择器有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.5.</span> <span class="nav-text">25. 什么是伪类？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.6.</span> <span class="nav-text">26. 什么是伪元素？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.7.</span> <span class="nav-text">27. CSS 优先级如何计算？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.8.</span> <span class="nav-text">28. !important 有什么作用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.9.</span> <span class="nav-text">29. 什么是继承？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.2.10.</span> <span class="nav-text">30. 什么是层叠？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.3.</span> <span class="nav-text">盒模型与布局</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.1.</span> <span class="nav-text">31. 什么是盒模型？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.2.</span> <span class="nav-text">32. 标准盒模型和怪异盒模型的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.3.</span> <span class="nav-text">33. box-sizing: border-box 有什么好处？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.4.</span> <span class="nav-text">34. 什么是外边距塌陷？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.5.</span> <span class="nav-text">35. 如何解决外边距塌陷？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.6.</span> <span class="nav-text">36. 什么是 BFC（Block Formatting Context）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.7.</span> <span class="nav-text">37. 如何触发 BFC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.8.</span> <span class="nav-text">38. display 常见取值有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.9.</span> <span class="nav-text">39. position 常见取值有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.10.</span> <span class="nav-text">40. relative 和 absolute 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.11.</span> <span class="nav-text">41. fixed 的特点是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.12.</span> <span class="nav-text">42. sticky 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.13.</span> <span class="nav-text">43. 什么是浮动？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.14.</span> <span class="nav-text">44. 如何清除浮动？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.15.</span> <span class="nav-text">45. Flex 布局适合什么场景？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.16.</span> <span class="nav-text">46. Grid 布局适合什么场景？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.17.</span> <span class="nav-text">47. Flex 中 justify-content 的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.18.</span> <span class="nav-text">48. Flex 中 align-items 的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.19.</span> <span class="nav-text">49. 如何让元素水平垂直居中？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.20.</span> <span class="nav-text">50. gap 有什么作用？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.4.</span> <span class="nav-text">响应式与视觉表现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.1.</span> <span class="nav-text">51. 什么是响应式设计？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.2.</span> <span class="nav-text">52. 什么是媒体查询？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.3.</span> <span class="nav-text">53. max-width 和 min-width 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.4.</span> <span class="nav-text">54. 什么是移动优先？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.5.</span> <span class="nav-text">55. 相对单位有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.6.</span> <span class="nav-text">56. em 和 rem 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.7.</span> <span class="nav-text">57. vw 和 vh 的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.8.</span> <span class="nav-text">58. 什么是 CSS 变量？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.9.</span> <span class="nav-text">59. calc() 的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.10.</span> <span class="nav-text">60. 什么是过渡 transition？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.11.</span> <span class="nav-text">61. 什么是动画 animation？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.12.</span> <span class="nav-text">62. transform 常见用途有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.13.</span> <span class="nav-text">63. 为什么动画常推荐用 transform 和 opacity？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.14.</span> <span class="nav-text">64. 什么是层叠上下文？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.15.</span> <span class="nav-text">65. z-index 为什么有时不生效？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.5.</span> <span class="nav-text">实战与工程化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.1.</span> <span class="nav-text">66. 什么是 CSS Reset？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.2.</span> <span class="nav-text">67. Normalize.css 和 Reset 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.3.</span> <span class="nav-text">68. 什么是 CSS Modules？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.4.</span> <span class="nav-text">69. 什么是 BEM 命名规范？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.5.</span> <span class="nav-text">70. 为什么大型项目需要命名规范？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.6.</span> <span class="nav-text">71. 什么是预处理器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.7.</span> <span class="nav-text">72. Sass 的常见优势是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.8.</span> <span class="nav-text">73. 什么是后处理器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.9.</span> <span class="nav-text">74. Autoprefixer 的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.10.</span> <span class="nav-text">75. 什么是 Tailwind CSS？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.11.</span> <span class="nav-text">76. 原子化 CSS 的优缺点是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.12.</span> <span class="nav-text">77. 什么是关键渲染路径？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.13.</span> <span class="nav-text">78. 为什么 CSS 会阻塞渲染？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.14.</span> <span class="nav-text">79. 如何优化 CSS 加载性能？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.15.</span> <span class="nav-text">80. 为什么要减少重排和重绘？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.16.</span> <span class="nav-text">81. 什么是重排？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.17.</span> <span class="nav-text">82. 什么是重绘？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.18.</span> <span class="nav-text">83. 哪些操作更容易触发重排？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.19.</span> <span class="nav-text">84. 什么是雪碧图？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.5.20.</span> <span class="nav-text">85. 现代项目中雪碧图还常用吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.6.</span> <span class="nav-text">常见问题与面试表达</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.1.</span> <span class="nav-text">86. 什么是 SEO 友好的 HTML 结构？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.2.</span> <span class="nav-text">87. 为什么按钮操作应优先使用 button 而不是 div？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.3.</span> <span class="nav-text">88. 图片懒加载有什么意义？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.4.</span> <span class="nav-text">89. 什么是响应式图片？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.5.</span> <span class="nav-text">90. overflow: hidden 常见用途有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.6.</span> <span class="nav-text">91. 什么是文本溢出省略号？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.7.</span> <span class="nav-text">92. 多行文本省略常见怎么做？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.8.</span> <span class="nav-text">93. 什么是 aspect-ratio？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.9.</span> <span class="nav-text">94. 为什么样式抖动会影响体验？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.10.</span> <span class="nav-text">95. 什么是 CLS？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.11.</span> <span class="nav-text">96. 如何减少布局偏移？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.12.</span> <span class="nav-text">97. 面试中如何回答 Flex 和 Grid 的取舍？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.13.</span> <span class="nav-text">98. 面试中如何系统回答 CSS 问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.14.</span> <span class="nav-text">99. 面试中如何系统回答 HTML5 问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.6.15.</span> <span class="nav-text">100. 如何总结 CSS &#x2F; HTML5 的核心价值？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.7.</span> <span class="nav-text">现代 CSS 与 HTML 特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.1.</span> <span class="nav-text">101. 什么是 CSS 容器查询（Container Queries）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.2.</span> <span class="nav-text">102. CSS clamp() 有什么作用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.3.</span> <span class="nav-text">103. 什么是 CSS 逻辑属性？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.4.</span> <span class="nav-text">104. 什么是 :is() 和 :where() 伪类？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.5.</span> <span class="nav-text">105. 什么是 CSS Scroll Snap？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.6.</span> <span class="nav-text">106. display: contents 有什么作用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.7.</span> <span class="nav-text">107. 什么是 CSS Subgrid？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.8.</span> <span class="nav-text">108. aspect-ratio 属性有什么用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.9.</span> <span class="nav-text">109. 什么是 CSS @layer（级联层）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.10.</span> <span class="nav-text">110. CSS color-scheme 和深色模式适配有什么最佳实践？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.11.</span> <span class="nav-text">111. 🆕 什么是 CSS 原生嵌套（Native Nesting）？和 Sass 嵌套有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.12.</span> <span class="nav-text">112. 🆕 :has() 父选择器能做什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.13.</span> <span class="nav-text">113. 🆕 View Transitions API 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.14.</span> <span class="nav-text">114. 🆕 Popover API 解决了什么问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.15.</span> <span class="nav-text">115. 🆕 &lt;dialog&gt; 元素怎么用？相比手写弹窗好在哪？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.16.</span> <span class="nav-text">116. 🆕 CSS Anchor Positioning（锚点定位）是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.17.</span> <span class="nav-text">117. 🆕 scroll-driven animations（滚动驱动动画）怎么实现？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.18.</span> <span class="nav-text">118. 🆕 @starting-style 和 transition-behavior: allow-discrete 解决了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.19.</span> <span class="nav-text">119. 🆕 text-wrap: balance 和 pretty 有什么用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.20.</span> <span class="nav-text">120. 🆕 color-mix() 函数怎么用于主题配色？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.21.</span> <span class="nav-text">121. 🆕 容器查询单位（cqw&#x2F;cqh&#x2F;cqi）和 style() 容器查询是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.22.</span> <span class="nav-text">122. 🆕 HTML inert 属性有什么用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.23.</span> <span class="nav-text">123. 🆕 Baseline 是什么？它如何判断&quot;新特性能不能用&quot;？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.24.</span> <span class="nav-text">124. 🆕 可自定义 &lt;select&gt; 和 Invoker Commands（command&#x2F;commandfor）进展如何？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/i/">I</a></li>
+            <li>P0-CSS-HTML5-QA</li>
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS / HTML5 常见面试题 124 道（附答案）</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;
+          --code-bg:#f6f8fa; --accent:#0969da; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+  <h1>CSS / HTML5 常见面试题 124 道（附答案）</h1>
+<h2>HTML5 基础</h2>
+<h3>1. 什么是 HTML？</h3>
+<p><strong>答案：</strong> HTML 是超文本标记语言，用于定义网页的结构和语义。</p>
+<h3>2. 什么是 HTML5？</h3>
+<p><strong>答案：</strong> HTML5 是 HTML 的现代标准版本，增强了语义化、多媒体、表单和 Web API 能力。</p>
+<h3>3. 为什么要强调语义化标签？</h3>
+<p><strong>答案：</strong> 语义化有助于提升可读性、可维护性、SEO 和无障碍访问能力。</p>
+<h3>4. 常见语义化标签有哪些？</h3>
+<p><strong>答案：</strong> 常见有 <code>header</code>、<code>nav</code>、<code>main</code>、<code>section</code>、<code>article</code>、<code>aside</code>、<code>footer</code> 等。</p>
+<h3>5. <code>div</code> 和语义化标签的区别是什么？</h3>
+<p><strong>答案：</strong> <code>div</code> 只有结构作用，语义化标签还表达内容含义和页面角色。</p>
+<h3>6. 什么是块级元素和行内元素？</h3>
+<p><strong>答案：</strong> 块级元素通常独占一行，行内元素通常不会独占一行，只包裹内容本身。</p>
+<h3>7. <code>img</code> 标签的 <code>alt</code> 属性有什么作用？</h3>
+<p><strong>答案：</strong> <code>alt</code> 用于图片无法显示时提供替代文本，也有助于无障碍和搜索引擎理解内容。</p>
+<h3>8. <code>meta viewport</code> 的作用是什么？</h3>
+<p><strong>答案：</strong> 它用于控制移动端页面视口宽度和缩放行为，是响应式布局基础配置之一。</p>
+<h3>9. <code>defer</code> 和 <code>async</code> 的区别是什么？</h3>
+<p><strong>答案：</strong> 两者都能异步下载脚本；<code>async</code> 下载完立即执行，顺序不可控；<code>defer</code> 会按顺序在 DOM 解析完成后执行。</p>
+<h3>10. 什么是无障碍访问？</h3>
+<p><strong>答案：</strong> 无障碍访问是让残障用户也能顺畅使用网页，包括语义标签、键盘操作、对比度和屏幕阅读器支持等。</p>
+<h3>11. HTML5 新增了哪些表单能力？</h3>
+<p><strong>答案：</strong> 新增了更多输入类型、占位符、校验属性和更好的移动端适配能力。</p>
+<h3>12. 常见 HTML5 输入类型有哪些？</h3>
+<p><strong>答案：</strong> 如 <code>email</code>、<code>number</code>、<code>date</code>、<code>url</code>、<code>tel</code>、<code>range</code> 等。</p>
+<h3>13. <code>label</code> 标签为什么重要？</h3>
+<p><strong>答案：</strong> 它能提升表单可用性和无障碍体验，点击标签即可聚焦关联控件。</p>
+<h3>14. <code>canvas</code> 和 <code>svg</code> 的区别是什么？</h3>
+<p><strong>答案：</strong> <code>canvas</code> 更适合像素级绘制和高频渲染；<code>svg</code> 更适合矢量图形和结构化图形场景。</p>
+<h3>15. <code>audio</code> 和 <code>video</code> 标签带来了什么？</h3>
+<p><strong>答案：</strong> 它们让网页可以原生嵌入音视频，而不必依赖传统插件。</p>
+<h3>16. 什么是自定义数据属性？</h3>
+<p><strong>答案：</strong> 自定义数据属性以 <code>data-</code> 开头，可用于在 DOM 上存储扩展信息。</p>
+<h3>17. <code>localStorage</code> 和 <code>sessionStorage</code> 属于 HTML5 哪类能力？</h3>
+<p><strong>答案：</strong> 它们属于 Web Storage 本地存储能力。</p>
+<h3>18. 什么是拖拽 API？</h3>
+<p><strong>答案：</strong> HTML5 提供了拖拽相关事件和数据传递机制，用于实现元素拖放交互。</p>
+<h3>19. 什么是 Web Worker？</h3>
+<p><strong>答案：</strong> Web Worker 允许在后台线程执行脚本，避免阻塞主线程 UI。</p>
+<h3>20. 什么是 WebSocket？</h3>
+<p><strong>答案：</strong> WebSocket 提供浏览器与服务器之间的全双工长连接通信能力。</p>
+<h2>CSS 基础</h2>
+<h3>21. CSS 是什么？</h3>
+<p><strong>答案：</strong> CSS 是层叠样式表，用于控制网页的外观、布局和视觉表现。</p>
+<h3>22. CSS 的引入方式有哪些？</h3>
+<p><strong>答案：</strong> 常见有行内样式、内部样式表和外部样式表，实际项目中多使用外部样式表。</p>
+<h3>23. 什么是选择器？</h3>
+<p><strong>答案：</strong> 选择器用于指定样式作用的元素范围，如标签、类、ID 和属性选择器等。</p>
+<h3>24. 常见选择器有哪些？</h3>
+<p><strong>答案：</strong> 常见有标签选择器、类选择器、ID 选择器、后代选择器、伪类、伪元素等。</p>
+<h3>25. 什么是伪类？</h3>
+<p><strong>答案：</strong> 伪类用于描述元素的特殊状态，如 <code>:hover</code>、<code>:focus</code>、<code>:nth-child()</code>。例如 <code>li:nth-child(odd)</code> 可选中奇数位置的列表项，常用于表格斑马纹。</p>
+<h3>26. 什么是伪元素？</h3>
+<p><strong>答案：</strong> 伪元素用于选中元素内容的特殊部分，如 <code>::before</code>、<code>::after</code>。</p>
+<h3>27. CSS 优先级如何计算？</h3>
+<p><strong>答案：</strong> 一般比较内联样式、ID、类/属性/伪类、标签/伪元素的权重，权重高者优先。</p>
+<h3>28. <code>!important</code> 有什么作用？</h3>
+<p><strong>答案：</strong> 它会强行提高声明优先级，但不应滥用，否则会降低样式可维护性。</p>
+<h3>29. 什么是继承？</h3>
+<p><strong>答案：</strong> 继承指某些样式属性会从父元素传递给子元素，如字体和颜色等。</p>
+<h3>30. 什么是层叠？</h3>
+<p><strong>答案：</strong> 层叠是指多个样式规则共同作用时，浏览器根据来源、优先级和顺序决定最终结果。</p>
+<h2>盒模型与布局</h2>
+<h3>31. 什么是盒模型？</h3>
+<p><strong>答案：</strong> 盒模型描述元素由 <code>content</code>、<code>padding</code>、<code>border</code>、<code>margin</code> 组成。</p>
+<h3>32. 标准盒模型和怪异盒模型的区别是什么？</h3>
+<p><strong>答案：</strong> 标准盒模型中宽高只包含内容区；怪异盒模型中宽高包含内容、内边距和边框。</p>
+<h3>33. <code>box-sizing: border-box</code> 有什么好处？</h3>
+<p><strong>答案：</strong> 它让元素宽高计算更直观，更适合实际项目布局。</p>
+<h3>34. 什么是外边距塌陷？</h3>
+<p><strong>答案：</strong> 垂直相邻块级元素的 <code>margin</code> 可能合并为一个更大的外边距，这种现象叫塌陷。</p>
+<h3>35. 如何解决外边距塌陷？</h3>
+<p><strong>答案：</strong> 可通过创建 BFC、设置边框、内边距或改变布局方式来解决。</p>
+<h3>36. 什么是 BFC（Block Formatting Context）</h3>
+<p><strong>答案：</strong> BFC 是块级格式化上下文，可用于隔离布局影响、清除浮动和避免外边距塌陷等。</p>
+<h3>37. 如何触发 BFC</h3>
+<p><strong>答案：</strong> 常见方式有设置 <code>display: flow-root</code>、 <code>overflow: hidden</code>、<code>float</code>、<code>position: absolute</code> 等。</p>
+<h3>38. <code>display</code> 常见取值有哪些？</h3>
+<p><strong>答案：</strong> 常见有 <code>block</code>、<code>inline</code>、<code>inline-block</code>、<code>none</code>、<code>flex</code>、<code>grid</code>。</p>
+<h3>39. <code>position</code> 常见取值有哪些？</h3>
+<p><strong>答案：</strong> 常见有 <code>static</code>、<code>relative</code>、<code>absolute</code>、<code>fixed</code>、<code>sticky</code>。</p>
+<h3>40. <code>relative</code> 和 <code>absolute</code> 的区别是什么？</h3>
+<p><strong>答案：</strong> <code>relative</code> 相对自身原位置偏移；<code>absolute</code> 脱离文档流并相对最近定位祖先定位。</p>
+<h3>41. <code>fixed</code> 的特点是什么？</h3>
+<p><strong>答案：</strong> <code>fixed</code> 元素相对视口定位，通常不随页面滚动而移动。</p>
+<h3>42. <code>sticky</code> 是什么？</h3>
+<p><strong>答案：</strong> <code>sticky</code> 是粘性定位，在达到阈值前表现像普通定位，达到后像固定定位。</p>
+<h3>43. 什么是浮动？</h3>
+<p><strong>答案：</strong> 浮动最初用于文字环绕图片，也被早期大量用于布局，但现在常被 Flex 和 Grid 替代。</p>
+<h3>44. 如何清除浮动？</h3>
+<p><strong>答案：</strong> 常见方式有清除元素、伪元素清除和触发 BFC。</p>
+<h3>45. Flex 布局适合什么场景？</h3>
+<p><strong>答案：</strong> 适合一维布局，如横向或纵向排列、居中对齐和分布控制。</p>
+<h3>46. Grid 布局适合什么场景？</h3>
+<p><strong>答案：</strong> 适合二维布局，如页面区域划分、表格式模块和复杂卡片排列。</p>
+<h3>47. Flex 中 <code>justify-content</code> 的作用是什么？</h3>
+<p><strong>答案：</strong> 它控制主轴方向上项目的对齐和分布方式。</p>
+<h3>48. Flex 中 <code>align-items</code> 的作用是什么？</h3>
+<p><strong>答案：</strong> 它控制交叉轴方向上项目的整体对齐方式。</p>
+<h3>49. 如何让元素水平垂直居中？</h3>
+<p><strong>答案：</strong> 常见方式有 Flex 居中、Grid 居中、定位加变换等，现代项目最常用 Flex。</p>
+<h3>50. <code>gap</code> 有什么作用？</h3>
+<p><strong>答案：</strong> <code>gap</code> 用于控制 Flex 或 Grid 子项之间的间距，比手动设边距更统一。</p>
+<h2>响应式与视觉表现</h2>
+<h3>51. 什么是响应式设计？</h3>
+<p><strong>答案：</strong> 响应式设计是让页面在不同设备和屏幕尺寸下都能良好展示和交互。</p>
+<h3>52. 什么是媒体查询？</h3>
+<p><strong>答案：</strong> 媒体查询允许根据屏幕宽度、方向、分辨率等条件应用不同样式。</p>
+<h3>53. <code>max-width</code> 和 <code>min-width</code> 的区别是什么？</h3>
+<p><strong>答案：</strong> <code>max-width</code> 常用于桌面优先向下兼容；<code>min-width</code> 常用于移动优先逐步增强。</p>
+<h3>54. 什么是移动优先？</h3>
+<p><strong>答案：</strong> 移动优先是先为小屏设备设计基础样式，再逐步增强到更大屏幕。</p>
+<h3>55. 相对单位有哪些？</h3>
+<p><strong>答案：</strong> 常见有 <code>%</code>、<code>em</code>、<code>rem</code>、<code>vw</code>、<code>vh</code> 等。</p>
+<h3>56. <code>em</code> 和 <code>rem</code> 的区别是什么？</h3>
+<p><strong>答案：</strong> <code>em</code> 相对当前元素字体大小，<code>rem</code> 相对根元素字体大小。</p>
+<h3>57. <code>vw</code> 和 <code>vh</code> 的作用是什么？</h3>
+<p><strong>答案：</strong> 它们分别相对视口宽度和高度，常用于全屏布局和响应式尺寸控制。</p>
+<h3>58. 什么是 CSS 变量？</h3>
+<p><strong>答案：</strong> CSS 变量通过 <code>--name</code> 定义，可复用主题值、间距、颜色等设计令牌。</p>
+<h3>59. <code>calc()</code> 的作用是什么？</h3>
+<p><strong>答案：</strong> <code>calc()</code> 用于在 CSS 中进行简单计算，适合动态尺寸组合。</p>
+<h3>60. 什么是过渡 <code>transition</code>？</h3>
+<p><strong>答案：</strong> 过渡用于让属性变化在一段时间内平滑完成。</p>
+<h3>61. 什么是动画 <code>animation</code>？</h3>
+<p><strong>答案：</strong> 动画通过 <code>@keyframes</code> 定义关键帧，可实现更复杂的连续变化效果。</p>
+<h3>62. <code>transform</code> 常见用途有哪些？</h3>
+<p><strong>答案：</strong> 常用于位移、旋转、缩放和倾斜，并且通常性能优于直接改布局属性。</p>
+<h3>63. 为什么动画常推荐用 <code>transform</code> 和 <code>opacity</code>？</h3>
+<p><strong>答案：</strong> 因为它们通常更容易由浏览器进行合成层优化，性能更好。</p>
+<h3>64. 什么是层叠上下文？</h3>
+<p><strong>答案：</strong> 层叠上下文决定元素的堆叠顺序和 <code>z-index</code> 生效范围。</p>
+<h3>65. <code>z-index</code> 为什么有时不生效？</h3>
+<p><strong>答案：</strong> 因为元素可能不在同一层叠上下文中，或没有形成可定位上下文。</p>
+<h2>实战与工程化</h2>
+<h3>66. 什么是 CSS Reset？</h3>
+<p><strong>答案：</strong> CSS Reset 用于清除浏览器默认样式差异，建立统一的样式基线。</p>
+<h3>67. Normalize.css 和 Reset 的区别是什么？</h3>
+<p><strong>答案：</strong> Normalize 更偏保留合理默认样式并做统一，Reset 更倾向完全清空默认样式。</p>
+<h3>68. 什么是 CSS Modules？</h3>
+<p><strong>答案：</strong> CSS Modules 通过局部作用域避免类名冲突，适合组件化开发。</p>
+<h3>69. 什么是 BEM 命名规范？</h3>
+<p><strong>答案：</strong> BEM 是一种 CSS 类命名方法，通过 Block、Element、Modifier 提升可维护性。</p>
+<h3>70. 为什么大型项目需要命名规范？</h3>
+<p><strong>答案：</strong> 因为规范能减少样式冲突、提升协作效率并增强代码可读性。</p>
+<h3>71. 什么是预处理器？</h3>
+<p><strong>答案：</strong> 预处理器如 Sass、Less 提供变量、嵌套、混入等能力，提高样式开发效率。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：预处理器曾经的核心卖点"嵌套"和"变量"如今已有原生替代——CSS 原生嵌套（见第 111 题）和 CSS 自定义属性（见第 58 题），新项目不一定要为此引入 Sass/Less；但 mixin、函数、循环、条件编译等能力预处理器仍有价值。</blockquote>
+<h3>72. Sass 的常见优势是什么？</h3>
+<p><strong>答案：</strong> 它支持变量、嵌套、函数、混入和模块化能力，适合中大型样式工程。</p>
+<h3>73. 什么是后处理器？</h3>
+<p><strong>答案：</strong> 后处理器在 CSS 编译后再做转换，如自动加前缀、压缩和兼容性处理。</p>
+<h3>74. Autoprefixer 的作用是什么？</h3>
+<p><strong>答案：</strong> 它根据浏览器兼容配置自动补全厂商前缀。</p>
+<h3>75. 什么是 Tailwind CSS？</h3>
+<p><strong>答案：</strong> Tailwind CSS 是一种原子化 CSS 框架，通过大量工具类快速组合界面样式。</p>
+<h3>76. 原子化 CSS 的优缺点是什么？</h3>
+<p><strong>答案：</strong> 优点是开发快、复用强、样式一致；缺点是类名较多，初学者阅读成本较高。</p>
+<h3>77. 什么是关键渲染路径？</h3>
+<p><strong>答案：</strong> 关键渲染路径是浏览器从下载资源到生成可交互页面的核心流程。</p>
+<h3>78. 为什么 CSS 会阻塞渲染？</h3>
+<p><strong>答案：</strong> 因为浏览器在构建渲染树前需要先拿到关键样式，避免页面闪烁和布局不稳定。</p>
+<h3>79. 如何优化 CSS 加载性能？</h3>
+<p><strong>答案：</strong> 可以压缩、拆分、按需加载、减少冗余规则和提取关键 CSS。</p>
+<h3>80. 为什么要减少重排和重绘？</h3>
+<p><strong>答案：</strong> 因为频繁布局和绘制会影响页面性能和交互流畅度。</p>
+<h3>81. 什么是重排？</h3>
+<p><strong>答案：</strong> 重排是元素几何属性变化后，浏览器重新计算布局的过程。</p>
+<h3>82. 什么是重绘？</h3>
+<p><strong>答案：</strong> 重绘是元素样式变化但不影响布局时，浏览器重新绘制视觉表现的过程。</p>
+<h3>83. 哪些操作更容易触发重排？</h3>
+<p><strong>答案：</strong> 如修改宽高、位置、字体大小、插入删除节点和读取某些布局属性后再写入。</p>
+<h3>84. 什么是雪碧图？</h3>
+<p><strong>答案：</strong> 雪碧图是把多个小图合并到一张图中，通过背景定位减少请求次数的优化方式。</p>
+<h3>85. 现代项目中雪碧图还常用吗？</h3>
+<p><strong>答案：</strong> 使用频率下降了，很多场景已被 SVG、Icon Font 或组件化图标方案替代。</p>
+<h2>常见问题与面试表达</h2>
+<h3>86. 什么是 SEO 友好的 HTML 结构？</h3>
+<p><strong>答案：</strong> 它通常具有清晰语义、合理标题层级、可读文本内容和规范元信息。</p>
+<h3>87. 为什么按钮操作应优先使用 <code>button</code> 而不是 <code>div</code>？</h3>
+<p><strong>答案：</strong> 因为 <code>button</code> 自带语义、可聚焦和键盘交互支持，更符合无障碍和可维护性要求。</p>
+<h3>88. 图片懒加载有什么意义？</h3>
+<p><strong>答案：</strong> 它能减少首屏资源加载压力，提升首屏速度和节省带宽。</p>
+<h3>89. 什么是响应式图片？</h3>
+<p><strong>答案：</strong> 响应式图片通过不同资源和尺寸适配不同设备，常结合 <code>srcset</code>、<code>sizes</code> 使用。</p>
+<h3>90. <code>overflow: hidden</code> 常见用途有哪些？</h3>
+<p><strong>答案：</strong> 可用于裁剪溢出内容、触发 BFC、隐藏滚动条区域外元素等。</p>
+<h3>91. 什么是文本溢出省略号？</h3>
+<p><strong>答案：</strong> 通常通过 <code>overflow: hidden</code>、<code>text-overflow: ellipsis</code> 和 <code>white-space: nowrap</code> 实现单行省略。</p>
+<h3>92. 多行文本省略常见怎么做？</h3>
+<p><strong>答案：</strong> 常见用 <code>-webkit-line-clamp</code> 配合弹性盒相关属性实现。</p>
+<h3>93. 什么是 <code>aspect-ratio</code>？</h3>
+<p><strong>答案：</strong> <code>aspect-ratio</code> 用于声明元素宽高比，简化图片和卡片比例控制。</p>
+<h3>94. 为什么样式抖动会影响体验？</h3>
+<p><strong>答案：</strong> 因为布局突然变化会影响用户点击和阅读，增加 CLS 等体验指标风险。</p>
+<h3>95. 什么是 CLS？</h3>
+<p><strong>答案：</strong> CLS 是累计布局偏移指标，用于衡量页面加载过程中布局稳定性。</p>
+<h3>96. 如何减少布局偏移？</h3>
+<p><strong>答案：</strong> 可以为图片和异步内容预留尺寸，避免后加载内容把页面挤动。</p>
+<h3>97. 面试中如何回答 Flex 和 Grid 的取舍？</h3>
+<p><strong>答案：</strong> 可以说 Flex 更适合一维排列，Grid 更适合二维区域布局，实际项目往往搭配使用。</p>
+<h3>98. 面试中如何系统回答 CSS 问题？</h3>
+<p><strong>答案：</strong> 可以按原理、布局模型、适用场景、兼容性和性能注意点来组织答案。</p>
+<h3>99. 面试中如何系统回答 HTML5 问题？</h3>
+<p><strong>答案：</strong> 可以围绕语义化、表单、多媒体、存储、离线能力和 Web API 扩展来展开。</p>
+<h3>100. 如何总结 CSS / HTML5 的核心价值？</h3>
+<p><strong>答案：</strong> HTML5 负责结构和语义，CSS 负责表现和布局，二者共同决定页面的可读性、可用性和用户体验。</p>
+<h2>现代 CSS 与 HTML 特性</h2>
+<h3>101. 什么是 CSS 容器查询（Container Queries）？</h3>
+<p><strong>答案：</strong> 容器查询允许根据父容器的尺寸（而不是视口）来应用样式，使用 <code>@container</code> 规则。父元素需声明 <code>container-type: inline-size</code>。比媒体查询粒度更细，让同一个组件在不同容器宽度下有不同表现，实现真正的组件级响应式，无需修改父级结构。</p>
+<h3>102. CSS <code>clamp()</code> 有什么作用？</h3>
+<p><strong>答案：</strong> <code>clamp(min, preferred, max)</code> 在最小值和最大值之间动态计算值。典型用法：<code>font-size: clamp(14px, 2vw, 20px)</code> 让字体随视口缩放但不超出范围，无需媒体查询。常用于响应式字号、间距和容器宽度，实现流体设计。</p>
+<h3>103. 什么是 CSS 逻辑属性？</h3>
+<p><strong>答案：</strong> 逻辑属性用逻辑方向（<code>block</code>/<code>inline</code>、<code>start</code>/<code>end</code>）代替物理方向（<code>top</code>/<code>left</code>），如 <code>margin-inline-start</code> 代替 <code>margin-left</code>，<code>padding-block-end</code> 代替 <code>padding-bottom</code>。在多语言（LTR/RTL）场景自动适配书写方向，无需为不同语言单独覆盖物理方向样式。</p>
+<h3>104. 什么是 <code>:is()</code> 和 <code>:where()</code> 伪类？</h3>
+<p><strong>答案：</strong> <code>:is()</code> 接受选择器列表，匹配其中任一选择器的元素，优先级取参数中最高的选择器；<code>:where()</code> 功能相同但优先级始终为 0，不影响整体权重。二者都可简化重复选择器，如 <code>:is(h1, h2, h3) a</code> 代替三条重复规则。</p>
+<h3>105. 什么是 CSS Scroll Snap？</h3>
+<p><strong>答案：</strong> Scroll Snap 让滚动在特定位置自动吸附停止，在容器设 <code>scroll-snap-type</code>，子元素设 <code>scroll-snap-align</code>。无需 JavaScript 即可实现轮播、全屏分页滚动、横向卡片吸附等体验，性能比 JS 监听方案更好。</p>
+<h3>106. <code>display: contents</code> 有什么作用？</h3>
+<p><strong>答案：</strong> <code>display: contents</code> 让元素自身不生成盒子（相当于"透明"），但其子元素正常渲染。常用于在 Flex/Grid 容器中插入语义化包装元素而不影响布局，如 <code>&lt;ul&gt;</code> 加 <code>display: contents</code> 后其 <code>&lt;li&gt;</code> 直接参与外层 Grid 布局。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：早期浏览器存在严重 bug——该元素会被移出可访问性树，屏幕阅读器读不到它的内容（"角色丢失"）。该问题已在 Firefox 62+、Chrome/Edge 89+ 修复，Safari 16/17 起也集中修复了大批相关问题。现代浏览器中可放心用于 <code>div</code>/<code>span</code> 等无语义包装层；但若用在 <code>button</code>、<code>table</code>、<code>ul</code> 等自带语义和交互的元素上，仍建议用读屏器实测确认。</blockquote>
+<h3>107. 什么是 CSS Subgrid？</h3>
+<p><strong>答案：</strong> Subgrid 允许子元素继承祖先 Grid 容器的行列轨道，通过 <code>grid-template-columns: subgrid</code> 声明。解决了嵌套 Grid 中内层元素难以与外层对齐的问题，常用于卡片列表中标题、内容、操作区跨卡片对齐的场景。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：Subgrid 现已全面可用——Firefox 71+、Safari 16+、Chrome/Edge 117+，2023 年 9 月达成 Baseline 新增可用（newly available），2026 年 3 月起已进入广泛可用（widely available），不再属于"需要观望的新特性"。</blockquote>
+<h3>108. <code>aspect-ratio</code> 属性有什么用？</h3>
+<p><strong>答案：</strong> <code>aspect-ratio: 16/9</code> 声明元素固定宽高比，当设置宽度后高度自动按比例计算，无需传统的 padding-top 百分比黑客技巧。常用于图片占位、视频容器、头像框、卡片等需要固定比例的元素。</p>
+<h3>109. 什么是 CSS <code>@layer</code>（级联层）？</h3>
+<p><strong>答案：</strong> <code>@layer</code> 允许将样式分组到具名层中，并通过 <code>@layer base, components, utilities</code> 声明层的优先级顺序。高层级的样式总是覆盖低层级，无论选择器权重如何。解决了第三方库样式权重难以覆盖、工具类 vs 组件样式冲突等问题，是现代 CSS 架构的重要新工具。</p>
+<h3>110. CSS <code>color-scheme</code> 和深色模式适配有什么最佳实践？</h3>
+<p><strong>答案：</strong> 通过媒体查询 <code>@media (prefers-color-scheme: dark)</code> 检测系统深色模式并应用变量：在 <code>:root</code> 定义亮色变量，在媒体查询内覆盖为深色值。结合 <code>color-scheme: light dark</code> 让表单控件、滚动条等浏览器原生元素也自动适配。也可配合 <code>data-theme</code> 属性实现手动切换。</p>
+<h3>111. 🆕 什么是 CSS 原生嵌套（Native Nesting）？和 Sass 嵌套有什么区别？</h3>
+<p><strong>答案：</strong> 原生嵌套指浏览器直接支持在一条规则内部书写子规则，用 <code>&amp;</code> 代表父选择器，无需 Sass/Less 预编译。</p>
+<pre><code class="language-css">.card {
+  padding: 16px;
+  &amp;:hover { box-shadow: 0 2px 8px rgb(0 0 0 / .15); }
+  &amp; &gt; .title { font-size: 18px; }
+  .body { color: #555; }          /* 放宽语法：等价于 .card .body */
+  &amp;.featured { border: 2px solid gold; }
+}</code></pre>
+<ul><li><strong>演进</strong>：2023 年中的初版要求嵌套选择器必须以 <code>&amp;</code> 开头，且早期规范包含 <code>@nest</code> 规则；2023 年底规范改为"放宽嵌套解析"，可直接写普通选择器，<code>@nest</code> 已废弃并从规范移除。保守写法可始终显式写 <code>&amp;</code>。</li><li><strong>与 Sass 区别</strong>：原生嵌套即标准 CSS、浏览器直接解析，而 Sass 还提供 mixin、函数、循环、条件、模块系统等原生没有的能力；优先级按展开后的选择器正常计算，<code>&amp;</code> 语义与 Sass 基本一致。</li><li><strong>场景</strong>：组件样式就近收拢、<code>:hover</code>/媒体查询与主规则写在一起，替代部分预处理器场景。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome/Edge 112+、Firefox 117+、Safari 17+ 起支持嵌套（2023 年下半年），放宽语法需 Chrome/Edge 120+、Safari 17.2+。2023 年 9 月成为 Baseline 新增可用，2026 年已属广泛可用。</li></ul>
+<h3>112. 🆕 <code>:has()</code> 父选择器能做什么？</h3>
+<p><strong>答案：</strong> <code>:has()</code> 是第一个能根据后代/兄弟元素反选父元素或前序兄弟元素的选择器，被俗称为"父选择器"。</p>
+<pre><code class="language-css">/* 含图片的文章切成两栏 */
+article:has(img) { display: grid; grid-template-columns: 1fr 2fr; }
+/* 表单字段内含错误提示时，输入框变红 */
+.field:has(.error) input { border-color: #e53e3e; }
+/* 复选框勾选后高亮 label */
+label:has(input[type=&quot;checkbox&quot;]:checked) { background: #eef6ff; }
+/* &quot;前序兄弟&quot;选择：标题后紧跟副标题时收紧标题下边距 */
+h2:has(+ .subtitle) { margin-bottom: 4px; }
+/* 空容器判断 */
+.section:not(:has(*)) { display: none; }</code></pre>
+<ul><li><strong>场景</strong>：表单校验状态联动、卡片含图自适应、<code>:has(:checked)</code> 实现纯 CSS 手风琴/Tab、空状态隐藏、前序兄弟样式调整。</li><li><strong>性能注意</strong>：避免 <code>body :has(*)</code> 这类全局、深层、多层嵌套的匹配，尽量限定在类名容器内；现代引擎对选择器失效做了专项优化，局部使用没有问题。</li><li><strong>兼容性（2026-09 核实）</strong>：Safari 15.4+（2022-03）、Chrome/Edge 105+（2022-08）、Firefox 121+（2023-12）。2023 年 12 月成为 Baseline 新增可用，2026 年已进入广泛可用；不支持时整条选择器失效，可用 <code>:is()</code>/<code>@supports selector(:has(*))</code> 做容错。</li></ul>
+<h3>113. 🆕 View Transitions API 是什么？</h3>
+<p><strong>答案：</strong> View Transitions API 让浏览器在两个 DOM 状态（SPA）或两次页面导航（MPA）之间自动生成截图过渡，默认是交叉淡入淡出，可自定义，无需手写动画库。</p>
+<p>单页应用（SPA）用法：把 DOM 更新包进回调，浏览器自动捕获前后两帧：</p>
+<pre><code class="language-js">function go(next) {
+  if (!document.startViewTransition) return render(next);   // 渐进增强
+  document.startViewTransition(() =&gt; render(next));
+}</code></pre>
+<pre><code class="language-css">.hero { view-transition-name: hero; }                       /* 给元素命名，实现&quot;共享元素&quot; morph */
+::view-transition-old(root) { animation: fade .2s ease both; }
+::view-transition-new(root) { animation: fade .2s ease reverse both; }
+@keyframes fade { to { opacity: 0; } }</code></pre>
+<p>多页应用（MPA）只需一行 CSS，同源整页导航即可转场：</p>
+<pre><code class="language-css">@view-transition { navigation: auto; }</code></pre>
+<ul><li><strong>场景</strong>：SPA 路由切换、列表→详情共享元素（大图/卡片）平滑移动、MPA 传统页面转场；可配合路由库和 Navigation API，DOM 更新放进回调里只执行一次。</li><li><strong>注意</strong>：务必包一层 <code>@media (prefers-reduced-motion: no-preference)</code>，为减少动效偏好的用户关闭大段动画；用 <code>CSS.supports(&#39;view-transition-name: x&#39;)</code> 或能力检测回退。</li><li><strong>兼容性（2026-09 核实）</strong>：同文档过渡 Chrome/Edge 111+（2023-03）、Safari 18+（2024-09）、Firefox 144+（2025-12），2025 年底成为 Baseline 新增可用；跨文档 <code>@view-transition</code> Chrome/Edge 126+、Safari 18.2+、Firefox 144+（2024 下半年至 2025 年底陆续到位），截至核实时尚未进入 Baseline，按渐进增强使用。</li></ul>
+<h3>114. 🆕 Popover API 解决了什么问题？</h3>
+<p><strong>答案：</strong> Popover 是原生"弹出层"能力：声明 <code>popover</code> 属性后，元素通过 <code>popovertarget</code> 按钮即可显隐，浏览器自动处理顶层渲染、点击外部关闭（light dismiss）和 ESC 关闭。</p>
+<pre><code class="language-html">&lt;button popovertarget=&quot;menu&quot; popovertargetaction=&quot;toggle&quot;&gt;菜单&lt;/button&gt;
+&lt;div id=&quot;menu&quot; popover=&quot;auto&quot;&gt;
+  &lt;button popovertarget=&quot;menu&quot; popovertargetaction=&quot;hide&quot;&gt;关闭&lt;/button&gt;
+  任意弹层内容
+&lt;/div&gt;</code></pre>
+<p>也可用 <code>el.showPopover()</code>、<code>el.hidePopover()</code>、<code>el.togglePopover()</code> 控制，监听 <code>beforetoggle</code>/<code>toggle</code> 事件。取值有 <code>auto</code>（一次只允许一个、点击外部自动关）、<code>manual</code>（完全程序控制）、<code>hint</code>（提示气泡语义，较新）。</p>
+<ul><li><strong>关键特性</strong>：弹层进入 top layer（顶层），不受父级 <code>overflow: hidden</code> 和 <code>z-index</code> 影响；非模态、不锁焦、不屏蔽页面其余部分。</li><li><strong>与 <code>&lt;dialog&gt;</code> 分工</strong>：需要模态确认、焦点陷阱用 <code>&lt;dialog&gt;</code>（见第 115 题）；菜单、气泡卡片、toast、命令面板用 Popover。二者也可组合（<code>&lt;dialog popover&gt;</code>）。</li><li><strong>场景</strong>：下拉菜单、悬浮卡片、Toast 通知、@提及/搜索建议气泡，替代手写"点击外部关闭 + 动态计算层级"逻辑。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome/Edge 114+（2023-05）、Safari 17+（2023-09）、Firefox 125+（2024-04），2024 年成为 Baseline 新增可用，可放心使用 <code>auto</code>/<code>manual</code>；较新的 <code>hint</code> 值和 <code>popoverhint</code> 语义仍属有限可用。</li></ul>
+<h3>115. 🆕 <code>&lt;dialog&gt;</code> 元素怎么用？相比手写弹窗好在哪？</h3>
+<p><strong>答案：</strong> <code>&lt;dialog&gt;</code> 是原生对话框元素，<code>showModal()</code> 打开模态对话框时浏览器免费提供：顶层渲染、<code>::backdrop</code> 遮罩、ESC 关闭、焦点陷阱（Tab 只在弹窗内循环），关闭后焦点自动归还触发元素。</p>
+<pre><code class="language-html">&lt;dialog id=&quot;d&quot;&gt;
+  &lt;h3&gt;确认删除？&lt;/h3&gt;
+  &lt;form method=&quot;dialog&quot;&gt;
+    &lt;button value=&quot;cancel&quot;&gt;取消&lt;/button&gt;
+    &lt;button id=&quot;ok&quot; value=&quot;ok&quot;&gt;删除&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;
+&lt;button onclick=&quot;d.showModal()&quot;&gt;打开&lt;/button&gt;
+&lt;script&gt;
+  d.addEventListener(&#39;close&#39;, () =&gt; {
+    if (d.returnValue === &#39;ok&#39;) doDelete();   // form method=&quot;dialog&quot; 自动关窗并写入 returnValue
+  });
+&lt;/script&gt;</code></pre>
+<ul><li><strong>三种方式</strong>：<code>showModal()</code>（模态，进 top layer）、<code>show()</code>（非模态）、<code>close(value)</code>（关闭并设置 <code>returnValue</code>）；不要手动切换 <code>open</code> 属性。点击遮罩关闭需自行监听 <code>click</code> 事件（较新的 <code>closedby</code> 属性可声明式实现，支持仍有限）。</li><li><strong>场景</strong>：确认框、登录/表单弹窗、图片预览、侧滑抽屉（配合定位与 transform 改样式）。与 Popover 的取舍：模态阻断用 dialog，非阻断浮层用 popover。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome 37+、Edge 79+、Firefox 98+、Safari 15.4+，2022 年起所有核心浏览器齐备，属 Baseline 广泛可用；入出场动画可配合 <code>@starting-style</code>（见第 118 题）。</li></ul>
+<h3>116. 🆕 CSS Anchor Positioning（锚点定位）是什么？</h3>
+<p><strong>答案：</strong> 锚点定位允许一个定位元素跟随另一个元素（锚点）摆放，纯 CSS 实现以前需要 Popper.js / Floating UI 才能做的气泡定位，并自带空间不足时的翻转策略。</p>
+<pre><code class="language-css">.btn { anchor-name: --menu-btn; }
+
+.menu {
+  position: fixed;
+  position-anchor: --menu-btn;
+  position-area: bottom;                 /* 九宫格式声明：按钮正下方（早期草案名为 inset-area，已更名） */
+  margin-top: 6px;
+  position-try-fallbacks: flip-block, flip-inline;   /* 空间不够自动翻转方向 */
+}
+
+/* 也可用函数取锚点几何值 */
+.menu-x {
+  position: fixed;
+  position-anchor: --menu-btn;
+  top: anchor(bottom);
+  left: anchor(center);
+  translate: -50% 0;
+  width: anchor-size(width);
+}</code></pre>
+<ul><li><strong>关键属性</strong>：<code>anchor-name</code> 命名锚点、<code>position-anchor</code> 关联、<code>anchor()</code>/<code>anchor-size()</code> 读取锚点位置与尺寸、<code>position-area</code> 语义化方位、<code>position-try-fallbacks</code> 与 <code>@position-try</code> 声明翻转/贴边备选方案。</li><li><strong>场景</strong>：Tooltip、下拉菜单、富文本气泡、悬浮工具栏，通常与 Popover 组合覆盖"显隐 + 定位"两件事，替换 Popper/Floating UI 一类库。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome/Edge 125+（2024-05）、Safari 26+（2025-09）、Firefox 147+（2026-01 默认开启），2026 年初才全引擎打通，属 Baseline 最新一批新增可用；旧浏览器必须用 <code>@supports (anchor-name: --a)</code> 回退到常规定位或 JS 方案。</li></ul>
+<h3>117. 🆕 scroll-driven animations（滚动驱动动画）怎么实现？</h3>
+<p><strong>答案：</strong> 它让 CSS 动画的时间轴不再跟随时间，而是跟随滚动容器的滚动进度或元素进出视口的进度，由合成线程驱动，不占用主线程。</p>
+<pre><code class="language-css">/* 1）整页阅读进度条：跟随页面滚动 */
+.progress {
+  transform-origin: 0 50%;
+  animation: grow linear;
+  animation-timeline: scroll(root block);
+}
+@keyframes grow { to { transform: scaleX(1); } }
+
+/* 2）卡片进入视口时上浮淡入 */
+.card {
+  animation: rise linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 100%;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }</code></pre>
+<ul><li><strong>两种时间轴</strong>：<code>scroll()</code> 绑定滚动容器的整体进度；<code>view()</code> 绑定元素自身进入/离开视口的进度（配合 <code>animation-range</code> 控制区间），也可用 <code>scroll-timeline-name</code>/<code>view-timeline-name</code> 命名后供其他元素引用。</li><li><strong>场景</strong>：阅读进度条、视差背景、图片/卡片入场 reveal、章节进度联动，替代 <code>scroll</code> 事件、IntersectionObserver 或 GSAP ScrollTrigger。</li><li><strong>坑</strong>：<code>animation</code> 简写会重置 <code>animation-timeline</code>，需写在简写之后；<code>overflow-x: hidden</code> 会创建滚动容器，可能意外破坏 <code>view()</code>；不支持的浏览器上元素会停留在首帧，务必把默认样式写成"动画结束态"并用 <code>@supports (animation-timeline: view())</code> 包裹增强。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome/Edge 115+（2023-07）、Safari 26+（2025-09）；Firefox 截至 2026-09 仍未默认开启（需 about:config flag，是 Interop 2026 重点推进项），因此<strong>尚未进入 Baseline</strong>，只能按渐进增强使用。</li></ul>
+<h3>118. 🆕 <code>@starting-style</code> 和 <code>transition-behavior: allow-discrete</code> 解决了什么？</h3>
+<p><strong>答案：</strong> 解决 <code>display: none</code> ↔ 显示状态、或顶层元素（dialog/popover）首次出现时无法播放入场动画的问题。<code>@starting-style</code> 声明元素"首次显示那一帧"的初始值；<code>allow-discrete</code> 允许 <code>display</code> 这类离散属性参与过渡。</p>
+<pre><code class="language-css">.pop {
+  opacity: 1;
+  transition:
+    opacity .25s,
+    display .25s allow-discrete,
+    overlay .25s allow-discrete;
+  @starting-style { opacity: 0; }
+}
+.pop[hidden] { opacity: 0; display: none; }</code></pre>
+<ul><li><strong>原理</strong>：离散属性过渡时，入场在 0% 瞬间翻转、出场在 100% 瞬间翻转；<code>overlay</code> 属性让 dialog/popover 在出场动画结束后再离开 top layer，避免"立刻消失"。</li><li><strong>场景</strong>：弹窗、抽屉、Popover、手风琴、Toast 的纯 CSS 入/出场动画，告别"双 requestAnimationFrame + setTimeout"的 hack；也用于 <code>display: none</code> 的元素首次挂载动画。</li><li><strong>兼容性（2026-09 核实）</strong>：<code>@starting-style</code> 与 <code>transition-behavior: allow-discrete</code>：Chrome/Edge 117+、Safari 17.5+、Firefox 129+，2024 年 8 月成为 Baseline 新增可用；<code>overlay</code> 仍为有限可用（Chromium/Safari 支持，Firefox 尚未支持），不支持时只是没有退场动画，不影响显隐功能。</li></ul>
+<h3>119. 🆕 <code>text-wrap: balance</code> 和 <code>pretty</code> 有什么用？</h3>
+<p><strong>答案：</strong> 它们让浏览器介入换行决策：<code>balance</code> 平衡多行标题各行长度，消除末行只剩一两个字的"孤词"；<code>pretty</code> 优化长段落排版（避免孤词行、改善右侧参差），计算成本更高，适合正文。</p>
+<pre><code class="language-css">h1, h2, h3, .card-title { text-wrap: balance; }
+article p, .prose li     { text-wrap: pretty; }</code></pre>
+<ul><li><strong>限制</strong>：<code>balance</code> 只对少量行数的短文本生效（Chrome/Safari 限 6 行以内，Firefox 限 10 行），大段正文请用 <code>pretty</code>。</li><li><strong>场景</strong>：新闻/营销标题、卡片标题、Hero 文案；正文段落防止末行孤词。两者都纯增强——不支持时回退普通换行，无任何副作用。</li><li><strong>兼容性（2026-09 核实）</strong>：<code>balance</code> Chrome/Edge 114+、Firefox 121+、Safari 17.5+，为 Baseline 2024 新增可用；<code>pretty</code> Chrome/Edge 117+、Safari 26+（2025-09），Firefox 截至 2026-09 尚未支持，按渐进增强使用。</li></ul>
+<h3>120. 🆕 <code>color-mix()</code> 函数怎么用于主题配色？</h3>
+<p><strong>答案：</strong> <code>color-mix(in &lt;色彩空间&gt;, 颜色A x%, 颜色B)</code> 在指定色彩空间中混合两种颜色，推荐用感知均匀的 <code>oklch</code>，中间色不会发灰。</p>
+<pre><code class="language-css">:root { --brand: #2563eb; }
+.btn:hover      { background: color-mix(in oklch, var(--brand) 82%, black); }  /* 加深 */
+.btn:disabled   { background: color-mix(in oklch, var(--brand) 35%, white); }  /* 调浅 */
+.dialog-scrim   { background: color-mix(in srgb, #000 45%, transparent); }     /* 加透明 */</code></pre>
+<ul><li><strong>场景</strong>：只维护一个主色变量，派生出 hover、禁用、选中、描边、遮罩等整套色阶；深色模式用同一变量与黑/白混合派生；替代 Sass 的 <code>darken()</code>/<code>lighten()</code>（它们基于 RGB/HSV，容易发灰）。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome/Edge 111+（2023-03）、Safari 16.2+（2022-12）、Firefox 113+（2023-05），2023 年 5 月起跨核心浏览器可用，2025 年底已达 Baseline 广泛可用；需要兼容旧浏览器时在前面先写一行静态颜色兜底。</li></ul>
+<h3>121. 🆕 容器查询单位（cqw/cqh/cqi）和 <code>style()</code> 容器查询是什么？</h3>
+<p><strong>答案：</strong> 容器查询单位相对最近的查询容器尺寸（而非视口），是容器查询的配套：<code>1cqw</code>/<code>1cqh</code> = 容器宽/高的 1%，<code>cqi</code>/<code>cqb</code> 对应 inline/block 方向，另有 <code>cqmin</code>/<code>cqmax</code>。<code>style()</code> 查询则让 <code>@container</code> 按容器的计算样式（主要是自定义属性）分支。</p>
+<pre><code class="language-css">.card-wrap { container-type: inline-size; }
+.card h2 { font-size: clamp(16px, 4cqi, 28px); }   /* 组件内流式字号，随容器宽度变化 */
+
+/* 容器不需要 container-type，自定义属性挂在任意祖先即可 */
+@container style(--theme: dark) {
+  .card { background: #1a1a1a; color: #eee; }
+}</code></pre>
+<ul><li><strong>场景</strong>：真正"自包含"的可移植组件——字号、间距跟随所在容器而非视口；<code>style(--variant: x)</code> 让组件外观由父级通过 CSS 变量传参，无需多写修饰类。尺寸容器查询基础见第 101 题。</li><li><strong>兼容性（2026-09 核实）</strong>：尺寸查询与 <code>cq*</code> 单位 Chrome/Edge 105+、Safari 16+、Firefox 110+，已属广泛可用；<code>style()</code> 自定义属性查询 Chrome/Edge 111+、Safari 18+，Firefox 截至 2026-09 尚未支持（开发中），需 <code>@supports</code> 渐进增强。</li></ul>
+<h3>122. 🆕 HTML <code>inert</code> 属性有什么用？</h3>
+<p><strong>答案：</strong> 给元素加 <code>inert</code> 后，该元素及其全部后代变为"惰性"：不可点击、不可 Tab 聚焦、不可编辑、浏览器页内查找不到，并且整体移出可访问性树（读屏器不可见）。</p>
+<pre><code class="language-html">&lt;dialog id=&quot;d&quot;&gt;弹窗内容&lt;/dialog&gt;
+&lt;main id=&quot;page&quot; inert&gt;弹窗打开期间，背景页面被完全锁住&lt;/main&gt;
+&lt;script&gt;
+  d.addEventListener(&#39;toggle&#39;, e =&gt; page.toggleAttribute(&#39;inert&#39;, d.open));
+&lt;/script&gt;</code></pre>
+<ul><li><strong>场景</strong>：模态弹窗打开时给背景容器加 <code>inert</code>，一行实现可靠的"锁焦 + 屏蔽读屏"，比手写 focus trap 简单；也用于轮播中离屏幻灯片、分步表单中未激活的步骤、禁用的整块 UI。</li><li><strong>注意</strong>：它不等于 <code>pointer-events: none</code>——后者仍可键盘聚焦、对读屏器仍可见；<code>inert</code> 本身没有视觉变化，需要自行加变暗/遮罩反馈。<code>showModal()</code> 打开的 dialog 本身会自动豁免祖先的 inert。</li><li><strong>兼容性（2026-09 核实）</strong>：Chrome/Edge 102+、Safari 15.5+（2022 年）、Firefox 112+（2023-04），2023 年 4 月成为 Baseline 新增可用，2025 年底已广泛可用。</li></ul>
+<h3>123. 🆕 Baseline 是什么？它如何判断"新特性能不能用"？</h3>
+<p><strong>答案：</strong> Baseline 是由 Web Platform DX（web-platform-dx/web-features 社区组）维护的 Web 特性支持分级，数据基于 browser-compat-data（MDN 页首的徽章即来自它），核心浏览器集合包含 Chrome/Edge/Firefox/Safari 的桌面与移动版：</p>
+<ul><li><strong>广泛可用（Widely available）</strong>：在所有核心浏览器互操作可用满 <strong>30 个月</strong>，可无兜底直接用；</li><li><strong>新增可用（Newly available）</strong>：最后一个核心浏览器刚补齐，最新版都能用，但旧设备仍需考虑降级；</li><li><strong>有限可用（Limited availability）</strong>：仍有核心引擎缺失或带前缀/flag。</li></ul>
+<ul><li><strong>怎么用</strong>：查 MDN/Can I Use 上的 Baseline 徽章；工程上 Browserslist（2025 年起）已支持 <code>baseline widely available</code>、<code>baseline newly available</code>、<code>baseline 2024</code> 等查询，Autoprefixer/PostCSS 等工具据此决定是否转译。</li><li><strong>场景/意义</strong>：面试中遇到"这个新属性能不能上生产"，正确姿势不是只看 caniuse 一块绿色，而是确认它处于哪个 Baseline 级别，并对 newly/limited 特性配合 <code>@supports</code> 做渐进增强、给出降级体验。</li></ul>
+<h3>124. 🆕 可自定义 <code>&lt;select&gt;</code> 和 Invoker Commands（<code>command</code>/<code>commandfor</code>）进展如何？</h3>
+<p><strong>答案：</strong> 这是 Open UI 推动的两个表单/交互增强，面试中定位为"知道方案、知道支持状态、知道渐进增强"即可。</p>
+<p><strong>（1）Customizable Select</strong>：保留原生 <code>&lt;select&gt;</code> 的键盘与无障碍行为，通过 <code>appearance: base-select</code> 开放样式，配合内置 <code>&lt;button&gt;</code>、<code>&lt;selectedcontent&gt;</code> 自定义触发按钮和富文本选项（早期提案名 <code>&lt;selectmenu&gt;</code>/<code>&lt;selectlist&gt;</code> 已废弃更名）：</p>
+<pre><code class="language-html">&lt;style&gt;
+  select, select::picker(select) { appearance: base-select; }
+&lt;/style&gt;
+&lt;select&gt;
+  &lt;button type=&quot;select&quot;&gt;&lt;selectedcontent&gt;&lt;/selectedcontent&gt;&lt;/button&gt;
+  &lt;option&gt;● 进行中&lt;/option&gt;
+  &lt;option&gt;✓ 已完成&lt;/option&gt;
+  &lt;option&gt;✕ 已取消&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+<p><strong>（2）Invoker Commands API</strong>：用 <code>commandfor</code>/<code>command</code> 声明式触发命令，替代开关 dialog/popover 的样板 JS：</p>
+<pre><code class="language-html">&lt;dialog id=&quot;d&quot;&gt;...&lt;/dialog&gt;
+&lt;button commandfor=&quot;d&quot; command=&quot;show-modal&quot;&gt;打开对话框&lt;/button&gt;
+&lt;button commandfor=&quot;tip&quot; command=&quot;show-popover&quot;&gt;显示提示&lt;/button&gt;</code></pre>
+<p>内置命令包括 <code>show-modal</code>、<code>close</code>、<code>request-close</code>、<code>show-popover</code>、<code>hide-popover</code>、<code>toggle-popover</code> 等；自定义命令通过监听 <code>command</code> 事件实现，可视为 <code>popovertarget</code> 的泛化版本。</p>
+<ul><li><strong>场景</strong>：消灭自建下拉组件和弹窗开关的重复 JS；统一键盘、读屏和移动端行为。</li><li><strong>兼容性（2026-09 核实）</strong>：Customizable Select 在 Chrome/Edge 135+（2025 年）已稳定发布，Safari 27（2026 年新版）加入，Firefox 尚未支持，<strong>非 Baseline</strong>，但旧浏览器自动回退为原生控件，可安全渐进增强；<code>command</code>/<code>commandfor</code> Chrome/Edge 135+（2025-04），2025 年 12 月成为 Baseline 新增可用（Safari/Firefox 新版已跟进），旧浏览器可用点击监听兜底。</li></ul>
+<h2>总结</h2>
+<p>这些题目覆盖了 HTML5 语义化、表单与多媒体、CSS 基础、盒模型、布局、响应式、性能优化、工程实践，以及现代 CSS/HTML 新特性——包括容器查询、原生嵌套、<code>:has()</code>、<code>&lt;dialog&gt;</code>/Popover、锚点定位、滚动驱动动画、View Transitions、<code>color-mix()</code> 与 Baseline 兼容性判断，适合作为前端基础面试系统复习资料。新特性均建议遵循"Baseline 分级 + <code>@supports</code> 渐进增强 + 尊重 <code>prefers-reduced-motion</code>"的原则落地。</p>
+</div>
+</body>
+</html>
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/static/">STATIC</a></li>
+            <li><a href="/static/i/">I</a></li>
+            <li>P0-CSS-HTML5-QA</li>
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

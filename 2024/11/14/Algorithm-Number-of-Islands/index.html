@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目给定一个由 &#39;1&#39;（陆地）和 &#39;0&#39;（水）组成的二维网格，计算岛屿的数量。岛屿由水平或垂直方向上相邻的陆地连接形成，且四周都被水包围。 示例: 123456输入:[[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;], [&quot;1&quot;,&quot;1&amp;q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 岛屿数量 (Number of Islands)">
+<meta property="og:url" content="https://jackniu81.github.io/2024/11/14/Algorithm-Number-of-Islands/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目给定一个由 &#39;1&#39;（陆地）和 &#39;0&#39;（水）组成的二维网格，计算岛屿的数量。岛屿由水平或垂直方向上相邻的陆地连接形成，且四周都被水包围。 示例: 123456输入:[[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;], [&quot;1&quot;,&quot;1&amp;q">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-14T00:33:51.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:52:06.985Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2024/11/14/Algorithm-Number-of-Islands/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2024/11/14/Algorithm-Number-of-Islands/","path":"2024/11/14/Algorithm-Number-of-Islands/","title":"算法 - 岛屿数量 (Number of Islands)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 岛屿数量 (Number of Islands) | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/11/14/Algorithm-Number-of-Islands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 岛屿数量 (Number of Islands) | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 岛屿数量 (Number of Islands)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-14 08:33:51" itemprop="dateCreated datePublished" datetime="2024-11-14T08:33:51+08:00">2024-11-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个由 <code>&#39;1&#39;</code>（陆地）和 <code>&#39;0&#39;</code>（水）组成的二维网格，计算岛屿的数量。岛屿由<strong>水平或垂直方向</strong>上相邻的陆地连接形成，且四周都被水包围。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">[[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],</span><br><span class="line"> [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],</span><br><span class="line"> [&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],</span><br><span class="line"> [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;]]</span><br><span class="line">输出: 3</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>典型的<strong>洪水填充（Flood Fill）&#x2F; 连通块计数</strong>。</p>
+<p>遍历每个格子：</p>
+<ul>
+<li>遇到 <code>&#39;1&#39;</code>，说明发现一座还没统计过的岛屿，<code>count++</code>。</li>
+<li>立刻从该点做一次 DFS&#x2F;BFS，把与它<strong>四连通</strong>的所有 <code>&#39;1&#39;</code> 全部「淹掉」（标记为 <code>&#39;0&#39;</code> 或写入 visited），这样同一座岛不会重复计数。</li>
+<li>继续扫描，直到所有格子处理完。</li>
+</ul>
+<p>「淹掉」即去重：一座岛只需在遇到它的第一个陆地格时计一次，之后整片都变 <code>&#39;0&#39;</code> 就不会再触发计数。</p>
+<ul>
+<li>时间复杂度：<code>O(m × n)</code>，每个格子最多访问常数次。</li>
+<li>空间复杂度：<code>O(m × n)</code> 最坏（递归栈或队列，全陆地时）。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">numIslands</span>(<span class="params"><span class="attr">grid</span>: <span class="built_in">string</span>[][]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (grid.<span class="property">length</span> === <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> m = grid.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> n = grid[<span class="number">0</span>].<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// DFS 淹没整座岛</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">sink</span>(<span class="params"><span class="attr">r</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (r &lt; <span class="number">0</span> || r &gt;= m || c &lt; <span class="number">0</span> || c &gt;= n || grid[r][c] !== <span class="string">&quot;1&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[r][c] = <span class="string">&quot;0&quot;</span>; <span class="comment">// 标记已访问（淹掉）</span></span><br><span class="line">        <span class="title function_">sink</span>(r + <span class="number">1</span>, c);</span><br><span class="line">        <span class="title function_">sink</span>(r - <span class="number">1</span>, c);</span><br><span class="line">        <span class="title function_">sink</span>(r, c + <span class="number">1</span>);</span><br><span class="line">        <span class="title function_">sink</span>(r, c - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> r = <span class="number">0</span>; r &lt; m; r++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> c = <span class="number">0</span>; c &lt; n; c++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (grid[r][c] === <span class="string">&quot;1&quot;</span>) &#123;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="title function_">sink</span>(r, c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// BFS 版（防止超深网格递归爆栈）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">numIslandsBFS</span>(<span class="params"><span class="attr">grid</span>: <span class="built_in">string</span>[][]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> m = grid.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> n = grid[<span class="number">0</span>].<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> dirs = [</span><br><span class="line">        [<span class="number">1</span>, <span class="number">0</span>], [-<span class="number">1</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, -<span class="number">1</span>],</span><br><span class="line">    ];</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> r = <span class="number">0</span>; r &lt; m; r++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> c = <span class="number">0</span>; c &lt; n; c++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (grid[r][c] !== <span class="string">&quot;1&quot;</span>) <span class="keyword">continue</span>;</span><br><span class="line">            count++;</span><br><span class="line">            grid[r][c] = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">            <span class="keyword">const</span> <span class="attr">queue</span>: [<span class="built_in">number</span>, <span class="built_in">number</span>][] = [[r, c]];</span><br><span class="line">            <span class="keyword">while</span> (queue.<span class="property">length</span>) &#123;</span><br><span class="line">                <span class="keyword">const</span> [x, y] = queue.<span class="title function_">shift</span>()!;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">const</span> [dx, dy] <span class="keyword">of</span> dirs) &#123;</span><br><span class="line">                    <span class="keyword">const</span> nx = x + dx;</span><br><span class="line">                    <span class="keyword">const</span> ny = y + dy;</span><br><span class="line">                    <span class="keyword">if</span> (nx &gt;= <span class="number">0</span> &amp;&amp; nx &lt; m &amp;&amp; ny &gt;= <span class="number">0</span> &amp;&amp; ny &lt; n &amp;&amp; grid[nx][ny] === <span class="string">&quot;1&quot;</span>) &#123;</span><br><span class="line">                        grid[nx][ny] = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">                        queue.<span class="title function_">push</span>([nx, ny]);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>DFS 爆栈风险</strong>：超大网格（如 1000×1000 全陆地）递归深度可达百万级，BFS 或显式栈更稳，这是全栈工程意识的加分点。</li>
+<li><strong>不允许修改原网格？</strong> 用 <code>visited</code> 布尔矩阵替代「淹成 0」，逻辑不变。</li>
+<li><strong>岛屿最大面积（695）&#x2F; 岛屿周长（463）</strong>：DFS 时顺带累加面积 &#x2F; 统计临海面数。</li>
+<li><strong>封闭岛屿、地图分析（多源 BFS 求离陆地最远的海）</strong> 都是 Flood Fill 家族的变体。</li>
+<li><strong>并查集解法</strong>：把相邻陆地 union，最后数连通分量，能顺带动态加陆地，体现数据结构选型能力。</li>
+<li>四连通 vs 八连通（含对角）只需增减 <code>dirs</code>，注意题意。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 200 题 | DFS&#x2F;BFS 网格模板</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/29/Algorithm-Longest-Palindromic-Substring/" rel="prev" title="算法 - 最长回文子串（中心扩散法）">
+                  <i class="fa fa-angle-left"></i> 算法 - 最长回文子串（中心扩散法）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/12/05/Algorithm-Kth-Largest-Element/" rel="next" title="算法 - 数组第 K 大元素 &#x2F; TopK 问题">
+                  算法 - 数组第 K 大元素 / TopK 问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

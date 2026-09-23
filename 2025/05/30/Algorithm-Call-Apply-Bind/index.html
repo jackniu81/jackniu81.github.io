@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目在 Function.prototype 上实现三个方法（挂到自定义名字以免污染）：  myCall(thisArg, ...args)：以 thisArg 为 this、逐个传参，立即调用函数。 myApply(thisArg, argsArray)：同上，但参数以数组形式传入。 myBind(thisArg, ...partialArgs)：返回一个新函数，绑定 this 并可柯里化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 手写 call &#x2F; apply &#x2F; bind">
+<meta property="og:url" content="https://jackniu81.github.io/2025/05/30/Algorithm-Call-Apply-Bind/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目在 Function.prototype 上实现三个方法（挂到自定义名字以免污染）：  myCall(thisArg, ...args)：以 thisArg 为 this、逐个传参，立即调用函数。 myApply(thisArg, argsArray)：同上，但参数以数组形式传入。 myBind(thisArg, ...partialArgs)：返回一个新函数，绑定 this 并可柯里化">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-30T12:18:05.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:56:10.129Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2025/05/30/Algorithm-Call-Apply-Bind/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2025/05/30/Algorithm-Call-Apply-Bind/","path":"2025/05/30/Algorithm-Call-Apply-Bind/","title":"算法 - 手写 call / apply / bind"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 手写 call / apply / bind | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-call-apply"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 call &#x2F; apply</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-bind"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 bind</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/05/30/Algorithm-Call-Apply-Bind/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 手写 call &#x2F; apply &#x2F; bind | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 手写 call / apply / bind
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-05-30 20:18:05" itemprop="dateCreated datePublished" datetime="2025-05-30T20:18:05+08:00">2025-05-30</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>在 <code>Function.prototype</code> 上实现三个方法（挂到自定义名字以免污染）：</p>
+<ul>
+<li><code>myCall(thisArg, ...args)</code>：以 <code>thisArg</code> 为 <code>this</code>、逐个传参，<strong>立即调用</strong>函数。</li>
+<li><code>myApply(thisArg, argsArray)</code>：同上，但参数以<strong>数组</strong>形式传入。</li>
+<li><code>myBind(thisArg, ...partialArgs)</code>：返回一个<strong>新函数</strong>，绑定 <code>this</code> 并可<strong>柯里化</strong>预置部分参数；新函数被 <code>new</code> 时，<code>this</code> 绑定失效（指向新建实例），但预置参数仍生效。</li>
+</ul>
+<p>要求处理 <code>thisArg</code> 为原始值（应装箱&#x2F;或在全局环境忽略）、<code>null</code>&#x2F;<code>undefined</code>（指向全局）等边界。</p>
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>三者核心都是一句话：<strong>让函数以某个对象作为 <code>this</code> 来执行</strong>。技巧是把函数临时设为该对象的属性，通过 <code>obj.fn()</code> 调用，此时 <code>this</code> 自然指向 <code>obj</code>，调用完删除临时属性。</p>
+<h2 id="2-1-call-apply"><a href="#2-1-call-apply" class="headerlink" title="2.1 call &#x2F; apply"></a>2.1 call &#x2F; apply</h2><ol>
+<li><code>thisArg</code> 为 <code>null/undefined</code> 时用全局对象（浏览器 <code>globalThis</code>）。</li>
+<li>把原始值 <code>Object(thisArg)</code> 装箱成对象（严格模式下 call 传入原始值 this 仍是原始值，这里按非严格近似）。</li>
+<li>用唯一的 <code>Symbol</code> 作为临时属性名，避免与已有 key 冲突。</li>
+<li>调用后 <code>delete</code> 掉临时属性。</li>
+<li><code>apply</code> 只是把数组参数展开传入。</li>
+</ol>
+<h2 id="2-2-bind"><a href="#2-2-bind" class="headerlink" title="2.2 bind"></a>2.2 bind</h2><p>bind 不立即执行，而是返回一个 <code>boundFunction</code>：</p>
+<ul>
+<li><p>普通调用时，<code>this</code> 固定为绑定对象，且把预置参数和调用时参数拼接（柯里化）。</p>
+</li>
+<li><p><strong>用 <code>new</code> 调用 boundFunction 时</strong>，ES 规范要求忽略绑定的 <code>this</code>，创建全新实例，但预置参数仍前置。实现关键：<code>new bind(Fn)</code> 时原型链上 <code>boundFunction.prototype === Fn.prototype</code>，因此判断 <code>this instanceof boundFunction</code> 来决定用 <code>thisArg</code> 还是新建对象。</p>
+</li>
+<li><p>时间复杂度：调用时才确定，均 <code>O(参数)</code>。</p>
+</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// myCall</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">myCall</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Function</span>, <span class="attr">thisArg</span>?: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> ctx = thisArg == <span class="literal">null</span> ? globalThis : <span class="title class_">Object</span>(thisArg);</span><br><span class="line">    <span class="keyword">const</span> key = <span class="title class_">Symbol</span>(<span class="string">&quot;fn&quot;</span>);</span><br><span class="line">    (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key] = <span class="variable language_">this</span>; <span class="comment">// this 即调用者函数</span></span><br><span class="line">    <span class="keyword">const</span> result = (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key](...args);</span><br><span class="line">    <span class="title function_">delete</span> (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// myApply</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">myApply</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Function</span>, <span class="attr">thisArg</span>?: <span class="built_in">any</span>, <span class="attr">argsList</span>?: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> ctx = thisArg == <span class="literal">null</span> ? globalThis : <span class="title class_">Object</span>(thisArg);</span><br><span class="line">    <span class="keyword">const</span> key = <span class="title class_">Symbol</span>(<span class="string">&quot;fn&quot;</span>);</span><br><span class="line">    (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key] = <span class="variable language_">this</span>;</span><br><span class="line">    <span class="keyword">const</span> result = argsList</span><br><span class="line">        ? (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key](...argsList)</span><br><span class="line">        : (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key]();</span><br><span class="line">    <span class="title function_">delete</span> (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// myBind</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">myBind</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Function</span>, <span class="attr">thisArg</span>?: <span class="built_in">any</span>, ...<span class="attr">boundArgs</span>: <span class="built_in">any</span>[]</span>): <span class="title class_">Function</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> original = <span class="variable language_">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用一个空函数承接原型链，保证 new bound() 能拿到 original.prototype</span></span><br><span class="line">    <span class="keyword">const</span> bound = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">callArgs</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> allArgs = [...boundArgs, ...callArgs]; <span class="comment">// 柯里化：预置参数在前</span></span><br><span class="line">        <span class="comment">// 被 new 调用时 this 是新建实例，忽略绑定的 thisArg</span></span><br><span class="line">        <span class="keyword">const</span> wasNew = <span class="keyword">new</span>.<span class="property">target</span> !== <span class="literal">undefined</span>;</span><br><span class="line">        <span class="keyword">if</span> (wasNew) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">new</span> (original <span class="keyword">as</span> <span class="built_in">any</span>)(...allArgs);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> original.<span class="title function_">apply</span>(thisArg, allArgs);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (original.<span class="property"><span class="keyword">prototype</span></span>) &#123;</span><br><span class="line">        bound.<span class="property"><span class="keyword">prototype</span></span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(original.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bound;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">name</span>: <span class="string">&quot;jack&quot;</span> &#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">greet</span>(<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, <span class="attr">a</span>: <span class="built_in">string</span>, <span class="attr">b</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;a&#125;</span> <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span> <span class="subst">$&#123;b&#125;</span>`</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(greet.<span class="title function_">myCall</span>(obj, <span class="string">&quot;hi&quot;</span>, <span class="string">&quot;!&quot;</span>));          <span class="comment">// &quot;hi jack !&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(greet.<span class="title function_">myApply</span>(obj, [<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;?&quot;</span>]));    <span class="comment">// &quot;hello jack ?&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> boundGreet = greet.<span class="title function_">myBind</span>(obj, <span class="string">&quot;hey&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">boundGreet</span>(<span class="string">&quot;there&quot;</span>));                   <span class="comment">// &quot;hey jack there&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>bind 的 <code>new</code> 语义</strong>是本题最大的区分点：很多人 bind 只会 <code>apply</code>，答不出 <code>new.target</code> 判断与 <code>boundFunction.prototype</code> 的桥接，原型链一断 <code>instanceof</code> 就错。</li>
+<li><strong>Symbol 临时属性名</strong>：用 <code>Symbol()</code> 或 <code>fn_${Date.now()}</code> 避免覆盖对象上同名方法，比直接写 <code>ctx.fn</code> 严谨。</li>
+<li><strong>严格模式差异</strong>：严格模式下 <code>call(1)</code> 的 <code>this</code> 就是 <code>1</code> 而非装箱对象，<code>Object(thisArg)</code> 是近似；能点出这条即显深度。</li>
+<li>三者关系：<code>call</code>&#x2F;<code>apply</code> 只传参方式不同、都立即执行；<code>bind</code> 返回新函数且能柯里化，底层常复用 <code>apply</code>。</li>
+<li>关联：<code>instanceof</code> 手写见下一篇 [手写 instanceof]，同属「理解原型与 this」的必考组合。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 手写原型三件套 | this 绑定机制</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/04/15/Algorithm-Deep-Clone/" rel="prev" title="算法 - 深拷贝（支持循环引用）">
+                  <i class="fa fa-angle-left"></i> 算法 - 深拷贝（支持循环引用）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/13/Algorithm-Instanceof/" rel="next" title="算法 - 手写 instanceof">
+                  算法 - 手写 instanceof <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

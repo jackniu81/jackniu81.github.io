@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目给你一个字符串 s，找到其中最长的回文子串。回文指正读反读都一样。 示例: 12345输入: s &#x3D; &quot;babad&quot;输出: &quot;bab&quot;（&quot;aba&quot; 同样是合法答案）输入: s &#x3D; &quot;cbbd&quot;输出: &quot;bb&quot;  2. 解题思路2.1 中心扩散（推荐，直观且高效）回文串一定围绕某个「中心」对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 最长回文子串（中心扩散法）">
+<meta property="og:url" content="https://jackniu81.github.io/2024/10/29/Algorithm-Longest-Palindromic-Substring/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目给你一个字符串 s，找到其中最长的回文子串。回文指正读反读都一样。 示例: 12345输入: s &#x3D; &quot;babad&quot;输出: &quot;bab&quot;（&quot;aba&quot; 同样是合法答案）输入: s &#x3D; &quot;cbbd&quot;输出: &quot;bb&quot;  2. 解题思路2.1 中心扩散（推荐，直观且高效）回文串一定围绕某个「中心」对">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-29T02:47:33.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:51:20.422Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2024/10/29/Algorithm-Longest-Palindromic-Substring/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2024/10/29/Algorithm-Longest-Palindromic-Substring/","path":"2024/10/29/Algorithm-Longest-Palindromic-Substring/","title":"算法 - 最长回文子串（中心扩散法）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 最长回文子串（中心扩散法） | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E4%B8%AD%E5%BF%83%E6%89%A9%E6%95%A3%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%8C%E7%9B%B4%E8%A7%82%E4%B8%94%E9%AB%98%E6%95%88%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 中心扩散（推荐，直观且高效）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-O-n%C2%B2-%E7%A9%BA%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 动态规划 O(n²) 空间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/10/29/Algorithm-Longest-Palindromic-Substring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 最长回文子串（中心扩散法） | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 最长回文子串（中心扩散法）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-29 10:47:33" itemprop="dateCreated datePublished" datetime="2024-10-29T10:47:33+08:00">2024-10-29</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个字符串 <code>s</code>，找到其中最长的<strong>回文子串</strong>。回文指正读反读都一样。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;babad&quot;</span><br><span class="line">输出: &quot;bab&quot;（&quot;aba&quot; 同样是合法答案）</span><br><span class="line"></span><br><span class="line">输入: s = &quot;cbbd&quot;</span><br><span class="line">输出: &quot;bb&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-中心扩散（推荐，直观且高效）"><a href="#2-1-中心扩散（推荐，直观且高效）" class="headerlink" title="2.1 中心扩散（推荐，直观且高效）"></a>2.1 中心扩散（推荐，直观且高效）</h2><p>回文串一定围绕某个「中心」对称展开。长度为 n 的字符串共有 <code>2n - 1</code> 个中心：</p>
+<ul>
+<li><code>n</code> 个单字符中心（产生奇数长度回文，如 “aba”）。</li>
+<li><code>n - 1</code> 个双字符间隙中心（产生偶数长度回文，如 “abba”）。</li>
+</ul>
+<p>枚举每个中心，向两边同时扩展直到不再相等，记录最长的一段。每个中心调用一次扩散函数，分别以 <code>i</code>（奇）和 <code>i, i+1</code>（偶）为初始左右指针。</p>
+<ul>
+<li>时间复杂度：<code>O(n²)</code>；空间复杂度：<code>O(1)</code>。</li>
+</ul>
+<h2 id="2-2-动态规划-O-n²-空间"><a href="#2-2-动态规划-O-n²-空间" class="headerlink" title="2.2 动态规划 O(n²) 空间"></a>2.2 动态规划 O(n²) 空间</h2><p><code>dp[i][j]</code> 表示 <code>s[i..j]</code> 是否回文：<code>dp[i][j] = (s[i]===s[j]) &amp;&amp; dp[i+1][j-1]</code>。按长度从小到大填表。空间更大，思路清晰可作为对照。</p>
+<blockquote>
+<p>存在 <code>O(n)</code> 的 Manacher 算法，面试一般不要求手写，能提名字并说明它是「利用已知回文的对称性避免重复扩展」即为加分。</p>
+</blockquote>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">longestPalindrome</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (s.<span class="property">length</span> &lt; <span class="number">2</span>) <span class="keyword">return</span> s;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> start = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> maxLen = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 (left, right) 向两边扩散，返回回文长度</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">expand</span>(<span class="params"><span class="attr">left</span>: <span class="built_in">number</span>, <span class="attr">right</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; right &lt; s.<span class="property">length</span> &amp;&amp; s[left] === s[right]) &#123;</span><br><span class="line">            left--;</span><br><span class="line">            right++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> right - left - <span class="number">1</span>; <span class="comment">// 注意循环退出时各多走了一步</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; s.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">const</span> oddLen = <span class="title function_">expand</span>(i, i);     <span class="comment">// 奇数中心</span></span><br><span class="line">        <span class="keyword">const</span> evenLen = <span class="title function_">expand</span>(i, i + <span class="number">1</span>); <span class="comment">// 偶数中心</span></span><br><span class="line">        <span class="keyword">const</span> len = <span class="title class_">Math</span>.<span class="title function_">max</span>(oddLen, evenLen);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (len &gt; maxLen) &#123;</span><br><span class="line">            maxLen = len;</span><br><span class="line">            <span class="comment">// 由中心反推起点：奇偶统一用这个式子</span></span><br><span class="line">            start = i - <span class="title class_">Math</span>.<span class="title function_">floor</span>((len - <span class="number">1</span>) / <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> s.<span class="title function_">slice</span>(start, start + maxLen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;babad&quot;</span>)); <span class="comment">// &quot;bab&quot; 或 &quot;aba&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;cbbd&quot;</span>));  <span class="comment">// &quot;bb&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;a&quot;</span>));     <span class="comment">// &quot;a&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>起点公式 <code>i - (len-1)/2</code> 是易错点</strong>：奇偶都适用，因为 <code>(len-1)/2</code> 向下取整正好覆盖两种中心的偏移差异。</li>
+<li><strong>最长回文子序列（516）</strong>：子序列可不连续，转成「s 与 reverse(s) 的 LCS」或区间 DP <code>dp[i][j]</code>，别和本题混淆。</li>
+<li><strong>Manacher</strong>：把 O(n²) 优化到 O(n)，核心是维护「右边界最大的回文」及其对称中心，复用已知信息。</li>
+<li>字符串匹配类（回文、子串、子序列）先问自己：中心？双指针？区间 DP？——建立这三选一的直觉。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 5 题 | 中心扩散模板</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/11/Algorithm-Reverse-Words-in-a-String/" rel="prev" title="算法 - 反转字符串中的单词">
+                  <i class="fa fa-angle-left"></i> 算法 - 反转字符串中的单词
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/14/Algorithm-Number-of-Islands/" rel="next" title="算法 - 岛屿数量 (Number of Islands)">
+                  算法 - 岛屿数量 (Number of Islands) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

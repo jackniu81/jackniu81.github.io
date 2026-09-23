@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目实现一个函数 myInstanceof(left, right)，等价于原生 instanceof 运算符：  判断 left 是否是 right 的实例，即 right.prototype 是否出现在 left 的原型链上。 是返回 true，否则返回 false。  示例: 1234myInstanceof([], Array)      &#x2F;&#x2F; truemyInstanceof([]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 手写 instanceof">
+<meta property="og:url" content="https://jackniu81.github.io/2025/06/13/Algorithm-Instanceof/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目实现一个函数 myInstanceof(left, right)，等价于原生 instanceof 运算符：  判断 left 是否是 right 的实例，即 right.prototype 是否出现在 left 的原型链上。 是返回 true，否则返回 false。  示例: 1234myInstanceof([], Array)      &#x2F;&#x2F; truemyInstanceof([]">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-13T03:47:29.000Z">
+<meta property="article:modified_time" content="2026-09-23T13:57:07.462Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2025/06/13/Algorithm-Instanceof/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2025/06/13/Algorithm-Instanceof/","path":"2025/06/13/Algorithm-Instanceof/","title":"算法 - 手写 instanceof"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 手写 instanceof | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/06/13/Algorithm-Instanceof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 手写 instanceof | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 手写 instanceof
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-06-13 11:47:29" itemprop="dateCreated datePublished" datetime="2025-06-13T11:47:29+08:00">2025-06-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个函数 <code>myInstanceof(left, right)</code>，等价于原生 <code>instanceof</code> 运算符：</p>
+<ul>
+<li>判断 <code>left</code> 是否是 <code>right</code> 的实例，即 <code>right.prototype</code> 是否出现在 <code>left</code> 的<strong>原型链</strong>上。</li>
+<li>是返回 <code>true</code>，否则返回 <code>false</code>。</li>
+</ul>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">myInstanceof([], Array)      // true</span><br><span class="line">myInstanceof([], Object)     // true（Array.prototype 的原型是 Object.prototype）</span><br><span class="line">myInstanceof(1, Number)      // false（原始值不在原型链上；new Number(1) 则 true）</span><br><span class="line">myInstanceof(null, Object)   // false</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p><code>instanceof</code> 的本质：<strong>沿 <code>left</code> 的原型链逐级向上查找，看能否碰到 <code>right.prototype</code></strong>。</p>
+<p>关键概念澄清：</p>
+<ul>
+<li><code>instanceof</code> 判断的不是「谁 new 出来的」，而是「<code>left.__proto__</code> 链上有没有 <code>right.prototype</code> 这个对象引用」。</li>
+<li>原型链靠 <code>__proto__</code>（即 <code>Object.getPrototypeOf</code>）向上走；构造函数的 <code>prototype</code> 挂在实例的 <code>__proto__</code> 上。</li>
+</ul>
+<p>算法步骤：</p>
+<ol>
+<li>若 <code>left</code> 是原始值或 <code>null</code>，直接 <code>false</code>（原始值没有原型链，原生也会返回 false）。</li>
+<li>取 <code>right.prototype</code> 作为目标。</li>
+<li>从 <code>Object.getPrototypeOf(left)</code> 开始，沿 <code>__proto__</code> 上溯：命中目标即 <code>true</code>；到 <code>null</code>（原型链顶）仍未命中则 <code>false</code>。</li>
+</ol>
+<blockquote>
+<p>进阶：原生 <code>instanceof</code> 会先调用 <code>right</code> 上的静态方法 <code>Symbol.hasInstance</code>（若定义），能提到这点是满分细节。</p>
+</blockquote>
+<ul>
+<li>时间复杂度：<code>O(原型链长度)</code>。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">myInstanceof</span>(<span class="params"><span class="attr">left</span>: <span class="built_in">any</span>, <span class="attr">right</span>: <span class="built_in">any</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="comment">// 原始值 / null / undefined 直接 false</span></span><br><span class="line">    <span class="keyword">if</span> (left === <span class="literal">null</span> || (<span class="keyword">typeof</span> left !== <span class="string">&quot;object&quot;</span> &amp;&amp; <span class="keyword">typeof</span> left !== <span class="string">&quot;function&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持 Symbol.hasInstance（对齐原生优先级）</span></span><br><span class="line">    <span class="keyword">const</span> hasInstance = right[<span class="title class_">Symbol</span>.<span class="property">hasInstance</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> hasInstance === <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> !!hasInstance.<span class="title function_">call</span>(right, left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> right !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&quot;Right-hand side of &#x27;instanceof&#x27; is not callable&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> proto = right.<span class="property"><span class="keyword">prototype</span></span>; <span class="comment">// 要找的目标</span></span><br><span class="line">    <span class="keyword">let</span> cursor = <span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(left);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cursor !== <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cursor === proto) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        cursor = <span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(cursor); <span class="comment">// 沿原型链上溯</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Animal</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Dog</span>));     <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Animal</span>));  <span class="comment">// true（继承链）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Object</span>));  <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="string">&quot;str&quot;</span>, <span class="title class_">String</span>));      <span class="comment">// false（原始值）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;s&quot;</span>), <span class="title class_">String</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>原型链三条铁律</strong>要能脱口而出：<code>实例.__proto__ === 构造函数.prototype</code>；<code>构造函数.__proto__ === Function.prototype</code>；<code>Object.prototype.__proto__ === null</code>（链顶）。</li>
+<li><strong><code>instanceof</code> vs <code>typeof</code> vs <code>Object.prototype.toString</code></strong>：<code>typeof</code> 只分原始类型、<code>instanceof</code> 查原型链判引用类型、<code>toString.call(x)</code> 最精确（能区分 Array&#x2F;Date&#x2F;RegExp）。三者的适用边界是高频追问。</li>
+<li><strong>跨 realm 失效</strong>：<code>iframe</code> 里的数组用 <code>instanceof Array</code> 会 false（不同全局的 <code>Array.prototype</code> 不同），此时应改用 <code>Array.isArray</code>。能点出这个坑非常加分。</li>
+<li><strong><code>class</code> 语法糖</strong>：<code>extends</code> 建立的正是一条 <code>Dog.prototype.__proto__ === Animal.prototype</code> 的链，<code>instanceof</code> 才因而能向上命中父类。</li>
+<li><code>Function instanceof Function === true</code>、<code>Object instanceof Function === true</code> 这些「鸡生蛋」常用来考你原型图是否清晰。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 手写题 | 原型链理解试金石</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/30/Algorithm-Call-Apply-Bind/" rel="prev" title="算法 - 手写 call &#x2F; apply &#x2F; bind">
+                  <i class="fa fa-angle-left"></i> 算法 - 手写 call / apply / bind
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/24/Algorithm-Curry/" rel="next" title="算法 - 函数柯里化 (Currying)">
+                  算法 - 函数柯里化 (Currying) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
