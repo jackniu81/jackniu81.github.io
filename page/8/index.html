@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">97</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -163,7 +163,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-11-ngmodule/">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/CSS-interview-qa/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -181,7 +181,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-11-ngmodule/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块</a>
+          <a href="/2021/03/07/CSS-interview-qa/" class="post-title-link" itemprop="url">CSS面试题汇总</a>
         </h2>
 
         <div class="post-meta-container">
@@ -192,7 +192,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-01-11 17:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T17:11:30+08:00">2021-01-11</time>
+      <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
     </span>
 
   
@@ -205,64 +205,55 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-ngmodule%E4%B8%BE%E4%BE%8B%E8%AF%B4%E6%98%8E">2. NgModule举例、说明</a></li>
-<li><a href="#3-angular-cli%E7%94%9F%E6%88%90%E6%A8%A1%E5%9D%97">3. Angular CLI生成模块</a></li>
-<li><a href="#4-%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9D%97">4. 延迟加载模块</a></li>
-<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>模块(NgModule)是Angular的核心概念之一。模块(NgModule)用于组织业务代码，按照自己的业务场景，把组件、服务、路由打包到模块里面。</p>
-<p>模块(NgModule)的主要作用：</p>
-<ol>
-<li>NgModule 组织业务代码，开发者可以利用 NgModule 把关系比较紧密的组件组织到一起。</li>
-<li>NgModule 用来控制组件、指令、管道等的可见性，处于同一个NgModule 里面的组件默认互相可见，而对于外部的组件来说，只能看到NgModule 导出（exports）的内容。这样就实现了封装，只暴露希望暴露的组件、服务给调用者。</li>
-<li>NgModule 是 @angular&#x2F;cli 打包的最小单位。打包的时候，@angular&#x2F;cli 会检查所有 @NgModule 和路由配置，如果你配置了异步模块，cli 会自动把模块切分成独立的 chunk（块）。在 Angular 里面，打包和切分的动作是 @angular&#x2F;cli 自动处理的，不需要你干预。当然，如果需要，你也可以修改angular的编译配置，基于Webpack 配一个环境出来，自定义打包规则。</li>
-<li>NgModule 是 Router 进行异步加载的最小单位，Router 能加载的最小单位是模块，而不是组件。当然，也可以一个模块里面只放一个组件是。</li>
+          <h1 id="CSS实现水平垂直居中"><a href="#CSS实现水平垂直居中" class="headerlink" title="CSS实现水平垂直居中"></a>CSS实现水平垂直居中</h1><ol>
+<li>margin: auto;实现绝对定位元素的居中</li>
 </ol>
-<h1 id="2-NgModule举例、说明"><a href="#2-NgModule举例、说明" class="headerlink" title="2. NgModule举例、说明"></a>2. NgModule举例、说明</h1><p>前文说过，Angular中任何的Component、service，都必须属于一个NgModule。所以，使用AngularCLI生成的框架程序，自动生成的组件，也是属于一个Component的，并且标记为启动模块。<br>这样，angular站点启动后，会以这个模块为入口，根据配置加载各个模块。</p>
-<p>下面以默认生成的启动模块为例，进行解释：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="attr">declarations</span>: [</span><br><span class="line">    <span class="title class_">AppComponent</span>,</span><br><span class="line">    <span class="title class_">MyComponentComponent</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">imports</span>: [</span><br><span class="line">    <span class="title class_">BrowserModule</span>,</span><br><span class="line">    <span class="title class_">AppRoutingModule</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">providers</span>: [],</span><br><span class="line">  <span class="attr">bootstrap</span>: [<span class="title class_">AppComponent</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppModule</span> &#123; &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>declarations，用来放组件、指令、管道的声明；</li>
-<li>imports，用来导入外部模块。比如当前模块需要调用其他模块的组件，需要加入到这里。比如上面例子，导入了Browser和Routing 2个模块。</li>
-<li>providers，需要使用的第三方或者其他模块的Service 都放在这里；</li>
-<li>bootstrap，定义启动组件。 一个可以启动的Angular项目（如果只是一个Library除外），需要定义一个启动组件。</li>
-<li>exports, 声明的组件、指令和管道可以在导入了本模块的模块下任何组件的模板中使用。 导出的这些可声明对象就是该模块的公共 API。换句话说，其他模块想用本模块中定义的内容，需要在这里声明。</li>
-<li>entryComponents， 如果其他模块想要动态加载本模块中的组件到视图中， 那么，这些组件需要写入entryComponents。</li>
-</ul>
-<h1 id="3-Angular-CLI生成模块"><a href="#3-Angular-CLI生成模块" class="headerlink" title="3. Angular CLI生成模块"></a>3. Angular CLI生成模块</h1><p>AngularCLI是一个很好很强大的工具集，可以帮助我们生成很多基础代码、文件， 包括创建一个模块，并且可以制定参数。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate <span class="variable language_">module</span> &lt;name&gt; [options]</span><br></pre></td></tr></table></figure>
-<p>详情参考<a target="_blank" rel="noopener" href="https://angular.io/cli/generate#module%E3%80%82">https://angular.io/cli/generate#module。</a></p>
-<p>几个简单的例子：</p>
-<ol>
-<li>创建feature1模块： <code>ng generate module feature1</code></li>
-<li>创建feature2模块， 并且带路由：<code>ng generate module feature2 --routing</code></li>
-<li>创建一个延迟加载的feature3模块(延迟加载模块，参考下面章节)： <code>ng generate module feature3 --route feature3  --module app.module</code></li>
+<pre><code class="language-css">    .center-vertical{
+        width: 100px;
+        height: 100px;
+        background: orange;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+</code></pre>
+<ol start="2">
+<li>CSS3.0弹性布局</li>
 </ol>
-<blockquote>
-<p>说明： <code>ng generate module xxx</code> 可以简写为 <code>ng g m xxx</code></p>
-</blockquote>
-<h1 id="4-延迟加载模块"><a href="#4-延迟加载模块" class="headerlink" title="4. 延迟加载模块"></a>4. 延迟加载模块</h1><p>延迟加载使得应用程序在启动时不被载入，而是结合路由配置，在需要时才动态加载相应模块。这样 Angular 就不需要在第一个界面从服务器下载所有的文件，直到请求它，才下载相应的模块。这对提供性能和减少首屏的初始下载文件尺寸有巨大的帮助，而且它可以很容易设置。</p>
-<p>举例来说，上文创建了3个模块，主程序模块以及feature1、feature2会被打成一个包（js），feature3会被单独打一个包（js），当用户访问&#x2F;feature3&#x2F;* 的地址后，才会加载feature3这个包（js），否则永远不会请求、加载feature3的模块，从而提高性能（首页加载时间）。当一个项目大到一定程度时，最好考虑把某些模块设置为延迟加载模块。</p>
-<p>延迟加载的路由定义（angular CLI会自动生成）：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/app-routing.module.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">NgModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Routes</span>, <span class="title class_">RouterModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;feature3&#x27;</span>,</span><br><span class="line">    <span class="attr">loadChildren</span>: <span class="function">() =&gt;</span></span><br><span class="line">      <span class="keyword">import</span>(<span class="string">&#x27;./feature3/feature3.module&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">m</span>) =&gt;</span> m.<span class="property">Feature3Module</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [<span class="title class_">RouterModule</span>.<span class="title function_">forRoot</span>(routes)],</span><br><span class="line">  <span class="attr">exports</span>: [<span class="title class_">RouterModule</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppRoutingModule</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>最后复习一下生成延迟加载模块的命令<code>ng generate module feature3 --route feature3  --module app.module</code>，或者简写为 <code>ng g m feature3 --route feature3  --module app.module</code>。</p>
-<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
-<li>Angular项目，就是模块（NgModule）的一个集合，任组件、服务等必须包含在一个模块中。</li>
-<li>延迟加载模块用于提高首页加载性能。</li>
-<li>Angular CLI命令，生成模块。</li>
+<pre><code class="language-css">      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* 定义body的元素水平居中 */
+      }
+      .content {
+        width: 300px;
+        height: 300px;
+        background: orange;
+      }
+</code></pre>
+<h1 id="行内元素有哪些？块级元素有哪些？"><a href="#行内元素有哪些？块级元素有哪些？" class="headerlink" title="行内元素有哪些？块级元素有哪些？"></a>行内元素有哪些？块级元素有哪些？</h1><ol>
+<li>行内元素有：<code>a b span img input select strong</code></li>
+<li>块级元素有：<code>div ul ol li dl dt dd h1 h2 h3 h4…p</code></li>
+<li>常见的空元素：    <code>&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt; &lt;link&gt; &lt;meta&gt;</code></li>
+</ol>
+<h1 id="CSS3有哪些新特性？"><a href="#CSS3有哪些新特性？" class="headerlink" title="CSS3有哪些新特性？"></a>CSS3有哪些新特性？</h1><ol>
+<li>新增各种CSS选择器  （: not(.input)：）</li>
+<li>圆角            （border-radius:8px）</li>
+<li>多列布局      （multi-column layout）</li>
+<li>阴影和反射   （Shadow\Reflect）</li>
+<li>文字特效      （text-shadow）</li>
+<li>文字渲染      （Text-decoration）</li>
+<li>线性渐变      （gradient）</li>
+<li>旋转            （transform）</li>
+<li>缩放,定位,倾斜,动画,多背景</li>
 </ol>
 <p><br><br></p>
 <blockquote>
@@ -298,7 +289,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-9-Component-Lifecycle/">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -316,7 +307,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-9-Component-Lifecycle/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（9）- 组件的生命周期(Component Lifecycle Hook)</a>
+          <a href="/2021/03/07/web-frontend-interview-qa/" class="post-title-link" itemprop="url">前端(Fontend)面试题汇总</a>
         </h2>
 
         <div class="post-meta-container">
@@ -327,7 +318,603 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-01-11 17:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T17:11:30+08:00">2021-01-11</time>
+      <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">前端(Fontend)面试题汇总</a></p>
+</blockquote>
+<h1 id="1-http-1-1-2-0-新增加的功能"><a href="#1-http-1-1-2-0-新增加的功能" class="headerlink" title="1. http 1.1&#x2F;2.0 新增加的功能"></a>1. http 1.1&#x2F;2.0 新增加的功能</h1><p><strong>HTTP1.1</strong></p>
+<ol>
+<li><strong>缓存处理</strong>，在 HTTP1.0 中主要使用 header 来控制缓存策略。</li>
+<li><strong>带宽优化及网络连接的使用</strong>，HTTP1.1 则在请求头引入了 range 头域，它允许只请求资源的某个部分， 并且支持断点续传。</li>
+<li><strong>错误通知的管理</strong>，在 HTTP1.1 中新增了 24 个错误状态响应码，如 409（Conflict）表示请求的资源与资源的当前状态发生冲突；410（Gone）表示服务器上的某个资源被永久性的删除。</li>
+<li>Host 头处理，在 HTTP1.0 中认为每台服务器都绑定一个唯一的 IP 地址，因此，请求消息中的 URL 并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个 IP 地址。HTTP1.1 的请求消息和响应消息都应支持 Host 头域，且请求消息中如果没有 Host 头域会报告一个错误（400 Bad Request）。</li>
+<li>长连接，HTTP 1.1 支持长连接（PersistentConnection）和请求的流水线（Pipelining）处理，在一个 TCP 连接上可以传送多个 HTTP 请求和响应. (Connection： keep-alive)</li>
+</ol>
+<p><strong>HTTP2.0</strong> 大幅度的提高了 web 性能，进一步减少了网络的延迟。实现低延迟高吞吐量。</p>
+<ol>
+<li>二进制分帧 （二进制格式编码）</li>
+<li>首部压缩 （header）</li>
+<li>多路复用 （HTTP2.0 可以在共享 TCP 连接的基础上同时发送请求和响应，避免 HTTP 旧版本的队头阻塞问题）</li>
+<li>请求优先级</li>
+<li>服务器推送 （服务端根据客户端的请求，提前返回多个响应，推送额外的资源给客户端。）</li>
+</ol>
+<h1 id="2-用户输入-URL-到浏览器显现给用户页面经过了什么过程"><a href="#2-用户输入-URL-到浏览器显现给用户页面经过了什么过程" class="headerlink" title="2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程"></a>2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程</h1><ol>
+<li>用户输入 URL，浏览器获取到 URL</li>
+<li>检查缓存，如果有有效缓存，直接加载</li>
+<li>浏览器(应用层)进行 DNS 解析（直接输入 IP 地址既跳过该步骤）</li>
+<li>根据解析出的 IP 地址+端口，浏览器（应用层）发起 HTTP 请求</li>
+<li>请求到达传输层，tcp 协议为传输报文提供可靠的字节流传输服务，它通过三次握手等手段来保证传输过程中的安全可靠。通过对大块数据的分割成一个个报文段的方式提供给大量数据的便携传输。</li>
+<li>服务器端收到发送方的 HTTP 请求之后，进行请求文件资源（如 HTML 页面）的寻找并响应报文</li>
+<li>客户端收到返回内容后，处理 html</li>
+<li>解析 html，生成 dom 树</li>
+<li>CSS 解析，为 DOM 中元素加入样式</li>
+<li>javascript 解析处理，更改 dom 树</li>
+<li>进行页面渲染</li>
+<li>重排、重绘</li>
+</ol>
+<h1 id="3-HTML5-的新特性"><a href="#3-HTML5-的新特性" class="headerlink" title="3. HTML5 的新特性"></a>3. HTML5 的新特性</h1><ol>
+<li>新的内容标签：header nav content footer article 1. aside</li>
+<li>更好的单元格体系:</li>
+<li>音频、视频 API:video radio</li>
+<li>画布(Canvas) API</li>
+<li>地理(Geolocation) API</li>
+<li>网页存储(Web storage) 1. API:localStorage,sessionStorage</li>
+<li>拖拽释放(Drag and drop) API</li>
+</ol>
+<h1 id="4-对浏览器内核的理解"><a href="#4-对浏览器内核的理解" class="headerlink" title="4. 对浏览器内核的理解"></a>4. 对浏览器内核的理解</h1><p>主要分成两部分：渲染引擎(layout engine 或 Rendering Engine)和 JS 引擎。</p>
+<ol>
+<li>渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入 CSS 等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。</li>
+<li>JS 引擎则：解析和执行 javascript 来实现网页的动态效果。最开始渲染引擎和 JS 引擎并没有区分的很明确，后来 JS 引擎越来越独立，内核就倾向于只指渲染引擎。</li>
+</ol>
+<h1 id="5-cookies，sessionStorage-和-localStorage"><a href="#5-cookies，sessionStorage-和-localStorage" class="headerlink" title="5. cookies，sessionStorage 和 localStorage"></a>5. cookies，sessionStorage 和 localStorage</h1><p>cookie 是网站为了标示用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。<br>cookie 数据始终在同源的 http 请求中携带（即使不需要），记会在浏览器和服务器间来回传递。<br>sessionStorage 和 localStorage 不会自动把数据发给服务器，仅在本地保存。</p>
+<p>存储大小：<br>cookie 数据大小不能超过 4k。<br>sessionStorage 和 localStorage 虽然也有存储大小的限制，但比 cookie 大得多，可以达到 5M 或更大。</p>
+<p>有期时间：<br>localStorage 存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；<br>sessionStorage 数据在当前浏览器窗口关闭后自动删除。<br>cookie 设置的 cookie 过期时间之前一直有效，即使窗口或浏览器关闭</p>
+<h1 id="6-如何实现浏览器内多个标签页之间的通"><a href="#6-如何实现浏览器内多个标签页之间的通" class="headerlink" title="6. 如何实现浏览器内多个标签页之间的通"></a>6. 如何实现浏览器内多个标签页之间的通</h1><p>WebSocket、SharedWorker；也可以调用 localstorge、cookies 等本地存储方式；</p>
+<h1 id="7-script标签中的async、defer属性的作用"><a href="#7-script标签中的async、defer属性的作用" class="headerlink" title="7. script标签中的async、defer属性的作用"></a>7. script标签中的async、defer属性的作用</h1><ol>
+<li>Async: 可选属性。表示应该立即下载脚本，但不应妨碍页面中的其他操作，比如下载其他资源或等待加载其他脚本。</li>
+<li>Defer: 可选属性。标识脚本可以延迟到文档完全被解析和显示之后再执行。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/02/javascript-interview-qa/" class="post-title-link" itemprop="url">2021 javascript 面试题汇总</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-02 14:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T14:06:00+08:00">2021-03-02</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">2021 javascript 面试题汇总</a></p>
+</blockquote>
+<h1 id="1-this-都可以是哪些内容"><a href="#1-this-都可以是哪些内容" class="headerlink" title="1. this 都可以是哪些内容"></a>1. this 都可以是哪些内容</h1><p>对 C#、Java 等语言，this 就是当前对象，但是 javascript 不是，简单来说：</p>
+<ul>
+<li>全局 this 是 window;</li>
+<li>函数 this 是调用者;</li>
+<li>构造函数的 this 是 new 之后的新对象,</li>
+<li>call 和 apply bind 的 this 第一个参数</li>
+</ul>
+<h1 id="2-原型链-prototype"><a href="#2-原型链-prototype" class="headerlink" title="2. 原型链, prototype"></a>2. 原型链, prototype</h1><ul>
+<li>函数对象都包含 prototype 属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor 属性的含义就是指向该对象的构造函数</li>
+<li><code>__proto__</code>和 constructor 属性是对象所独有的；prototype 属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<code>__proto__</code>和 constructor 属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象 prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为 null。</li>
+<li>当访问一个对象的属性或方法时，js 引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为 null,这就是原型链。</li>
+<li>每个构造函数都有一个 prototype 属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="3-new-操作符都做了什么"><a href="#3-new-操作符都做了什么" class="headerlink" title="3. new 操作符都做了什么"></a>3. new 操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型(<code>__proto__</code>)指向构造函数的 prototype</li>
+<li>把构造函数里的 this 指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="4-Javascript-的内存回收机制"><a href="#4-Javascript-的内存回收机制" class="headerlink" title="4. Javascript 的内存回收机制"></a>4. Javascript 的内存回收机制</h1><p>Javascript 内嵌了垃圾收集器，用来跟踪内存的分配和使用，以便当分配的内存不再使用时，自动释放它。垃圾收集器会按照固定的时间间隔，或代码执行中预定的收集时间，周期性地执行这一操作。<br>垃圾收集器必须跟踪哪个变量有用哪个变量无用，对于不再有用的变量打上标记，以备将来收回其所占用的内存。用于标识无用变量的策略通常有标记清除和引用计数两种。不同浏览器采用的策略不完全一致。</p>
+<h1 id="5-内存泄漏的主要原因"><a href="#5-内存泄漏的主要原因" class="headerlink" title="5. 内存泄漏的主要原因"></a>5. 内存泄漏的主要原因</h1><ul>
+<li>缓存</li>
+<li>队列消费不及时</li>
+<li>作用域未释放</li>
+</ul>
+<h1 id="6-Javascript-性能优化"><a href="#6-Javascript-性能优化" class="headerlink" title="6. Javascript 性能优化"></a>6. Javascript 性能优化</h1><ol>
+<li>针对 js 方面的前端性能优化，可以 1）使用 ansyc&#x2F;defer 加载；2）加载时，放到<code>&lt;/body&gt;</code>之前；3) 合并 JS 文件，并进行最小化处理；4）缓存；5）使用 CDN 网络；6）js 的 HTTP 压缩</li>
+<li>删除未使用的功能性代码以及与之相关的代码， 多余的依赖库，被滥用的 npm 包。</li>
+<li>减少作用域链上的查找次数（减少循环中的活动）。比如 for 循环，把 Array.length 赋值给一个变量，而不是每次比较都直接使用 length 属性；对页面元素进行操作时，取出复制给一个变量，每次操作都对这个变量进行操作，而不是每次操作都再重复取一下这个元素；</li>
+<li>闭包导致的内存泄露。闭包可以保证函数内的变量安全，可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，不会被自动清除。我们需要手动销毁内存中的变量。（赋值为 null）；</li>
+<li>尽量少用全局变量，尽量使用局部变量。</li>
+<li>减少不必要的变量</li>
+<li>类型转换：把数字转换成字符串使用 number + “” 。 性能对比： (“” + ) &gt; String() &gt; .toString() &gt; new String()</li>
+<li>对字符串进行循环操作，譬如替换、查找，应使用正则表达式。因为本身 JavaScript 的循环速度就比较慢，而正则表达式的操作是用 C 写成的语言的 API，性能很好。</li>
+<li>浮点数转换成整型使用 Math.floor()或者 Math.round()。parseInt()是用于将字符串转换成数字，Math 是内部对象，所以 Math.floor()其实并没有多少查询方法和调用的时间，速度是最快的。</li>
+<li>使用 classname 代替大量的内联样式修改。</li>
+<li>循环遍历，尽量少用 for in， 虽然代码易读，但性能很差。 尤其是遍历属性数量未知的情况下，少用。</li>
+</ol>
+<h1 id="7-ES6-ES7-ES8-…-新增的功能"><a href="#7-ES6-ES7-ES8-…-新增的功能" class="headerlink" title="7. ES6&#x2F;ES7&#x2F;ES8&#x2F;… 新增的功能"></a>7. ES6&#x2F;ES7&#x2F;ES8&#x2F;… 新增的功能</h1><h2 id="7-1-ES6-（2015）"><a href="#7-1-ES6-（2015）" class="headerlink" title="7.1. ES6 （2015）"></a>7.1. ES6 （2015）</h2><ul>
+<li>类</li>
+<li>模块化</li>
+<li>箭头函数</li>
+<li>函数参数默认值</li>
+<li>模板字符串</li>
+<li>解构赋值</li>
+<li>延展操作符</li>
+<li>对象属性简写</li>
+<li>Promise</li>
+<li>Let与Const</li>
+</ul>
+<h2 id="7-2-ES7（2016）"><a href="#7-2-ES7（2016）" class="headerlink" title="7.2. ES7（2016）"></a>7.2. ES7（2016）</h2><ul>
+<li>数组includes()方法，用来判断一个数组是否包含一个指定的值，根据情况，如果包含则返回true，否则返回false。</li>
+<li>**指数运算符： a ** b指数运算符，它与 Math.pow(a, b)相同。</li>
+</ul>
+<h2 id="7-3-ES8（2017）"><a href="#7-3-ES8（2017）" class="headerlink" title="7.3. ES8（2017）"></a>7.3. ES8（2017）</h2><ul>
+<li>async&#x2F;await</li>
+<li>Object.values()</li>
+<li>Object.entries()</li>
+<li>String padding: padStart()和padEnd()，填充字符串达到当前长度</li>
+<li>函数参数列表结尾允许逗号</li>
+<li>Object.getOwnPropertyDescriptors()</li>
+<li>ShareArrayBuffer和Atomics对象，用于从共享内存位置读取和写入</li>
+</ul>
+<h2 id="7-4-ES9（2018）"><a href="#7-4-ES9（2018）" class="headerlink" title="7.4. ES9（2018）"></a>7.4. ES9（2018）</h2><ul>
+<li>异步迭代</li>
+<li>Promise.finally()</li>
+<li>Rest&#x2F;Spread 属性: ES2015引入了Rest参数和扩展运算符。三个点（…）仅用于数组。Rest参数语法允许我们将一个不定数量的参数表示为一个数组。</li>
+<li>正则表达式命名捕获组</li>
+<li>正则表达式反向断言</li>
+</ul>
+<h2 id="7-5-ES10新特性（2019）"><a href="#7-5-ES10新特性（2019）" class="headerlink" title="7.5. ES10新特性（2019）"></a>7.5. ES10新特性（2019）</h2><ul>
+<li>行分隔符（U + 2028）和段分隔符（U + 2029）符号现在允许在字符串文字中，与JSON匹配</li>
+<li>更加友好的 JSON.stringify</li>
+<li>新增了Array的flat()方法和flatMap()方法</li>
+<li>新增了String的trimStart()方法和trimEnd()方法</li>
+<li>Object.fromEntries()</li>
+<li>Symbol.prototype.description</li>
+<li>String.prototype.matchAll</li>
+<li>Function.prototype.toString()现在返回精确字符，包括空格和注释</li>
+<li>简化try {} catch {},修改 catch 绑定</li>
+<li>新的基本数据类型BigInt</li>
+<li>globalThis</li>
+<li>import()</li>
+<li>Legacy RegEx</li>
+<li>私有的实例方法和访问器</li>
+</ul>
+<h2 id="7-6-ES11（2020）"><a href="#7-6-ES11（2020）" class="headerlink" title="7.6. ES11（2020）"></a>7.6. ES11（2020）</h2><ul>
+<li>Nullish coalescing Operator(空值处理)</li>
+<li>import() 按需导入</li>
+</ul>
+<h2 id="7-7-ES12（2021）"><a href="#7-7-ES12（2021）" class="headerlink" title="7.7. ES12（2021）"></a>7.7. ES12（2021）</h2><ul>
+<li>string增加replaceAll</li>
+<li>Promise.any, 收一个Promise可迭代对象，只要其中的一个 promise 成功，就返回那个已经成功的 promise</li>
+<li>WeakRefs, 使用WeakRefs的Class类创建对对象的弱引用(对对象的弱引用是指当该对象应该被GC回收时不会阻止GC的回收行为)</li>
+<li>数字分隔符</li>
+<li>逻辑运算符和赋值表达式</li>
+</ul>
+<h1 id="8-VS"><a href="#8-VS" class="headerlink" title="8. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;"></a>8. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&quot;100&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>很有意思吧， 看看这两个，是等效的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span>;</span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="9-闭包"><a href="#9-闭包" class="headerlink" title="9. 闭包"></a>9. 闭包</h1><p>在 JavaScript 中，实现外部作用域访问内部作用域中变量的方法叫做闭包（closure)。这得益于高阶函数的特性：函数可以作为参数或者者返回值；</p>
+<p><strong>当一个内部函数被调用，就会形成闭包</strong>，闭包就是能够读取其他函数内部变量的函数，就是一个函数去访问了另外一个函数的中的变量的函数。</p>
+<p><strong>闭包作用</strong>：局部变量无法共享和长久的保存，而全局变量可能造成变量污染，所以我们希望有一种机制既可以长久的保存变量又不会造成全局污染。延伸变量的作用范围。</p>
+<p><strong>闭包特点</strong>：占用更多内存；不容易被释放</p>
+<p><strong>闭包用法</strong>：变量既想反复使用，又想避免全局污染如何使用？</p>
+<ol>
+<li>定义外层函数，封装被保护的局部变量。</li>
+<li>定义内层函数，执行对外部函数变量的操作。</li>
+<li>外层函数返回内层函数的对象，并且外层函数被调用，结果保存在一个全局的变量中。</li>
+</ol>
+<p>e.g.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">outerMethod</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> innerMethod = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(a + <span class="string">&quot;!&quot;</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="title function_">innerMethod</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="10-js-里的作用域是什么样子的？"><a href="#10-js-里的作用域是什么样子的？" class="headerlink" title="10. js 里的作用域是什么样子的？"></a>10. js 里的作用域是什么样子的？</h1><p>大多数语言里边都是块作作用域，以{}进行限定，js 里边不是．js 里边叫函数作用域，就是一个变量在全函数里有效．比如有个变量 p1 在函数最后一行定义，第一行也有效，但是值是 undefined.</p>
+<h1 id="11-let-和-var-的区别"><a href="#11-let-和-var-的区别" class="headerlink" title="11. let 和 var 的区别"></a>11. let 和 var 的区别</h1><ul>
+<li>var 声明变量可以重复声明，而 let 不可以重复声明，属于 TDZ 暂时性死区问题</li>
+<li>作用域不同，var 是函数作用域，而 let 是块级作用域；</li>
+<li>var 可以在声明的上面访问变量，而 let 不存在变量提升；</li>
+</ul>
+<h1 id="12-对-async-和-await-的理解"><a href="#12-对-async-和-await-的理解" class="headerlink" title="12. 对 async 和 await 的理解"></a>12. 对 async 和 await 的理解</h1><ol>
+<li>async…await 是基于 promise 的 generator 语法糖，是用来解决异步的，它用来等待 promise 的执行结果，常规函数使用 await 没有效果；</li>
+<li>async 函数返回一个 Promise 对象，可以使用 then 方法添加回调函数</li>
+<li>当函数执行的时候，一旦遇到 await 就会先返回，等到异步操作完成，再接着执行函数体内后面的语句；</li>
+</ol>
+<h1 id="13-promised-的三种状态"><a href="#13-promised-的三种状态" class="headerlink" title="13. promised 的三种状态"></a>13. promised 的三种状态</h1><p>promise 有三种状态：pending&#x2F;reslove&#x2F;reject 。pending 就是未决，resolve 可以理解为成功，reject 可以理解为拒绝。</p>
+<h1 id="14-async-await-的优点"><a href="#14-async-await-的优点" class="headerlink" title="14. async&#x2F;await 的优点"></a>14. async&#x2F;await 的优点</h1><p><strong>1）方便级联调用：</strong> 即调用依次发生的场景；</p>
+<p><strong>2）同步代码编写方式：</strong> Promise 使用 then 函数进行链式调用，一直点点点，是一种从左向右的横向写法；async&#x2F;await 从上到下，顺序执行，就像写同步代码一样，更符合代码编写习惯；</p>
+<p><strong>3）多个参数传递：</strong> Promise 的 then 函数只能传递一个参数，虽然可以通过包装成对象来传递多个参数，但是会导致传递冗余信息，频繁的解析又重新组合参数，比较麻烦；async&#x2F;await 没有这个限制，可以当做普通的局部变量来处理，用 let 或者 const 定义的块级变量想怎么用就怎么用，想定义几个就定义几个，完全没有限制，也没有冗余工作；</p>
+<p><strong>4）同步代码和异步代码可以一起编写：</strong> 使用 Promise 的时候最好将同步代码和异步代码放在不同的 then 节点中，这样结构更加清晰；async&#x2F;await 整个书写习惯都是同步的，不需要纠结同步和异步的区别，当然，异步过程需要包装成一个 Promise 对象放在 await 关键字后面；</p>
+<p><strong>5）基于协程：</strong> Promise 是根据函数式编程的范式，对异步过程进行了一层封装，async&#x2F;await 基于协程的机制，是真正的“保存上下文，控制权切换……控制权恢复，取回上下文”这种机制，是对异步过程更精确的一种描述；</p>
+<p><strong>6）async&#x2F;await 是对 Promise 的优化：</strong> async&#x2F;await 是基于 Promise 的，是进一步的一种优化，不过在写代码时，Promise 本身的 API 出现得很少，很接近同步代码的写法；</p>
+<h1 id="15-async-await-的写法"><a href="#15-async-await-的写法" class="headerlink" title="15. async&#x2F;await 的写法"></a>15. async&#x2F;await 的写法</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">testAsync</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello async&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用时</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">await</span> <span class="title function_">testAsync</span>();</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="16-apply、call-和-bind-的区别"><a href="#16-apply、call-和-bind-的区别" class="headerlink" title="16. apply、call 和 bind 的区别"></a>16. apply、call 和 bind 的区别</h1><p>这三者都是用来改变函数的 this 对象的指向的(也就是说要改变函数运行时的 context 即上下文),第一个参数都是 this 要指向的对象。</p>
+<p>不同之处：</p>
+<ol>
+<li>call 接受连续参数，apply 接受数组参数。</li>
+<li>bind 功能和 call apply 差不多，区别在于 bind 返回的是一个改变 this 指向的新函数，这个函数不是立即执行函数（call apply 两个立即执行！）</li>
+</ol>
+<h1 id="17-深拷贝的原理"><a href="#17-深拷贝的原理" class="headerlink" title="17. 深拷贝的原理"></a>17. 深拷贝的原理</h1><p>操作的是值，取出对象的值，放到一个新的{}，修改时不会影响到原数据；要完成对象的深拷贝需要使用递归遍历所有对象的属性进行赋值，也可以使用 JSON.stringfy 和 JSON.parse 操作。</p>
+<h1 id="18-set-和-Map-的区别"><a href="#18-set-和-Map-的区别" class="headerlink" title="18. set 和 Map 的区别"></a>18. set 和 Map 的区别</h1><ol>
+<li>Set 是一种类似数组的集合类型，它与数组不同的是，不允许存在重复数据；常用操作方法有：add,delete,has,clear 等；遍历使用 forEach；</li>
+<li>Map 是一种类似对象的集合类型，它与对象不同的是，key 可以接受对象类型，常用的操作方法有：set,get,has,delete 等；遍历使用 forEach</li>
+</ol>
+<h1 id="19-JS-实现双向绑定-（vue-angular-双向绑定的原理）"><a href="#19-JS-实现双向绑定-（vue-angular-双向绑定的原理）" class="headerlink" title="19. JS 实现双向绑定 （vue&#x2F;angular 双向绑定的原理）"></a>19. JS 实现双向绑定 （vue&#x2F;angular 双向绑定的原理）</h1><p><strong>vue.js</strong> 采用数据劫持（Proxy 模式）结合发布者-订阅者模式（PubSub 模式）的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。<br>Object.defineProperty( )内还包含一对儿 getter 和 setter 函数，它们被称作这个对象的访问器属性，这两个函数都不是必须的，只是在读取访问对象属性时，会调用 getter 函数，这个函数负责返回有效值，在写入对象属性时，会调用 setter 函数并传入新值，这个函数负责决定如何处理数据。</p>
+<p><strong>Angular</strong>, 采用脏检查的方式。基于 zone.js，重写 setTimeout, httpRequest 等方法，触发脏检查, 更新 dom 节点。</p>
+<h1 id="20-var-和-let-的区别"><a href="#20-var-和-let-的区别" class="headerlink" title="20. var 和 let 的区别"></a>20. var 和 let 的区别</h1><ol>
+<li>作用域不同， var 是函数作用域，let 是块作用域。</li>
+</ol>
+<ul>
+<li>在函数中声明了 var，整个函数内都是有效的，比如说在 for 循环内定义的一个 var 变量，实际上其在 for 循环以外也是可以访问的</li>
+<li>而 let 由于是块作用域，所以如果在块作用域内定义的变量，比如说在 for 循环内，在其外面是不可被访问的，所以 for 循环推荐用 let</li>
+</ul>
+<ol start="2">
+<li>let 不能在定义之前访问该变量，但是 var 可以。 （var 可以提升变量作用域）</li>
+<li>let不能被重新定义，但是var是可以的。（重新定义var，执行时会忽略）</li>
+</ol>
+<h1 id="21-Javascript-如何实现继承？"><a href="#21-Javascript-如何实现继承？" class="headerlink" title="21. Javascript 如何实现继承？"></a>21. Javascript 如何实现继承？</h1><p>1、构造继承<br>2、原型继承: Child.prototype &#x3D; new Parent();<br>3、实例继承<br>4、拷贝继承</p>
+<h1 id="22-变量提升"><a href="#22-变量提升" class="headerlink" title="22. 变量提升"></a>22. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
+<ol>
+<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
+<li>执行(执行逻辑操作)</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 输出 ReferenceError: b is not defined</span></span><br><span class="line">b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 输出 undefined</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 输出 2</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="23-函数提升"><a href="#23-函数提升" class="headerlink" title="23. 函数提升"></a>23. 函数提升</h1><p>首先要知道函数定义有两种方式的，一种是函数定义表达式，一种是函数声明语句。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数定义表达式</span></span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">function</span> (<span class="params"></span>)&#123;</span><br><span class="line">&#125;；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明语句</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提升测试</span></span><br><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="title function_">f</span>();</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 test</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="title function_">f</span>();</span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//输出 Uncaught TypeError: f is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(f);</span><br><span class="line"><span class="keyword">var</span> f = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(f);</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;fff&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//  输出</span></span><br><span class="line"><span class="comment">//  [Function: f]</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  a = <span class="number">10</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 输出：10</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>) &#123;&#125; <span class="comment">// 看似无用， 实际上在foo的作用域内重新声明了&#x27;a&#x27;，和外面的a不一样了</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">foo</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 输出：1</span></span><br><span class="line"><span class="comment">//输出：</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>重点：</p>
+<ol>
+<li>函数提升针对是函数声明语句而言，其次变量提升只提升变量名而函数提升会提升整个函数体</li>
+<li>优先级，函数提升会在变量提升的上面</li>
+</ol>
+<h1 id="24-作用域"><a href="#24-作用域" class="headerlink" title="24. 作用域"></a>24. 作用域</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1 块级作用域, 不适合变量提升</span></span><br><span class="line"><span class="comment">// es6允许块级作用域的任意嵌套。外层作用域无法读取内层作用域的变量。</span></span><br><span class="line"><span class="comment">// 内层作用域可以定义外层作用域的同名变量。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 hello</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> z = <span class="string">&quot;!&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(v, z);</span><br><span class="line"><span class="comment">//输出 :</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"><span class="comment">// world !</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2 闭包，变量提升</span></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">//输出 undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例 3， 块级作用域内let和const命令所声明的变量，只在命令所在的代码块内有效。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4 let， var与作用域、变量提升</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="25-实现一个随机排序的程序"><a href="#25-实现一个随机排序的程序" class="headerlink" title="25. 实现一个随机排序的程序"></a>25. 实现一个随机排序的程序</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">randomSort</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">random</span>() - <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.<span class="title function_">sort</span>(randomSort);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;after random sort: &quot;</span>, list.<span class="title function_">join</span>(<span class="string">&quot;,&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 箭头函数写法</span></span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.<span class="title function_">sort</span>(<span class="function">() =&gt;</span> <span class="title class_">Math</span>.<span class="title function_">random</span>() - <span class="number">0.5</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;after random sort: &quot;</span>, list.<span class="title function_">join</span>(<span class="string">&quot;,&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h1 id="26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"><a href="#26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量" class="headerlink" title="26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"></a>26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getMostUsedChar</span>(<span class="params">sourceString</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> length = sourceString.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">let</span> counter = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> currentChar = sourceString[i];</span><br><span class="line">    <span class="keyword">if</span> (counter[currentChar]) &#123;</span><br><span class="line">      counter[currentChar]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      counter[currentChar] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> maxCount = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> maxChar = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> counter) &#123;</span><br><span class="line">    <span class="keyword">if</span> (counter[key] &gt;= maxCount) &#123;</span><br><span class="line">      maxChar = key;</span><br><span class="line">      maxCount = counter[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`most used char: <span class="subst">$&#123;maxChar&#125;</span>, count: <span class="subst">$&#123;maxCount&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">getMostUsedChar</span>(<span class="string">&quot;fjiwejfal33232jkj3fjfie&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>参考:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md">https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/node-js-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/02/node-js-interview-qa/" class="post-title-link" itemprop="url">node.js 面试题总结</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-02 14:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T14:06:00+08:00">2021-03-02</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-nodejs-有哪些特点？"><a href="#1-nodejs-有哪些特点？" class="headerlink" title="1. nodejs 有哪些特点？"></a>1. nodejs 有哪些特点？</h1><p>是单线程的，但是有很高的可扩展性，使用 JavaScript 作为主流编程语言。使用的是<code>非阻塞IO,异步处理机制和事件驱动</code>。处理高效。</p>
+<p>擅长 IO 密集型业务业务处理，不擅长 CPU 密集型业务；</p>
+<h1 id="2-什么是事件循环-Event-Loop"><a href="#2-什么是事件循环-Event-Loop" class="headerlink" title="2. 什么是事件循环 Event Loop"></a>2. 什么是事件循环 Event Loop</h1><p>在进程启动动时，Node 会创建一个类似于 while(true)的循环，每执行一次循环的过程我们称之为 Tick。每个 Tick 的过程就是查看是否有事件等待处理，如果有，就取出时间相关的回调函数。如果存在相关联的回调函数，就执行它们。然后进入下一个循环；如果不再有事件待处理，就退出进程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   ┌───────────────────────┐</span><br><span class="line">┌─&gt;│        timers         │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     I/O callbacks     │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     idle, prepare     │</span><br><span class="line">│  └──────────┬────────────┘      ┌───────────────┐</span><br><span class="line">│  ┌──────────┴────────────┐      │   incoming:   │</span><br><span class="line">│  │         poll          │&lt;─────┤  connections, │</span><br><span class="line">│  └──────────┬────────────┘      │   data, etc.  │</span><br><span class="line">│  ┌──────────┴────────────┐      └───────────────┘</span><br><span class="line">│  │        check          │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">└──┤    close callbacks    │</span><br><span class="line">   └───────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>timers: 这个阶段执行 setTimeout()和 setInterval()设定的回调。</li>
+<li>I&#x2F;O callbacks: 执行几乎所有的回调，除了 close 回调，timer 的回调，和 setImmediate()的回调。</li>
+<li>idle, prepare: 仅内部使用。</li>
+<li>poll: 获取新的 I&#x2F;O 事件；node 会在适当条件下阻塞在这里。</li>
+<li>check: 执行 setImmediate()设定的回调。</li>
+<li>close callbacks: 执行比如 socket.on(‘close’, …)的回调。</li>
+</ol>
+<p>在底层， Node 是通过 libuv 来实现多线程的。<code>Libuv</code>库负责 Node API 的执行。它将不同的任务分配给不同的线程，形成一个事件循环， 以异步的方式将任务的执行结果返回给 V8 引擎。</p>
+<p>另：浏览器下的 Event Loop 如下：</p>
+<ol>
+<li>所有任务都在js执行线程上执行，形成一个执行栈(Execution Context Stack)</li>
+<li>在js执行线程之外还存在一个任务队列(Task Queen),系统把异步任务放到任务队列中，然后主线程继续执行后续的任务</li>
+<li>一旦执行栈中所有的任务执行完毕，系统就会读取任务队列。如果这时异步任务已结束等待状态，就会从任务队列进入执行栈，恢复执行</li>
+<li>js执行线程不断重复上面的第三步</li>
+</ol>
+<h1 id="3-在每个-tick-的过程中，如何判断是否有事件需要处理呢？"><a href="#3-在每个-tick-的过程中，如何判断是否有事件需要处理呢？" class="headerlink" title="3. 在每个 tick 的过程中，如何判断是否有事件需要处理呢？"></a>3. 在每个 tick 的过程中，如何判断是否有事件需要处理呢？</h1><ol>
+<li>每个事件循环中有一个或者多个观察者，而判断是否有事件需要处理的过程就是向这些观察者询问是否有要处理的事件。</li>
+<li>在 Node 中，事件主要来源于网络请求、文件的 I&#x2F;O 等，这些事件对应的观察者有文件 I&#x2F;O 观察者，网络 I&#x2F;O 的观察者。</li>
+<li>事件循环是一个典型的生产者&#x2F;消费者模型。异步 I&#x2F;O，网络请求等则是事件的生产者，源源不断为 Node 提供不同类型的事件，这些事件被传递到对应的观察者那里，事件循环则从观察者那里取出事件并处理。</li>
+</ol>
+<h1 id="4-什么是回调函数？"><a href="#4-什么是回调函数？" class="headerlink" title="4. 什么是回调函数？"></a>4. 什么是回调函数？</h1><p>回调函数是指用一个函数作为参数传入另一个函数，这个函数会被在某个时机调用。</p>
+<h1 id="5-node-js-计时器-promise-then-process-nextTick-setTimeout，setImmediate-执行顺序"><a href="#5-node-js-计时器-promise-then-process-nextTick-setTimeout，setImmediate-执行顺序" class="headerlink" title="5. node.js 计时器 promise.then, process.nextTick, setTimeout，setImmediate 执行顺序"></a>5. node.js 计时器 promise.then, process.nextTick, setTimeout，setImmediate 执行顺序</h1><p>首先了解 2 个概念</p>
+<ul>
+<li>macro-task（宏任务）: script ，setTimeout, setInterval, setImmediate, I&#x2F;O, UI rendering.Event Loop 在每个阶段执行的任务；</li>
+<li>micro-task （微任务）: process.nextTick, Promise，Object. fvEvent Loop 在每个阶段之间执行的任务 observe，MutationObserver</li>
+</ul>
+<p>对于 node.js, micro-task 的任务优先级高于 macro-task 的任务优先级,所以微任务普遍优先于宏任务的执行。</p>
+<p>另一种优先级顺序，是“观察者优先级”， 在每次轮训检查中，各观察者的优先级分别是：<code>idle观察者 &gt; I/O观察者 &gt; check观察者。</code></p>
+<ul>
+<li>idle 观察者：process.nextTick</li>
+<li>I&#x2F;O 观察者：一般性的 I&#x2F;O 回调，如网络，文件，数据库 I&#x2F;O 等</li>
+<li>check 观察者：setTimeout &gt; setImmediate (setTimeout(()&#x3D;&gt;{},0)优先于 setImmediate 执行）；</li>
+<li><strong>总结</strong></li>
+</ul>
+<ol>
+<li>同步代码执行顺序优先级高于异步代码执行顺序优先级；</li>
+<li>new Promise(fn)中的 fn 是同步执行；</li>
+<li>process.nextTick()&gt;Promise.then()&gt;setTimeout&gt;setImmediate。</li>
+</ol>
+<h1 id="6-next-tick-和-setImmediate-的区别是什么？"><a href="#6-next-tick-和-setImmediate-的区别是什么？" class="headerlink" title="6. next tick 和 setImmediate 的区别是什么？"></a>6. next tick 和 setImmediate 的区别是什么？</h1><ul>
+<li><p>NextTick 会等待当前的 event 执行完成或者下一轮儿事件循环到达再执行。</p>
+</li>
+<li><p>SetImmediate, 会在下一轮的事件循环中，执行回调并且返回当前的循环来做读写操作.</p>
+</li>
+</ul>
+<h1 id="7-node-js-模块加载机制"><a href="#7-node-js-模块加载机制" class="headerlink" title="7. node.js 模块加载机制"></a>7. node.js 模块加载机制</h1><p>Nodejs 遵循 commonjs 规范的模块加载机制，使用 require 加载文件，使用 exports 或 module.exports 导出文件</p>
+<h1 id="8-什么是-globals"><a href="#8-什么是-globals" class="headerlink" title="8. 什么是 globals?"></a>8. 什么是 globals?</h1><p>有三个 global 的关键字。</p>
+<ol>
+<li>Global 代表的是最上层的命名空间,用来管理所有其他的全局对象。</li>
+<li>Process 是一个全局对象，可以把异步函数转化成异步回调, 它可以在任何地方被访问，它主要是用来返回系统的应用信息和环境信息.</li>
+<li>Buffer, 是用来处理二进制数据的类.</li>
+</ol>
+<h1 id="9-什么是-EventEmitter"><a href="#9-什么是-EventEmitter" class="headerlink" title="9. 什么是 EventEmitter?"></a>9. 什么是 EventEmitter?</h1><p>EventEmitter 是 node 中一个实现观察者模式的类，主要功能是监听和发射消息，用于处理多模块交互问题.</p>
+<p>主要用于： 1) 模块间传递消息 2) 回调函数内外传递消息 3) 处理流数据，因为流是在 EventEmitter 基础上实现的. 4) 观察者模式发射触发机制相关应用</p>
+<h1 id="10-process-有哪些常用方法"><a href="#10-process-有哪些常用方法" class="headerlink" title="10. process 有哪些常用方法?"></a>10. process 有哪些常用方法?</h1><p>process.stdin, process.stdout, process.stderr, process.on, process.env, process.argv, process.arch, process.platform, process.exit</p>
+<h1 id="11-解释一下什么是-reactor-pattern。"><a href="#11-解释一下什么是-reactor-pattern。" class="headerlink" title="11. 解释一下什么是 reactor pattern。"></a>11. 解释一下什么是 reactor pattern。</h1><p>reactor 设计模式是 event-driven architecture 的一种实现方式，处理多个客户端并发的向服务端请求服务的场景。每种服务在服务端可能由多个方法组成。reactor 会解耦并发请求的服务并分发给对应的事件处理器来处理。</p>
+<p>Reactor pattern 主要是非阻滞的 i&#x2F;o 操作。提供一个回调函数来关联 io 操作。io 请求完成以后会不会提交给 demultiplexer, 这是一个通知接口用来处理并发性的非阻滞的 io 操作，这个功能是通过查询一个 event loop 来实现的.</p>
+<h1 id="12-什么是错误优先的回调函数"><a href="#12-什么是错误优先的回调函数" class="headerlink" title="12. 什么是错误优先的回调函数"></a>12. 什么是错误优先的回调函数</h1><p>node.js 广泛使用异步编程，而异步中的异常很难在主程序中捕获。为此，我们将异步中的异常、错误，通过回调函数传递给主程序。</p>
+<p>错误优先的回调函数用于传递错误和数据。第一个参数始终应该是一个错误对象， 用于检查程序是否发生了错误。其余的参数用于传递数据。</p>
+<h1 id="13-如何避免回调地狱"><a href="#13-如何避免回调地狱" class="headerlink" title="13. 如何避免回调地狱"></a>13. 如何避免回调地狱</h1><ol>
+<li>模块化：将回调函数分割为独立的函数</li>
+<li>使用 Promise&#x2F;ansyc (ES6)</li>
+<li>使用 yield 来计算生成器或 Promise</li>
+</ol>
+<h1 id="14-什么是-Promise"><a href="#14-什么是-Promise" class="headerlink" title="14. 什么是 Promise?"></a>14. 什么是 Promise?</h1><p>Promise 可以帮助我们更好地处理异步操作。采用类似同步结构的代码，实现异步处理，同时避免回调地狱。</p>
+<h1 id="15-使用-NPM-有哪些好处？"><a href="#15-使用-NPM-有哪些好处？" class="headerlink" title="15. 使用 NPM 有哪些好处？"></a>15. 使用 NPM 有哪些好处？</h1><p>通过 NPM，你可以安装和管理项目的依赖，并且能够指明依赖项的具体版本号。 对于 Node 应用开发而言，你可以通过 package.json 文件来管理项目信息，配置脚本， 以及指明项目依赖的具体版本。</p>
+<h1 id="16-什么是-Stub？"><a href="#16-什么是-Stub？" class="headerlink" title="16. 什么是 Stub？"></a>16. 什么是 Stub？</h1><p>Stub 是用于模拟一个组件或模块的函数或程序，在测试用例中很常用。简单的说，你可以用 Stub 去模拟一个方法，从而避免调用真实的方法， 使用 Stub 你还可以返回虚构的结果。你可以配合断言使用 Stub。</p>
+<h1 id="17-什么是测试金字塔？"><a href="#17-什么是测试金字塔？" class="headerlink" title="17. 什么是测试金字塔？"></a>17. 什么是测试金字塔？</h1><p>测试金字塔指的是： 测试用例从下到上，包括单元测试、集成测试、端到端测试；当我们在编写测试用例时，底层的单元测试应该远比上层的端到端测试要多。</p>
+<h1 id="18-Node-模块机制"><a href="#18-Node-模块机制" class="headerlink" title="18. Node 模块机制"></a>18. Node 模块机制</h1><p>Node 中，每个文件模块都是一个对象，所有的模块都是 Module 的实例。</p>
+<h1 id="19-Node-js-require-的模块加载机制"><a href="#19-Node-js-require-的模块加载机制" class="headerlink" title="19. Node.js require 的模块加载机制"></a>19. Node.js require 的模块加载机制</h1><p>1、先计算模块路径<br>2、如果模块在缓存里面，取出缓存；如果不存在生成模块实例，存入缓存<br>3、加载模块<br>4、输出模块的 exports 属性</p>
+<h1 id="20-V8-的垃圾回收机制"><a href="#20-V8-的垃圾回收机制" class="headerlink" title="20. V8 的垃圾回收机制"></a>20. V8 的垃圾回收机制</h1><p>在 V8 中，主要将内存分为新生代和老生代两代。新生代中的对象存活时间较短的对象，老生代中的对象存活时间较长，或常驻内存的对象。<br><strong>新生代</strong>中的对象主要通过 Scavenge 算法进行垃圾回收。这是一种采用复制的方式实现的垃圾回收算法。它将堆内存一份为二，分为 2 个 semispace。在这两个 semispace 空间中，只有一个处于使用中，另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间，处于闲置状态的空间称为 To 空间。</p>
+<ol>
+<li>当开始垃圾回收的时候，会检查 From 空间中的存活对象，这些存活对象将被复制到 To 空间中，而非存活对象占用的空间将会被释放。完成复制后，From 空间和 To 空间发生角色对换。</li>
+<li>应为新生代中对象的生命周期比较短，就比较适合这个算法。</li>
+<li>当一个对象经过多次复制依然存活，它将会被认为是生命周期较长的对象。这种新生代中生命周期较长的对象随后会被移到老生代中。<br><strong>老生代</strong>主要采取的是标记清除的垃圾回收算法。与 Scavenge 复制活着的对象不同，标记清除算法在标记阶段遍历堆中的所有对象，并标记活着的对象，只清理死亡对象。活对象在新生代中只占叫小部分，死对象在老生代中只占较小部分，这是为什么采用标记清除算法的原因。</li>
+</ol>
+<p><strong>标记清楚算法的问题</strong>：<br>主要问题是每一次进行标记清除回收后，内存空间会出现不连续的状态</p>
+<ol>
+<li>这种内存碎片会对后续内存分配造成问题，很可能出现需要分配一个大对象的情况，这时所有的碎片空间都无法完成此次分配，就会提前触发垃圾回收，而这次回收是不必要的。</li>
+<li>为了解决碎片问题，标记整理被提出来。就是在对象被标记死亡后，在整理的过程中，将活着的对象往一端移动，移动完成后，直接清理掉边界外的内存。</li>
+</ol>
+<h1 id="21-child-process"><a href="#21-child-process" class="headerlink" title="21. child-process"></a>21. child-process</h1><p>node 是异步非阻塞的，这对高并发非常有效．可是我们还有其它一些常用需求，比如和操作系统 shell 命令交互，调用可执行文件，创建子进程进行阻塞式访问或高 CPU 计算等，child-process 就是为满足这些需求而生的．child-process 顾名思义，就是把 node 阻塞的工作交给子进程去做．</p>
+<h1 id="22-创建子进程的方法有哪些，简单说一下它们的区别"><a href="#22-创建子进程的方法有哪些，简单说一下它们的区别" class="headerlink" title="22. 创建子进程的方法有哪些，简单说一下它们的区别"></a>22. 创建子进程的方法有哪些，简单说一下它们的区别</h1><p>创建子进程的方法大致有：</p>
+<ol>
+<li>spawn()： 启动一个子进程来执行命令</li>
+<li>exec(): 启动一个子进程来执行命令，与 spawn()不同的是其接口不同，它有一个回调函数获知子进程的状况</li>
+<li>execFlie(): 启动一个子进程来执行可执行文件</li>
+<li>fork(): 与 spawn()类似，不同电在于它创建 Node 子进程需要执行 js 文件</li>
+<li>spawn()与 exec()、execFile()不同的是，后两者创建时可以指定 timeout 属性设置超时时间，一旦创建的进程超过设定的时间就会被杀死</li>
+<li>exec()与 execFile()不同的是，exec()适合执行已有命令，execFile()适合执行文件。</li>
+</ol>
+<p>（exec 可以用操作系统原生的方式执行各种命令，如管道 cat ab.txt | grep hello; execFile 是执行一个文件; spawn 是流式和操作系统进行交互; fork 是两个 node 程序(javascript)之间时行交互.）</p>
+<h1 id="23-怎样充分利用多个-CPU"><a href="#23-怎样充分利用多个-CPU" class="headerlink" title="23. 怎样充分利用多个 CPU?"></a>23. 怎样充分利用多个 CPU?</h1><p>一个 CPU 运行一个 node 实例。 （Child_Process)</p>
+<h1 id="24-有哪些方法可以让-node-程序遇到错误后自动重启"><a href="#24-有哪些方法可以让-node-程序遇到错误后自动重启" class="headerlink" title="24. 有哪些方法可以让 node 程序遇到错误后自动重启?"></a>24. 有哪些方法可以让 node 程序遇到错误后自动重启?</h1><p>Linxu: 1) runit 2) forever 3) nohup npm start &amp;<br>Winwow: Windows service(auto restart)</p>
+<h1 id="25-关于-Express-框架"><a href="#25-关于-Express-框架" class="headerlink" title="25. 关于 Express 框架"></a>25. 关于 Express 框架</h1><h2 id="25-1-express-生成器的作用是什么"><a href="#25-1-express-生成器的作用是什么" class="headerlink" title="25.1. express 生成器的作用是什么?"></a>25.1. express 生成器的作用是什么?</h2><p>通过应用生成器工具 express-generator 可以快速创建一个应用的框架, 包含一整套配置好的服务器配置, 文件和文件夹等, 包括静态资源的暴露等, 包括路由的配置, 和模板引擎配置, 以及 404 的处理，异常处理等；</p>
+<h2 id="25-2-express-优点是什么"><a href="#25-2-express-优点是什么" class="headerlink" title="25.2. express 优点是什么?"></a>25.2. express 优点是什么?</h2><p>Express 的优点是线性逻辑：路由和中间件完美融合，通过中间件形式把业务逻辑细分，简化，一个请求进来经过一系列中间件处理后再响应给用户，再复杂的业务也是线性了，清晰明了。</p>
+<h2 id="25-3-什么是中间件"><a href="#25-3-什么是中间件" class="headerlink" title="25.3. 什么是中间件"></a>25.3. 什么是中间件</h2><ul>
+<li>中间件是可以访问请求对象，响应对象以及 next 应用程序请求-响应周期中的函数，使用 app.use()来使用&#x2F;定义中间件；</li>
+<li>Express 是一个自身功能极简，完全是路由和中间件构成一个 web 开发框架；</li>
+<li>从本质上来说，一个 Express 应用就是在调用各种中间件。封装了一些或许复杂但肯定是通用的功能, 非内置的中间件需要通过安装后，require 到文件就可以运行。</li>
+</ul>
+<h2 id="25-4-express-缺点是什么"><a href="#25-4-express-缺点是什么" class="headerlink" title="25.4. express 缺点是什么?"></a>25.4. express 缺点是什么?</h2><p>Express 是基于 callback 来组合业务逻辑。Callback 有两大硬伤，一是<code>不可组合</code>，二是<code>异常不可捕获</code>。</p>
+<h2 id="25-5-ejs-作用是什么"><a href="#25-5-ejs-作用是什么" class="headerlink" title="25.5. ejs 作用是什么?"></a>25.5. ejs 作用是什么?</h2><p>EJS 是一个 Javascript 模板库, 用来从 JSON 数据中生成 HTML 文件。其他模板库（模板引擎如 jade&#x2F;pug);</p>
+<h2 id="25-6-什么是后端渲染项目"><a href="#25-6-什么是后端渲染项目" class="headerlink" title="25.6. 什么是后端渲染项目?"></a>25.6. 什么是后端渲染项目?</h2><p>浏览器请求静态网页资源, 服务器端会在后端把数据渲染到 HTML 页面上, 再把 html 文件内的字符串一起返回给浏览器进行展示的一种手段, Nodejs 中体现为 ejs 和 pug 模板引擎；</p>
+<h2 id="25-7-session-和-cookie-的作用和区别"><a href="#25-7-session-和-cookie-的作用和区别" class="headerlink" title="25.7. session 和 cookie 的作用和区别?"></a>25.7. session 和 cookie 的作用和区别?</h2><p>session 是区别于数据库存在的一种服务器临时存储技术, 它主要存储一些无需持久化的数据, 比如临时的登录状态信息等</p>
+<p>cookie 是存在于浏览器上的一种浏览器本地存储的方式, 同域名下的 cookie 不同标签页可以共享, 默认过期时间是浏览器关闭时, 而且在进行 http 请求时, 会自动带上浏览器全部的 cookie 发给后台, 后台也可以获取 cookie, 设置可以在响应时, 想浏览器中设置 cookie。</p>
+<h2 id="25-8-跨域-CORS-是什么-如何解决跨域"><a href="#25-8-跨域-CORS-是什么-如何解决跨域" class="headerlink" title="25.8. 跨域(CORS)是什么, 如何解决跨域?"></a>25.8. 跨域(CORS)是什么, 如何解决跨域?</h2><p>当 ajax 请求所在域名或接口和请求目标 url 的域名或接口, 有一个不同, 即发生了跨域请求, 浏览器会阻止这次 ajax 请求.</p>
+<p>解决跨域请求的方法：</p>
+<ol>
+<li>让后台(API)开启跨域支持；</li>
+<li>通过iframe</li>
+<li>使用 jsonp 方式处理跨域（需要服务器端支持）;</li>
+<li>反向代理（API Gateway），UI&#x2F;API 配置到同一个API Gateway，浏览器端看到的结果就是在同一个域了；</li>
+<li>UI有编程能力（node.js&#x2F; asp.net)的话，可以代理其他站点的API</li>
+</ol>
+<h2 id="25-9-express4-中-app-和-router-的区别"><a href="#25-9-express4-中-app-和-router-的区别" class="headerlink" title="25.9. express4 中 app 和 router 的区别"></a>25.9. express4 中 app 和 router 的区别</h2><p>app 可以认为是全局的，方便注入中间件；router 主要针对具体的 routing，除了注入中间件，具体处理 routing 对应的核心业务逻辑；<br>app 级路由不方便模块化封装，而且 app.js 文件没有路由代码，路由代码在 router 文件中，而且 router 方便模块化封装</p>
+<h2 id="25-10-Cookies-如何防范-XSS-攻击？"><a href="#25-10-Cookies-如何防范-XSS-攻击？" class="headerlink" title="25.10. Cookies 如何防范 XSS 攻击？"></a>25.10. Cookies 如何防范 XSS 攻击？</h2><p>XSS(Cross-Site Scripting，跨站脚本攻击)是指攻击者在返回的 HTML 中插入 JavaScript 脚本。为了减轻这些攻击，需要在 HTTP 头部配置 set-cookie:</p>
+<ul>
+<li><p>HttpOnly - 这个属性可以防止 cross-site scripting，因为它会禁止 Javascript 脚本访问 cookie。</p>
+</li>
+<li><p>secure - 这个属性告诉浏览器仅在请求为 HTTPS 时发送 cookie。</p>
+</li>
+</ul>
+<p>结果应该是这样的: Set-Cookie: sid&#x3D;; HttpOnly. 使用 Express 的话，cookie-session 默认配置好了。</p>
+<h2 id="25-11-Koa-和-Express-的对比"><a href="#25-11-Koa-和-Express-的对比" class="headerlink" title="25.11. Koa 和 Express 的对比"></a>25.11. Koa 和 Express 的对比</h2><ol>
+<li>Express 是一个完整的 nodejs 应用框架。Koa 是由 Express 团队开发的，但是它有不同的关注点。Koa 致力于核心中间件功能。nodejs 中间件是访问请求对象（req）和响应对象（res）的例程。 Express 包含一个完整的应用程序框架，具有路由和模板等功能。</li>
+<li>Koa 对 Express 进行了扩展，并充分利用了 ES7 新的语法。Koa 的 Context 对象是对 Express 核心请求和应答对象的扩展，另外利用 async&#x2F;await 来消除回调（callback）陷阱。</li>
+<li>Koa 的中间件的设计是洋葱模型。</li>
+<li>Koa 不是立即响应，是整个中间件处理完成在最外层进行了响应，而 Express 则是立即响应</li>
+</ol>
+<h1 id="26-KOA"><a href="#26-KOA" class="headerlink" title="26. KOA"></a>26. KOA</h1><h2 id="26-1-KOA-洋葱模型"><a href="#26-1-KOA-洋葱模型" class="headerlink" title="26.1. KOA 洋葱模型"></a>26.1. KOA 洋葱模型</h2><p>中间件执行就像洋葱一样，最早 use 的中间件，就放在最外层。处理顺序从左到右，左边接收一个 request，右边输出返回 response。<br>一般的中间件都会执行两次，调用 next 之前为第一次，调用 next 时把控制传递给下游的下一个中间件。当下游不再有中间件或者没有执行 next 函数时，就将依次恢复上游中间件的行为，让上游中间件执行 next 之后的代码。</p>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/mobile-ux-performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/02/mobile-ux-performance/" class="post-title-link" itemprop="url">移动端如何做好用户体验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-02 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T13:06:00+08:00">2021-03-02</time>
     </span>
 
   
@@ -341,61 +928,228 @@
     
     <div class="post-body" itemprop="articleBody">
           <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%8F%8A%E9%A1%BA%E5%BA%8F">2. 生命周期及顺序</a></li>
-<li><a href="#3-%E5%93%8D%E5%BA%94%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BA%8B%E4%BB%B6">3. 响应生命周期事件</a></li>
-<li><a href="#4-%E4%B8%BB%E8%A6%81%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BA%8B%E4%BB%B6">4. 主要生命周期事件</a><ul>
-<li><a href="#41-%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BA%8B%E4%BB%B6-ngoninit">4.1. 初始化事件 ngOnInit()</a></li>
-<li><a href="#42-%E5%AE%9E%E4%BE%8B%E9%94%80%E6%AF%81-ngondestroy">4.2. 实例销毁 ngOnDestroy()</a></li>
+<li><a href="#1-%E5%9C%A8%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%A6%82%E4%BD%95%E5%81%9A%E5%A5%BD%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C">1. 在移动端如何做好用户体验</a></li>
+<li><a href="#2-%E6%80%BB%E7%BB%93">2. 总结</a></li>
 </ul>
-</li>
-<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
+<h1 id="1-在移动端如何做好用户体验"><a href="#1-在移动端如何做好用户体验" class="headerlink" title="1. 在移动端如何做好用户体验"></a>1. 在移动端如何做好用户体验</h1><ul>
+<li>清晰的视觉纵线</li>
+<li>信息的分组</li>
+<li>极致的减法</li>
+<li>利用选择代替输入</li>
+<li>标签以及文字的排布方式</li>
+<li>依靠明文确认密码</li>
+<li>合理地利用键盘</li>
 </ul>
+<h1 id="2-总结"><a href="#2-总结" class="headerlink" title="2. 总结"></a>2. 总结</h1><p>1. </p>
+<p><br><br></p>
 <blockquote>
-<p>环境: </p>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/02/09/Angular-keyword/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/02/09/Angular-keyword/" class="post-title-link" itemprop="url">Angular 词汇表</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-02-09 13:06:00" itemprop="dateCreated datePublished" datetime="2021-02-09T13:06:00+08:00">2021-02-09</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#1-%E6%A6%82%E8%A6%81-1">1. 概要</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>大多数 Angular 短语都是日常用语或计算机术语，但是在 Angular 体系中，它们有特别的含义。</p>
+<h1 id="1-概要-1"><a href="#1-概要-1" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>预编译 (ahead-of-time, AOT)<br>即时编译 (just-in-time, JIT)<br>Angular元素（element， Angular Element）<br>注解（Annotation）: 注解也叫装饰器；<br>装饰器（decorator | decoration）: 注解也叫装饰器；<br>应用外壳（app-shell）<br>架构（Architect）<br>指令 directives<br>属性型指令（attribute directives）<br>绑定 (binding)<br>启动&#x2F;引导 (bootstrap)<br>构建器（Builder）<br>大小写类型（case types）<br>小驼峰形式（camelCase）：小驼峰（也叫标准驼峰）形式的第一个字母要使用小写形式。<br>大驼峰形式（UpperCamelCase）或叫帕斯卡形式（PascalCase）<br>中线形式（dash-case）或叫烤串形式（kebab-case）<br>下划线形式（underscore_case）或叫蛇形形式（snake_case）<br>大写下划线形式（UPPER_UNDERSCORE_CASE）或叫大写蛇形形式（UPPER_SNAKE_CASE）<br>变更检测（change detection）<br>类装饰器（class decorator）<br>类字段装饰器（class field decorator）<br>集合（collection）<br>命令行工具,命令行客户端（CLI， Angular CLI）<br>组件 (component)<br>配置（configuration）<br>内容投影 （content projection）<br>自定义元素（Custom element）:也叫 Web Component<br>数据绑定 (data binding)<br>可声明对象（declarable）<br>装饰器（decorator | decoration）<br>依赖注入（dependency injection）<br>DI 令牌（Token）<br>差异化加载 (differential loading)<br>指令 (directive)<br>领域特定语言（domain-specific language, DSL)<br>动态组件加载（dynamic component loading）<br>急性加载（Eager Loading）<br>惰性加载（Lazy loading）<br>元素（Element, Angular Element）<br>入口点（Entry Point）<br>表单控件（form control）<br>表单模型（form model）<br>表单验证（form validation）<br>不可变性（immutability）<br>可注入对象（injectable）<br>注入器 (injector)<br>输入属性 (input)<br>输出属性 (output)<br>插值 (interpolation)<br>常春藤引擎（Ivy）<br>惰性加载（Lazy loading）<br>库（Library）<br>生命周期钩子（Lifecycle hook）<br>模块 (module)<br>ngcc (Angular 兼容性编译器)<br>npm 包 (npm package)<br>ngc (ngc 是一个 TypeScript 到 JavaScript 的转译器)<br>可观察对象（Observable）<br>观察者（Observer）<br>管道（pipe）<br>平台（platform）<br>腻子脚本（polyfill）<br>项目（project）<br>提供者 (provider)<br>响应式表单 (reactive forms)<br>解析器（resolver）<br>路由守卫 (route guard)<br>路由器 (router)<br>路由出口（router outlet）<br>路由组件 (routing component)<br>规则（rule）<br>原理图（schematic）<br>Schematics CLI (Schematics 自带了一个命令行工具)<br>范围化包 (scoped package)<br>服务端渲染 (server-side rendering)<br>服务 (service)<br>结构型指令（Structural directives）<br>订阅者（Subscriber）<br>目标 (target)<br>模板 (template)<br>模板驱动表单（template-driven forms）<br>模板表达式（template expression）<br>模板引用变量 (template reference variable)<br>令牌（Token）<br>转译（transpile)<br>目录树（tree）<br>TypeScript 配置文件<br>单向数据流 (unidirectional data flow)<br>视图 (view)<br>视图引擎（View Engine）<br>视图树（View hierarchy）<br>Web 组件 (web component)<br>工作空间（Workspace）<br>工作空间配置（Workspace configuration）<br>区域 (zone)</p>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/02/07/js-speical/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/02/07/js-speical/" class="post-title-link" itemprop="url">javascript中常见的非人类（java/c#)知识</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-02-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-02-07T13:06:00+08:00">2021-02-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><img src="/img/javascript.jpg"></p>
 <ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-this">2. this</a></li>
+<li><a href="#3-%E5%8E%9F%E5%9E%8B%E9%93%BE-prototype">3. 原型链, prototype</a></li>
+<li><a href="#4-new%E6%93%8D%E4%BD%9C%E7%AC%A6%E9%83%BD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88">4. new操作符都做了什么</a></li>
+<li><a href="#5--vs-">5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</a></li>
+<li><a href="#6-%E9%97%AD%E5%8C%85">6. 闭包</a></li>
+<li><a href="#7-%E6%80%BB%E7%BB%93">7. 总结</a></li>
 </ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>当 Angular 实例化组件类并渲染组件视图及其子视图时，组件实例的生命周期就开始了。生命周期一直伴随着变更检测，Angular 会检查数据绑定属性何时发生变化，并按需更新视图和组件实例。当 Angular 销毁组件实例并从 DOM 中移除它渲染的模板时，生命周期就结束了。当 Angular 在执行过程中创建、更新和销毁实例时，指令就有了类似的生命周期。</p>
-<p>你的应用可以使用生命周期钩子方法来触发组件或指令生命周期中的关键事件，以初始化新实例，需要时启动变更检测，在变更检测过程中响应更新，并在删除实例之前进行清理。</p>
-<h1 id="2-生命周期及顺序"><a href="#2-生命周期及顺序" class="headerlink" title="2. 生命周期及顺序"></a>2. 生命周期及顺序</h1><ol>
-<li>ngOnChanges(): 当 Angular 设置或重新设置数据绑定的输入属性时响应。</li>
-<li>ngOnInit(): 在 Angular 第一次显示数据绑定和设置指令&#x2F;组件的输入属性之后，初始化指令&#x2F;组件。 </li>
-<li>ngDoCheck(): 每次执行变更检测时的 ngOnChanges() 和 首次执行变更检测时的 ngOnInit() 后调用。</li>
-<li>ngAfterContentInit(): 当 Angular 把外部内容投影进组件视图或指令所在的视图之后调用。</li>
-<li>ngAfterContentChecked(): ngAfterContentInit() 和每次 ngDoCheck() 之后调用</li>
-<li>ngAfterViewInit(): 当 Angular 初始化完组件视图及其子视图或包含该指令的视图之后调用。</li>
-<li>ngAfterViewChecked(): ngAfterViewInit() 和每次 ngAfterContentChecked() 之后调用。</li>
-<li>ngOnDestroy(): 每当 Angular 每次销毁指令&#x2F;组件之前调用，清理释放资源。</li>
-</ol>
-<h1 id="3-响应生命周期事件"><a href="#3-响应生命周期事件" class="headerlink" title="3. 响应生命周期事件"></a>3. 响应生命周期事件</h1><p>我们以通过实现一个或多个 Angular中定义的生命周期钩子接口来响应组件或指令生命周期中的事件。每个接口都有唯一的一个钩子方法，它们的名字是由接口名再加上 ng 前缀构成的。例如：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DemoComponent</span> <span class="keyword">implements</span> <span class="title class_">OnInit</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// implement OnInit&#x27;s `ngOnInit` method</span></span><br><span class="line">  <span class="title function_">ngOnInit</span>(<span class="params"></span>) &#123; </span><br><span class="line">      <span class="comment">// do something here</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>说明：<br>1） 通过生命周期钩子接口来响应生命周期中的事件，需要在类名之后，声明实现(implements) 具体的钩子接口。然后代码中定义个钩子函数才能被执行。如 <code>ngOnInit()</code> 对应 接口<code>OnInit</code> 。<br>2） 可以实现多个钩子接口，例如 <code>export class DemoComponent implements OnInit, OnDestroy {</code></p>
-</blockquote>
-<h1 id="4-主要生命周期事件"><a href="#4-主要生命周期事件" class="headerlink" title="4. 主要生命周期事件"></a>4. 主要生命周期事件</h1><h2 id="4-1-初始化事件-ngOnInit"><a href="#4-1-初始化事件-ngOnInit" class="headerlink" title="4.1. 初始化事件 ngOnInit()"></a>4.1. 初始化事件 ngOnInit()</h2><p>使用 ngOnInit() 方法执行以下初始化任务:</p>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie&#x2F;firefox&#x2F;sarfari&#x2F;chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javascript。对于广大程序员来说，随着web流行度越来越高，那么为了同时支持大多数浏览器，那么使用标准的javascript成为趋势。而第三方（coffeescript, typescript, dart等)也都是选择将代码编译为JavaScript，然后在浏览器端执行。</p>
+<p>作为从C#、java等语言转到javascript的同学来说，会发现不少C#、java的“我觉得应该是这样”的东西，JavaScript中却是不一样的。下面总结一下</p>
+<h1 id="2-this"><a href="#2-this" class="headerlink" title="2. this"></a>2. this</h1><p>对C#、Java等语言，this就是当前对象，但是javascript不是，简单来说：</p>
+<ul>
+<li>全局this 是window;</li>
+<li>函数this 是调用者;</li>
+<li>构造函数的this 是new 之后的新对象,</li>
+<li>call 和 apply bind的this第一个参数</li>
+</ul>
+<h1 id="3-原型链-prototype"><a href="#3-原型链-prototype" class="headerlink" title="3. 原型链, prototype"></a>3. 原型链, prototype</h1><ul>
+<li>函数对象都包含prototype属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor属性的含义就是指向该对象的构造函数</li>
+<li>①__proto__和constructor属性是对象所独有的；② prototype属性是函数所独有的，因为函数也是一种对象，所以函数也拥有__proto__和constructor属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性__proto__指向其构造函数的原型对象prototype；该原型对象也会作为实例对象有一个私有属性__proto__，层层向上直到一个对象的原型对象值为null。</li>
+<li>当访问一个对象的属性或方法时，js引擎会先查找该对象本身是否包含，如果没有，会去该对象的__proto__属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的__proto__值为null,这就是原型链。</li>
+<li>每个构造函数都有一个prototype属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="4-new操作符都做了什么"><a href="#4-new操作符都做了什么" class="headerlink" title="4. new操作符都做了什么"></a>4. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
 <ol>
-<li>逻辑稍复杂，不适合放到构造函数中的逻辑</li>
-<li>初始化中的数据访问逻辑</li>
-<li>处理需要根据父组件传入参数（@Input）进行初始化的逻辑</li>
+<li>创建一个新对象</li>
+<li>把新对象的原型指向构造函数的prototype</li>
+<li>把构造函数里的this指向新对象</li>
+<li>返回这个新对象</li>
 </ol>
-<h2 id="4-2-实例销毁-ngOnDestroy"><a href="#4-2-实例销毁-ngOnDestroy" class="headerlink" title="4.2. 实例销毁 ngOnDestroy()"></a>4.2. 实例销毁 ngOnDestroy()</h2><p>把清理逻辑放进 ngOnDestroy() 中，这个逻辑就必然会在 Angular 销毁该指令之前运行。下列逻辑可言放到ngOnDestroy()：</p>
-<ul>
-<li>取消订阅可观察对象和 DOM 事件。</li>
-<li>停止 interval 计时器。</li>
-<li>反注册该指令在全局或应用服务中注册过的所有回调。</li>
-<li>释放其他占有的资源。</li>
-</ul>
-<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ol>
-<li>使用生命周期事件钩子函数，别忘了类名后面<code>implements</code> 相应的接口，否则不生效；</li>
-<li>初始化代码，区分哪些放构造函数，哪些放 ngOnInit()；</li>
-<li>可以精简的钩子事件方法来避免性能问题；</li>
-<li>ngOnChanges()发生的非常频繁，加入复杂逻辑会影响性能；</li>
+<h1 id="5-VS"><a href="#5-VS" class="headerlink" title="5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;"></a>5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&#x27;100&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&#x27;&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&#x27;&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>很有意思吧， 看看这两个，是等效的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span></span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="6-闭包"><a href="#6-闭包" class="headerlink" title="6. 闭包"></a>6. 闭包</h1><p>在JavaScript中的一大特点就是闭包，很多高级应用(早期的jquery，现在的angular、vue)都要依靠闭包来实现。由于闭包会使得函数中的变量都被保存在内存中，会消耗很大的内存，导致页面的性能问题，甚至导致内存泄漏。建议不要或者少用闭包。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">outerMethod</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line"> <span class="keyword">var</span> innerMethod = <span class="keyword">function</span>(<span class="params"></span>) &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>( a + <span class="string">&quot;!&quot;</span>) ;&#125;</span><br><span class="line"> <span class="title function_">innerMethod</span>(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><ol>
+<li>Javascipt 中有些内容和其他编程语言不一致，需要牢记</li>
+<li>JavaScript中拿不准的东西，可以简单测试一下，免得代码写好后出错。</li>
+<li>简单测试，可以打开浏览器，直接F12（进入Dev Tools），再选择Console(控制台)， 直接输入要测试的内容，查看返回结果</li>
 </ol>
 <p><br><br></p>
 <blockquote>
@@ -431,7 +1185,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-8-component-child-parent/">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/Angular-Starter-15-folder-structure/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -449,7 +1203,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-8-component-child-parent/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（8）- 父子组件（Component）之间传递数据</a>
+          <a href="/2021/01/29/Angular-Starter-15-folder-structure/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（15）- 目录结构（工程结构）推荐</a>
         </h2>
 
         <div class="post-meta-container">
@@ -460,7 +1214,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-01-11 16:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T16:11:30+08:00">2021-01-11</time>
+      <time title="Created: 2021-01-29 13:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T13:06:00+08:00">2021-01-29</time>
     </span>
 
   
@@ -474,15 +1228,15 @@
     
     <div class="post-body" itemprop="articleBody">
           <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E7%88%B6%E4%BC%A0%E5%AD%90-input">2. 父传子 @Input()</a><ul>
-<li><a href="#21-%E5%AD%90%E7%BB%84%E4%BB%B6%E5%AE%9A%E4%B9%89input">2.1. 子组件定义@Input()</a></li>
-<li><a href="#22-%E7%88%B6%E7%BB%84%E4%BB%B6%E4%BC%A0%E9%80%92%E5%8F%98%E9%87%8F%E7%BB%99%E5%AD%90%E7%BB%84%E4%BB%B6">2.2. 父组件传递变量给子组件</a></li>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84%E6%8E%A8%E8%8D%90">2. 目录结构（工程结构）推荐</a><ul>
+<li><a href="#21-%E6%80%BB%E7%9A%84%E5%8E%9F%E5%88%99">2.1. 总的原则</a></li>
+<li><a href="#22-%E5%AE%9E%E4%BE%8B">2.2. 实例</a></li>
+<li><a href="#23-%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9D%97-sharedmodule">2.3. 共享模块-SharedModule</a></li>
 </ul>
 </li>
-<li><a href="#3-%E5%AD%90%E4%BC%A0%E7%88%B6-output">3. 子传父 @Output()</a><ul>
-<li><a href="#31-%E5%AD%90%E7%BB%84%E4%BB%B6%E5%AE%9A%E4%B9%89output">3.1. 子组件定义@Output</a></li>
-<li><a href="#32-%E7%88%B6%E7%BB%84%E4%BB%B6%E8%AE%A2%E9%98%85%E4%BA%8B%E4%BB%B6">3.2. 父组件订阅事件</a></li>
+<li><a href="#3-%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8---angular%E5%BA%93%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4workspace-">3. 高级应用 - angular库、工作空间（workspace ）</a><ul>
+<li><a href="#31-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E7%A4%BA%E6%84%8F">3.1. 目录结构示意</a></li>
 </ul>
 </li>
 <li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
@@ -497,42 +1251,54 @@
 <li>IDE: Visual Studio Code</li>
 </ul>
 </blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>组件之间传递数据，最主要的就是父子组件之间传递数据， 例如：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent-component</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">child-component</span>&gt;</span><span class="tag">&lt;/<span class="name">child-component</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent-component</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>父组件传入数据给子组件，同时，子组件数据发生变化是，希望能够通知父组件。</p>
-<p>Angular 中，@Input() 和 @Output() 为子组件提供了一种与其父组件通信的方法。 @Input() 允许父组件更新子组件中的数据。相反，@Output() 允许子组件向父组件发送数据。</p>
-<h1 id="2-父传子-Input"><a href="#2-父传子-Input" class="headerlink" title="2. 父传子 @Input()"></a>2. 父传子 @Input()</h1><h2 id="2-1-子组件定义-Input"><a href="#2-1-子组件定义-Input" class="headerlink" title="2.1. 子组件定义@Input()"></a>2.1. 子组件定义@Input()</h2><p>子组件中的 @Input() 装饰器表示该属性可以从其父组件中获取值。</p>
-<p>例如：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">ChildComponent</span> &#123;</span><br><span class="line">  <span class="meta">@Input</span>() <span class="attr">message</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>实际的Angular项目，肯定不是一个简单的Hello World程序，会包含很多的功能，很多的文件。那么如何更好的组织这些文件呢？官方给了一个原则，可以供参考：<br><a target="_blank" rel="noopener" href="https://angular.io/guide/styleguide#application-structure-and-ngmodules%E3%80%82">https://angular.io/guide/styleguide#application-structure-and-ngmodules。</a><br>下面，我们来通过一个例子具体解释一下。</p>
+<h1 id="2-目录结构（工程结构）推荐"><a href="#2-目录结构（工程结构）推荐" class="headerlink" title="2. 目录结构（工程结构）推荐"></a>2. 目录结构（工程结构）推荐</h1><h2 id="2-1-总的原则"><a href="#2-1-总的原则" class="headerlink" title="2.1. 总的原则"></a>2.1. 总的原则</h2><ol>
+<li>基于Angular CLI创建模块（module），组件（component）等等的内容；</li>
+<li>源代码都放到<code>src</code> 文件夹下；</li>
+<li>应用的根目录创建一个 NgModule, 并命名为app.module.ts（例如 &#x2F;src&#x2F;app，这个Angular CLI 会自动帮我们做)</li>
+<li>组件具有多个伴生文件 (.ts、.html、.css 和 .spec)，建议为它创建一个文件夹;(Angular CLI 会自动帮我们做)</li>
+<li>为每一组功能（特性区）创建一个模块（<code>NgModule</code>）；（这个也方便我们应用惰性加载&#x2F;延迟加载，预加载）</li>
+<li>在 src&#x2F;app&#x2F;shared 目录中创建名叫 SharedModule 的共享模块，方便其他功能调用；</li>
+</ol>
+<h2 id="2-2-实例"><a href="#2-2-实例" class="headerlink" title="2.2. 实例"></a>2.2. 实例</h2><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">src/ 目录下：</span><br><span class="line">+---app</span><br><span class="line">|   |   app-routing.module.ts</span><br><span class="line">|   |   app.component.css</span><br><span class="line">|   |   app.component.html</span><br><span class="line">|   |   app.component.spec.ts</span><br><span class="line">|   |   app.component.ts</span><br><span class="line">|   |   app.module.ts</span><br><span class="line">|   |   </span><br><span class="line">|   +---feature1</span><br><span class="line">|   |   |   ......</span><br><span class="line">|   |           </span><br><span class="line">|   +---feature1</span><br><span class="line">|   |   |   ......</span><br><span class="line">|   |           </span><br><span class="line">|   +---core</span><br><span class="line">|   |   |   core.module.ts</span><br><span class="line">|   |   |   ....</span><br><span class="line">|   |           </span><br><span class="line">|   \---shared</span><br><span class="line">|       |   shared.module.ts</span><br><span class="line">|       |   </span><br><span class="line">|       +---components</span><br><span class="line">|       +---pipes</span><br><span class="line">|       +---services</span><br><span class="line">|               </span><br><span class="line">+---assets</span><br><span class="line">|       .gitkeep</span><br><span class="line">|       </span><br><span class="line">\---environments</span><br><span class="line">        environment.prod.ts</span><br><span class="line">        environment.ts</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明</strong>：</p>
 <ol>
-<li>增加@Input() 装饰器的变量，除了数据可以从父组件传入后，其他逻辑和普通变量一致；</li>
-<li>子组件的html代码中，既可使用message这个变量， 例如：</li>
+<li>根目录下的<code>NgModule</code> 默认是 <code>app.module.ts</code>, 不要改名，方便阅读</li>
+<li>app 下，每个目录，同时也都是一个模块-<code>NgModule</code></li>
+<li>一个项目，一般包含多个功能（feature）模块</li>
+<li>推荐使用共享模块-SharedModule，将通用的、功能的功能（service&#x2F;component&#x2F;pipe等）放到改模块中。 （下文详细介绍）</li>
+<li>推荐使用核心模块-CoreModule，可以将项目的一些全局的设置、UI等放到该模块。如header、footer组件，安全组件（服务），上下文存储服务等。</li>
 </ol>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">  Parent says: &#123;&#123;message&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="2-2-父组件传递变量给子组件"><a href="#2-2-父组件传递变量给子组件" class="headerlink" title="2.2. 父组件传递变量给子组件"></a>2.2. 父组件传递变量给子组件</h2><p>当父组件调用子组件时，可以把父组件的变量（如<code>messageToChild</code>） 传递给子组件</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child-component</span> [<span class="attr">message</span>]=<span class="string">&quot;messageToChild&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">child-component</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>子组件中，可以更改<code>message</code>这个传入的变量，但是其作用域只在子组件中，父组件拿不到更改后的结果。（如何传给父组件，请接着看）</p>
-</blockquote>
-<h1 id="3-子传父-Output"><a href="#3-子传父-Output" class="headerlink" title="3. 子传父 @Output()"></a>3. 子传父 @Output()</h1><p>Angular通过事件（Event）来实现子组件通知父组件数据的改变，父组件需要订阅该事件。</p>
-<h2 id="3-1-子组件定义-Output"><a href="#3-1-子组件定义-Output" class="headerlink" title="3.1. 子组件定义@Output"></a>3.1. 子组件定义@Output</h2><p>子组件定义@Output</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">ChildComponent</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// EventEmitter ，这意味着它是一个事件</span></span><br><span class="line">  <span class="comment">// new EventEmitter&lt;string&gt;() - </span></span><br><span class="line">  <span class="comment">// 使用 Angular 来创建一个新的事件发射器，它发出的数据是 string 类型的。</span></span><br><span class="line">  <span class="meta">@Output</span>() newItemEvent = <span class="keyword">new</span> <span class="title class_">EventEmitter</span>&lt;<span class="built_in">string</span>&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="title function_">addNewItem</span>(<span class="params"><span class="attr">value</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">newItemEvent</span>.<span class="title function_">emit</span>(value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>子组件当数据发生变化时，调用这个<code>addNewItem</code>方法既可。例如，html中</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">label</span>&gt;</span>Add an item: <span class="tag">&lt;<span class="name">input</span> #<span class="attr">newItem</span>&gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> (<span class="attr">click</span>)=<span class="string">&quot;addNewItem(newItem.value)&quot;</span>&gt;</span>Add to parent&#x27;s list<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-父组件订阅事件"><a href="#3-2-父组件订阅事件" class="headerlink" title="3.2. 父组件订阅事件"></a>3.2. 父组件订阅事件</h2><ol>
-<li>父组件的ts代码中，增加一个处理上面事件的方法，例如</li>
+<h2 id="2-3-共享模块-SharedModule"><a href="#2-3-共享模块-SharedModule" class="headerlink" title="2.3. 共享模块-SharedModule"></a>2.3. 共享模块-SharedModule</h2><p>上文提到，推荐使用共享模块-SharedModule，将通用的、功能的功能（service&#x2F;component&#x2F;pipe等）放到改模块中。具体存放内容包括：</p>
+<ol>
+<li>共享模块中声明那些可能被特性模块引用的可复用组件(Component)、指令(Directive)和管道(Pipe)。</li>
+<li>如果放置服务（Service），由于服务的单例特性，共享模块中只建议放置无状态的服务（Service），对于有状态、或者和业务紧密相关的服务，建议放到CoreModule中。</li>
+<li>SharedModule 中声明(declarations)和导出(exports)所有组件、指令和管道，方便其他模块调用</li>
+<li>共享模块（SharedModule）在项目中处于底层，从逻辑上，只能由其他业务逻辑模块调用，不能调用其他模块；</li>
+<li>共享模块（SharedModule）不建议使用延迟加载（惰性加载），因为这样会破坏服务的单例特性；</li>
 </ol>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">addItem</span>(<span class="params"><span class="attr">newItem</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="comment">// logic here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="3-高级应用-angular库、工作空间（workspace-）"><a href="#3-高级应用-angular库、工作空间（workspace-）" class="headerlink" title="3. 高级应用 - angular库、工作空间（workspace ）"></a>3. 高级应用 - angular库、工作空间（workspace ）</h1><p>想一想你是如何安装angular相关的类库的？我们使用的是<code>npm install xxx</code>。那么这些第三方angular库是如何开发的呢？我们是否可以把通用的内容写成Angular类库，然后方便在多个angular项目间共享了？又或者直接发布到官方npm站点？</p>
+<p>Angular 从6.0开始，引入了工作区的概念。使用Angular CLI，默认创建的就是一个工作空间(workspace)。一个工作空间(workspace)可以有一个主项目，同时可以有多个子项目。当然这些子项目可以是angular的application， 也可以是Library。Angular的子项目，都在<code>app</code>下的<code>projects</code> 之下，和<code>src</code>目录平级。</p>
+<p>这样，一般来说，我们的项目中，除了主程序，还可以包含多个子类库。这样在开发时方便主程序、类库同时开发调试；也可以项目结束后，单独发布类库，实现项目之间的代码共享。</p>
+<p>创建子项目也很简单，子项目有2种类型，application（可以启动的）和Library（Angular类库），默认都在<code>projects</code>文件夹下：</p>
+<ol>
+<li>创建子Applicaton</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate application &lt;name&gt; [options]</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li>父组件的html中，订阅该事件。</li>
+<li>创建子类库（Angular Library)</li>
 </ol>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child-component</span> (<span class="attr">newItemEvent</span>)=<span class="string">&quot;addItem($event)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">child-component</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>事件绑定 <code>(newItemEvent)=&#39;addItem($event)&#39;</code> 会把子组件中的 newItemEvent 事件连接到父组件的 addItem() 方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate library &lt;name&gt; [options]</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-1-目录结构示意"><a href="#3-1-目录结构示意" class="headerlink" title="3.1. 目录结构示意"></a>3.1. 目录结构示意</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">+---projects</span><br><span class="line">|   \---ng-lib-a</span><br><span class="line">|       \---src</span><br><span class="line">|           \---lib</span><br><span class="line">|   \---ng-lib-b</span><br><span class="line">|       \---src</span><br><span class="line">|           \---lib</span><br><span class="line">\---src</span><br><span class="line">    +---app</span><br><span class="line">    |   +---feature1</span><br><span class="line">    |   +---feature2</span><br><span class="line">    |   +---core</span><br><span class="line">    |   |   +---footer</span><br><span class="line">    |   |   \---header</span><br><span class="line">    |   \---shared</span><br><span class="line">    |       +---components</span><br><span class="line">    |       +---pipes</span><br><span class="line">    |       \---services</span><br><span class="line">    +---assets</span><br><span class="line">    \---environments</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
-<li>使用@Input() 和 @Output() 可以很方便的实现父子组件之间的数据传递、共享。</li>
-<li>可以同时使用 @Input() 和 @Output()</li>
+<li>Angular CLI默认创建的Angular项目，实际是一个工作空间（workspace ），在其内部还可以创建多个子项目</li>
+<li>子项目可以是Application，也可以是类库（Library）；</li>
+<li>对于主项目（一般来说是一个Application），以功能模块的方式进行组织；</li>
+<li>公共内容，建议放到共享模块-SharedModule中。</li>
+<li>对于功能模块，可以通过惰性加载（延迟）加载，提高首页加载速度；同时通过预加载技术，可以在空闲时间加载这部分模块，使用户体验更好。</li>
 </ol>
 <p><br><br></p>
 <blockquote>
@@ -568,7 +1334,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-6-update/">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/css3-flex-box/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -586,7 +1352,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-6-update/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（6）- Angular的升级</a>
+          <a href="/2021/01/29/css3-flex-box/" class="post-title-link" itemprop="url">CSS3 Flex Box 弹性盒子、弹性布局</a>
         </h2>
 
         <div class="post-meta-container">
@@ -597,7 +1363,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2021-01-11 14:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T14:11:30+08:00">2021-01-11</time>
+      <time title="Created: 2021-01-29 13:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T13:06:00+08:00">2021-01-29</time>
     </span>
 
   
@@ -611,9 +1377,226 @@
     
     <div class="post-body" itemprop="articleBody">
           <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-httpsupdateangulario">2. https://update.angular.io/</a></li>
-<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-justify-content-%E5%B1%9E%E6%80%A7">2. justify-content 属性</a></li>
+<li><a href="#3-align-items-%E5%B1%9E%E6%80%A7">3. align-items 属性</a></li>
+<li><a href="#4-flex-wrap-%E5%B1%9E%E6%80%A7">4. flex-wrap 属性</a></li>
+<li><a href="#5-align-content-%E5%B1%9E%E6%80%A7">5. align-content 属性</a></li>
+<li><a href="#6-%E5%B1%85%E4%B8%AD">6. 居中</a></li>
+<li><a href="#7-align-self">7. align-self</a></li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8. 总结</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>Flexible Box翻译过来就是弹性盒子、弹性布局，是css3中新增的一种布局方式，是当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。引入弹性布局模型的目的是提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间。</p>
+<p>弹性盒子由弹性容器(Flex container)和弹性子元素(Flex item)组成。</p>
+<ul>
+<li>弹性容器通过设置 display 属性的值为 flex 或 inline-flex将其定义为弹性容器。</li>
+<li>弹性容器内包含了一个或多个弹性子元素。</li>
+</ul>
+<table>
+    <tbody>
+        <tr>
+            <th style="width:25%">属性</th>
+            <th>描述</th>
+        </tr>
+        <tr>
+            <td>display
+            </td>
+            <td>指定 HTML 元素盒子类型。</td>
+        </tr>
+        <tr>
+            <td>flex-direction</td>
+            <td>指定了弹性容器中子元素的排列方式</td>
+        </tr>
+        <tr>
+            <td>justify-content
+            </td>
+            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td>
+        </tr>
+        <tr>
+            <td>align-items
+            </td>
+            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td>
+        </tr>
+        <tr>
+            <td>flex-wrap
+            </td>
+            <td>设置弹性盒子的子元素超出父容器时是否换行。</td>
+        </tr>
+        <tr>
+            <td>align-content
+            </td>
+            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td>
+        </tr>
+        <tr>
+            <td>flex-flow
+            </td>
+            <td>flex-direction 和 flex-wrap 的简写</td>
+        </tr>
+        <tr>
+            <td>order
+            </td>
+            <td>设置弹性盒子的子元素排列顺序。</td>
+        </tr>
+        <tr>
+            <td>align-self
+            </td>
+            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td>
+        </tr>
+        <tr>
+            <td>flex
+            </td>
+            <td>设置弹性盒子的子元素如何分配空间。</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<h1 id="2-justify-content-属性"><a href="#2-justify-content-属性" class="headerlink" title="2. justify-content 属性"></a>2. justify-content 属性</h1><p>内容对齐（justify-content）属性应用在弹性容器上，把弹性项沿着弹性容器的横轴（主轴线，main axis）对齐。</p>
+<p><code>·justify-content</code> 语法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">justify-content</span>: flex-start | flex-end | center | space-between | space-around</span><br></pre></td></tr></table></figure>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性项目向行头紧挨着填充。这个是默认值。第一个弹性项的main-start外边距边线被放置在该行的main-start边线，而后续弹性项依次平齐摆放。</li>
+<li>flex-end：弹性项目向行尾紧挨着填充。第一个弹性项的main-end外边距边线被放置在该行的main-end边线，而后续弹性项依次平齐摆放。</li>
+<li>center：弹性项目居中紧挨着填充。（如果剩余的自由空间是负的，则弹性项目将在两个方向上同时溢出）。</li>
+<li>space-between：弹性项目平均分布在该行上。如果剩余空间为负或者只有一个弹性项，则该值等同于flex-start。否则，第1个弹性项的外边距和行的main-start边线对齐，而最后1个弹性项的外边距和行的main-end边线对齐，然后剩余的弹性项分布在该行上，相邻项目的间隔相等。</li>
+<li>space-around：弹性项目平均分布在该行上，两边留有一半的间隔空间。如果剩余空间为负或者只有一个弹性项，则该值等同于center。否则，弹性项目沿该行分布，且彼此间隔相等（比如是20px），同时首尾两边和弹性容器之间留有一半的间隔（1&#x2F;2*20px&#x3D;10px）。</li>
+</ul>
+<h1 id="3-align-items-属性"><a href="#3-align-items-属性" class="headerlink" title="3. align-items 属性"></a>3. align-items 属性</h1><p>align-items 设置或检索弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</p>
+<p><code>align-items</code>语法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">align-items</span>: flex-start | flex-end | center | baseline | stretch</span><br></pre></td></tr></table></figure>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min&#x2F;max-width&#x2F;height’属性的限制。</li>
+</ul>
+<h1 id="4-flex-wrap-属性"><a href="#4-flex-wrap-属性" class="headerlink" title="4. flex-wrap 属性"></a>4. flex-wrap 属性</h1><p>flex-wrap 属性用于指定弹性盒子的子元素换行方式。</p>
+<p>语法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">flex-wrap</span>: nowrap|wrap|wrap-reverse|initial|inherit; </span><br></pre></td></tr></table></figure>
+<p>可选项:</p>
+<ul>
+<li>nowrap - 默认，弹性容器为单行。该情况下弹性子项可能会溢出容器。</li>
+<li>wrap - 弹性容器为多行。该情况下弹性子项溢出的部分会被放置到新行，子项内部会发生断行</li>
+<li>wrap-reverse -反转 wrap 排列。</li>
+</ul>
+<h1 id="5-align-content-属性"><a href="#5-align-content-属性" class="headerlink" title="5. align-content 属性"></a>5. align-content 属性</h1><p><code>align-content</code> 属性用于修改 flex-wrap 属性的行为。类似于 align-items, 但它不是设置弹性子元素的对齐，而是设置各个行的对齐。</p>
+<p>语法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">align-content</span>: flex-start | flex-end | center | space-between | space-around | stretch</span><br></pre></td></tr></table></figure>
+<p>各个值解析:</p>
+<ul>
+<li>stretch - 默认。各行将会伸展以占用剩余的空间。</li>
+<li>flex-start - 各行向弹性盒容器的起始位置堆叠。</li>
+<li>flex-end - 各行向弹性盒容器的结束位置堆叠。</li>
+<li>center -各行向弹性盒容器的中间位置堆叠。</li>
+<li>space-between -各行在弹性盒容器中平均分布。</li>
+<li>space-around - 各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。</li>
+</ul>
+<h1 id="6-居中"><a href="#6-居中" class="headerlink" title="6. 居中"></a>6. 居中</h1><p>使用弹性盒子，居中变的很简单，只想要设置 margin: auto; 可以使得弹性子元素在两上轴方向上完全居中:</p>
+<p>如</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.flex-item</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="7-align-self"><a href="#7-align-self" class="headerlink" title="7. align-self"></a>7. align-self</h1><p>align-self 属性用于设置弹性元素自身在侧轴（纵轴）方向上的对齐方式。</p>
+<p>选项：</p>
+<ul>
+<li>auto：如果’align-self’的值为’auto’，则其计算值为元素的父元素的’align-items’值，如果其没有父元素，则计算值为’stretch’。</li>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min&#x2F;max-width&#x2F;height’属性的限制。</li>
+</ul>
+<h1 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h1><p>1. </p>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/29/Angular-Starter-14-compile-publish/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（14）- Angular 编译打包 & Docker发布</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-01-29 10:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T10:06:00+08:00">2021-01-29</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85">2. 编译打包</a><ul>
+<li><a href="#21-%E5%9F%BA%E6%9C%AC%E6%89%93%E5%8C%85%E5%91%BD%E4%BB%A4">2.1. 基本打包命令</a></li>
+<li><a href="#22-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0%E4%BA%8C%E7%BA%A7%E7%9B%AE%E5%BD%95">2.2. 打包部署到二级目录</a></li>
+</ul>
+</li>
+<li><a href="#3-angular%E7%AB%99%E7%82%B9%E7%9A%84%E5%8F%91%E5%B8%83">3. Angular站点的发布</a><ul>
+<li><a href="#31-web%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83">3.1. web服务器发布</a></li>
+<li><a href="#32-%E4%BD%BF%E7%94%A8docker%E5%8F%91%E5%B8%83">3.2. 使用docker发布</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
 </ul>
 <blockquote>
 <p>环境: </p>
@@ -625,485 +1608,54 @@
 <li>IDE: Visual Studio Code</li>
 </ul>
 </blockquote>
-<hr>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>近些年Web技术飞速发展，新的类库、框架如雨后春笋般不断涌现，而每个类库也不断的更新、升级，甚至是不再兼容的升级。笔者之前维护的一个6年项目，是用jQueryMobile开发的，估计入门web开发比较短的同学都没有听说过吧。另外，就拿Angular来说，从2.0开始，使用ts开发，不再兼容1.0 版本。从2.0开始，命名为Angular，1.0的叫angularJS, 2个版本彻底切割。而这也是angular流失很多用户的其中一个原因。</p>
-<p>针对这些问题，Angular专门提供了版本升级的指导方案，非常详细、准确（Angular每半年发布一个主版本，这个也是必须的）。</p>
-<h1 id="2-https-update-angular-io"><a href="#2-https-update-angular-io" class="headerlink" title="2. https://update.angular.io/"></a>2. <a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a></h1><p><a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a> 是官方的angular升级指导页面，你可以选择你的项目的版本，以及要升级到的版本；同时可以选择项目使用的技术，比如是否使用了Angular Material （这也是之前推荐这个UI框架的原因–升级方便），是否和AngualrJS同时使用等等。之后，自动提示升级步骤。</p>
-<p>升级主要通过 <code>ng update xxx</code> 来实现， <code>ng update</code> 命令不同于npm命令，<code>npm update</code>相当于 npm+更改配置（代码），也就是说，再更新完node-modules之后，<code>ng update</code>会自动更新配置文件，甚至是代码中的基本的import的代码，实现自动升级、更新。</p>
-<p>举例，10.2升级到11.1，如果没有涉及到复杂的anuglar技术，大致的升级步骤是：</p>
-<ul>
-<li>Run <code>ng update @angular/core @angular/cli</code> which should bring you to version 11 of Angular.</li>
-<li>Run <code>ng update @angular/material</code>.</li>
-<li>Angular now requires TypeScript 4.0. ng update will migrate you automatically.</li>
-<li>Support for IE9, IE10, and IE mobile has been removed. This was announced * in the v10 update.</li>
-</ul>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ul>
-<li>Angular虽然更新、升级比较频繁（从某种意义上也是优点），但是升级部分确实做得最完善的</li>
-<li>UI框架，@angular&#x2F;material可以实现和Angular的同步升级，其他第三方框架，都会有演示，时间不等</li>
-<li>个人不推荐使用最新的版本，不做小白鼠。可以使用之前发布的一个版本，比如现在是v11，那么我们就使用v10。更稳定，同时网上资料也多。</li>
-<li>及时更新angular版本，免得技术债欠的越来越多而导致无法升级。</li>
-<li>这个升级指导也是相对的，如果你对Angular有些特殊的用法，或者没有安装官方推荐方式使用，升级也是比较麻烦的。</li>
-<li>升级时，如果跨多版本，建议一个版本一个版本的升级，每升级一次，执行UT或者把站点跑起来试试，以防出错。</li>
-</ul>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-11 12:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T12:11:30+08:00">2021-01-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E7%AC%AC%E4%B8%89%E6%96%B9ui%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9">1. 第三方UI库的选择</a></li>
-<li><a href="#2-angular-material">2. Angular Material</a><ul>
-<li><a href="#21-%E4%BC%98%E7%BC%BA%E7%82%B9">2.1. 优缺点</a><ul>
-<li><a href="#211-%E4%BC%98%E7%82%B9">2.1.1. 优点</a></li>
-<li><a href="#212-%E7%BC%BA%E7%82%B9">2.1.2. 缺点</a></li>
-</ul>
-</li>
-<li><a href="#22-%E5%BC%95%E5%85%A5%E5%88%B0%E9%A1%B9%E7%9B%AE">2.2. 引入到项目</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-第三方UI库的选择"><a href="#1-第三方UI库的选择" class="headerlink" title="1. 第三方UI库的选择"></a>1. 第三方UI库的选择</h1><p>Angular开发，除非你只有简单一两个页面，否则引入第三方UI库就是必不可少的。而具体用哪个库，就需要考虑多方面的东西了。比如：</p>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
+<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject/src/environments/</span><br><span class="line">               └──environment.ts</span><br><span class="line">               └──environment.prod.ts</span><br></pre></td></tr></table></figure>
 <ol>
-<li>流行程度</li>
-<li>版本更新情况 （是否能跟进anuglar更新，bug是否及时修复）</li>
-<li>UI风格，是否适用于项目</li>
-<li>入手难易程度</li>
-<li>文档完善程度</li>
+<li>environment.ts: 针对开发环境使用的环境文件</li>
+<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
 </ol>
-<p>市面上有很多Angular可用的类库，可用根据项目、企业情况去选择。简单列一下可选的UI库。</p>
-<ol>
-<li><code>Angular Material</code>: angular 官方UI库。<a target="_blank" rel="noopener" href="https://material.angular.io/">https://material.angular.io/</a></li>
-<li><code>clarity</code>: 国外的一套比较流行的框架， <a target="_blank" rel="noopener" href="https://clarity.design/%E3%80%82">https://clarity.design/。</a> </li>
-<li><code>NG-ZORRO</code>: 阿里Ant Design的Angular版本。 <a target="_blank" rel="noopener" href="https://ng.ant.design/docs/introduce/en">https://ng.ant.design/docs/introduce/en</a> </li>
-<li><code>Element Angular</code>：国内非常流行的基于Vue的Element，同样有Angular版本。 <a target="_blank" rel="noopener" href="https://element-angular.faas.ele.me/">https://element-angular.faas.ele.me/</a></li>
-<li><code>Kendo UI</code>。很多很强大，只是要收费。<a target="_blank" rel="noopener" href="https://www.telerik.com/kendo-angular-ui">https://www.telerik.com/kendo-angular-ui</a></li>
-</ol>
-<h1 id="2-Angular-Material"><a href="#2-Angular-Material" class="headerlink" title="2. Angular Material"></a>2. Angular Material</h1><h2 id="2-1-优缺点"><a href="#2-1-优缺点" class="headerlink" title="2.1. 优缺点"></a>2.1. 优缺点</h2><h3 id="2-1-1-优点"><a href="#2-1-1-优点" class="headerlink" title="2.1.1. 优点"></a>2.1.1. 优点</h3><ul>
-<li>官方UI组件</li>
-<li>最标准的Material实现</li>
-<li>紧跟Angular核心组件的更新进度</li>
-<li>官方支持与Angular的同步升级</li>
-</ul>
-<h3 id="2-1-2-缺点"><a href="#2-1-2-缺点" class="headerlink" title="2.1.2. 缺点"></a>2.1.2. 缺点</h3><ul>
-<li>组件不像其他框架那么多，但是基本够用</li>
-<li>风格不是特别像国内的框架</li>
-</ul>
-<h2 id="2-2-引入到项目"><a href="#2-2-引入到项目" class="headerlink" title="2.2. 引入到项目"></a>2.2. 引入到项目</h2><ol>
-<li>根目录下执行下面命令：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng add @angular/material</span><br></pre></td></tr></table></figure>
+<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
+<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod</span><br></pre></td></tr></table></figure>
 
+<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;configurations&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;production&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;fileReplacements&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;replace&quot;</span>: <span class="string">&quot;src/environments/environment.ts&quot;</span>,</span><br><span class="line">            <span class="string">&quot;with&quot;</span>: <span class="string">&quot;src/environments/environment.prod.ts&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&quot;optimization&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;outputHashing&quot;</span>: <span class="string">&quot;all&quot;</span>,</span><br><span class="line">        <span class="string">&quot;sourceMap&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractCss&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;namedChunks&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;aot&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractLicenses&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;vendorChunk&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;buildOptimizer&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;budgets&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;initial&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumWarning&quot;</span>: <span class="string">&quot;5mb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumError&quot;</span>: <span class="string">&quot;10mb&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
+<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a target="_blank" rel="noopener" href="http://abc.com下,要求部署到/">http://abc.com下，要求部署到</a> <a target="_blank" rel="noopener" href="http://abc.com/demo">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod --deploy-url /demo/ --base-href /demo/</span><br></pre></td></tr></table></figure>
+<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
+<blockquote>
+<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
+</blockquote>
+<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
+<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
+<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
+<p>基本步骤：</p>
+<ol>
+<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
+</blockquote>
 <ol start="2">
-<li>import 到页面所属的module，或者是app.module.ts中。</li>
+<li>编译docker。 在Dockerfile目录下，执行</li>
 </ol>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import MatSliderModule</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MatSliderModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/material/slider&#x27;</span>;</span><br><span class="line"></span><br><span class="line">…</span><br><span class="line"><span class="meta">@NgModule</span> (&#123;....</span><br><span class="line">  <span class="attr">imports</span>: [...,</span><br><span class="line">  <span class="title class_">MatSliderModule</span>,</span><br><span class="line">…]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
-<li>第三方组件各有优缺点</li>
-<li>根据公司、项目的需求去选择</li>
-<li>Angular Material升级更容易，官方支持。</li>
-</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-environment-cli-vscode/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-environment-cli-vscode/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（4）- 开发环境搭建以及入手项目</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-11 11:11:35" itemprop="dateCreated datePublished" datetime="2021-01-11T11:11:35+08:00">2021-01-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>@[TOC]</p>
+<p>三条命令分别为：</p>
 <ul>
-<li><a href="#1-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">1. 本地开发环境搭建</a><ul>
-<li><a href="#11-nodejs">1.1. node.js</a></li>
-<li><a href="#12-angular-cli">1.2. Angular CLI</a></li>
+<li>生成docker image， 名字（name）为your-docker-name</li>
+<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
+<li>压缩docker image</li>
 </ul>
-</li>
-<li><a href="#2-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7---visual-studio-code">2. 开发工具 - Visual Studio Code</a></li>
-<li><a href="#%E7%AC%AC%E4%B8%80%E4%B8%AAanuglar%E9%A1%B9%E7%9B%AE">第一个Anuglar项目</a><ul>
-<li><a href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AAanuglar%E9%A1%B9%E7%9B%AE">创建第一个anuglar项目</a></li>
-<li><a href="#angular-cli%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Angular CLI常用命令</a></li>
-</ul>
-</li>
-<li><a href="#%E5%9C%A8%E7%BA%BF%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE">在线实战项目</a><ul>
-<li><a href="#%E6%96%B0%E6%89%8B%E9%A1%B9%E7%9B%AEbasic-angular-app">新手项目：<code>Basic Angular app</code></a></li>
-<li><a href="#%E5%85%A5%E9%97%A8%E9%A1%B9%E7%9B%AEtour-of-heroes">入门项目：<code>Tour of Heroes</code></a></li>
-</ul>
-</li>
-</ul>
-<p>了解了一些Angular的基本概念后，如果想进一步学习Angular，接下来让我们来搭建本地开发环境，并从一个入门项目了解Angular的基本用法。</p>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-本地开发环境搭建"><a href="#1-本地开发环境搭建" class="headerlink" title="1. 本地开发环境搭建"></a>1. 本地开发环境搭建</h1><p>本地开发环境搭建只需要node.js, 和Angular CLI。</p>
-<h2 id="1-1-node-js"><a href="#1-1-node-js" class="headerlink" title="1.1. node.js"></a>1.1. node.js</h2><p>官网（<a target="_blank" rel="noopener" href="https://nodejs.org/%EF%BC%89%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%9A%84LTS%EF%BC%88Long">https://nodejs.org/）下载最新的LTS（Long</a> Time Support)版本的node.js，安装。</p>
-<p>说明：</p>
-<ol>
-<li>LTS（Long Time Support)版本, 官方会支持更长时间，比如打补丁，改bug等。相对更稳定、靠谱。</li>
-<li>node.js 安装后，同时会安装npm</li>
-</ol>
-<p>检查本地node.js, npm环境</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js 版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="comment"># npm 版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-2-Angular-CLI"><a href="#1-2-Angular-CLI" class="headerlink" title="1.2. Angular CLI"></a>1.2. Angular CLI</h2><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。(参考：<a target="_blank" rel="noopener" href="https://cli.angular.io/">https://cli.angular.io/</a>)</p>
-<p>npm安装最新版本@angular&#x2F;cli</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @angular/cli</span><br></pre></td></tr></table></figure>
-
-<p>检查本地angular环境</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng v</span><br></pre></td></tr></table></figure>
-
-<p>说明：</p>
-<ol>
-<li>该命令如果在非angular项目下执行，返回全局的Angular CLI环境版本</li>
-<li>在angular项目下执行, 返回当前angular项目使用的angular，angular CLI，以及核心angular组件的版本。</li>
-<li>全局Angular CLI版本有何能与项目的Angular CLI版本不一致，不冲突。项目中，使用项目制定的CLI版本。</li>
-</ol>
-<h1 id="2-开发工具-Visual-Studio-Code"><a href="#2-开发工具-Visual-Studio-Code" class="headerlink" title="2. 开发工具 - Visual Studio Code"></a>2. 开发工具 - Visual Studio Code</h1><p>推荐使用，Visual Studio Code （VSCode），微软开发的，可以说是现今为止最好的免费的Angular开发工具。并且有很多非常好用的插件。</p>
-<p>推荐插件：</p>
-<ul>
-<li>Angular Language Service： Angular语法自动提示, Angular开发必备。 This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.</li>
-<li>Prettier - 代码自动格式化插件。VS Code plugin for prettier&#x2F;prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.</li>
-<li>Code Spell Checker - 语法检查插件. 注释可以写中文，变量名不行吧，如果拼写不对不好看吧。所以推荐把这个语法检查插件装上。</li>
-<li>GitLens - GIT 辅助插件。If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.</li>
-<li>Markdown All in One： 如果用Markdown写东西，这个东西一定要有，增加了对MD文件的很多支持，比如生成目录(TOC)， 目录编号等。</li>
-</ul>
-<h1 id="第一个Anuglar项目"><a href="#第一个Anuglar项目" class="headerlink" title="第一个Anuglar项目"></a>第一个Anuglar项目</h1><h2 id="创建第一个anuglar项目"><a href="#创建第一个anuglar项目" class="headerlink" title="创建第一个anuglar项目"></a>创建第一个anuglar项目</h2><p>使用Anuglar CLI可以很轻松的创建angular项目。使用的Angular版本与当前环境的Anuglar CLI一致。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建angular项目，项目名 ·my-ngular-app·</span></span><br><span class="line">ng new my-ngular-app</span><br><span class="line"><span class="comment"># 进入项目目录</span></span><br><span class="line"><span class="built_in">cd</span> my-ngular-app</span><br><span class="line"><span class="comment"># 启动angualar项目</span></span><br><span class="line">ng serve</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>说明</p>
-</blockquote>
-<ol>
-<li><code>ng</code> 是angular CLI的简称</li>
-<li><code>ng serve</code>: 启动angular项目。</li>
-</ol>
-<h2 id="Angular-CLI常用命令"><a href="#Angular-CLI常用命令" class="headerlink" title="Angular CLI常用命令"></a>Angular CLI常用命令</h2><ol>
-<li><code>ng serve</code>: 启动angular项目。默认情况下，angular CLI检测代码改动，如果文件改动，自动编译更改部分代码，然后重新加载（reload）页面。</li>
-<li><code>ng build</code>: 编译代码，默认输出到根目录下的<code>dist</code>目录。</li>
-<li><code>ng test</code>： 执行单元测试（Unit Test）</li>
-</ol>
-<h1 id="在线实战项目"><a href="#在线实战项目" class="headerlink" title="在线实战项目"></a>在线实战项目</h1><p>Angular官方提供了2个新手入门项目，并且都是基于StackBlitz（针对 Web 开发者的在线 IDE），可以不使用本地环境，直接基于Web学习和练习Angular。</p>
-<h2 id="新手项目：Basic-Angular-app"><a href="#新手项目：Basic-Angular-app" class="headerlink" title="新手项目：Basic Angular app"></a>新手项目：<code>Basic Angular app</code></h2><ul>
-<li><a target="_blank" rel="noopener" href="https://angular.io/start">https://angular.io/start</a></li>
-</ul>
-<h2 id="入门项目：Tour-of-Heroes"><a href="#入门项目：Tour-of-Heroes" class="headerlink" title="入门项目：Tour of Heroes"></a>入门项目：<code>Tour of Heroes</code></h2><ul>
-<li><a target="_blank" rel="noopener" href="https://angular.io/tutorial">https://angular.io/tutorial</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-tech-stack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-tech-stack/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（3） - Angular 技术栈 （Tech Stack）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-11 09:11:35" itemprop="dateCreated datePublished" datetime="2021-01-11T09:11:35+08:00">2021-01-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>(Based on Angular V8.x ~ 11.x)</p>
-<ol>
-<li>Angular-CLI<br>Angular CLI is a command-line interface tool that you use to initialize, develop, scaffold, and maintain Angular applications directly from a command shell.</li>
-</ol>
-<p>It is the MUST have tool to write Angular code, so make sure you are familiar with its commands.</p>
-<ol>
-<li>IDE<br>1.1 Visual Studio Code<br>Visual Studio Code: Best and free IDE for web developing.<br>Plugins:</li>
-</ol>
-<p>Angular Language Service - This extension provides a rich editing experience for Angular templates, both inline and external templates.<br>This extension is brought to you by members of the Angular team. It is fantastic at helping write solid code in the html templates.<br>Prettier - VS Code plugin for prettier&#x2F;prettier, which formats code consistently. Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.<br>Code Spell Checker - A basic spell checker that works well with camelCase code.<br>The goal of this spell checker is to help catch common spelling errors while keeping the number of false positives low.<br>GitLens - If you use git, this is quite helpful. GitLens supercharges the Git capabilities built into Visual Studio Code. It helps you to visualize code authorship at a glance via Git blame annotations and code lens, seamlessly navigate and explore Git repositories, gain valuable insights via powerful comparison commands, and so much more.<br>1.2 Alternatives<br>Atom by GitHub<br>Sublime Text 3<br>PyCharm<br>IntelliJ IDEA<br>Webstorm<br>There are may alternatives, you can choose which you are familiar with.<br>*</p>
-<ol start="2">
-<li>UI Framework<br>2.1 Angular Material<br>Angular Material is Material Design components for Angular.<br>There are many alternatives. But Angular Material is the official one from Angular, and Angular also give detail upgrade solution on Angular plus Angular Material in <a target="_blank" rel="noopener" href="https://update.angular.io/">https://update.angular.io/</a>.</li>
-</ol>
-<p>For future upgrade reason, this is your best choice.</p>
-<ol start="3">
-<li>State Management - NgRx<br>@ngrx&#x2F;store is RxJS powered global state management for Angular applications, inspired by Redux. Store is a controlled state container designed to help write performant, consistent applications on top of Angular.</li>
-</ol>
-<p>NgRx Store is mainly for managing global state across an entire application.</p>
-<ol start="4">
-<li>Code Reuse<br>4.1 Angular libraries<br>Angular libraries should what you need.</li>
-</ol>
-<p>Many applications need to solve the same general problems, such as presenting a unified user interface, presenting data, and allowing data entry. Developers can create general solutions for particular domains that can be adapted for re-use in different apps. Such a solution can be built as Angular libraries and these libraries can be published and shared as npm packages.</p>
-<p>An Angular library is an Angular project that differs from an app in that it cannot run on its own. A library must be imported and used in an app.</p>
-<p>You can easily reuse your Angular library or also submit your library into npm server.</p>
-<p>4.2 Alternatives - Angular custom elements<br>Note that libraries are intended to be used by Angular apps. To add Angular functionality to non-Angular web apps, you can use Angular custom elements.</p>
-<p>Angular elements are Angular components packaged as custom elements (also called Web Components), a web standard for defining new HTML elements in a framework-agnostic way.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Kubernetes-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Kubernetes-1/" class="post-title-link" itemprop="url">Kubernetes 概述</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-11 09:11:35" itemprop="dateCreated datePublished" datetime="2021-01-11T09:11:35+08:00">2021-01-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">1. 基本概念</a></li>
-</ul>
-<h1 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h1><ol>
-<li>Kubernetes 是为生产环境而设计的<code>容器调度管理系统</code>，对于负载均衡、服务发现、高可用、滚动升级、自动伸缩等容器云平台的功能要求有原生支持。</li>
-<li>由于 Kubernetes 在 K 和 s 间有 8 个字母，因此常简称 K8s。</li>
-<li>K8s 系统最核心的两个设计理念：一个是容错性，一个是易扩展性。</li>
+<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
+<li>为生产环境编译，一定要加参数<code>--prod</code></li>
+<li>如果要部署到二级目录，编译时加参数。如部署到&#x2F;demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
+<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
 </ol>
 <p><br><br></p>
 <blockquote>
@@ -1113,223 +1665,6 @@
 <blockquote>
 <p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
 </blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Basic-Concept/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/08/angular-Starter-Basic-Concept/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（2） - 基本概念</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-08 17:13:44" itemprop="dateCreated datePublished" datetime="2021-01-08T17:13:44+08:00">2021-01-08</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Angular入门到精通系列教程（2） - 基本概念</p>
-<ul>
-<li><a href="#1-angular-angular2vs-angularjs">1. Angular （Angular2）v.s. AngularJS</a></li>
-<li><a href="#2-%E6%A3%80%E6%9F%A5%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E7%9A%84%E7%89%88%E6%9C%AC">2. 检查本地环境的版本</a></li>
-<li><a href="#3-typescript">3. TypeScript</a></li>
-<li><a href="#4-angular-cli">4. Angular CLI</a></li>
-<li><a href="#5-angular-%E7%9A%84%E7%89%88%E6%9C%AC">5. Angular 的版本</a></li>
-<li><a href="#6-angular-%E7%89%88%E6%9C%AC%E5%A6%82%E4%BD%95%E5%8D%87%E7%BA%A7">6. Angular 版本如何升级</a></li>
-<li><a href="#7-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5dependency-injection">7. 依赖注入（dependency injection）</a></li>
-<li><a href="#8-%E7%BC%96%E8%AF%91-aot%E5%92%8Cjit%E7%9A%84%E5%8C%BA%E5%88%AB">8. 编译-AOT和JIT的区别</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-Angular-（Angular2）v-s-AngularJS"><a href="#1-Angular-（Angular2）v-s-AngularJS" class="headerlink" title="1. Angular （Angular2）v.s. AngularJS"></a>1. Angular （Angular2）v.s. AngularJS</h1><p>Angular最早期的版本，也叫AnugularJS，使用javascript开发；新的版本，才叫Angular，也称为Angular2，使用typescript开发，Angular和AngularJS是不兼容的（当然，官方也有2个版本的集成方案）。</p>
-<h1 id="2-检查本地环境的版本"><a href="#2-检查本地环境的版本" class="headerlink" title="2. 检查本地环境的版本"></a>2. 检查本地环境的版本</h1><p>检查npm, node 版本:</p>
-<ul>
-<li>npm 版本：<code>npm -v</code></li>
-<li>node版本： <code>node -v</code></li>
-<li>angular、angular CLI全局、本地版本 <code>ng --version</code></li>
-</ul>
-<h1 id="3-TypeScript"><a href="#3-TypeScript" class="headerlink" title="3. TypeScript"></a>3. TypeScript</h1><p>Angular要求开发语言必须为TypeScript。TypeScript有很多好处，比如引入了类、接口的概念，比如强类型，可以在写代码时（编译时）就能检查到一些错误，避免只有代码在执行时才发现异常。</p>
-<p>如果没用过TypeScript，不要害怕TypeScript这个新的概念，只要你有javascript经验，直接入手，没有任何难度。只需要用到class、interface等东西时，参考一下别人如何使用，或者查一下typescript文档即可。</p>
-<h1 id="4-Angular-CLI"><a href="#4-Angular-CLI" class="headerlink" title="4. Angular CLI"></a>4. Angular CLI</h1><p>angular-cli又称 Angular脚手架，是angular开发团队自行维护的一个开发工具，用于快速生成项目或者组件的框架以提高效率。可以方便的生成angular app、component、service 等等， 并且可以通过参数，按照自己的需求去创建。可以说是angular开发必不可少的利器。<br>参考：<a target="_blank" rel="noopener" href="https://cli.angular.io/">https://cli.angular.io/</a></p>
-<p>ng generate: 新建component、service、pipe, class 等<br>ng new: 新建angular app<br>ng update: 升级angular自身，以及依赖<br>ng version： 显示anuglar cli全局版本、以及本地的angular cli、angular code等的版本<br>ng add: 新增第三方库。会做2件事，1）基于npm安装node_modules, 2）自动更改配置文件，保证新的依赖正常工作</p>
-<p>总结一下，Angular的开放，离不开AngularCLI。</p>
-<h1 id="5-Angular-的版本"><a href="#5-Angular-的版本" class="headerlink" title="5. Angular 的版本"></a>5. Angular 的版本</h1><p>不同于Angular2+Angular的不兼容， Angular 2.0 之后会保证向下兼容。官方的版本发布计划是：</p>
-<ul>
-<li>每 6 个月发布一个主版本（第一位版本号，主版本）</li>
-<li>每个主版本发布 1 ~ 3 个小版本（第二位版本号，Feature 版本号）</li>
-<li>每周发布一个补丁版本（第三位版本号，Hotfix 版本号）</li>
-</ul>
-<h1 id="6-Angular-版本如何升级"><a href="#6-Angular-版本如何升级" class="headerlink" title="6. Angular 版本如何升级"></a>6. Angular 版本如何升级</h1><p>Angular CLI提供了升级命令(ng update)，同时，官网（<a target="_blank" rel="noopener" href="https://update.angular.io/%EF%BC%89%E4%B9%9F%E6%9C%89%E5%8D%87%E7%BA%A7%E6%8C%87%E5%8D%97%E3%80%82%E9%80%89%E6%8B%A9%E4%BB%8E%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%AC%E5%90%8E%EF%BC%8C%E4%BC%9A%E7%BB%99%E5%87%BA%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E7%9A%84%E5%8D%87%E7%BA%A7%E5%91%BD%E4%BB%A4%EF%BC%8C%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8C%E5%B0%B1%E5%A5%BD%E3%80%82">https://update.angular.io/）也有升级指南。选择从哪个版本升级到哪个版本后，会给出一步一步的升级命令，直接执行就好。</a></p>
-<h1 id="7-依赖注入（dependency-injection）"><a href="#7-依赖注入（dependency-injection）" class="headerlink" title="7. 依赖注入（dependency injection）"></a>7. 依赖注入（dependency injection）</h1><p>依赖注入是Angular实现的一种应用程序设计模式， 是Angular的核心概念之一。</p>
-<p>依赖就是具有一系列功能的服务(service)， 应用程序中的各种组件和指令（derictives）可能需要服务的功能。 Angular提供了一种平滑的机制，通过它我们可以将这些依赖项注入我们的组件和指令中。因此，我们只是在构建依赖关系，这些依赖关系可以在应用程序的所有组件之间注入。</p>
-<p>使用依赖注入还有以下好处，</p>
-<ol>
-<li>不需要实例化，（new 实例）。不需要关心class的构造函数里需要什么参数</li>
-<li>一次注入（app module通过Providers注入），所有组件都可以使用。而且是用同一个service实例（Singleton），也就是说一个service里的数据是共分享的，可以用于组件间数据传递。</li>
-</ol>
-<h1 id="8-编译-AOT和JIT的区别"><a href="#8-编译-AOT和JIT的区别" class="headerlink" title="8. 编译-AOT和JIT的区别"></a>8. 编译-AOT和JIT的区别</h1><p>每个Angular应用程序都包含浏览器无法理解的组件和模板。 因此，在浏览器内部运行之前，需要先编译所有Angular应用程序。</p>
-<p>Angular提供两种编译类型：</p>
-<ol>
-<li>JIT(Just-in-Time) compilation</li>
-<li>AOT(Ahead-of-Time) compilation</li>
-</ol>
-<p>区别在于，在JIT编译中，应用程序在运行时在浏览器内部进行编译；而在AOT编译中，应用程序在构建期间进行编译。<br>显而易见，AOT编译好处多多，因而是Angular的默认编译方式。主要优点</p>
-<p>由于应用程序是在浏览器内部运行之前进行编译的，因此浏览器会加载可执行代码并立即呈现应用程序，从而加快了呈现速度。</p>
-<p>在AOT编译中，编译器将与应用程序一起发送外部HTML和CSS文件，从而消除了对那些源文件的单独AJAX请求，从而减少了ajax请求。</p>
-<p>开发人员可以在构建阶段检测并处理错误，这有助于最大程度地减少错误。<br>AOT编译器将HTML和模板添加到JS文件中，然后再在浏览器中运行。 因此，没有多余的HTML文件可读取，从而为应用程序提供了更好的安全性。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/08/angular-Starter-Angular-Vue-React/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/08/angular-Starter-Angular-Vue-React/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（1） - Angular,Vue,React 选型</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-08 15:02:55" itemprop="dateCreated datePublished" datetime="2021-01-08T15:02:55+08:00">2021-01-08</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
-<li><a href="#2-%E6%A1%86%E6%9E%B6%E6%AF%94%E8%BE%83">2. 框架比较</a></li>
-<li><a href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%86%85angular%E4%B8%8D%E6%98%AF%E5%BE%88%E6%B5%81%E8%A1%8C">3. 为什么国内Angular不是很流行</a></li>
-</ul>
-<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>总的来说一句话，如果你是老大，你可以选择用什么；如果你不是，那么，老大让用什么，你就用什么。</p>
-<ul>
-<li>前端框架Angular,Vue,React三选一，没有第四种。 （当然，如果只是一两个简单的页面，纯JS、jquery足够了）。</li>
-<li>国内的话，React和vue更流行一点，国外的话React和Angular更流行。</li>
-<li>Vue 中文资料更多一些</li>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-</ul>
-<h1 id="2-框架比较"><a href="#2-框架比较" class="headerlink" title="2. 框架比较"></a>2. 框架比较</h1><p>网上比较的文章太多了，如果想了解，baidu、google一下吧，这个就不再多说了。</p>
-<h1 id="3-为什么国内Angular不是很流行"><a href="#3-为什么国内Angular不是很流行" class="headerlink" title="3. 为什么国内Angular不是很流行"></a>3. 为什么国内Angular不是很流行</h1><p>只说些个人看法，更多原因请自行搜索。</p>
-<ol>
-<li>Angular有些资源访问受限或者较慢（防火墙问题）</li>
-<li>上手难度稍大，或者说需要更多的时间培训才能开发。</li>
-<li>Angular对anuglarJS（1.0版本）不支持（虽然后期推出了兼容方案）， 伤了很多人的心。不过这个难免，一个组件、框架的升级，如果一直背负的早期债务，很难有更好的提升。</li>
-<li>TypeScript。Angular是第一个吃螃蟹的，完全抛弃了js，转入Typscript，得罪的很多js的铁杆粉丝，以及惧怕ts的人。不过现在看来，typescript才是前端的趋势。vue3也声称用typescript重写了，并打算更完美的支持typescript。</li>
-<li>大而全的框架。选择Angular的话，它自带了很多东西，路由、表单、动画、http请求等等，需要更多的时间去学习和理解。而其他框架，很多组件都是有备选方案，或者第三方提供的（如vue使用axios处理http请求），让人觉得了解框架更简单。</li>
-<li>版本升级较快。每半年一个主版本，优缺点共存吧。</li>
-<li>恶性循环：用的人少 》 聊的人少 》 资源少 》 用的人更少。</li>
-<li>vue更符合国人的习惯，考虑了一些小的常用细节。比如自带支持避免一个按钮点击多次（修饰符once，@click.prevent.once）。</li>
-</ol>
 
       
     </div>
@@ -1349,7 +1684,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目设计一个支持 push、pop、top 操作，并能在 O(1) 时间内检索到最小元素的栈。 实现 MinStack 类：  push(val) 将元素压入栈 pop() 移除栈顶元素 top() 返回栈顶元素 getMin() 返回栈中的最小元素  示例: 123456789输入:MinStack s &#x3D; new MinStack();s.push(-2);s.push(0);s.pus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 最小栈（Min Stack）">
+<meta property="og:url" content="https://jackniu81.github.io/2026/05/10/Algorithm-Min-Stack/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目设计一个支持 push、pop、top 操作，并能在 O(1) 时间内检索到最小元素的栈。 实现 MinStack 类：  push(val) 将元素压入栈 pop() 移除栈顶元素 top() 返回栈顶元素 getMin() 返回栈中的最小元素  示例: 123456789输入:MinStack s &#x3D; new MinStack();s.push(-2);s.push(0);s.pus">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-10T03:08:44.000Z">
+<meta property="article:modified_time" content="2026-09-24T03:15:27.769Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/05/10/Algorithm-Min-Stack/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/05/10/Algorithm-Min-Stack/","path":"2026/05/10/Algorithm-Min-Stack/","title":"算法 - 最小栈（Min Stack）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 最小栈（Min Stack） | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E8%BE%85%E5%8A%A9%E6%A0%88%EF%BC%88%E5%90%8C%E6%AD%A5%E8%AE%B0%E5%BD%95%E6%9C%80%E5%B0%8F%E5%80%BC%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 辅助栈（同步记录最小值）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E4%BC%98%E5%8C%96%EF%BC%9A%E6%9C%80%E5%B0%8F%E6%A0%88%E5%8F%AA%E5%9C%A8%E3%80%8C%E6%96%B0%E6%9C%80%E5%B0%8F%E6%88%96%E5%B9%B6%E5%88%97%E6%9C%80%E5%B0%8F%E3%80%8D%E6%97%B6%E5%8E%8B%E5%85%A5"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 优化：最小栈只在「新最小或并列最小」时压入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E5%8F%8C%E8%BE%85%E5%8A%A9%E6%A0%88%EF%BC%88%E7%BB%8F%E5%85%B8%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 双辅助栈（经典）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E5%8D%95%E6%A0%88%E5%AD%98%E5%B7%AE%E5%80%BC%EF%BC%88%E8%BF%9B%E9%98%B6%EF%BC%8C%E7%9C%81%E4%B8%80%E4%B8%AA%E6%A0%88%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 单栈存差值（进阶，省一个栈）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/05/10/Algorithm-Min-Stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 最小栈（Min Stack） | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 最小栈（Min Stack）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-05-10 11:08:44" itemprop="dateCreated datePublished" datetime="2026-05-10T11:08:44+08:00">2026-05-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>设计一个支持 <code>push</code>、<code>pop</code>、<code>top</code> 操作，并能在 <strong>O(1) 时间</strong>内检索到最小元素的栈。</p>
+<p>实现 <code>MinStack</code> 类：</p>
+<ul>
+<li><code>push(val)</code> 将元素压入栈</li>
+<li><code>pop()</code> 移除栈顶元素</li>
+<li><code>top()</code> 返回栈顶元素</li>
+<li><code>getMin()</code> 返回栈中的最小元素</li>
+</ul>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">MinStack s = new MinStack();</span><br><span class="line">s.push(-2);</span><br><span class="line">s.push(0);</span><br><span class="line">s.push(-3);</span><br><span class="line">s.getMin();   → -3</span><br><span class="line">s.pop();</span><br><span class="line">s.top();      → 0</span><br><span class="line">s.getMin();   → -2</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>普通栈取最小值需要 O(n) 遍历。要 O(1)，需<strong>额外空间换时间</strong>。</p>
+<h2 id="2-1-辅助栈（同步记录最小值）"><a href="#2-1-辅助栈（同步记录最小值）" class="headerlink" title="2.1 辅助栈（同步记录最小值）"></a>2.1 辅助栈（同步记录最小值）</h2><p>维护两个栈：<code>data</code> 存所有元素，<code>minStack</code> 存「<strong>对应 data 各状态下的最小值</strong>」。</p>
+<ul>
+<li>push 时：<code>data</code> 正常入栈；<code>minStack</code> 入栈 <code>min(val, 当前 minStack 栈顶)</code>。</li>
+<li>pop 时：两栈同时弹出。</li>
+<li>getMin：直接看 <code>minStack</code> 栈顶。</li>
+</ul>
+<p>这样 <code>minStack</code> 栈顶始终是 <code>data</code> 当前全部元素的最小值。</p>
+<ul>
+<li>时间复杂度：所有操作 O(1)；空间复杂度：O(n)。</li>
+</ul>
+<h2 id="2-2-优化：最小栈只在「新最小或并列最小」时压入"><a href="#2-2-优化：最小栈只在「新最小或并列最小」时压入" class="headerlink" title="2.2 优化：最小栈只在「新最小或并列最小」时压入"></a>2.2 优化：最小栈只在「新最小或并列最小」时压入</h2><p><code>minStack</code> 只在 <code>val &lt;= 当前最小</code> 时压入，pop 时若 <code>data</code> 弹出值等于栈顶再同步弹出 <code>minStack</code>，可省部分空间（注意 <code>&lt;=</code> 以处理重复最小值）。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双辅助栈（经典）"><a href="#3-1-双辅助栈（经典）" class="headerlink" title="3.1 双辅助栈（经典）"></a>3.1 双辅助栈（经典）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinStack</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">data</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">minStack</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="title function_">push</span>(<span class="attr">val</span>: <span class="built_in">number</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="title function_">push</span>(val);</span><br><span class="line">        <span class="keyword">const</span> curMin = <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span></span><br><span class="line">            ? <span class="variable language_">this</span>.<span class="property">minStack</span>[<span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span> - <span class="number">1</span>]</span><br><span class="line">            : val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="title function_">push</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(val, curMin));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">pop</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="title function_">pop</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="title function_">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">top</span>(): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">data</span>[<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">getMin</span>(): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">minStack</span>[<span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-单栈存差值（进阶，省一个栈）"><a href="#3-2-单栈存差值（进阶，省一个栈）" class="headerlink" title="3.2 单栈存差值（进阶，省一个栈）"></a>3.2 单栈存差值（进阶，省一个栈）</h2><p>栈中每个元素存「压入时的值 − 当时的最小值」。用 <code>min</code> 记录当前最小：</p>
+<ul>
+<li>压入 <code>val</code>：若 <code>val - min &gt;= 0</code> 直接入栈；否则说明出现更小值，入 <code>val - min</code>（负数）并更新 <code>min = val</code>。</li>
+<li>pop 时：弹出 <code>d</code>，若 <code>d &gt;= 0</code> 原值为 <code>min + d</code>；若 <code>d &lt; 0</code> 说明弹出的是「旧的最小值」，需还原 <code>min = min - d</code>。</li>
+</ul>
+<p>思路巧妙但边界易错，面试能讲清 3.1 已足够，3.2 作为加分。</p>
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>核心思想</strong>：用空间换 O(1) 查询，「辅助栈记录历史状态」是通用技巧。</li>
+<li>追问：如果 getMin 之后还要能恢复？——正因为 pop 同步回退 minStack，历史最小值可正确还原，这是辅助栈方法的正确性来源。</li>
+<li>类似设计题：LRU 缓存、带最大值的队列（双栈模拟队列 + 单调队列）等，考察数据结构组合能力，可对照本博客 <a href="https://jackniu81.github.io/2022/04/28/Algorithm-LRU-Cache/">LRU Cache</a>。</li>
+<li>语言细节：TS 里 <code>private</code> 字段、返回栈顶用 <code>arr[arr.length-1]</code>，注意空栈的防御（LeetCode 保证合法调用）。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 155 | 设计 &#x2F; 栈</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/18/Algorithm-Sliding-Window-Maximum/" rel="prev" title="算法 - 滑动窗口最大值">
+                  <i class="fa fa-angle-left"></i> 算法 - 滑动窗口最大值
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/08/Algorithm-Trapping-Rain-Water/" rel="next" title="算法 - 接雨水">
+                  算法 - 接雨水 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

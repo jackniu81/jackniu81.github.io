@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目给你一个未排序的整数数组 nums，请你找出其中没有出现的最小的正整数。 要求：时间复杂度 O(n)，并且只使用常数级别额外空间。 示例: 123456输入: nums &#x3D; [3,4,-1,1]输出: 2解释: 缺失的最小正整数是 2。输入: nums &#x3D; [7,8,9,11,12]输出: 1  2. 解题思路关键结论：长度为 n 的数组，答案一定落在 [1, n + 1] 区间内（最理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 缺失的第一个正数">
+<meta property="og:url" content="https://jackniu81.github.io/2026/02/07/Algorithm-First-Missing-Positive/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目给你一个未排序的整数数组 nums，请你找出其中没有出现的最小的正整数。 要求：时间复杂度 O(n)，并且只使用常数级别额外空间。 示例: 123456输入: nums &#x3D; [3,4,-1,1]输出: 2解释: 缺失的最小正整数是 2。输入: nums &#x3D; [7,8,9,11,12]输出: 1  2. 解题思路关键结论：长度为 n 的数组，答案一定落在 [1, n + 1] 区间内（最理">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-07T06:39:55.000Z">
+<meta property="article:modified_time" content="2026-09-24T03:15:27.215Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/02/07/Algorithm-First-Missing-Positive/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/02/07/Algorithm-First-Missing-Positive/","path":"2026/02/07/Algorithm-First-Missing-Positive/","title":"算法 - 缺失的第一个正数"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 缺失的第一个正数 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E5%8E%9F%E5%9C%B0%E5%93%88%E5%B8%8C%EF%BC%88%E6%8A%8A-i-%E6%94%BE%E5%88%B0%E4%BD%8D%E7%BD%AE-i-1%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 原地哈希（把 i 放到位置 i-1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E7%94%A8%E5%93%88%E5%B8%8C%E9%9B%86%E5%90%88%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 为什么不能用哈希集合？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E5%8E%9F%E5%9C%B0%E5%93%88%E5%B8%8C%EF%BC%88%E4%BA%A4%E6%8D%A2%E6%B3%95%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 原地哈希（交换法）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%A0%87%E8%AE%B0%E6%B3%95%EF%BC%88%E5%8F%96%E8%B4%9F%EF%BC%8C%E7%AD%89%E4%BB%B7%E6%80%9D%E8%B7%AF%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 标记法（取负，等价思路）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/02/07/Algorithm-First-Missing-Positive/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 缺失的第一个正数 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 缺失的第一个正数
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-02-07 14:39:55" itemprop="dateCreated datePublished" datetime="2026-02-07T14:39:55+08:00">2026-02-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个未排序的整数数组 <code>nums</code>，请你找出其中没有出现的最小的正整数。</p>
+<p>要求：时间复杂度 O(n)，并且只使用常数级别额外空间。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [3,4,-1,1]</span><br><span class="line">输出: 2</span><br><span class="line">解释: 缺失的最小正整数是 2。</span><br><span class="line"></span><br><span class="line">输入: nums = [7,8,9,11,12]</span><br><span class="line">输出: 1</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>关键结论：长度为 n 的数组，答案一定落在 <code>[1, n + 1]</code> 区间内（最理想情况数组恰好是 1..n，则答案为 n+1）。</p>
+<h2 id="2-1-原地哈希（把-i-放到位置-i-1）"><a href="#2-1-原地哈希（把-i-放到位置-i-1）" class="headerlink" title="2.1 原地哈希（把 i 放到位置 i-1）"></a>2.1 原地哈希（把 i 放到位置 i-1）</h2><p>目标：让数组「归位」——值 <code>x</code>（1 ≤ x ≤ n）应放到下标 <code>x - 1</code>。</p>
+<ul>
+<li><p>遍历数组，对每个 <code>nums[i]</code>，只要它在 <code>[1, n]</code> 且「它该去的位置上的值还不等于它」，就交换过去（循环，因为换回来的值可能也需归位）。</p>
+</li>
+<li><p>归位后再扫一遍，第一个 <code>nums[i] !== i + 1</code> 的位置，<code>i + 1</code> 就是缺失的最小正数。</p>
+</li>
+<li><p>时间复杂度：O(n)（每个元素最多被交换归位一次），空间复杂度：O(1)。</p>
+</li>
+</ul>
+<h2 id="2-2-为什么不能用哈希集合？"><a href="#2-2-为什么不能用哈希集合？" class="headerlink" title="2.2 为什么不能用哈希集合？"></a>2.2 为什么不能用哈希集合？</h2><p>可以用 Set 存所有正数再从 1 开始找，满足 O(n) 时间，但空间 O(n)，不满足「常数空间」的进阶要求——面试先讲 Set 思路，再优化到原地哈希。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-原地哈希（交换法）"><a href="#3-1-原地哈希（交换法）" class="headerlink" title="3.1 原地哈希（交换法）"></a>3.1 原地哈希（交换法）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">firstMissingPositive</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="comment">// 只要 nums[i] 在 [1,n] 且没归位，就把它换到 nums[i]-1 处</span></span><br><span class="line">        <span class="keyword">while</span> (</span><br><span class="line">            nums[i] &gt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">            nums[i] &lt;= n &amp;&amp;</span><br><span class="line">            nums[nums[i] - <span class="number">1</span>] !== nums[i]</span><br><span class="line">        ) &#123;</span><br><span class="line">            <span class="keyword">const</span> target = nums[i] - <span class="number">1</span>;</span><br><span class="line">            [nums[i], nums[target]] = [nums[target], nums[i]];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums[i] !== i + <span class="number">1</span>) <span class="keyword">return</span> i + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> n + <span class="number">1</span>; <span class="comment">// 1..n 全在，答案为 n+1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">firstMissingPositive</span>([<span class="number">3</span>, <span class="number">4</span>, -<span class="number">1</span>, <span class="number">1</span>])); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>坑点：解构交换 <code>[nums[i], nums[target]] = [...]</code> 中 <code>target</code> 必须先算好；若写成 <code>nums[nums[i]-1]</code> 内联，赋值左侧求值顺序会导致索引错乱。</p>
+</blockquote>
+<h2 id="3-2-标记法（取负，等价思路）"><a href="#3-2-标记法（取负，等价思路）" class="headerlink" title="3.2 标记法（取负，等价思路）"></a>3.2 标记法（取负，等价思路）</h2><p>先把所有 ≤0 的数替换成 n+1（移出有效区），再对每个值的绝对值 <code>v</code>（1≤v≤n）把 <code>nums[v-1]</code> 取负作为「出现过」标记，最后第一个非负下标 +1 即答案。同样 O(n) 时间 O(1) 空间。</p>
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>原地哈希 vs 排序</strong>：排序 O(n log n)，原地哈希利用「答案范围有界」把空间压到 O(1)，是本题精髓。</li>
+<li>变形题「数组中重复的数字 &#x2F; 找丢失的数字」都能复用「下标当哈希表」这一模式。</li>
+<li>追问：为什么 while 而不是 if？因为一次交换换来的新值可能也需要归位，必须持续下沉。</li>
+</ul>
+<blockquote>
+<p>难度：困难 | LeetCode 41 | 原地哈希经典</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/01/09/Algorithm-Hamming-Distance/" rel="prev" title="算法 - 汉明距离">
+                  <i class="fa fa-angle-left"></i> 算法 - 汉明距离
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/03/14/Algorithm-Add-Strings/" rel="next" title="算法 - 字符串相加（大数相加）">
+                  算法 - 字符串相加（大数相加） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
