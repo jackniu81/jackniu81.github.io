@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力现在做 AI 编程，很多人已经不是只用一个 IDE 了。 写代码时可能打开 Qoder，做一些 Agent 相关的工作；遇到自己更顺手的场景，又切到 TRAE；国内网络环境或者团队协作场景下，CodeBuddy 也可能成为主力。 多个 IDE 并不是什么问题，真正麻烦的是：每个 IDE 都有自己的一套 S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理">
+<meta property="og:url" content="https://jackniu81.github.io/2026/09/25/Reuse-skill-qoder-trae-codebuddy/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力现在做 AI 编程，很多人已经不是只用一个 IDE 了。 写代码时可能打开 Qoder，做一些 Agent 相关的工作；遇到自己更顺手的场景，又切到 TRAE；国内网络环境或者团队协作场景下，CodeBuddy 也可能成为主力。 多个 IDE 并不是什么问题，真正麻烦的是：每个 IDE 都有自己的一套 S">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-25T01:52:11.000Z">
+<meta property="article:modified_time" content="2026-09-25T00:16:34.903Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="IDE">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/09/25/Reuse-skill-qoder-trae-codebuddy/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/09/25/Reuse-skill-qoder-trae-codebuddy/","path":"2026/09/25/Reuse-skill-qoder-trae-codebuddy/","title":"别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8-Qoder%E3%80%81TRAE%E3%80%81CodeBuddy-%E4%B9%8B%E9%97%B4%E5%85%B1%E4%BA%AB%E5%85%A8%E5%B1%80-Skill%EF%BC%9A%E5%A4%9A%E4%B8%AA-IDE%EF%BC%8C%E4%B8%80%E5%A5%97%E8%83%BD%E5%8A%9B"><span class="nav-number">1.</span> <span class="nav-text">在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%9C%A8%E5%A4%9A%E4%B8%AA-IDE-%E4%B9%8B%E9%97%B4%E5%85%B1%E4%BA%AB-Skill%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">一、为什么要在多个 IDE 之间共享 Skill？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%8A%8A-Skill-%E4%BB%8E-IDE-%E4%B8%AD%E2%80%9C%E8%A7%A3%E8%80%A6%E2%80%9D%E5%87%BA%E6%9D%A5"><span class="nav-number">1.2.</span> <span class="nav-text">二、把 Skill 从 IDE 中“解耦”出来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%85%B3%E9%94%AE%E6%8A%80%E5%B7%A7%EF%BC%9A%E7%94%A8%E8%BD%AF%E9%93%BE%E6%8E%A5%E5%85%B1%E4%BA%AB-Skill"><span class="nav-number">1.3.</span> <span class="nav-text">三、关键技巧：用软链接共享 Skill</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Skill-%E4%B8%8D%E5%8F%AA%E6%98%AF%E5%85%B1%E4%BA%AB%EF%BC%8C%E8%BF%98%E5%8F%AF%E4%BB%A5%E7%94%A8-Git-%E7%AE%A1%E8%B5%B7%E6%9D%A5"><span class="nav-number">1.4.</span> <span class="nav-text">四、Skill 不只是共享，还可以用 Git 管起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%BF%99%E5%A5%97%E6%96%B9%E6%A1%88%E7%9C%9F%E6%AD%A3%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">1.5.</span> <span class="nav-text">五、这套方案真正有价值的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%B8%8D%E5%90%8C-IDE-%E6%93%85%E9%95%BF%E4%B8%8D%E5%90%8C%E4%BA%8B%E6%83%85%EF%BC%8C%E4%BD%86-Skill-%E5%8F%AF%E4%BB%A5%E4%BF%9D%E6%8C%81%E4%B8%80%E8%87%B4"><span class="nav-number">1.6.</span> <span class="nav-text">六、不同 IDE 擅长不同事情，但 Skill 可以保持一致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%BF%9B%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%8A%8A-Skill-%E5%BD%93%E6%88%90%E8%87%AA%E5%B7%B1%E7%9A%84%E2%80%9CAI-%E9%85%8D%E7%BD%AE%E4%BB%93%E5%BA%93%E2%80%9D"><span class="nav-number">1.7.</span> <span class="nav-text">七、进一步：把 Skill 当成自己的“AI 配置仓库”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">1.8.</span> <span class="nav-text">写在最后</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">98</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/25/Reuse-skill-qoder-trae-codebuddy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-25 09:52:11" itemprop="dateCreated datePublished" datetime="2026-09-25T09:52:11+08:00">2026-09-25</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="在-Qoder、TRAE、CodeBuddy-之间共享全局-Skill：多个-IDE，一套能力"><a href="#在-Qoder、TRAE、CodeBuddy-之间共享全局-Skill：多个-IDE，一套能力" class="headerlink" title="在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力"></a>在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力</h1><p>现在做 AI 编程，很多人已经不是只用一个 IDE 了。 写代码时可能打开 Qoder，做一些 Agent 相关的工作；遇到自己更顺手的场景，又切到 TRAE；国内网络环境或者团队协作场景下，CodeBuddy 也可能成为主力。</p>
+<p>多个 IDE 并不是什么问题，真正麻烦的是：<strong>每个 IDE 都有自己的一套 Skill 配置。</strong></p>
+<p>你花时间写了一套代码规范、Git 提交规范、Code Review 规则，或者整理了一套“如何分析项目、如何写测试、如何生成 API 文档”的 Skill，结果换一个 IDE 就得重新配置一遍。</p>
+<p>更麻烦的是，Skill 一旦修改，就要同步到多个地方。</p>
+<p>有没有办法做到：</p>
+<blockquote>
+<p><strong>Skill 只维护一份，Qoder、TRAE、CodeBuddy 都能使用？</strong></p>
+</blockquote>
+<p>答案是可以。</p>
+<p>核心思路其实很简单：<strong>把 Skill 从 IDE 的配置目录中抽离出来，放到一个独立的全局目录，然后让不同 IDE 的 Skill 目录指向同一个位置。</strong></p>
+<p>这样，我们就可以实现“一份 Skill，多处使用”。</p>
+<h2 id="一、为什么要在多个-IDE-之间共享-Skill？"><a href="#一、为什么要在多个-IDE-之间共享-Skill？" class="headerlink" title="一、为什么要在多个 IDE 之间共享 Skill？"></a>一、为什么要在多个 IDE 之间共享 Skill？</h2><p>首先，是因为<strong>多个 IDE 可以一起薅羊毛</strong>。</p>
+<p>不同 AI IDE 往往有不同的优势。</p>
+<p>有的 IDE 更适合日常 Coding，有的 Agent 能力比较强，有的在代码补全、项目理解、Terminal 操作或者国内服务接入方面体验更好。</p>
+<p>既然不同 IDE 各有所长，没有必要强迫自己只使用一个。</p>
+<p>真正应该统一的，是自己的“工作方法”。</p>
+<p>例如，我可能有这样几个 Skill：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">code-review</span><br><span class="line">git-commit</span><br><span class="line">write-test</span><br><span class="line">project-analysis</span><br><span class="line">api-design</span><br><span class="line">documentation</span><br></pre></td></tr></table></figure>
+
+<p>这些东西描述的是<strong>我希望 AI 如何帮我工作</strong>，而不是某个 IDE 专属的能力。</p>
+<p>所以它们天然应该独立于 IDE 存在。</p>
+<hr>
+<h2 id="二、把-Skill-从-IDE-中“解耦”出来"><a href="#二、把-Skill-从-IDE-中“解耦”出来" class="headerlink" title="二、把 Skill 从 IDE 中“解耦”出来"></a>二、把 Skill 从 IDE 中“解耦”出来</h2><p>假设我们建立一个统一的 Skill 仓库：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br><span class="line">├── code-review/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── git-commit/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── write-test/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── project-analysis/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">└── api-design/</span><br><span class="line">    └── SKILL.md</span><br></pre></td></tr></table></figure>
+
+<p>以后不管使用 Qoder、TRAE 还是 CodeBuddy，都不直接维护自己的 Skill 内容。</p>
+<p>而是让它们共同使用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>从逻辑上看，就变成了：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             ┌── Qoder</span><br><span class="line">             │</span><br><span class="line">shared-skills├── TRAE</span><br><span class="line">             │</span><br><span class="line">             └── CodeBuddy</span><br></pre></td></tr></table></figure>
+
+<p>三个 IDE 是不同的入口，但背后使用的是同一套 Skill。</p>
+<p>这样做最大的好处就是：</p>
+<blockquote>
+<p><strong>Skill 和 IDE 解耦。</strong></p>
+</blockquote>
+<p>IDE 可以换，Skill 不需要跟着换。</p>
+<hr>
+<h2 id="三、关键技巧：用软链接共享-Skill"><a href="#三、关键技巧：用软链接共享-Skill" class="headerlink" title="三、关键技巧：用软链接共享 Skill"></a>三、关键技巧：用软链接共享 Skill</h2><p>如果不同 IDE 都支持从固定目录加载 Skill，那么最简单的方法就是使用软链接。</p>
+<p>例如，我们把真正的 Skill 放在：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>然后让各个 IDE 的 Skill 目录指向它。</p>
+<p>Linux&#x2F;macOS 下可以使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.qoder/skills</span><br><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.trae/skills</span><br><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.codebuddy/skills</span><br></pre></td></tr></table></figure>
+
+<p>具体目录需要根据各个 IDE 当前版本的 Skill 目录规则进行调整。</p>
+<p>最终效果类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Qoder Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br><span class="line"></span><br><span class="line">TRAE Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br><span class="line"></span><br><span class="line">CodeBuddy Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>于是你只需要修改：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/code-review/SKILL.md</span><br></pre></td></tr></table></figure>
+
+<p>三个 IDE 使用的就是同一份内容。</p>
+<p>这就解决了一个非常痛苦的问题：</p>
+<p><strong>一处修改，所有 IDE 生效。</strong></p>
+<hr>
+<h2 id="四、Skill-不只是共享，还可以用-Git-管起来"><a href="#四、Skill-不只是共享，还可以用-Git-管起来" class="headerlink" title="四、Skill 不只是共享，还可以用 Git 管起来"></a>四、Skill 不只是共享，还可以用 Git 管起来</h2><p>如果只是把 Skill 放到一个公共目录，其实还不够。</p>
+<p>因为 Skill 本身也是代码和知识资产。</p>
+<p>既然是自己的工作流，为什么不把它放进 Git？</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/shared-skills</span><br><span class="line"></span><br><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init skills&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后修改 Skill：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;improve code review skill&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>甚至可以直接把它放到 GitHub、GitLab 或公司的 Git 服务中。</p>
+<p>这样就有了一个独立的：</p>
+<blockquote>
+<p><strong>个人 AI Skill 仓库。</strong></p>
+</blockquote>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">my-ai-skills/</span><br><span class="line">├── README.md</span><br><span class="line">├── coding/</span><br><span class="line">│   ├── code-review/</span><br><span class="line">│   └── write-test/</span><br><span class="line">├── git/</span><br><span class="line">│   └── git-commit/</span><br><span class="line">├── architecture/</span><br><span class="line">│   └── project-analysis/</span><br><span class="line">└── documentation/</span><br><span class="line">    └── api-doc/</span><br></pre></td></tr></table></figure>
+
+<p>换电脑的时候，只需要：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> &lt;your-skill-repository&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后重新建立 IDE 的软链接即可。</p>
+<hr>
+<h2 id="五、这套方案真正有价值的地方"><a href="#五、这套方案真正有价值的地方" class="headerlink" title="五、这套方案真正有价值的地方"></a>五、这套方案真正有价值的地方</h2><p>很多人一开始会觉得：</p>
+<p>“几个 SKILL.md 文件而已，有必要这么折腾吗？”</p>
+<p>真正用一段时间之后，就会发现价值非常大。</p>
+<p>因为 Skill 会不断迭代。</p>
+<p>比如最开始的 <code>code-review</code> 只有几十行，后来你发现 AI 经常漏掉异常处理，于是增加：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">检查异常处理</span><br><span class="line">检查边界条件</span><br><span class="line">检查资源释放</span><br><span class="line">检查并发安全</span><br></pre></td></tr></table></figure>
+
+<p>再后来，又加入公司的编码规范。</p>
+<p>如果每个 IDE 都维护一份，那么修改一次就要同步三次。</p>
+<p>但共享 Skill 后：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改一次</span><br><span class="line">   ↓</span><br><span class="line">Git commit</span><br><span class="line">   ↓</span><br><span class="line">所有 IDE 自动使用最新版</span><br></pre></td></tr></table></figure>
+
+<p>这时候 Skill 才真正变成了自己的<strong>可积累资产</strong>。</p>
+<hr>
+<h2 id="六、不同-IDE-擅长不同事情，但-Skill-可以保持一致"><a href="#六、不同-IDE-擅长不同事情，但-Skill-可以保持一致" class="headerlink" title="六、不同 IDE 擅长不同事情，但 Skill 可以保持一致"></a>六、不同 IDE 擅长不同事情，但 Skill 可以保持一致</h2><p>这也是我比较推荐这种方案的另一个原因。</p>
+<p>我们没有必要因为使用多个 IDE，就让工作流也碎片化。</p>
+<p>可以让：</p>
+<ul>
+<li><strong>Qoder</strong> 负责它擅长的 Agent &#x2F; Coding 场景</li>
+<li><strong>TRAE</strong> 负责适合它的开发任务</li>
+<li><strong>CodeBuddy</strong> 处理另外一些项目或工作流</li>
+</ul>
+<p>但是，无论 AI 来自哪个 IDE，都遵循同一套：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">代码规范</span><br><span class="line">↓</span><br><span class="line">项目分析方法</span><br><span class="line">↓</span><br><span class="line">测试规范</span><br><span class="line">↓</span><br><span class="line">Git 规范</span><br><span class="line">↓</span><br><span class="line">Code Review 规范</span><br><span class="line">↓</span><br><span class="line">文档规范</span><br></pre></td></tr></table></figure>
+
+<p>也就是说：</p>
+<blockquote>
+<p><strong>IDE 可以不同，AI 的“工作方法”可以统一。</strong></p>
+</blockquote>
+<p>这其实比单纯共享几个 Prompt 更重要。</p>
+<hr>
+<h2 id="七、进一步：把-Skill-当成自己的“AI-配置仓库”"><a href="#七、进一步：把-Skill-当成自己的“AI-配置仓库”" class="headerlink" title="七、进一步：把 Skill 当成自己的“AI 配置仓库”"></a>七、进一步：把 Skill 当成自己的“AI 配置仓库”</h2><p>如果再往前走一步，可以把 Skill 当成 dotfiles 一样管理。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/dotfiles/</span><br><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>里面保存的不是某个 IDE 的配置，而是自己长期积累下来的 AI 工作流。</p>
+<p>最终形成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                    ┌── Qoder</span><br><span class="line">                    │</span><br><span class="line">                    ├── TRAE</span><br><span class="line">shared-skills ──────┤</span><br><span class="line">                    └── CodeBuddy</span><br><span class="line">                         │</span><br><span class="line">                         ↓</span><br><span class="line">                    Git Repository</span><br></pre></td></tr></table></figure>
+
+<p>以后无论换电脑、换 IDE，甚至换团队，只要新的工具支持类似的 Skill 机制，就可以继续复用。</p>
+<p><strong>工具会变化，但自己的工作流可以沉淀下来。</strong></p>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>AI IDE 的竞争会越来越激烈，我们没有必要在不同工具之间“二选一”。</p>
+<p>哪个 IDE 在什么事情上好用，就用哪个。</p>
+<p>真正值得沉淀的，不应该是某一个 IDE 的配置，而是我们自己积累出来的 Skill。</p>
+<p>把 Skill 独立出来，再通过软链接让 Qoder、TRAE、CodeBuddy 共享，最后交给 Git 管理，就可以形成一套非常简单但实用的工作方式：</p>
+<blockquote>
+<p><strong>多个 IDE，一起薅羊毛；不同 IDE，各司其职；Skill 一份维护，到处生效；Git 管理，持续沉淀。</strong></p>
+</blockquote>
+<p>最终，你使用的不再只是几个 AI IDE，而是一套属于自己的、可以不断迭代的 <strong>AI Coding 工作流</strong>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/IDE/" rel="tag"># IDE</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/13/Algorithm-Minimum-Path-Sum/" rel="prev" title="算法 - 最小路径和">
+                  <i class="fa fa-angle-left"></i> 算法 - 最小路径和
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
