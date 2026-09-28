@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent 工程师面试题（基础概念 + LangChain / LangGraph / Deep Agents 实战，附答案）</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;
+          --code-bg:#f6f8fa; --accent:#0969da; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+  <h1>AI Agent 工程师面试题（基础概念 + LangChain / LangGraph / Deep Agents 实战，附答案）</h1>
+<blockquote>一篇覆盖：Agent / ReAct / 记忆 / RAG / Function Calling / 多 Agent / A2A 等通用概念，以及主流框架的<strong>编码能力与工程决策</strong>（代码手写、机制原理、排错与方案设计）。</blockquote>
+<hr>
+<h2>一、基础概念</h2>
+<h3>1. 什么是 AI Agent？它与普通 LLM 聊天有什么区别？</h3>
+<p><strong>答案：</strong> AI Agent（智能体）是一种能够感知环境、自主规划、调用工具并执行动作以实现目标的 AI 系统。与普通 LLM 聊天不同，Agent 具备<strong>自主决策、多步执行、工具调用</strong>的能力。</p>
+<table><thead><tr><th>对比维度</th><th>普通 LLM</th><th>AI Agent</th></tr></thead><tbody><tr><td>交互方式</td><td>单轮/多轮对话</td><td>自主规划、多步执行</td></tr><tr><td>工具使用</td><td>无</td><td>可调用外部工具、API、数据库</td></tr><tr><td>记忆能力</td><td>有限上下文窗口</td><td>持久记忆（短期+长期）</td></tr><tr><td>自主性</td><td>被动回答</td><td>主动规划和行动</td></tr><tr><td>任务复杂度</td><td>简单、单步</td><td>复杂、多步、长周期</td></tr></tbody></table>
+<h3>2. AI Agent 的四大核心组件是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>感知（Perception）</strong>：接收用户输入、环境状态、工具返回结果</li><li><strong>规划（Planning）</strong>：分解任务、制定执行计划（如 ReAct、Chain-of-Thought）</li><li><strong>记忆（Memory）</strong>：存储上下文（短期）和知识（长期），支持跨步骤推理</li><li><strong>行动（Action）</strong>：调用工具、执行代码、调用 API、操作文件等</li></ul>
+<h3>3. 什么是 ReAct 架构？</h3>
+<p><strong>答案：</strong> ReAct（Reasoning + Acting）是一种 Agent 推理框架，让 LLM 交替进行<strong>思考（Thought）</strong>和<strong>行动（Action）</strong>：</p>
+<pre><code>Thought: 我需要搜索今天的天气
+Action: search_web(&quot;今天北京天气&quot;)
+Observation: 晴天，25°C
+Thought: 已获得结果，整理回答
+Action: 返回结果给用户</code></pre>
+<p>这种模式使 LLM 的推理过程透明、可调试，是目前最主流的 Agent 模式之一。LangGraph 手写实现见第 23 题。</p>
+<h3>4. Agent 的规划模式有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>ReAct</strong>：思考与行动交替，动态规划，适合未知环境</li><li><strong>Plan-and-Execute</strong>：先整体规划，再逐步执行，适合复杂任务</li><li><strong>Reflection</strong>：执行后自我反思，迭代改进，提升输出质量</li><li><strong>Self-Ask</strong>：将复杂问题分解为子问题逐步回答</li><li><strong>Tree of Thoughts（ToT）</strong>：并行探索多个推理路径，选最优解</li></ul>
+<h3>5. Agentic AI 与传统 AI 的区别是什么？</h3>
+<p><strong>答案：</strong></p>
+<table><thead><tr><th></th><th>传统 AI</th><th>Agentic AI</th></tr></thead><tbody><tr><td>决策方式</td><td>规则驱动或单次推理</td><td>自主规划、多步推理</td></tr><tr><td>目标</td><td>完成单一预定任务</td><td>自主达成复杂长期目标</td></tr><tr><td>适应性</td><td>固定流程</td><td>动态适应环境变化</td></tr><tr><td>工具使用</td><td>无或固定</td><td>动态选择和调用工具</td></tr><tr><td>代表</td><td>图像识别、推荐系统</td><td>AutoGPT、Devin、Manus</td></tr></tbody></table>
+<h3>6. 🆕 什么是 Context Engineering？为什么 2025 年后它比 Prompt Engineering 更常被提起？</h3>
+<p><strong>答案：</strong></p>
+<p>Context Engineering（上下文工程）是指<strong>系统性地设计和管理进入模型上下文窗口的全部信息</strong>：系统提示、工具定义、检索结果、历史消息、子代理回传、scratchpad 内容等。2025 年中由 Tobi Lütke（6/19）、Harrison Chase（6/23）、Andrej Karpathy（6/25）等人在公开讨论中带火，Anthropic 于 2025 年末发表《Effective Context Engineering for AI Agents》。</p>
+<p>与 Prompt Engineering 的关系：<strong>上下文工程是超集</strong>——prompt 只是上下文中的一个可控片段。Agent 是多轮、自主、带工具的，真正决定成败的往往不是某一句 prompt，而是每一步"上下文里到底有什么"。</p>
+<p>核心做四件事：</p>
+<table><thead><tr><th>动作</th><th>手段</th><th>典型实现</th></tr></thead><tbody><tr><td>写（Write）</td><td>让 Agent 把中间产物外写</td><td>scratchpad、todo 清单、虚拟文件（Deep Agents）</td></tr><tr><td>选（Select）</td><td>每步只加载当前需要的内容</td><td>JIT 检索、按需加载工具、动态 few-shot</td></tr><tr><td>压缩（Compress）</td><td>上下文逼近窗口时摘要/裁剪</td><td>compaction、滑窗、对话摘要（经验阈值约 70% 窗口占用即触发）</td></tr><tr><td>隔离（Isolate）</td><td>把高噪音子任务关进独立上下文</td><td>子代理（Manus 总结为 reduce / offload / isolate 三策）</td></tr></tbody></table>
+<p>为什么必须做：研究表明长上下文下所有模型都会出现性能衰减——Chroma 的 Context Rot 实验中 18 个模型全部随上下文长度衰减；"Lost in the Middle" 证明位于中间位置的信息利用率最低。Anthropic 总结四类上下文失败：<strong>poisoning（污染/投毒）、distraction（干扰）、confusion（混淆）、clash（指令冲突）</strong>。2025-09-29 Claude Code 推出 context editing（自动写文件、压缩对话），是该理念落地的代表。</p>
+<h3>7. 🆕 Anthropic《Building Effective Agents》提出了哪几种工作流模式？</h3>
+<p><strong>答案：</strong></p>
+<p>Anthropic 于 2024-12-19 发表该文，首先区分两个概念：</p>
+<ul><li><strong>Workflow（工作流）</strong>：LLM 与工具按<strong>预定义的代码路径</strong>编排，流程确定；</li><li><strong>Autonomous Agent（自主智能体）</strong>：模型自己决定路径、动态调用工具，流程开放。</li></ul>
+<p>基本构件是"增强型 LLM"（带工具调用、检索、结构化输出的单次模型调用）。五种工作流模式：</p>
+<table><thead><tr><th>模式</th><th>结构</th><th>适用场景</th></tr></thead><tbody><tr><td>Prompt Chaining</td><td>多个 prompt 串行，前一步输出喂下一步</td><td>可拆成固定子任务（生成→校对→翻译）</td></tr><tr><td>Routing</td><td>分类后分流到不同处理链</td><td>客服意图分流、模型分级路由（见第 22 题）</td></tr><tr><td>Parallelization</td><td>并行调用后聚合：sectioning（分片）/ voting（投票）</td><td>多维度同时评审、多次投票降方差</td></tr><tr><td>Orchestrator-Workers</td><td>主模型动态拆任务、派给 worker</td><td>任务子项预先未知（如跨多文件代码修改）</td></tr><tr><td>Evaluator-Optimizer</td><td>生成→评审→按意见修订循环</td><td>翻译、代码、写作等可反复打磨的任务</td></tr></tbody></table>
+<p>核心建议：<strong>先用最简方案</strong>（单次增强 LLM → 再加工作流 → 最后才考虑完全自主 agent）；框架会增加抽象成本，能不引入就不引入。Orchestrator-Workers 与 Deep Agents 的规划 + 子代理机制一脉相承（见第 35 题）。</p>
+<hr>
+<h2>二、记忆、RAG 与知识</h2>
+<h3>8. Agent 的记忆系统如何设计？</h3>
+<p><strong>答案：</strong> Agent 记忆分为三类：</p>
+<ul><li><strong>短期记忆（In-context Memory）</strong>：当前对话的上下文，存在 LLM 的 context window 中，不持久</li><li><strong>长期记忆（External Memory）</strong>：持久化存储，通过向量数据库（RAG）或数据库检索，跨会话保留</li><li><strong>工作记忆（Working Memory）</strong>：当前任务执行中的中间状态、变量、步骤结果</li></ul>
+<p>工程实现上，短期记忆对应 LangGraph 的 state + checkpointer（第 24 题），长期记忆对应跨 thread 的 Store / RAG 知识库。</p>
+<h3>9. 什么是 RAG？与 Agent 有何关系？</h3>
+<p><strong>答案：</strong> RAG（Retrieval-Augmented Generation，检索增强生成）是将外部知识库与 LLM 结合的技术：</p>
+<ol><li>将文档分块，向量化后存入向量数据库</li><li>用户提问时，检索相关文档片段</li><li>将检索结果注入 LLM prompt 生成回答</li></ol>
+<p>在 Agent 中，RAG 通常作为<strong>长期记忆工具</strong>，Agent 可以决定是否调用 RAG 检索来补充知识。</p>
+<h3>10. 常见向量数据库有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>Chroma</strong>：轻量级，本地部署，适合原型和小型项目</li><li><strong>Pinecone</strong>：云托管，高性能，适合生产环境</li><li><strong>Milvus</strong>：开源，高性能，支持大规模向量检索</li><li><strong>Weaviate</strong>：开源，支持混合检索（语义+关键词）</li><li><strong>FAISS</strong>：Facebook 出品，纯本地，适合离线场景</li></ul>
+<h3>11. 🆕 Agent 的长期记忆基建有哪些方案？和直接做 RAG 有什么区别？</h3>
+<p><strong>答案：</strong></p>
+<p>代表方案（截至 2026-09）：</p>
+<table><thead><tr><th>项目</th><th>技术路线</th><th>特点</th></tr></thead><tbody><tr><td>Mem0</td><td>向量 + 图谱的 drop-in 记忆层</td><td>接入简单，有 ECAI 2025 论文（arXiv:2504.19413）与 LoCoMo 基准</td></tr><tr><td>Zep</td><td>Graphiti 时序知识图谱</td><td>支持带时间维度的事实，官方称检索 <200ms（示例口径）</td></tr><tr><td>Letta（前身 MemGPT，UCB）</td><td>OS 式 memory blocks，Agent 自编辑记忆</td><td>显式区分核心记忆/归档记忆</td></tr><tr><td>LangMem</td><td>LangChain 原生记忆模块</td><td>与 LangGraph Store 深度集成</td></tr></tbody></table>
+<p>与纯 RAG 的关键区别：</p>
+<ol><li><strong>写入侧做事实抽取与更新</strong>：不是原样存文档块，而是从对话中抽取"用户偏好/实体关系"，并处理更新与冲突（旧事实失效）；</li><li><strong>时序与关系</strong>：支持"用户上个月在 A 团队、这个月换到 B 团队"这类带时间的事实，图谱维护实体关系；</li><li><strong>召回侧个性化</strong>：按用户/会话作用域检索，而非全局相似度。</li></ol>
+<p>常用评测基准：<strong>LoCoMo、LongMemEval、BEAM</strong>。注意各厂商常引用<strong>自测分数</strong>，跨方案比较时以独立基准为准。</p>
+<hr>
+<h2>三、工具调用</h2>
+<h3>12. 什么是 Function Calling / Tool Use？</h3>
+<p><strong>答案：</strong> Function Calling 是让 LLM 能够决定"调用哪个工具、传入什么参数"的能力：</p>
+<ol><li>开发者定义工具的名称、描述和参数 schema（通常是 JSON Schema）</li><li>LLM 根据用户意图选择合适的工具并生成调用参数</li><li>代码执行实际的工具调用，将结果返回给 LLM</li><li>LLM 基于结果继续推理或生成最终回答</li></ol>
+<pre><code class="language-python">tools = [{
+    &quot;name&quot;: &quot;get_weather&quot;,
+    &quot;description&quot;: &quot;获取指定城市的天气&quot;,
+    &quot;parameters&quot;: {
+        &quot;type&quot;: &quot;object&quot;,
+        &quot;properties&quot;: {
+            &quot;city&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;城市名称&quot;}
+        },
+        &quot;required&quot;: [&quot;city&quot;]
+    }
+}]</code></pre>
+<p>不借助框架的手写调用循环与消息流转见第 20 题。</p>
+<h3>13. Agent 常见的工具类型有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>搜索工具</strong>：Google Search、Bing、SerpAPI、Tavily</li><li><strong>代码执行</strong>：Python Interpreter、Node.js 运行环境</li><li><strong>文件操作</strong>：读写文件、解析 PDF/Excel/Word</li><li><strong>数据库查询</strong>：SQL 查询、向量数据库检索</li><li><strong>API 调用</strong>：REST API、GraphQL、第三方服务</li><li><strong>浏览器控制</strong>：Playwright、Puppeteer（用于 Web 自动化）</li><li><strong>计算器</strong>：数学计算，避免 LLM 幻觉</li></ul>
+<h3>14. <code>@tool</code> 装饰器生成的工具，其 schema 从哪里来？怎么写复杂参数？</h3>
+<p><strong>答案：</strong></p>
+<p>schema 来自三处的自动提取：<strong>函数名</strong>、<strong>docstring</strong>（作为工具描述）、<strong>类型注解 + Pydantic</strong>（作为参数 JSON Schema）。复杂参数用 Pydantic Model：</p>
+<pre><code class="language-python">from pydantic import BaseModel, Field
+from langchain_core.tools import tool
+
+class RefundInput(BaseModel):
+    order_id: str = Field(description=&quot;订单号，ORD- 开头&quot;)
+    reason: str = Field(max_length=200, description=&quot;退款原因&quot;)
+    amount: float | None = Field(default=None, description=&quot;金额，单位元&quot;)
+
+@tool(args_schema=RefundInput)
+def apply_refund(order_id: str, reason: str, amount: float | None) -&gt; str:
+    &quot;&quot;&quot;提交退款。写操作，调用前必须先与用户确认金额与原因。&quot;&quot;&quot;
+    ...</code></pre>
+<p>追问"如何提升工具调用准确率"的标准答案：动宾命名、docstring 写清何时用/何时不用、参数给示例与约束、工具数量控制在约 20 个以内、返回精炼结构化结果。</p>
+<h3>15. 🆕 OpenAI Responses API 与 Chat Completions、Assistants API 是什么关系？</h3>
+<p><strong>答案：</strong></p>
+<p>Responses API 是 OpenAI 于 2025-03 推出的统一接口（<code>POST /v1/responses</code>），定位为 Assistants API 的替代者：</p>
+<table><thead><tr><th>特性</th><th>说明</th></tr></thead><tbody><tr><td>有状态</td><td><code>previous<em>response</em>id</code> 串联多轮，<code>store</code> 控制是否服务端存状态</td></tr><tr><td>入参</td><td><code>input</code>（取代 messages）+ <code>instructions</code>（系统提示）</td></tr><tr><td>内置工具</td><td><code>web<em>search</code>、<code>file</em>search</code>、<code>code<em>interpreter</code>、<code>computer</em>use</code>，并可挂 MCP 服务器</td></tr><tr><td>强类型输出</td><td>output items 列表，含 message / function_call / reasoning / compaction（状态压缩）等类型</td></tr><tr><td>结构化</td><td><code>responses.parse()</code> 直接返回经 schema 校验的对象</td></tr></tbody></table>
+<pre><code class="language-python">resp = client.responses.create(
+    model=&quot;gpt-5&quot;,
+    input=&quot;查一下今天北京天气并总结穿衣建议&quot;,
+    tools=[{&quot;type&quot;: &quot;web_search&quot;}],
+    store=True,
+)
+print(resp.output_text)</code></pre>
+<p>迁移口径：<strong>Assistants API 已于 2025-08-26 弃用、2026-08-26 关闭</strong>；简单单轮/多轮对话继续用 Chat Completions 即可；需要内置工具与服务端状态管理的 Agent 场景用 Responses API。</p>
+<hr>
+<h2>四、框架与选型</h2>
+<h3>16. 用一句话说清 LangChain、LangGraph、Deep Agents 的关系，并给出选型依据。</h3>
+<p><strong>答案：</strong></p>
+<p>三者是<strong>分层依赖</strong>而非竞争关系：</p>
+<ul><li><strong>LangChain</strong>：组件层——ChatModel、Tool、Prompt、Retriever、OutputParser 的统一抽象，LCEL 做线性编排。</li><li><strong>LangGraph</strong>：编排层——在 LangChain 组件之上提供有状态的图（State/Node/Edge），解决循环、分支、持久化、人机协同。</li><li><strong>Deep Agents</strong>：应用层——基于 LangGraph 预置了规划（todo）、子代理、虚拟文件系统、长短期记忆的"深度智能体"模板。</li></ul>
+<p>选型依据：</p>
+<table><thead><tr><th>任务特征</th><th>选择</th></tr></thead><tbody><tr><td>单次调用 / 固定线性 RAG</td><td>LCEL 或裸 SDK（OpenAI / Anthropic）</td></tr><tr><td>简单 ReAct 单 Agent</td><td>LangChain <code>create_agent</code></td></tr><tr><td>流程可画出确定流程图、需审批/回放/多 Agent</td><td>LangGraph <code>StateGraph</code></td></tr><tr><td>多角色对话协作、研究型分工</td><td>AutoGen / CrewAI（或 LangGraph Supervisor）</td></tr><tr><td>只能描述目标、路径靠 Agent 自主探索的长任务</td><td>Deep Agents</td></tr></tbody></table>
+<p>核心判断：<strong>固定流程用图，开放目标用深度智能体，线性任务别上框架。</strong></p>
+<h3>17. AutoGen 和 CrewAI 分别是什么？适合什么场景？</h3>
+<p><strong>答案：</strong></p>
+<p><strong>AutoGen</strong>（微软出品）专注于<strong>多智能体对话协作</strong>，让多个 Agent 相互交流完成任务：</p>
+<ul><li>每个 Agent 有独立角色（如 Planner、Coder、Reviewer）</li><li>Agent 之间通过消息传递协作</li><li>支持人机混合（Human-in-the-loop）</li></ul>
+<p><strong>CrewAI</strong> 是基于角色的多智能体框架，用船员（Crew）来比喻多个 Agent 分工协作：</p>
+<ul><li><strong>Agent</strong>：有 role、goal、backstory，定义具体角色</li><li><strong>Task</strong>：分配给某个 Agent 的具体任务</li><li><strong>Crew</strong>：管理所有 Agent 和 Task 的编排器</li><li><strong>Process</strong>：顺序或层级执行模式</li></ul>
+<p>与 LangChain 系的区别：LangChain/LangGraph 更侧重工作流编排和工具调用、可控性强；AutoGen / CrewAI 更侧重多 Agent 角色扮演与对话协作，适合"研究员 + 写作者 + 审核员"这类专业化分工场景。</p>
+<blockquote>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>：AutoGen v0.4 已于 2025-01 完全重写（2025-01-14/17 发布），改为异步事件驱动的 Actor 模型，分层为 <code>autogen-core</code> / <code>autogen-agentchat</code> / <code>autogen-ext</code>，内置 OpenTelemetry，支持 Python + .NET。2025-10 微软宣布 <strong>Microsoft Agent Framework（MAF，合并 AutoGen + Semantic Kernel）</strong>，其 1.0 于 2026-04-03 发布，AutoGen 随后进入维护模式。新项目选型应评估 MAF，而非直接上手旧 AutoGen；SDK 整体格局见第 19 题。</blockquote>
+<h3>18. LangChain v1 之后有哪些重要的 API 变化？</h3>
+<p><strong>答案：</strong></p>
+<ul><li>模型按 provider 分包：<code>from langchain<em>openai import ChatOpenAI</code>，旧的 <code>langchain.chat</em>models</code> 入口废弃。</li><li>Agent 统一为 <code>from langchain.agents import create<em>agent</code>；旧的 <code>initialize</em>agent</code>、<code>AgentExecutor</code>、各堆 <code>AgentType</code> 枚举全部废弃。</li><li>推荐用 <code>init<em>chat</em>model(&quot;openai:gpt-4o&quot;)</code> 按"provider:model"字符串实例化，便于切换厂商。</li><li>消息类型统一走 <code>langchain_core.messages</code>；状态更新走 LangGraph 的 reducer 机制。</li><li>可观测性统一到 LangSmith v2 环境变量（<code>LANGSMITH_TRACING=true</code>）。</li></ul>
+<p>面试要点：能说出"<strong>Chain/AgentExecutor 那套老 API 已被 LCEL + LangGraph 取代</strong>"即可看出是否持续跟进版本。</p>
+<blockquote>⚠️ <strong>过时/存疑标注（2026-09 核实，适用于全文代码示例）</strong>：本文示例中出现的 <code>gpt-4o</code> / <code>gpt-4o-mini</code> 自 <strong>2026-02-13 起陆续退役</strong>，新代码应改用 gpt-5 系列（或对应厂商的现役型号）；<code>init<em>chat</em>model(&quot;provider:model&quot;)</code> 的用法本身不变，迁移通常只需改模型字符串。</blockquote>
+<h3>19. 🆕 2025-2026 主流 Agent SDK 与编码 CLI 的格局是怎样的？</h3>
+<p><strong>答案：</strong></p>
+<p>Agent SDK 四强（截至 2026-09）：</p>
+<table><thead><tr><th>SDK</th><th>厂商</th><th>关键时间 / 特点</th></tr></thead><tbody><tr><td>Claude Agent SDK</td><td>Anthropic</td><td>2025-09-29 随 Sonnet 4.5 发布，与 Claude Code 同栈；权限系统、子代理、MCP 原生支持；Python + TS</td></tr><tr><td>OpenAI Agents SDK</td><td>OpenAI</td><td>2025-03 发布，由 Swarm 演变；Agent / Handoff / Guardrails / Runner 四概念（见第 31 题）</td></tr><tr><td>Google ADK</td><td>Google</td><td>2025-04 发布，原生 A2A + MCP，可部署到 Agent Engine（见第 32 题）</td></tr><tr><td>Vercel AI SDK</td><td>Vercel</td><td>TS 生态；4.2（2025-03）支持 MCP/Responses；6（2025-12）推 ToolLoopAgent；7（2026-06）WorkflowAgent 支持持久化执行与语音</td></tr></tbody></table>
+<p>编码类 CLI（Agentic Coding）：<strong>Claude Code、OpenAI Codex CLI、Gemini CLI、Deep Agents CLI</strong>；GitHub Copilot Agent、Cursor 等走 IDE 形态。微软侧为 <strong>Microsoft Agent Framework</strong>（合并 AutoGen + Semantic Kernel，1.0 于 2026-04-03 发布，AutoGen 进入维护模式，见第 17 题标注）。</p>
+<p>选型要点：各家 SDK 都在收敛到同一组概念——agent 定义、handoff、护栏、MCP 工具、可持久化的执行循环；优先选与主用模型同厂的 SDK，跨厂商需求再考虑 LangChain/LangGraph。</p>
+<hr>
+<h2>五、LangChain 编码题</h2>
+<h3>20. 手写一个带工具的 Agent（不使用 AgentExecutor），说明消息流转。</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-python">from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, ToolMessage
+from langchain_core.tools import tool
+
+@tool
+def get_weather(city: str) -&gt; str:
+    &quot;&quot;&quot;查询指定城市的天气。city 为城市名。&quot;&quot;&quot;
+    return f&quot;{city}：晴，25°C&quot;
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;).bind_tools([get_weather])
+tools = {&quot;get_weather&quot;: get_weather}
+
+messages = [HumanMessage(&quot;北京天气如何？&quot;)]
+
+for _ in range(10):                       # 最大步数，防死循环
+    ai = llm.invoke(messages)
+    messages.append(ai)
+    if not ai.tool_calls:                # 无工具调用 = 终态
+        break
+    for call in ai.tool_calls:           # 执行所有请求的工具
+        result = tools[call[&quot;name&quot;]].invoke(call[&quot;args&quot;])
+        messages.append(ToolMessage(str(result), tool_call_id=call[&quot;id&quot;]))
+
+print(messages[-1].content)</code></pre>
+<p>消息流转是 Agent 的命门，必须能默写：</p>
+<pre><code>Human → AI(tool_calls) → Tool(tool_call_id 对应) → AI … → AI(无 tool_calls=终态)</code></pre>
+<p>两个高频扣分点：① <code>ToolMessage</code> 必须带 <code>tool<em>call</em>id</code> 与请求一一对应；② 每轮要把 AI 消息和 Tool 消息都追加进历史，漏任一边模型都会报错。</p>
+<h3>21. LCEL 的 <code>|</code> 语法底层是什么？为什么它能免费获得流式/重试/并行？</h3>
+<p><strong>答案：</strong></p>
+<p><code>|</code> 调用的是对象的 <code><strong>or</strong></code>，把每个 <strong>Runnable</strong> 串成 <code>RunnableSequence</code>。LangChain 的组件（prompt、llm、parser、retriever）都实现了统一的 <code>Runnable</code> 接口（<code>invoke / stream / batch / ainvoke / astream</code>）。</p>
+<p>因为接口统一，序列就能把能力<strong>整条链透传</strong>：</p>
+<ul><li><code>.stream()</code>：逐段向前后传播，最后一个组件边产边出；</li><li><code>.batch()</code> / <code>.abatch()</code>：自动并发执行多条输入；</li><li><code>.with<em>retry()</code>、<code>.with</em>config()</code>：包裹在任意 Runnable 外层，不侵入业务代码。</li></ul>
+<pre><code class="language-python">chain = (prompt | llm | StrOutputParser()).with_retry(
+    stop_after_attempt=3, wait_exponential_jitter=True
+)</code></pre>
+<p>适用边界要能说清：LCEL 只擅长<strong>无环的线性/并行</strong>结构；一旦需要根据模型输出循环或回跳到前面节点，LCEL 表达不了，必须用 LangGraph。</p>
+<h3>22. 怎么做模型分级路由（省成本）？给出代码。</h3>
+<p><strong>答案：</strong></p>
+<p>用 LCEL 的 <code>RunnableBranch</code> 按输入特征选择不同模型：</p>
+<pre><code class="language-python">from langchain_core.runnables import RunnableBranch, RunnableLambda
+
+mini = ChatOpenAI(model=&quot;gpt-4o-mini&quot;)
+pro  = ChatOpenAI(model=&quot;gpt-4o&quot;)
+
+def is_complex(msg: dict) -&gt; bool:
+    return any(k in msg[&quot;question&quot;] for k in (&quot;架构&quot;, &quot;排查&quot;, &quot;多步&quot;, &quot;权衡&quot;))
+
+router = RunnableBranch(
+    (is_complex, pro),
+    mini,                       # 默认分支
+)
+chain = RunnableLambda(lambda x: x) | router | StrOutputParser()</code></pre>
+<p>工程上还会配合：意图识别用小模型 + <code>with<em>structured</em>output</code>、子 Agent 强制用便宜模型、超长固定前缀开 prompt caching、对每一步记账设预算。</p>
+<hr>
+<h2>六、LangGraph 编码题</h2>
+<h3>23. 手写 StateGraph 版 ReAct，并解释 reducer 的作用。</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-python">from typing import Annotated, TypedDict
+from langgraph.graph import StateGraph, START, END
+from langgraph.graph.message import add_messages
+from langgraph.prebuilt import ToolNode, tools_condition
+
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+
+llm_tools = ChatOpenAI(model=&quot;gpt-4o-mini&quot;).bind_tools([get_weather])
+
+def chat(state: State):
+    return {&quot;messages&quot;: [llm_tools.invoke(state[&quot;messages&quot;])]}
+
+g = StateGraph(State)
+g.add_node(&quot;chat&quot;, chat)
+g.add_node(&quot;tools&quot;, ToolNode([get_weather]))
+g.add_edge(START, &quot;chat&quot;)
+g.add_conditional_edges(&quot;chat&quot;, tools_condition)   # 有 tool_calls→tools，否则→END
+g.add_edge(&quot;tools&quot;, &quot;chat&quot;)
+app = g.compile()</code></pre>
+<p><strong>reducer 是高频考点</strong>：节点返回的是"对 state 的更新"，<code>Annotated[list, add<em>messages]</code> 声明该字段用 <code>add</em>messages</code> 做<strong>追加合并</strong>（按消息 id 去重/更新），而不是默认的整体覆盖。若不写 reducer，第二个节点返回 <code>{&quot;messages&quot;: [...]}</code> 会把整个列表替换掉，历史丢失。自定义场景常用 <code>operator.add</code>（列表拼接）或自己写 reducer 函数。</p>
+<h3>24. Checkpointer 解决什么问题？写一段"跨次请求保持记忆 + 恢复执行"的代码。</h3>
+<p><strong>答案：</strong></p>
+<p>Checkpointer 在每个<strong>超步（super-step）</strong>后把 state 快照持久化，带来三个能力：同 thread 多轮记忆、进程重启后续跑、历史回放/分叉（time travel）。</p>
+<pre><code class="language-python">from langgraph.checkpoint.memory import InMemorySaver  # 生产换 PostgresSaver
+
+app = g.compile(checkpointer=InMemorySaver())
+cfg = {&quot;configurable&quot;: {&quot;thread_id&quot;: &quot;user-123&quot;}}
+
+app.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;查 ORD-12345678&quot;)]}, cfg)
+app.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;它现在到哪了&quot;)]}, cfg)  # 自动带历史
+
+snapshot = app.get_state(cfg)             # 当前状态快照
+for hist in app.get_state_history(cfg):   # 全部历史，可回到任意步分叉
+    ...</code></pre>
+<p>要点：<strong>thread_id 是会话隔离键</strong>，一个会话一个 thread；内存版只用于开发，生产必须用 Postgres 等持久实现，否则重启即失忆。</p>
+<h3>25. 什么是 Human-in-the-Loop？现场编码：给"退款"这类写操作加人工审批（interrupt）。</h3>
+<p><strong>答案：</strong></p>
+<p>Human-in-the-Loop 是在 Agent 工作流中加入人工干预的机制：在关键决策节点暂停，等待人工确认后再继续；防止 Agent 执行高风险操作（删除数据、退款、发邮件）；也支持人工修正 Agent 的中间输出或补充信息。LangGraph 用 <code>interrupt</code> 原生实现。</p>
+<pre><code class="language-python">from langgraph.types import interrupt, Command
+from langchain_core.messages import AIMessage
+
+def refund_node(state: State):
+    payload = {&quot;order_id&quot;: &quot;ORD-12345678&quot;, &quot;amount&quot;: 299.0}
+    decision = interrupt({&quot;ask&quot;: &quot;确认退款 ¥299？&quot;, &quot;payload&quot;: payload})
+    if decision == &quot;approve&quot;:
+        apply_refund.invoke(payload)
+        return {&quot;messages&quot;: [AIMessage(&quot;退款已提交&quot;)]}
+    return {&quot;messages&quot;: [AIMessage(&quot;已取消退款&quot;)]}</code></pre>
+<p>调用方两次调用：</p>
+<pre><code class="language-python">app.invoke(inputs, cfg)                       # 在 interrupt 处暂停，state 已落盘
+app.invoke(Command(resume=&quot;approve&quot;), cfg)    # 人工审批后恢复</code></pre>
+<p>关键区分（常追问）：让模型"先问一句用户"只是生成文本，请求结束状态即丢；<code>interrupt</code> 是<strong>真正暂停图执行并持久化</strong>，可以隔数小时、跨进程重启后用 <code>Command(resume=...)</code> 精确恢复。典型场景：高风险写操作、补信息、等待外部回调。</p>
+<h3>26. 条件边怎么写？<code>tools_condition</code> 内部判断逻辑是什么？</h3>
+<p><strong>答案：</strong></p>
+<p>条件边接收一个返回"下一节点名"的路由函数：</p>
+<pre><code class="language-python">def route(state: State) -&gt; str:
+    last = state[&quot;messages&quot;][-1]
+    if getattr(last, &quot;tool_calls&quot;, None):
+        return &quot;tools&quot;
+    return END
+
+g.add_conditional_edges(&quot;chat&quot;, route, {&quot;tools&quot;: &quot;tools&quot;, END: END})</code></pre>
+<p><code>tools<em>condition</code> 就是这个逻辑的预置版：检查最后一条 AIMessage 是否带非空 <code>tool</em>calls</code>，有则路由到工具节点名（默认 <code>&quot;tools&quot;</code>），否则路由到 <code>END</code>。注意第三个参数是返回值→真实节点名的映射，重命名节点时必须同步改映射。</p>
+<h3>27. LangGraph 的流式有哪几种 stream_mode？分别用在什么场景？</h3>
+<p><strong>答案：</strong></p>
+<table><thead><tr><th>stream_mode</th><th>产出</th><th>场景</th></tr></thead><tbody><tr><td><code>values</code></td><td>每个节点后的完整 state</td><td>调试、要看全局最新状态</td></tr><tr><td><code>updates</code></td><td>每个节点本次的增量更新</td><td>最常用，前端展示"当前执行到哪步/在干什么"</td></tr><tr><td><code>messages</code></td><td>LLM 的 token 级分片 + 元数据</td><td>聊天打字机效果</td></tr><tr><td><code>debug</code></td><td>含检查点/任务调度的详细事件</td><td>深度排错</td></tr></tbody></table>
+<p>可传列表同时订阅多种：<code>stream_mode=[&quot;updates&quot;, &quot;messages&quot;]</code>，配合异步 SSE/WebSocket 推给前端。</p>
+<hr>
+<h2>七、多智能体与互操作协议</h2>
+<h3>28. 什么是多智能体系统？价值是什么？</h3>
+<p><strong>答案：</strong> 多智能体系统由多个 AI Agent 组成，每个 Agent 有独立的角色和职责，通过协作完成复杂任务：</p>
+<ul><li><strong>分工</strong>：每个 Agent 专注于特定任务（规划、编码、测试、审查）</li><li><strong>并行</strong>：多个 Agent 同时处理不同子任务，提升效率</li><li><strong>检验</strong>：一个 Agent 验证另一个 Agent 的输出，减少错误</li></ul>
+<p>多 Agent 的核心价值是<strong>专职分工和上下文隔离</strong>；但要记住"单 Agent + 多工具够用，就不要上多 Agent"。</p>
+<h3>29. 多智能体有哪些架构模式？通信如何实现？</h3>
+<p><strong>答案：</strong></p>
+<p>常见架构模式：</p>
+<ul><li><strong>Supervisor（监督者模式）</strong>：一个主 Agent 负责协调分配任务给子 Agent</li><li><strong>Peer-to-Peer / Network（点对点）</strong>：Agent 之间直接通信，无中心节点</li><li><strong>Pipeline（流水线）</strong>：Agent 串行执行，上一个的输出是下一个的输入</li><li><strong>Hierarchical（层级）</strong>：树形结构，高层 Agent 管理低层 Agent</li></ul>
+<p>通信方式：</p>
+<ul><li><strong>消息传递</strong>：Agent 发送/接收结构化消息（如 JSON）</li><li><strong>共享状态</strong>：通过共享数据库或内存（如 LangGraph State）交换信息</li><li><strong>工具调用</strong>：一个 Agent 以"工具"形式调用另一个 Agent</li><li><strong>事件驱动</strong>：通过消息队列（如 Kafka、RabbitMQ）异步通信</li></ul>
+<h3>30. 多 Agent 的 Supervisor 模式如何实现？为什么默认不推荐 Network 模式？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-python">from langgraph_supervisor import create_supervisor
+
+sup = create_supervisor(
+    agents=[researcher_agent, writer_agent],
+    model=ChatOpenAI(model=&quot;gpt-4o&quot;),
+    prompt=&quot;你是主管，把任务分给调研员/写作者，全部完成后回复 FINISH。&quot;,
+).compile(checkpointer=InMemorySaver())</code></pre>
+<p>主管 Agent 每轮决定"派给谁或结束"，子 Agent 作为被调度的节点，上下文由主管统一管理。</p>
+<p>不默认用去中心化 Network 的原因：Agent 互相喊话会形成不可控的调用图，容易<strong>互相等待/死循环</strong>、token 与延迟随对话轮次膨胀、出错时难以定位是哪个 Agent 的决策、状态一致性难保证。只有确实需要对等协商且能接受这些代价时才用。</p>
+<h3>31. 什么是 OpenAI Agents SDK？</h3>
+<p><strong>答案：</strong> <strong>OpenAI Agents SDK</strong>（2025 年发布）是 OpenAI 官方推出的轻量级 Agent 开发框架，前身为 Swarm。</p>
+<p><strong>核心概念</strong>：</p>
+<ul><li><strong>Agent</strong>：有 instructions（角色描述）和 tools（工具列表）的 LLM 执行单元</li><li><strong>Handoff（移交）</strong>：一个 Agent 将任务移交给另一个更专业的 Agent</li><li><strong>Guardrails（护栏）</strong>：对 Agent 输入/输出进行验证的过滤器</li><li><strong>Runner</strong>：协调 Agent 执行循环的调度器</li></ul>
+<p><strong>代码示例</strong>：</p>
+<pre><code class="language-python">from openai import OpenAI
+from agents import Agent, Runner, tool
+
+@tool
+def get_weather(city: str) -&gt; str:
+    return f&quot;{city} 今天晴天，25°C&quot;
+
+weather_agent = Agent(
+    name=&quot;天气助手&quot;,
+    instructions=&quot;你是一个天气查询助手，帮用户查询城市天气。&quot;,
+    tools=[get_weather]
+)
+
+result = Runner.run_sync(weather_agent, &quot;北京今天天气怎么样？&quot;)
+print(result.final_output)</code></pre>
+<p><strong>与 LangChain 的区别</strong>：OpenAI Agents SDK 更轻量、官方支持，原生支持 Handoff 多 Agent 协作，不依赖 LangChain 的复杂抽象，学习曲线更低；LangChain/LangGraph 则生态更广、跨厂商、持久化与人机协同更成熟。</p>
+<h3>32. 什么是 Google ADK（Agent Development Kit）？</h3>
+<p><strong>答案：</strong> <strong>Google ADK</strong> 是 Google 于 2025 年发布的开源 Agent 框架，专为构建可互操作的 AI Agent 设计。</p>
+<p><strong>核心特点</strong>：</p>
+<ul><li><strong>多 Agent 编排</strong>：原生支持层级化多 Agent 系统</li><li><strong>A2A 原生集成</strong>：内置 Agent2Agent 协议支持</li><li><strong>MCP 集成</strong>：与 Model Context Protocol 无缝对接</li><li><strong>流式事件</strong>：基于事件驱动的 Agent 执行模型</li></ul>
+<p><strong>部署选项</strong>：Google Agent Engine、Cloud Run、GKE。</p>
+<p><strong>与 LangGraph 对比</strong>：ADK 更紧密集成 Google 生态（Gemini、Vertex AI），LangGraph 更通用、更成熟。</p>
+<h3>33. 什么是 A2A 协议（Agent2Agent Protocol）？</h3>
+<p><strong>答案：</strong> <strong>A2A（Agent2Agent）协议</strong>是 Google 于 2025 年 4 月发布的开放标准，解决不同框架、不同厂商的 AI Agent 之间的互操作问题。</p>
+<p><strong>核心理念</strong>：</p>
+<ul><li><strong>MCP</strong>：解决 Agent ↔ 工具 的通信（Agent 如何调用工具）</li><li><strong>A2A</strong>：解决 Agent ↔ Agent 的通信（Agent 如何委托另一个 Agent）</li></ul>
+<p><strong>MCP vs A2A 对比</strong>：</p>
+<table><thead><tr><th>维度</th><th>MCP</th><th>A2A</th></tr></thead><tbody><tr><td>通信对象</td><td>Agent ↔ Tool（工具）</td><td>Agent ↔ Agent（智能体）</td></tr><tr><td>发起方</td><td>Agent 主动调用工具</td><td>Agent 委托另一个 Agent</td></tr><tr><td>标准化内容</td><td>工具 schema、资源接口</td><td>Agent 发现、任务委托、结果返回</td></tr><tr><td>发起方</td><td>Anthropic</td><td>Google（50+ 合作伙伴）</td></tr></tbody></table>
+<p><strong>A2A 工作流程</strong>：</p>
+<pre><code>用户请求
+    ↓
+Orchestrator Agent（协调者）
+    ↓ A2A 委托
+Research Agent（研究者）  ←→  Writing Agent（写作者）
+    ↓ 通过 MCP 调用工具
+搜索工具、数据库、文件系统</code></pre>
+<p><strong>支持伙伴</strong>：LangChain、Salesforce、SAP、ServiceNow 等 50+ 企业。</p>
+<p><strong>意义</strong>：A2A + MCP 构成了 AI Agent 的完整协议栈，类比于 HTTP（应用层）+ TCP（传输层）。</p>
+<blockquote>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>： ① <strong>治理进展</strong>：A2A 发布后于 <strong>2025-06-23 捐赠给 Linux Foundation</strong>；v1.0 稳定规范于 2026 年春发布。据 LF 2026-04-09 一周年文章：已有 150+ 组织参与、22k+ stars，提供 Python/JS/Java/Go/.NET SDK 与 Signed Agent Cards，并已集成 Azure AI Foundry / Copilot Studio、AWS Bedrock AgentCore 等平台。 ② <strong>MCP 治理</strong>：MCP 也已于 <strong>2025-12-09 捐赠给 Linux Foundation 旗下新成立的 Agentic AI Foundation（AAIF）</strong>——由 Anthropic、Block、OpenAI 联合发起，创始项目包括 MCP、goose、AGENTS.md。 ③ <strong>表格勘误</strong>：上表"发起方"出现了两次：第一行内容实际是"<strong>通信方向</strong>"（主动调用 vs 委托），第二行才是协议发起方（MCP=Anthropic，A2A=Google）。</blockquote>
+<h3>34. 🆕 深入讲讲 MCP：传输方式、原语演进与安全风险。</h3>
+<p><strong>答案：</strong></p>
+<p>MCP（Model Context Protocol）由 Anthropic 于 <strong>2024-11-25</strong> 发布，定位为"工具侧的 USB-C"。规范按日期版本演进：2024-11-05、2025-03-26、2025-06-18、2025-11-25，最新为 <strong>2026-07-28</strong> 版。</p>
+<p><strong>两种传输</strong>：</p>
+<table><thead><tr><th>传输</th><th>形态</th><th>要点</th></tr></thead><tbody><tr><td>stdio</td><td>客户端拉起本地子进程，换行分隔 JSON-RPC</td><td>无网络攻击面、无需鉴权，适合本地工具</td></tr><tr><td>Streamable HTTP</td><td>单端点：POST 请求 + 可选 GET/SSE 流</td><td>取代旧的 HTTP+SSE；本地部署必须绑 127.0.0.1 并校验 Origin 防 DNS rebinding；远端走 OAuth 2.1（服务器即 OAuth 资源服务器，RFC9728 元数据、RFC8707 resource indicator、PKCE）</td></tr></tbody></table>
+<p><strong>原语体系</strong>：服务端暴露 <strong>Tools / Resources / Prompts</strong>；客户端可发起 <strong>Sampling / Roots</strong>；2025-06-18 新增 <strong>Elicitation</strong>（方法 <code>elicitation/create</code>，服务器向用户弹出结构化表单收集输入；2025-11-25 版增加 URL 模式），同版引入 <code>structuredContent</code>、<code>resource_link</code>，并取消了 JSON-RPC 批处理。</p>
+<p>与 OpenAPI / function calling 的区别：function calling 只是单次请求里的工具 schema；OpenAPI 描述 HTTP 接口但无状态/资源/提示协商；MCP 是<strong>有生命周期、可发现、双向通信</strong>的长连接协议。</p>
+<p><strong>2025 年密集出现的安全事件</strong>：</p>
+<table><thead><tr><th>时间</th><th>事件</th></tr></thead><tbody><tr><td>2025-04</td><td>Invariant Labs 披露 <strong>tool poisoning</strong>（恶意工具描述注入）与 <strong>rug pull</strong>（描述事后篡改）</td></tr><tr><td>2025-05</td><td>GitHub 官方 MCP Server 被指出 issue/PR 内容可注入指令</td></tr><tr><td>2025</td><td><strong>slopsquatting</strong>（幻觉包名抢注，Seth Larson 命名）：USENIX Security 2025 论文显示 19.7% 样本引用幻觉包、43% 可在每次环境中复现，抢注的 <code>huggingface-cli</code> 曾获约 3 万下载</td></tr><tr><td>2025</td><td>OX Security 报告 MCP SDK 缺陷波及约 1.5 亿次下载的包；11 个知名注册表里 9 个接受恶意条目</td></tr><tr><td>2025</td><td>Trend Micro 发现 492 个无鉴权暴露在公网的 MCP 服务器；2025-07 出现恶意 MCP 代理包 RCE；Kaspersky 2025-09 报告相关攻击活动</td></tr><tr><td>2026-03</td><td>LiteLLM 生态发生投毒事件（示例，截至 2026-09）</td></tr></tbody></table>
+<p>防御：工具/服务器 allowlist、锁版本与哈希校验、沙箱执行、最小权限、写操作人审、<strong>所有工具返回内容一律当作不可信数据</strong>处理（安全体系见第 46 题）。</p>
+<hr>
+<h2>八、Deep Agents 专题</h2>
+<h3>35. Deep Agents 内置了什么？手写一个研究型深度智能体。</h3>
+<p><strong>答案：</strong></p>
+<p>内置四件套，免去自己在 LangGraph 里手搓：</p>
+<ol><li><strong>规划</strong>：todo 清单工具，自主拆解并维护任务状态；</li><li><strong>子代理（Subagents）</strong>：在隔离上下文中执行子任务，只回传摘要；</li><li><strong>虚拟文件系统</strong>：跨步骤沉淀中间产物（草稿、数据、代码）；</li><li><strong>分层记忆</strong>：thread 内短期记忆 + 跨 thread 的长期 Store。</li></ol>
+<pre><code class="language-python">from langchain.chat_models import init_chat_model
+from langgraph.deepagents import create_deep_agent
+from langgraph.checkpoint.memory import InMemorySaver
+
+agent = create_deep_agent(
+    model=init_chat_model(&quot;openai:gpt-4o&quot;),
+    tools=[web_search, write_file],
+    instructions=&quot;先制定研究计划，派子代理分头检索，原始资料写入文件，最后产出带引用的中文报告。&quot;,
+    checkpointer=InMemorySaver(),
+)
+agent.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;调研 2026 年主流 Agent 框架演进并写对比报告&quot;)]})</code></pre>
+<blockquote>❌ <strong>更正（2026-09 核实）</strong>：上文 <code>from langgraph.deepagents import create<em>deep</em>agent</code> 是<strong>错误导入</strong>。Deep Agents 是独立 PyPI 包 <strong><code>deepagents</code></strong>（构建于 LangGraph 之上，仓库 github.com/langchain-ai/deepagents），并非 <code>langgraph</code> 的子模块。正确安装与写法如下；新版签名使用 <code>model=</code> / <code>tools=</code> / <code>system<em>prompt=</code>（旧示例中的 <code>instructions=</code> 已更名为 <code>system</em>prompt</code>），示例模型也不应再用已退役的 gpt-4o：  ``<code>python # pip install deepagents from deepagents import create<em>deep</em>agent from langchain.chat<em>models import init</em>chat<em>model  agent = create</em>deep<em>agent(     model=init</em>chat<em>model(&quot;openai:gpt-5&quot;),     tools=[web</em>search, write<em>file],     system</em>prompt=&quot;先制定研究计划，派子代理分头检索，原始资料写入文件，最后产出带引用的中文报告。&quot;, ) agent.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;调研 2026 年主流 Agent 框架演进并写对比报告&quot;)]}) </code>``</blockquote>
+<h3>36. 子代理为什么能"节省主上下文"？什么时候该用？</h3>
+<p><strong>答案：</strong></p>
+<p>上下文窗口是稀缺资源，且长上下文会稀释注意力、增加成本。子代理在<strong>独立上下文</strong>里完成高噪音工作（浏览几十个网页、跑若干 SQL、读多个文件），只把最终结论/摘要交回主 Agent，主上下文不被海量原始 observation 撑爆。</p>
+<p>适用：子任务会产生大量中间内容、与主线决策弱相关；不适用：子任务结果就是最终答案主体、或需要与主流程反复细粒度交互——隔离反而丢信息。</p>
+<h3>37. Deep Agents 和裸 LangGraph 的代价分别是什么？如何决策？</h3>
+<p><strong>答案：</strong></p>
+<ul><li>裸 StateGraph：开发量大，每个节点/分支都要自己设计，但<strong>可控性、可审计性、SLA 最强</strong>，适合企业交易流程。</li><li>Deep Agents：上手快、能自主探路，但 token 消耗高、执行路径不确定、难以给出强时效保证，且复杂工具环境下可能规划失焦。</li></ul>
+<p>决策口诀：<strong>"人能画出确定流程图"用 LangGraph；"只能描述清楚目标"用 Deep Agents。</strong> 涉及钱、合规、不可逆操作的核心链路不应交给纯自主探索，应在 LangGraph 中显式约束并加 <code>interrupt</code>。</p>
+<hr>
+<h2>九、工程化与排错</h2>
+<h3>38. Agent 跑到一半报 429 / 超时，如何保证不丢上下文？</h3>
+<p><strong>答案：</strong></p>
+<p>关键认知：<strong>重试的单位是"一次 LLM 调用"，而状态都在 messages/state 里</strong>。做法：</p>
+<ul><li>对模型调用加指数退避 + 抖动的重试（<code>with_retry</code>），读 <code>retry-after</code>，超阈值（如 5 分钟，配额耗尽）快速失败而非死等；</li><li>重试时<strong>携带完整 messages</strong>，模型能基于已执行的工具结果从断点继续；</li><li>在 LangGraph 中还有双保险：checkpointer 已把每步落盘，即使进程崩溃，用同 <code>thread_id</code> 重新 <code>invoke(None, cfg)</code> 即可从最后一个完成的超步恢复。</li></ul>
+<h3>39. 如何保证模型输出一定是可解析的结构化数据？</h3>
+<p><strong>答案：</strong></p>
+<p>用<strong>结构化输出</strong>而不是在 prompt 里"请返回 JSON"：</p>
+<pre><code class="language-python">class Ticket(BaseModel):
+    category: Literal[&quot;billing&quot;, &quot;tech&quot;, &quot;other&quot;]
+    priority: int = Field(ge=1, le=5)
+    summary: str
+
+structured = llm.with_structured_output(Ticket)
+ticket = structured.invoke(&quot;我付了钱但没开通，很急&quot;)   # -&gt; Ticket 实例</code></pre>
+<p>底层走模型厂商的 function calling / JSON Schema 强约束，框架负责 schema 校验与必要的自动修复重试。</p>
+<table><thead><tr><th>特性</th><th>JSON Mode</th><th>Structured Output</th></tr></thead><tbody><tr><td>保证有效 JSON</td><td>✅</td><td>✅</td></tr><tr><td>保证符合 Schema</td><td>❌ 偶尔偏差</td><td>✅</td></tr><tr><td>支持必填/嵌套字段</td><td>❌</td><td>✅</td></tr></tbody></table>
+<p>需要枚举时用 <code>Literal</code>，需要范围用 <code>Field(ge=, le=)</code>。适用于工单抽取、工具参数、函数返回值、评测打标；主流厂商 OpenAI（gpt-4o 起，现应迁移 gpt-5 系）、Anthropic（Claude 3 起）、Gemini 2.5 均支持。</p>
+<h3>40. 如何防止 Agent 失控（死循环 / 烧钱 / 误操作）？还有哪些高频故障？</h3>
+<p><strong>答案：</strong> 一组组合拳：</p>
+<ul><li><code>recursion_limit</code> 限制图最大超步数（默认 25，按业务收紧）；</li><li>外层工具调用总预算、相同参数重复调用检测、整体超时；</li><li>工具结果截断、工具数量精简，控制每轮 token；</li><li><strong>所有副作用写操作走 <code>interrupt</code> 人工确认</strong>；</li><li>模型分级路由 + 子代理用小模型 + 固定前缀 prompt caching；</li><li>LangSmith/Langfuse 全链路 tracing，按 run 统计 token 与耗时定位热点。</li></ul>
+<p>其他高频故障及对策：</p>
+<table><thead><tr><th>问题</th><th>对策</th></tr></thead><tbody><tr><td>幻觉（编造信息）</td><td>引入 RAG、增加验证步骤、要求引用出处</td></tr><tr><td>上下文丢失（多步后忘记早期信息）</td><td>checkpointer 持久化、压缩/摘要历史</td></tr><tr><td>工具滥用（调不必要的工具）</td><td>优化工具描述、精简工具集</td></tr><tr><td>成本失控</td><td>控制 context window、小模型路由、预算告警</td></tr></tbody></table>
+<h3>41. 怎么做 Agent 的测试、评估与回归？</h3>
+<p><strong>答案：</strong></p>
+<p><strong>测试方法</strong>（和普通单元测试的不同在于 LLM 输出不确定）：</p>
+<ul><li><strong>节点纯函数化</strong>：节点 <code>(state) → state_update</code>，对其用构造的 state 做确定性单测；</li><li><strong>工具层</strong>：mock 外部 API，单独测参数解析与返回处理；</li><li><strong>LLM 层不确定性</strong>：用两类手段——录制真实交互的<strong>轨迹（trajectories）</strong>做端到端回归，断言"调用了哪些工具、顺序、最终结果"；对语义判断用 <strong>LLM-as-Judge</strong> 打分而非精确匹配；</li><li>结构化输出用 Pydantic 校验作为断言；用少量金标集在每次改 prompt/换模型后回归，防止"改好一个 case 改坏三个"。</li></ul>
+<p><strong>评估指标</strong>：</p>
+<ul><li><strong>任务完成率</strong>：Agent 成功完成任务的比例</li><li><strong>步骤效率</strong>：完成任务所需的工具调用次数（越少越好）</li><li><strong>幻觉率</strong>：Agent 输出的错误信息比例</li><li><strong>工具调用准确率</strong>：选择正确工具的比例</li><li><strong>延迟与成本</strong>：Token 消耗、API 调用次数、P50/P95 响应时间</li></ul>
+<p>常用评估框架：LangSmith、Langfuse、Ragas、TruLens、Braintrust、Arize Phoenix。标准化基准见第 47 题。</p>
+<h3>42. Agent 可观测性（Observability）如何实现？</h3>
+<p><strong>答案：</strong></p>
+<p><strong>三大核心维度</strong>：</p>
+<ul><li><strong>追踪（Tracing）</strong>：记录 Agent 的每一步执行（工具调用、LLM 请求、决策链路）</li><li><strong>评估（Evaluation）</strong>：自动或人工评估 Agent 输出质量</li><li><strong>监控（Monitoring）</strong>：实时监控延迟、错误率、Token 消耗、成本</li></ul>
+<p><strong>主流工具对比</strong>：</p>
+<table><thead><tr><th>工具</th><th>厂商</th><th>特点</th></tr></thead><tbody><tr><td><strong>LangSmith</strong></td><td>LangChain</td><td>与 LangChain/LangGraph 深度集成，功能全面</td></tr><tr><td><strong>Langfuse</strong></td><td>开源</td><td>开源可自部署，支持多框架，成本低</td></tr><tr><td><strong>Arize Phoenix</strong></td><td>Arize AI</td><td>专注 AI 评估，支持 RAG 质量分析</td></tr><tr><td><strong>Braintrust</strong></td><td>Braintrust</td><td>专注 Eval，团队协作友好</td></tr><tr><td><strong>Helicone</strong></td><td>Helicone</td><td>轻量级 API 代理，快速接入</td></tr></tbody></table>
+<p><strong>LangSmith 接入示例</strong>：</p>
+<pre><code class="language-python">import os
+os.environ[&quot;LANGSMITH_TRACING&quot;] = &quot;true&quot;   # v1 后统一变量名（旧版 LANGCHAIN_TRACING_V2）
+os.environ[&quot;LANGSMITH_API_KEY&quot;] = &quot;your-key&quot;
+os.environ[&quot;LANGSMITH_PROJECT&quot;] = &quot;my-agent&quot;
+
+# 之后所有 LangChain/LangGraph 调用自动追踪</code></pre>
+<p>厂商中立的 OpenTelemetry GenAI 标准见第 48 题。</p>
+<h3>43. 什么是 Prompt Caching（提示词缓存）？</h3>
+<p><strong>答案：</strong> <strong>Prompt Caching</strong> 是大模型 API 的一项重要优化特性，将重复使用的上下文缓存在服务器端，显著降低成本和延迟。</p>
+<p><strong>工作原理</strong>：</p>
+<ol><li>首次请求：完整处理系统提示和文档上下文（正常计费）</li><li>后续请求：相同前缀部分从缓存读取（仅收取少量缓存读取费用）</li><li>缓存 TTL：通常 5 分钟（Anthropic），部分厂商支持更长 TTL</li></ol>
+<p><strong>成本对比</strong>（Anthropic 示例）：</p>
+<table><thead><tr><th>类型</th><th>价格</th></tr></thead><tbody><tr><td>普通输入 Token</td><td>$3 / 1M tokens</td></tr><tr><td>缓存写入</td><td>$3.75 / 1M tokens（首次）</td></tr><tr><td>缓存读取</td><td>$0.30 / 1M tokens（后续），<strong>节省 90%</strong></td></tr></tbody></table>
+<blockquote>❌ <strong>更正（2026-09 核实）</strong>：下文代码使用的 <code>claude-opus-4-5</code> 型号<strong>真实存在</strong>（2025-11-24 发布），但上表 $3 / $3.75 / $0.30 实际是 <strong>Sonnet 4.x 档</strong>价格（输入 $3 的 1.25 倍写入、0.1 倍命中），<strong>并非 Opus 价格</strong>。Opus 4.5 / 4.6 / 4.7 / 4.8 / 5 定价均为 <strong>$5 输入 / $25 输出；5 分钟缓存写入 $6.25、1 小时缓存写入 $10、缓存命中 $0.50（每 1M tokens）</strong>。当前旗舰为 Opus 5（2026-07-24 发布；另有 Opus 4.8 2026-05-28、Opus 4.6 2026-02-05；Sonnet 5 为 $2 / $10）。缓存现有 <strong>5 分钟与 1 小时两档 TTL</strong>。以上价格仅为示例、截至 2026-09，以 platform.claude.com 官网为准。</blockquote>
+<p><strong>使用场景</strong>：</p>
+<ul><li>系统提示较长（1000+ tokens）的 Agent</li><li>RAG 检索结果作为固定上下文</li><li>代码库分析（将代码文件缓存，多次查询）</li></ul>
+<p><strong>代码示例（Anthropic）</strong>：</p>
+<pre><code class="language-python">client.messages.create(
+    model=&quot;claude-opus-4-5&quot;,
+    system=[{
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;text&quot;: &quot;你是代码审查专家...&quot;,
+        &quot;cache_control&quot;: {&quot;type&quot;: &quot;ephemeral&quot;}  # 标记缓存
+    }],
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;审查这段代码&quot;}]
+)</code></pre>
+<p><strong>OpenAI 缓存</strong>：GPT-4o 自动缓存超过 1024 tokens 的前缀，无需手动标记。注意缓存要求<strong>前缀完全一致</strong>，所以要把固定内容（角色提示、工具定义、资料）放在前面，易变内容放后面。</p>
+<blockquote>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>："GPT-4o 自动缓存超过 1024 tokens 前缀"的说法已过时——<strong>gpt-4o 系列自 2026-02-13 起退役</strong>；自动前缀缓存是 OpenAI 平台级特性，迁移 gpt-5 系列后仍适用，但免费缓存的 token 阈值与覆盖模型会调整，以官方文档为准。</blockquote>
+<h3>44. 生产部署 Agent，你会给出怎样的架构清单？</h3>
+<p><strong>答案：</strong></p>
+<ul><li><strong>运行时</strong>：LangGraph Platform 或自建 FastAPI 服务；长任务异步执行，结果走 SSE/WebSocket 流式回推；</li><li><strong>持久化</strong>：Postgres 做 checkpointer 与 store，thread_id 绑定会话；密钥走环境变量/Secret Manager；</li><li><strong>可靠性</strong>：节点级重试与超时、失败分支降级到"道歉/转人工"、限流与配额熔断；长任务的持久化执行专题见第 51 题；</li><li><strong>安全</strong>：工具最小权限、写操作审批、用户输入与工具返回的注入风险审查（防"把全部订单删掉"类提示注入）；安全体系见第 46 题；</li><li><strong>可观测/成本</strong>：LangSmith tracing，监控任务完成率、工具成功率、P95 延迟、token/成本告警；</li><li><strong>质量</strong>：轨迹回放评测集、灰度发布与 prompt 版本管理、模型可热切换（<code>init<em>chat</em>model</code> 配置化）。</li></ul>
+<h3>45. 排查"模型该调工具却直接瞎答"，你的排查顺序是什么？</h3>
+<p><strong>答案：</strong></p>
+<ol><li>看 <strong>工具描述</strong>：是否说清了触发时机，名字是否直观；</li><li>看 <strong>参数 schema</strong>：描述、示例、必填项是否完整，模型是否因不知怎么填参数而放弃；</li><li>看 <strong>工具数量与冲突</strong>：是否太多、有无功能重叠导致选择困难；</li><li>看 <strong>system prompt</strong>：是否明确授权/鼓励使用工具，有无冲突指令；</li><li>看 <strong>模型能力</strong>：小模型 function calling 能力弱，换更强模型验证；</li><li>看 <strong>上下文</strong>：决策所需信息是否已在历史里（已在上下文就不必调工具）；</li><li>用 LangSmith trace 确认模型实际收到的 tools 定义和返回的 <code>tool_calls</code>，定位是"没选工具"还是"选了但参数错/被代码拦截"。</li></ol>
+<h3>46. 🆕 Agent 安全怎么做？OWASP Top 10 for LLM Applications 2025 版有哪些条目？</h3>
+<p><strong>答案：</strong></p>
+<p>OWASP Top 10 for LLM Applications <strong>2025 版</strong>（2024-11-18 发布，截至 2026-09 仍为当前版本）：</p>
+<table><thead><tr><th>编号</th><th>风险</th></tr></thead><tbody><tr><td>LLM01</td><td>Prompt Injection（提示注入，含直接注入与间接注入）</td></tr><tr><td>LLM02</td><td>Sensitive Information Disclosure（敏感信息泄露）</td></tr><tr><td>LLM03</td><td>Supply Chain（供应链）</td></tr><tr><td>LLM04</td><td>Data and Model Poisoning（数据与模型投毒）</td></tr><tr><td>LLM05</td><td>Improper Output Handling（输出处理不当）</td></tr><tr><td>LLM06</td><td>Excessive Agency（过度自主权）</td></tr><tr><td>LLM07</td><td>System Prompt Leakage（系统提示泄露，新增）</td></tr><tr><td>LLM08</td><td>Vector and Embedding Weaknesses（向量与嵌入弱点，新增）</td></tr><tr><td>LLM09</td><td>Misinformation（错误信息）</td></tr><tr><td>LLM10</td><td>Unbounded Consumption（无界消耗）</td></tr></tbody></table>
+<p>此外 OWASP 还有 <strong>Agentic AI 专项指南</strong>，针对多步、多工具、多代理场景补充威胁模型。</p>
+<p>防御按层落地：</p>
+<ol><li><strong>指令层</strong>：系统提示声明"外部内容是数据不是指令"，间接注入输入打标记并隔离；</li><li><strong>权限层</strong>：工具最小权限 + 作用域（只读优先、按用户隔离、限额）；</li><li><strong>审批层</strong>：所有写/不可逆操作走 <code>interrupt</code> 人审（见第 25 题）；</li><li><strong>输出层</strong>：结构化输出 + Pydantic 校验、URL/命令白名单、禁止直接拼 shell/SQL；</li><li><strong>执行层</strong>：沙箱、容器、域名 allowlist、网络隔离；</li><li><strong>预算层</strong>：token/步数预算与熔断，防 LLM10（见第 40、51 题）。</li></ol>
+<h3>47. 🆕 衡量 Agent 能力有哪些主流基准？为什么单看任务完成率不够？</h3>
+<p><strong>答案：</strong></p>
+<p>主流基准（下列数字均为公开报告值，会随模型迭代快速变化，仅作量级参考，截至各自发布时点）：</p>
+<table><thead><tr><th>基准</th><th>机构 / 时间</th><th>考察点</th></tr></thead><tbody><tr><td>τ-bench</td><td>Sierra，2024-06（arXiv:2406.12045）</td><td>零售/航空客服双控对话；按策略遵循 + 数据库终态打分；用 <strong>pass^k</strong> 衡量 k 次独立运行全部成功的可靠性</td></tr><tr><td>τ²-bench</td><td>2025-06（arXiv:2506.07982）</td><td>Dec-POMDP 双控，新增电信域；考察"引导用户"能力——代表模型单控约 74%、双控降到约 34%（发布时示例值）</td></tr><tr><td>τ³-bench</td><td>2026-03</td><td>银行知识型 RAG 任务 + τ-Voice 全双工语音评测</td></tr><tr><td>SWE-bench</td><td>Princeton</td><td>Verified 集 500 题；Pro 集更难，推出时头名仅约 23%，而同期 Verified 已达 70%+</td></tr><tr><td>Terminal-Bench 2.0 / OSWorld / WebArena</td><td>社区</td><td>终端任务 / 真实 OS 桌面（OSWorld 人类约 72%）/ 真实网站任务</td></tr></tbody></table>
+<p>评估分三层：<strong>outcome</strong>（终态对不对）、<strong>trajectory</strong>（工具调用序列是否合理）、<strong>process</strong>（每步推理是否可解释）。要点：</p>
+<ul><li>pass¹ 高但 pass⁴ 低 = 不稳定，生产不可用；</li><li>harness（脚手架/提示/重试策略）对分数影响巨大，跨论文比较先对齐评测协议；</li><li>浏览器/桌面任务注意视觉派与 DOM 派的成本差异（见第 50 题）。</li></ul>
+<h3>48. 🆕 OpenTelemetry GenAI 语义约定是什么？现在成熟到什么程度？</h3>
+<p><strong>答案：</strong></p>
+<p>OpenTelemetry 为 GenAI 调用定义了 <code>gen_ai.*</code> 命名空间的标准 span / 事件 / 指标，目标是<strong>厂商中立</strong>的可观测性（截至 2026-09 仍在演进）。</p>
+<p>核心属性：<code>gen<em>ai.operation.name</code>、<code>gen</em>ai.provider.name</code>、<code>gen<em>ai.request.model</code>、<code>gen</em>ai.usage.input<em>tokens</code>、<code>gen</em>ai.usage.output<em>tokens</code>、<code>gen</em>ai.response.finish_reasons</code>。</p>
+<p>核心指标：</p>
+<ul><li><code>gen_ai.client.token.usage</code>（直方图，按 token 类型分维）；</li><li><code>gen_ai.client.operation.duration</code>（调用耗时）。</li></ul>
+<p>成熟度分层（面试高频）：</p>
+<table><thead><tr><th>层次</th><th>状态</th></tr></thead><tbody><tr><td>核心 chat 调用属性</td><td>Stable / RC，可放心使用</td></tr><tr><td>Agent / tool span（<code>create<em>agent</code>、<code>invoke</em>agent</code>、<code>execute<em>tool</code> 等 <code>gen</em>ai.agent.*</code>）</td><td>仍为 Development，字段可能变</td></tr><tr><td>消息 / 对话内容捕获</td><td>默认关闭（PII 风险），需显式开启</td></tr></tbody></table>
+<p>v1.37 起消息体改为结构化表示；尝鲜最新约定需设环境变量 <code>OTEL<em>SEMCONV</em>STABILITY<em>OPT</em>IN=gen<em>ai</em>latest_experimental</code>。GitHub Copilot、Codex、Claude Code 等工具已可导出 OTel 数据，直接进 Jaeger / Tempo / Datadog 等后端。</p>
+<h3>49. 🆕 语音 Realtime Agent 的架构要点是什么？</h3>
+<p><strong>答案：</strong></p>
+<p>OpenAI Realtime API 时间线：<code>gpt-4o-realtime-preview</code>（2024-12-17）→ <code>gpt-realtime</code> GA（2025-08-28）→ <code>gpt-realtime-mini</code>（2025-10-06，示例口径，以官网为准）。</p>
+<p>三种接入方式：</p>
+<table><thead><tr><th>方式</th><th>延迟量级（示例）</th><th>场景</th></tr></thead><tbody><tr><td>WebRTC</td><td>客户端约 100ms</td><td>浏览器 / App 直连媒体面</td></tr><tr><td>WebSocket</td><td>服务端约 200ms</td><td>后端编排、对接业务系统</td></tr><tr><td>SIP</td><td>电话网络</td><td>接入传统电话 / 呼叫中心</td></tr></tbody></table>
+<p>安全要点：<strong>前端绝不嵌入 <code>sk-</code> 密钥</strong>，由后端签发短时有效的 ephemeral key。</p>
+<p>架构四要点：</p>
+<ol><li><strong>VAD 与 turn<em>detection</strong>：<code>none</code>（自行管理）/ <code>server</em>vad</code>（按静音切分）/ <code>semantic_vad</code>（按语义判断话说完没有）；</li><li><strong>打断（barge-in）</strong>：客户端监听 <code>input<em>audio</em>buffer.speech_started</code>，立即取消当前 response 并清空播放队列——这是自然对话体验的核心；</li><li><strong>流式</strong>：音频边采边发、输出边收边播，避免攒整句；</li><li><strong>音频工程</strong>：回声消除、降噪、抖动缓冲。</li></ol>
+<p>路线对比：端到端 S2S 模型延迟低、语气自然，但可控性弱；传统 <strong>STT → LLM → TTS 级联</strong>链路慢但每环可替换、可插工具与护栏。生产常见混合：S2S 为主，关键交易节点降级为级联以便加校验。</p>
+<h3>50. 🆕 浏览器 Agent 的两大技术路线是什么？生产上怎么选？</h3>
+<p><strong>答案：</strong></p>
+<table><thead><tr><th>路线</th><th>代表</th><th>原理</th><th>优劣</th></tr></thead><tbody><tr><td>视觉/截图派</td><td>Claude Computer Use（2024-10）、OpenAI CUA/Operator（2025-01）、Gemini 2.5 Computer Use（2025-10）</td><td>截图 → 视觉模型定位 → 鼠标键盘操作</td><td>通用性强，任何页面可试；慢、贵，每步 100KB+ 图像</td></tr><tr><td>DOM/可访问性树派</td><td>Playwright MCP（微软）、browser-use（Python）、Stagehand（Browserbase，v4 提供 act/extract/observe/agent，选择器可自愈）、Skyvern、chrome-mcp（CDP）</td><td>抽取可访问性快照，元素带稳定引用</td><td>快照约 2-5KB、确定性的 <code>[ref=e14]</code> 定位、不依赖视觉模型，快且便宜；遇 canvas / 纯视觉绘制元素会失效</td></tr></tbody></table>
+<p>生产建议：<strong>DOM 优先、视觉兜底的混合方案</strong>——常规表单/列表走可访问性树，复杂画布、异形控件再降级截图。</p>
+<p>高频坑：页面返回内容里的提示注入（DOM 注入，呼应第 34、46 题）、CAPTCHA、会话/状态漂移、反爬与封号、多步成本累积、隐私合规（截图含用户数据）。与传统 Playwright 脚本不是替代而是互补：固定流程仍用脚本，开放探索才用 agent。产品视角见第 58 题。</p>
+<h3>51. 🆕 长时间运行的 Agent 任务如何保证可靠性？</h3>
+<p><strong>答案：</strong></p>
+<p>长任务（数分钟到数小时）的核心敌人：进程崩溃、网络抖动、副作用重复执行、预算失控。</p>
+<ol><li><strong>Durable Execution（持久化执行）</strong>：工作流状态事件溯源、可回放恢复——Temporal / Restate / DBOS 是这一派代表；Vercel AI SDK 7 的 WorkflowAgent 提供同范式；LangGraph 用 Postgres checkpointer，崩溃后 <code>invoke(None, cfg)</code> 从最后超步恢复（见第 24、38 题）；</li><li><strong>任务队列 + 异步化</strong>：请求只负责入队，结果通过 SSE / WebSocket / webhook 回推；</li><li><strong>重试语义</strong>：指数退避 + 抖动重试瞬时错误；<strong>至少一次投递</strong>下用幂等键（idempotency key）/ 去重表保证副作用只生效一次；跨多步的写操作用补偿事务（saga）回滚；</li><li><strong>预算护栏</strong>：<code>recursion_limit</code>、每工具调用次数与 token 预算、整体超时与熔断；</li><li><strong>降级路径</strong>：超预算或连续失败后保存现场、转人工或发通知，而不是无限重试。</li></ol>
+<p>一句话：<strong>把"内存里跑的 agent 循环"当成"随时会崩溃的分布式系统"来设计。</strong></p>
+<hr>
+<h2>十、综合设计题</h2>
+<h3>52. 设计一个电商客服 Agent：查单、退款、转人工。请给出技术选型与关键流程。</h3>
+<p><strong>答案：</strong></p>
+<p><strong>选型</strong>：核心链路路径确定且含风险操作 → <strong>LangGraph</strong>，不用纯 Deep Agents。</p>
+<p><strong>节点设计</strong>：</p>
+<pre><code>START → 意图识别(structured_output)
+          ├─ 查单 → order_query(tool) → 生成回复 → END
+          ├─ 退款 → 信息补全 → refund_review(interrupt 人工审批)
+          │             ├─ approve → apply_refund(tool) → END
+          │             └─ reject  → 取消回复 → END
+          └─ 其他/超步数/超预算/连续失败 → human_handoff → END</code></pre>
+<p><strong>工程要点</strong>：</p>
+<ul><li>意图识别与工单字段用 <code>gpt-4o-mini + with<em>structured</em>output</code>（示例，2026 年应换现役小型号），复杂沟通才升级旗舰模型；</li><li>Postgres checkpointer，thread_id 即会话 ID，支持跨轮/跨重启续跑；</li><li>退款金额、原因必须 <code>interrupt</code> 确认；节点重试 + 失败统一兜底转人工；</li><li><code>recursion_limit</code> 与 token 预算触发自动转人工；</li><li>LangSmith tracing + 金标轨迹集做回归；工具最小权限（退款接口限单用户、限金额）。</li></ul>
+<h3>53. 设计一个"自动生成竞品分析报告"的系统，该用 Deep Agents 吗？如何控成本与质量？</h3>
+<p><strong>答案：</strong></p>
+<p>适合用 <strong>Deep Agents</strong>：目标明确但路径开放（搜什么、读几篇、如何组织无法预先画死）。</p>
+<ul><li><strong>规划</strong>：让 Agent 先生成 todo（竞品维度、信息源清单）并展示，便于纠偏；</li><li><strong>子代理隔离</strong>：每个竞品/每个维度派独立子代理检索，只回传结构化摘要，保护主上下文；</li><li><strong>文件系统</strong>：原始资料与各章节草稿落虚拟文件，最终汇总，支持长任务和续写；</li><li><strong>质量</strong>：末尾加一个 reviewer 角色（结构化打分 + 引用核查，事实必须能在文件资料中找到出处），不达标带着意见回到 writer 修订（有限次数的反思循环）；</li><li><strong>成本</strong>：检索/摘要子代理用小模型，仅主编排与终审用旗舰模型；设总 token 预算与最大轮次；固定的角色提示与资料前缀开 prompt caching；</li><li><strong>交付</strong>：流式产出过程步骤（<code>updates</code>）让用户看到进度，报告以 Markdown/文件形式交付并附引用列表。</li></ul>
+<h3>54. 如果团队已有 Java/Node 技术栈，引入 Python 写 Agent 框架如何与主系统集成？</h3>
+<p><strong>答案：</strong></p>
+<p>不要为了用框架把业务搬进 Python，采用<strong>边界化集成</strong>：</p>
+<ul><li>把 Agent 做成<strong>独立服务</strong>（FastAPI / LangGraph Platform），主系统通过 HTTP/SSE 或消息队列调用，按会话传 thread_id；</li><li>Agent 需要的业务能力（查单、退款）由主系统以<strong>工具 API / MCP Server</strong> 暴露，Agent 侧只做编排，不直连核心数据库；</li><li>鉴权、限流、审计放在 API 网关层统一处理；</li><li>JS/TS 团队也可评估 <strong>LangChain.js / LangGraph.js</strong>，核心概念（Runnable、StateGraph、checkpointer）一一对应，减少语言切换成本；</li><li>工具协议尽量走 <strong>MCP</strong> 标准化，使同一套工具能被不同语言、不同 Agent 复用。</li></ul>
+<hr>
+<h2>十一、职业发展与前沿</h2>
+<h3>55. AI Agent 工程师需要掌握哪些核心技能？</h3>
+<p><strong>答案：</strong> <strong>编程能力：</strong></p>
+<ul><li>Python（主力语言）</li><li>异步编程（asyncio）</li><li>REST API 设计与开发</li><li>Docker / 容器化部署</li></ul>
+<p><strong>AI/LLM 知识：</strong></p>
+<ul><li>Prompt Engineering（提示词工程）与 Context Engineering（上下文工程，见第 6 题）</li><li>RAG 设计与优化</li><li>LLM API 使用（OpenAI、Anthropic、Gemini）</li><li>Fine-tuning 基础</li></ul>
+<p><strong>Agent 框架：</strong></p>
+<ul><li>LangChain / LangGraph / Deep Agents</li><li>AutoGen / CrewAI（注意 MAF 合并，见第 17 题）</li><li>OpenAI Agents SDK / Google ADK / Claude Agent SDK</li><li>LlamaIndex（RAG 专项）</li></ul>
+<p><strong>数据与存储：</strong></p>
+<ul><li>向量数据库（Chroma、Pinecone、Milvus）</li><li>关系数据库（PostgreSQL）</li><li>缓存（Redis）</li></ul>
+<p><strong>工程化：</strong></p>
+<ul><li>日志监控（LangSmith、Langfuse、OpenTelemetry GenAI，见第 48 题）</li><li>评估与测试（基准见第 47 题）</li><li>安全（OWASP LLM Top 10，见第 46 题）</li><li>CI/CD 部署</li></ul>
+<h3>56. 如何设计一个高质量的 Prompt？</h3>
+<p><strong>答案：</strong> 好的 Prompt 应包含以下要素：</p>
+<pre><code>1. 角色定义（Role）：You are an expert ...
+2. 任务描述（Task）：Your goal is to ...
+3. 上下文（Context）：Given the following information ...
+4. 约束条件（Constraints）：You must only ..., avoid ...
+5. 输出格式（Output Format）：Respond in JSON with fields ...
+6. 示例（Few-shot）：Example input/output</code></pre>
+<p><strong>常用技巧：</strong></p>
+<ul><li>Chain-of-Thought：要求模型"step by step"思考</li><li>Self-consistency：多次采样取最优</li><li>Structured Output：用 JSON Schema 强约束输出而非文字要求（第 39 题）</li></ul>
+<h3>57. 目前主流的 AI Agent 产品有哪些？</h3>
+<p><strong>答案：</strong></p>
+<blockquote>❌ <strong>更正（2026-09 核实）</strong>：下文清单中的 <strong>OpenAI Operator 已不是独立产品</strong>——2025-01 以研究预览发布，2025-07-17/18 并入 <strong>ChatGPT Agent</strong>（与 Deep Research 合体），独立入口 operator.chatgpt.com 于 <strong>2025-08-31 关闭</strong>。截至 2026-09，主流清单还应包括：ChatGPT Agent、Claude Code、OpenAI Codex CLI、Gemini CLI、GitHub Copilot Agent、Cursor、Devin、Manus、<strong>Claude for Chrome</strong>（2025-09-29 随 Claude Sonnet 4.5 发布）。</blockquote>
+<ul><li><strong>Devin</strong>（Cognition）：AI 软件工程师，自主完成编程任务</li><li><strong>Manus</strong>（Monica）：通用 AI Agent，可自主完成复杂任务</li><li><strong>OpenAI Operator</strong>：可操作浏览器完成网页任务（已并入 ChatGPT Agent，见上方更正）</li><li><strong>Claude Computer Use</strong>：Anthropic 出品，控制电脑桌面</li><li><strong>GitHub Copilot Agent</strong>：代码库级别的自动化任务</li><li><strong>AutoGPT</strong>：早期开源 Agent，生态丰富</li></ul>
+<h3>58. 什么是 Computer Use（计算机使用）Agent？</h3>
+<p><strong>答案：</strong> <strong>Computer Use</strong> 是 Anthropic 于 2024 年底推出的能力，允许 AI Agent <strong>直接控制计算机桌面</strong>（鼠标、键盘、屏幕截图）来完成任务。</p>
+<p><strong>工作原理</strong>：</p>
+<pre><code>截图 → 视觉理解 → 决策（点击/输入/滚动）→ 执行 → 截图（下一步）</code></pre>
+<p><strong>当前主要产品</strong>：</p>
+<ul><li><strong>Claude Computer Use</strong>：Anthropic API，开发者可集成</li><li><strong>OpenAI Operator</strong>：面向消费者，操作网页完成任务（预约、购物等）</li><li><strong>Google Project Mariner</strong>：Chrome 插件形态的浏览器 Agent</li></ul>
+<blockquote>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>：产品清单需更新——OpenAI Operator 已并入 ChatGPT Agent、独立入口 2025-08-31 关闭（见第 57 题）；Google Project Mariner 已演化为 <strong>Gemini 2.5 Computer Use（2025-10）</strong>。此外，视觉/截图派之外，<strong>DOM/可访问性树路线</strong>（Playwright MCP、browser-use、Stagehand 等）在工程界已成为主流补充，两条路线的工程对比详见第 50 题。</blockquote>
+<p><strong>与 Playwright/Selenium 的区别</strong>：</p>
+<table><thead><tr><th>维度</th><th>传统 Web 自动化</th><th>Computer Use</th></tr></thead><tbody><tr><td>依赖</td><td>DOM 结构、CSS 选择器</td><td>屏幕截图（像素级）</td></tr><tr><td>适用范围</td><td>仅 Web 应用</td><td>任何桌面/Web 应用</td></tr><tr><td>维护成本</td><td>UI 变化后需更新脚本</td><td>自适应，无需维护</td></tr><tr><td>稳定性</td><td>高</td><td>仍在改善中</td></tr></tbody></table>
+<p><strong>当前局限</strong>：速度较慢（每步需截图+推理）、成本较高、复杂界面下错误率仍偏高。</p>
+</div>
+</body>
+</html>

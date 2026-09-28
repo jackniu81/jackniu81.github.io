@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端工程化 常见面试题（附答案）</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de;
+          --code-bg:#f6f8fa; --accent:#0969da; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+  <h1>前端工程化 常见面试题（附答案）</h1>
+<blockquote>版本核实日期：2026-09。当前主线版本：Vite 8.1（Vite 8 于 2026-03-12 发布）、Rolldown 1.0（2026-05）、Node 24 LTS、ESLint 10、Vitest 4、Rspack 2.x、Biome 2.x。</blockquote>
+<h2>构建工具</h2>
+<h3>1. Vite 和 Webpack 的核心区别是什么？</h3>
+<p><strong>答案：</strong> <strong>开发环境</strong>：Vite 利用浏览器原生 ESM，按需编译模块（秒级启动，不随项目大小增加）；Webpack 需要打包所有模块，项目大时启动几十秒。<strong>热更新（HMR）</strong>：Vite 只更新变化的模块，毫秒级；Webpack 需重新打包相关模块，较慢。<strong>生产构建</strong>：Vite 底层用 Rollup（Tree Shaking 更彻底）；Webpack 自有生态更成熟，插件生态更丰富。选型建议：新项目优先 Vite；现有 Webpack 大型项目迁移成本较高。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：Vite 8（2026-03-12 稳定版）已将生产构建从 Rollup 切换为 Rust 编写的 Rolldown，开发期 esbuild 的角色也由 Rolldown + Oxc 接管，"dev esbuild / prod Rollup"双引擎成为历史架构；Rolldown 保持 Rollup 插件 API 兼容，多数 Vite 插件可直接使用。Vite 6/7 主线仍是 esbuild + Rollup，Vite 7 可通过 <code>rolldown-vite</code> 包可选切换。Vite 8 要求 Node 20.19+ 或 22.12+。</blockquote>
+<h3>2. Vite 的开发原理是什么？</h3>
+<p><strong>答案：</strong> ① 启动时只启动开发服务器，不打包，速度极快；② 浏览器发起模块请求时，Vite 按需编译对应文件（TS/JSX/Vue/Sass → 浏览器可运行 JS/CSS）；③ 利用浏览器 HTTP 缓存和强缓存区分源码模块和依赖（<code>node_modules</code> 用 esbuild 预打包为 ESM，缓存于 <code>.vite</code>）；④ HMR 通过 WebSocket 通知浏览器只替换变化的模块。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>："<code>node<em>modules</code> 用 esbuild 预打包"在 Vite 6/7 主线仍是现状（这两版可安装 <code>rolldown-vite</code> 切换为 Rolldown 预览）；<strong>Vite 8 起依赖预打包（dep optimizer）已改用 Rolldown</strong>，TS/JSX 转换改用 Oxc，缓存目录仍是 <code>node</em>modules/.vite</code>。<code>optimizeDeps.esbuildOptions</code> 保留并自动转换为 <code>optimizeDeps.rolldownOptions</code>，但已标记弃用。</blockquote>
+<h3>3. 🆕 Vite 8 为什么切换到 Rolldown？rolldown-vite 是什么？</h3>
+<p><strong>答案：</strong> <strong>旧架构问题</strong>：Vite 长期使用双引擎——开发期 esbuild 负责依赖预打包与 TS/JSX 转换，生产期 Rollup 负责打包优化。两套转换管线、两套插件适配、大量胶水代码，导致 dev/prod 行为偶发不一致，且单一管线的能力（如全量打包、模块级持久缓存）难以实现。<strong>Rolldown</strong> 是 VoidZero（Evan You 创立）用 Rust 编写、底层基于 Oxc 的打包器，目标是"esbuild 级速度 + Rollup 插件 API 兼容"，官方基准比 Rollup 快 10-30 倍。 <strong>时间线</strong>：2024-04 首次发布 → 2025-05 <code>rolldown-vite</code> 技术预览（把 Vite 6/7 整体换成 Rolldown 的临时包，通过 npm alias <code>&quot;vite&quot;: &quot;npm:rolldown-vite@x&quot;</code> 可选安装）→ 2025-12 Vite 8 beta 默认 Rolldown → <strong>2026-03-12 Vite 8 稳定版，Rolldown 成为唯一默认打包器</strong> → 2026-05 Rolldown 1.0 稳定。 <strong>Vite 8 现状</strong>：依赖预打包用 Rolldown、JS/JSX 转换与压缩用 Oxc（<code>esbuild</code> 配置项自动映射到 <code>oxc</code> 但已弃用）、CSS 压缩默认 Lightning CSS；多数 Vite 插件开箱即用；额外解锁了 <code>advancedChunks</code> 精细分包、模块级持久缓存、原生插件（hook filters）、原生 Module Federation，以及 Vite 8.1 的实验性 Bundled Dev Mode（大型应用开发期也打包，冷启动可快十余倍）。<strong>迁移建议</strong>：中小项目直接升 Vite 8（兼容层自动转换大部分配置）；插件重度依赖的大库可先停在 Vite 7 + <code>rolldown-vite</code> 灰度验证。注意 Vite 6/7 主线不是 Rolldown，面试时不要把路线图当成当时的现状。</p>
+<h3>4. 🆕 2026 年 Rspack、Turbopack、Vite（Rolldown）如何选型？</h3>
+<p><strong>答案：</strong> 三者都是 Rust 系高性能打包工具，但定位不同：① <strong>Vite 8 + Rolldown</strong>：多框架通用（Vue/React/Svelte/Solid/Astro 等），开发期原生 ESM 按需编译 + 生产统一 Rolldown 打包，插件生态最广、周下载量最大，新项目的默认选择；② <strong>Rspack</strong>（字节跳动）：webpack API 兼容的替代品，配置结构、loader 与大部分 webpack 插件可复用，2025 年 1.0 GA，2026 年已发布 2.0/2.1，冷启动速度突出，适合存量 webpack 大型仓库低成本迁移；③ <strong>Turbopack</strong>（Vercel）：与 Next.js 深度绑定的增量打包器（函数级缓存、复用 SWC 转换），Next.js 15（2024-10）开发模式稳定，<strong>Next.js 16（2025-10）起 dev 与 <code>next build</code> 生产构建均稳定，并成为新项目默认打包器</strong>，但它基本不能脱离 Next.js 单独使用。 <strong>选型口诀</strong>：按"从哪里迁移"决定——webpack 存量项目 → Rspack；Next.js 项目 → 用内置 Turbopack；其他框架/全新项目 → Vite。Rspack（讲 webpack API）和 Rolldown（讲 Rollup API）是互补关系而非直接竞争。Parcel 仍在维护，但社区声量已明显落后。</p>
+<h3>5. 🆕 什么是 Vite 6 的 Environment API？解决什么问题？</h3>
+<p><strong>答案：</strong> Vite 5 之前系统中只有两个隐式环境：<code>client</code>（浏览器）和可选的 <code>ssr</code>（Node）。现代应用往往同时运行在浏览器、Node SSR、Cloudflare workerd/Deno 等边缘运行时上，两套环境无法表达这种结构，框架作者只能写 hack 代码适配。<strong>Vite 6（2024-11）正式引入 Environment API</strong>：一个 dev server 内可存在多个相互独立的环境（共享 HTTP server、中间件、解析配置和插件管线，各自拥有模块图），每个环境连接自己的开发运行时——客户端由浏览器执行代码，其他环境由 Module Runner 拉取并执行 Vite 转换后的代码（如 workerd 经 miniflare 本地运行），使开发行为尽量对齐生产。 配置上通过 <code>environments: { server: {}, edge: { resolve: { noExternal: true } } }</code> 声明多个环境，未显式配置时继承顶层选项。Vite 5.1 的实验性 <strong>Vite Runtime API</strong> 在 Vite 6 演化为 <strong>Module Runner API</strong>。<strong>目标用户要分清</strong>：该 API 主要面向框架/库作者（Nuxt、SvelteKit、SolidStart 等）；普通 SPA/MPA 应用开发者完全无感知，配置和行为与 Vite 5 一致，不需要学习。该 API 在 Vite 6 发布时标记为实验性，后续大版本逐步稳定。</p>
+<h3>6. Webpack 的构建流程是什么？</h3>
+<p><strong>答案：</strong> ① 读取 <code>webpack.config.js</code> 初始化配置；② 从 <code>entry</code> 开始递归分析依赖图；③ 对每个模块按 <code>rules</code> 配置调用对应 Loader 转换（如 Babel、CSS Loader）；④ 将模块转换结果合并为 Chunk；⑤ 通过 Plugin 在各生命周期钩子执行额外操作（如 HTML 生成、压缩）；⑥ 输出打包文件到 <code>output</code> 目录。</p>
+<h3>7. Loader 和 Plugin 的区别？</h3>
+<p><strong>答案：</strong> <strong>Loader</strong>：文件转换器，在模块加载时转换文件内容（如将 <code>.scss</code> → CSS，<code>.ts</code> → JS），是单一职责的纯函数，按 <code>use</code> 数组逆序执行。<strong>Plugin</strong>：功能扩展，通过 Webpack 的 Tapable 钩子系统在构建各阶段插入逻辑，可访问完整的编译上下文（如生成 HTML 入口、提取 CSS 文件、定义全局变量）。Loader 处理文件级别，Plugin 处理构建流程级别。</p>
+<h3>8. 什么是 Tree Shaking？原理是什么？</h3>
+<p><strong>答案：</strong> Tree Shaking 静态分析模块导入导出关系，移除未使用的代码（dead code elimination）。依赖 ES Module 的静态结构（<code>import</code>/<code>export</code> 是静态声明，构建时可分析），CommonJS 的动态 <code>require</code> 无法静态分析。要求：① 使用 ES Module；② 代码无副作用（<code>package.json</code> 中 <code>&quot;sideEffects&quot;: false</code>，或指定有副作用的文件）；③ 生产模式（Rollup/Rolldown/Webpack 生产构建自动开启）。</p>
+<h3>9. 什么是代码分割（Code Splitting）？</h3>
+<p><strong>答案：</strong> 将大 bundle 拆分为多个 chunk，按需加载，减少初始加载体积。三种方式：① <strong>入口分割</strong>（多个 entry point）；② <strong>动态导入</strong>（<code>import(&#39;module&#39;)</code> 返回 Promise，Vite/Webpack/Rspack 自动拆包）；③ <strong>SplitChunksPlugin</strong>（Webpack/Rspack 将公共依赖提取为独立 chunk）。常见策略：路由级分割（每个路由一个 chunk）+ 第三方库单独分包（<code>vendor</code>）。</p>
+<h3>10. 🆕 Vite 生产构建有哪些常用优化手段？</h3>
+<p><strong>答案：</strong> ① <strong>分包策略</strong>：Rollup 时代用 <code>output.manualChunks</code> 把 react/react-dom 等稳定大库拆成 vendor 包以利长缓存；<strong>Vite 8/Rolldown 中 <code>manualChunks</code> 对象形式已移除、函数形式弃用，推荐更精细的 <code>output.advancedChunks.groups</code></strong>（类似 webpack splitChunks，用 <code>name</code>/<code>test</code> 声明分组），路由级 <code>import()</code> 仍自动拆包。② <strong>build.target</strong>：Vite 7 起默认 <code>&#39;baseline-widely-available&#39;</code>（Vite 7 约为 chrome107/safari16；Vite 8 升到 chrome111/edge111/firefox114/safari16.4），默认少转译、产物更小；要兼容更老浏览器再显式调低。③ <strong>modulepreload</strong>：默认 <code>{ polyfill: true }</code> 自动注入 <code>&lt;link rel=&quot;modulepreload&quot;&gt;</code> polyfill 并预加载动态 import 的依赖 chunk，库模式不注入，确认不需要可关闭（旧的 <code>build.polyfillModulePreload</code> 已弃用）。④ <strong>CSS 分包与压缩</strong>：CSS 默认按异步 chunk 做 code split（<code>build.cssCodeSplit</code>），Vite 8 起 CSS 压缩默认 Lightning CSS。⑤ 其他：Vite 8 JS 压缩默认走 Oxc；按需开 sourcemap；<code>assetsInlineLimit</code> 内联小资源；用 rollup-plugin-visualizer 分析包体；避免 barrel files（桶文件妨碍按需 Tree Shaking）；dev 期可用 <code>server.warmup</code> 预热高频文件。</p>
+<h3>11. 🆕 Vite 库模式、SSR 外部化和 d.ts 类型声明如何处理？</h3>
+<p><strong>答案：</strong> <strong>库模式（build.lib）</strong>：开发组件库/工具库时配置 <code>lib: { entry, name, formats: [&#39;es&#39;,&#39;cjs&#39;], fileName }</code>，产出多格式产物；库模式下 <code>node<em>modules</code> 默认全部外部化、不注入 modulepreload polyfill、CSS 默认提取为独立文件。<strong>SSR 外部化</strong>：Vite 在 SSR 时默认外部化 <code>node</em>modules</code>（<code>ssr.external</code>），因为 Node 可直接加载 CJS/ESM，避免重复打包；对只发布 ESM、含需转译新语法或有样式副作用的依赖，用 <strong><code>ssr.noExternal</code></strong> 强制纳入 Vite 管线打包（边缘运行时如 workerd 场景尤其常见，很多 SSR 报错都和 external/noExternal 配置有关）。<strong>类型声明</strong>：Vite 本身不生成 <code>.d.ts</code>（它只转译、不做类型检查），常见方案是 <code>tsc --emitDeclarationOnly</code> 单独产出声明，或用 <strong>vite-plugin-dts</strong> 插件自动生成、支持多入口与插入三斜线引用。发布前仍应跑 <code>tsc --noEmit</code> 保证类型无误。<strong>package.json 配合</strong>：用现代 <code>exports</code> 字段声明 <code>import</code>/<code>require</code>/<code>types</code> 条件导出，让不同环境解析到正确产物。</p>
+<h3>12. 🆕 Oxc 是什么？它在 Vite 中承担什么角色？</h3>
+<p><strong>答案：</strong> Oxc（The JavaScript Oxidation Compiler）是 VoidZero 团队用 Rust 编写的 JS/TS 工具链合集，基于一套高性能统一 AST，包含 parser、resolver、transformer、minifier、linter（<strong>Oxlint</strong>）和 formatter（<strong>Oxfmt</strong>）。<strong>与其他工具的关系</strong>：① Rolldown 底层的解析与压缩就使用 Oxc；② <strong>Vite 8 中 TS/JSX 转换和 JS 压缩从 esbuild 切换为 Oxc transformer/minify</strong>（Vite 6.1 时 <code>minify: &#39;oxc&#39;</code> 还是实验项，Vite 8 已成默认，<code>esbuild</code> 配置项自动转换但弃用）；③ Oxlint 对标 ESLint，2025 年发布 1.0、内置 650+ 条 Rust 原生规则，2026-03 推出兼容 ESLint 插件 API 的 JS Plugins（alpha），官方基准比 ESLint 快数十倍，已在 Preact、PostHog 等项目生产使用；④ Oxfmt（2026 年 beta）对标 Prettier；⑤ <strong>SWC 是另一套独立的 Rust 转译器</strong>（Next.js/Turbopack 生态使用），与 Oxc 是竞争关系；Biome 也是 Rust 实现但自带 AST 与 formatter，并不基于 Oxc。<strong>取舍</strong>：Oxlint 规则总量与插件生态仍不及 ESLint（框架自定义文件、类型感知规则在补齐），很多团队采用"Oxlint 跑绝大多数规则 + ESLint 兜底少量特殊规则"的过渡方案。</p>
+<h3>13. 🆕 Lightning CSS 是什么？与 PostCSS/Autoprefixer 什么关系？</h3>
+<p><strong>答案：</strong> Lightning CSS 是 Rust 实现的 CSS 解析、转换与压缩一体化工具，速度远快于 JS 版 PostCSS 链，并内置按 browserslist 的语法降级（嵌套、<code>color-mix()</code>、逻辑属性等新特性自动改写）与高级压缩优化。<strong>Vite 中的集成</strong>：① <code>css.transformer</code> 可选 <code>&#39;postcss&#39;</code>（默认）或 <code>&#39;lightningcss&#39;</code>，开启后整条 CSS 处理管线（含 CSS Modules、<code>@import</code> 打包、降级）换成 Lightning CSS；② <strong>Vite 8 起 <code>build.cssMinify</code> 默认已是 <code>&#39;lightningcss&#39;</code></strong>（仅压缩环节默认切换；想用回 esbuild 需自行安装 esbuild 并显式配置），而 transformer 在 Vite 8.1 仍处于"向默认切换推进中"的状态。<strong>与 PostCSS/Autoprefixer 是替代而非叠加关系</strong>：选择 lightningcss transformer 后 CSS 不再经过 PostCSS，Autoprefixer 的加前缀工作由 Lightning CSS 按 targets 自动完成；但大量 PostCSS 插件（Tailwind 的 PostCSS 插件、自定义插件链）在 Lightning CSS 下不可用，迁移前需要评估替代方案。</p>
+<h3>14. 🆕 esbuild 和 SWC 的定位是什么？为什么它们都不做类型检查？</h3>
+<p><strong>答案：</strong> <strong>esbuild</strong> 是 Go 编写的一体化构建工具（打包 + 转译 + 压缩），Vite 6/7 用它做开发期转换和依赖预打包；<strong>SWC</strong> 是 Rust 编写的编译/转译库，Next.js（经 Turbopack）及大量 Babel 替代场景使用，也可配合其他打包器。二者核心定位都是"快速转译"：把 TS/JSX/新语法降级为可运行的 JS，不理解类型语义。<strong>不做类型检查的原因</strong>：转译是单文件、纯语法层面的工作，可高度并行、按需编译，契合 dev server 毫秒级响应；而类型检查需要整个程序的类型图（跨文件导入导出、泛型推断、声明合并），架构和成本完全不同，塞进转译管线会毁掉速度优势。因此 Vite 对 <code>.ts</code> 只 transpile（要求 <code>isolatedModules: true</code>，不支持 <code>const enum</code> 等需跨文件信息的特性），类型检查交给 <code>tsc --noEmit</code>（CI 中执行或单独开 <code>tsc --watch</code>）、IDE 或 vite-plugin-checker。<strong>2026 现状</strong>：Vite 8 中 esbuild 的转译/压缩角色已被 Oxc 取代（配置仍兼容），SWC 则继续在 Next.js/Turbopack 生态中使用。</p>
+<h3>15. 如何优化 Webpack 构建速度？</h3>
+<p><strong>答案：</strong> ① 缩小查找范围：配置 <code>resolve.extensions</code>、<code>resolve.alias</code>、<code>include</code>/<code>exclude</code> Loader 范围；② 缓存：<code>cache: { type: &#39;filesystem&#39; }</code> 开启持久缓存（Webpack 5），Babel Loader 开启 <code>cacheDirectory</code>；③ 多线程：<code>thread-loader</code> 或 <code>happypack</code>；④ 减少插件：生产才用的插件不要在开发环境运行；⑤ DllPlugin / 联邦模块：预编译不变的第三方库；⑥ 升级到 Webpack 5（内置持久缓存、更快的算法）。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：第⑤点中的 <strong>DllPlugin 在 Webpack 5 持久缓存时代已基本淘汰</strong>。DLL 需要手动维护预编译清单、依赖升级后容易出现版本不一致问题，而 <code>cache: { type: &#39;filesystem&#39; }</code> + Babel 缓存已能覆盖其收益，新项目不建议再引入。模块联邦（Module Federation）解决的是运行时跨应用共享模块，属于微前端架构需求，并不能用来给日常构建提速。若团队可更换工具链，Rspack 对 webpack 配置高度兼容，是更彻底的提速路径。</blockquote>
+<h3>16. 什么是 Module Federation（模块联邦）？</h3>
+<p><strong>答案：</strong> Webpack 5 引入，允许多个独立构建的应用之间共享模块，实现真正的微前端运行时共享。一个应用可以作为 Host（消费其他应用暴露的模块），也可以作为 Remote（暴露模块给其他应用使用）。共享依赖（如 React）只加载一次，无需重复打包。适合大型企业级微前端架构。</p>
+<blockquote>ℹ️ <strong>补充（2026-09）</strong>：Vite 生态曾长期依赖社区的 vite-plugin-federation；Rolldown 已把 Module Federation 作为原生能力内建，Vite 8 项目做模块联邦不再必须借助社区插件。</blockquote>
+<h2>包管理与依赖</h2>
+<h3>17. <code>package.json</code> 中 <code>dependencies</code> 和 <code>devDependencies</code> 的区别？</h3>
+<p><strong>答案：</strong> <code>dependencies</code>：生产运行所需的依赖（如 React、Axios），会打包进产物或随项目部署；<code>devDependencies</code>：只在开发时需要的依赖（如 Vite、TypeScript、ESLint、测试框架），不进入生产产物。<code>npm install --production</code> 只安装 <code>dependencies</code>。区分清楚可减小生产镜像体积，加快部署。</p>
+<h3>18. <code>package-lock.json</code> / <code>pnpm-lock.yaml</code> 的作用是什么？</h3>
+<p><strong>答案：</strong> 锁文件精确记录每个依赖及其依赖的具体版本和完整性哈希（SHA），保证所有环境（本地/CI/生产）安装的依赖版本完全一致，避免"我这里没问题"的问题。<strong>必须提交到版本库</strong>。不同包管理器的锁文件格式不同，混用（如同时有 <code>package-lock.json</code> 和 <code>yarn.lock</code>）会导致混乱，应统一使用一种。</p>
+<h3>19. 什么是 <code>peerDependencies</code>？</h3>
+<p><strong>答案：</strong> <code>peerDependencies</code> 声明插件/库对宿主环境的依赖要求，但不自动安装，由使用者手动安装兼容版本。如 React 插件库声明 <code>&quot;peerDependencies&quot;: { &quot;react&quot;: &quot;&gt;=16.8.0&quot; }</code>，表示需要宿主项目提供 React，避免重复安装多个 React 实例。npm 7+ 自动安装 peer deps（之前版本只警告）。</p>
+<h3>20. 什么是 npm script 的 <code>pre</code> 和 <code>post</code> 钩子？</h3>
+<p><strong>答案：</strong> 在 script 名称前加 <code>pre</code> 或 <code>post</code> 前缀，npm 会自动在对应脚本前后执行：</p>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    &quot;prebuild&quot;: &quot;npm run lint&quot;,
+    &quot;build&quot;: &quot;vite build&quot;,
+    &quot;postbuild&quot;: &quot;npm run compress&quot;
+  }
+}</code></pre>
+<p>执行 <code>npm run build</code> 时自动依次运行 <code>prebuild → build → postbuild</code>，适合串联步骤。</p>
+<h3>21. 🆕 Corepack 是什么？Node 25 之后包管理器安装有什么变化？</h3>
+<p><strong>答案：</strong> Corepack 是 Node 官方附带的包管理器代理：在项目中直接运行 <code>pnpm</code>/<code>yarn</code> 时，它会读取 <code>package.json</code> 的 <code>packageManager</code> 字段（如 <code>&quot;packageManager&quot;: &quot;pnpm@9.15.0&quot;</code>）自动下载并切换到对应版本，保证团队成员使用同一个包管理器版本，通过 <code>corepack enable</code> 启用。 <strong>版本变化（2026-09 核实）</strong>：Corepack 仅随 <strong>Node 14.19 到 Node 25 之前</strong>的版本分发；<strong>Node 25（2025-10 发布）起不再内置 Corepack</strong>，新环境要么 <code>npm install -g corepack</code> 单独安装，要么直接安装 pnpm/yarn，不能再假设 <code>corepack</code> 命令必然存在。包管理器侧，<strong>pnpm 11（2026-04）要求 Node 22+、改为纯 ESM 分发</strong>，store 索引改用 SQLite，并默认开启供应链安全策略（如新包发布 24 小时后才允许安装的 <code>minimumReleaseAge</code>、构建脚本白名单 <code>allowBuilds</code>）。当前 Node LTS 为 24，Node 20 已于 2026-04 EOL。团队实践建议：锁定唯一包管理器（<code>packageManager</code> 字段 + <code>only-allow</code> 类拦截脚本）、锁文件必提交。</p>
+<h2>代码质量</h2>
+<h3>22. ESLint 的作用和配置方式？</h3>
+<p><strong>答案：</strong> ESLint 是 JS/TS 静态代码分析工具，检查代码质量和风格问题，可自动修复部分问题（<code>--fix</code>）。配置文件（<code>.eslintrc.json</code> 或 <code>eslint.config.js</code>）中配置：<code>parser</code>（如 <code>@typescript-eslint/parser</code>）、<code>plugins</code>、<code>extends</code>（规则集，如 <code>eslint:recommended</code>、<code>@typescript-eslint/recommended</code>、<code>plugin:react/recommended</code>）、<code>rules</code>（自定义规则）。配合 VSCode ESLint 插件实现实时提示。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：<strong>ESLint 9（2024-04）起 Flat Config（<code>eslint.config.js</code>）成为默认配置格式</strong>，旧 <code>.eslintrc.*</code> 同期被弃用；<strong>ESLint 10（2026-02 发布）已彻底移除 eslintrc 系统</strong>——<code>.eslintrc.json</code>、<code>.eslintignore</code>、<code>ESLINT<em>USE</em>FLAT_CONFIG</code>、<code>--env</code> 等旧参数全部失效，Node 要求 20.19+/22.13+/24+。新项目应直接写 Flat Config（单一配置文件、插件直接 import、用 <code>languageOptions</code> 代替 <code>parserOptions</code>）：  ``<code>js // eslint.config.js import tseslint from &#39;typescript-eslint&#39; export default [   { files: [&#39;**/*.ts&#39;], languageOptions: { parser: tseslint.parser }, rules: { &#39;no-unused-vars&#39;: &#39;error&#39; } }, ] </code>`<code>  旧仓库可用 </code>npx @eslint/migrate-config .eslintrc.json` 自动迁移。ESLint 10 还改为从被检查文件所在目录向上查找配置，对 monorepo 多包不同规则更友好。</blockquote>
+<h3>23. Prettier 和 ESLint 有什么区别？如何配合使用？</h3>
+<p><strong>答案：</strong> Prettier 是代码格式化工具，只关注代码样式（缩进、引号、换行等），不做语义分析；ESLint 关注代码质量（未使用变量、潜在错误等），也有部分格式规则。配合使用：安装 <code>eslint-config-prettier</code>（关闭 ESLint 中与 Prettier 冲突的格式规则），<code>eslint-plugin-prettier</code>（将 Prettier 作为 ESLint 规则运行）。二者职责互补，不应重复配置格式规则。</p>
+<h3>24. Husky 和 lint-staged 如何配合使用？</h3>
+<p><strong>答案：</strong> <strong>Husky</strong>：配置 Git hooks，在特定 Git 操作前自动执行脚本（如 <code>pre-commit</code>、<code>commit-msg</code>、<code>pre-push</code>）。<strong>lint-staged</strong>：只对本次提交（staged）的文件运行 lint/format，而非全量扫描（避免慢）。组合：提交前自动对变更文件运行 ESLint + Prettier，阻止不合规代码进入仓库，保证代码库质量。</p>
+<pre><code class="language-sh"># .husky/pre-commit
+npx lint-staged</code></pre>
+<pre><code class="language-json">// package.json
+&quot;lint-staged&quot;: {
+  &quot;*.{ts,tsx}&quot;: [&quot;eslint --fix&quot;, &quot;prettier --write&quot;],
+  &quot;*.{css,md}&quot;: [&quot;prettier --write&quot;]
+}</code></pre>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：<strong>Husky v9（2024-01 发布，当前主线）初始化方式已变</strong>：使用 <code>npx husky init</code>（不再是 <code>husky install</code> 或 <code>npx husky-init</code>），<code>package.json</code> 中的 prepare 脚本简化为 <code>&quot;prepare&quot;: &quot;husky&quot;</code>；v9 通过 git config 的 <code>core.hooksPath</code> 指向仓库内 <code>.husky/<em></code> 目录，钩子文件是<strong>纯 shell</strong>（不再需要 <code>. &quot;$(dirname -- &quot;$0&quot;)/</em>/husky.sh&quot;</code> 样板行），<code>.husky/_/</code> 是自动生成的运行时目录，不要手改。上面示例中的纯命令写法本身即 v9 风格，可继续使用。</blockquote>
+<h3>25. 什么是 Commitlint？</h3>
+<p><strong>答案：</strong> Commitlint 检查 Git commit message 是否符合规范（通常是 Conventional Commits 规范：<code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>refactor:</code>, <code>chore:</code> 等）。配合 Husky <code>commit-msg</code> 钩子使用，不符合规范的提交会被拒绝。规范化的 commit 便于：自动生成 CHANGELOG、语义化版本自动升级（<code>semantic-release</code>）、代码审查。</p>
+<h3>26. 🆕 Biome 是什么？和 ESLint + Prettier 组合如何取舍？</h3>
+<p><strong>答案：</strong> Biome 从 Rome 项目 fork 而来，是 Rust 编写的<strong>单二进制 linter + formatter 一体化工具</strong>：一个 <code>biome.json</code> 同时完成 lint、格式化、import 排序，零第三方依赖、安装即用，速度比 ESLint + Prettier 链快一到两个数量级，也不存在两工具格式规则互相冲突的问题。Biome 2.0（2025 年末，代号 Biotype）首次提供不依赖 TypeScript 编译器的类型感知 lint，并引入 GritQL 插件系统、多文件分析；2026 年已迭代到 2.5，内置 500+ 条规则，改进了 Vue/Svelte/Astro 支持。 <strong>取舍建议</strong>：新项目、规则需求主流（推荐规则集 + 少量自定义）选 Biome 最省心，CI 提速明显；存量项目如果深度依赖 ESLint 插件生态（大量 React/无障碍/企业自定义规则），迁移要先核对规则覆盖率（格式化与 Prettier 约 97%+ 兼容，仍建议跑快照对比），可以继续用 ESLint 10（已强制 Flat Config），或关注 Oxlint——它走"兼容 ESLint 插件 API"路线，对大型 ESLint 代码库迁移更平滑。</p>
+<h2>测试</h2>
+<h3>27. 🆕 Vitest 是什么？与 Jest 相比有什么优劣？</h3>
+<p><strong>答案：</strong> Vitest 是 Vite 团队出品的测试框架，<strong>复用 Vite 的配置、插件和转译管线</strong>：开箱支持 TS/JSX/ESM、watch 模式按模块粒度极速重跑，API 与 Jest 高度兼容（<code>describe</code>/<code>it</code>/<code>expect</code>/<code>vi.mock</code>，开启 <code>globals: true</code> 后用例代码几乎不用改）。<strong>核心能力</strong>：① 环境可选 node/jsdom/happy-dom；② <strong>Browser Mode 在 Vitest 4 已稳定</strong>，可用真实 Chromium（Playwright/WebDriver provider）跑组件测试，验证真实浏览器 API，替代部分 Playwright Component Testing 场景；③ 多项目/workspace 模式（<code>vitest.workspace.ts</code> + <code>defineWorkspace</code>）可在 monorepo 中给不同包、不同环境（node 单测与 browser 组件测）分组并行执行（配置项 <code>workspace</code> 在 Vitest 3.2 更名为 <code>projects</code>）。<strong>版本</strong>：Vitest 4 要求 Vite 6+/Node 20+，4.1（2026-03）支持 Vite 8。<strong>与 Jest 对比</strong>：省去 <code>ts-jest</code>/<code>babel-jest</code> 配置、与 <code>vite.config</code> 同源、HMR 式反馈快；代价是绑定 Vite 生态——非 Vite 项目（重度自定义 webpack/Next 转换链）迁移前要评估，Vitest 4 的 V8 覆盖率重映射逻辑重写，升级后覆盖率数字会有变化。</p>
+<h2>CI/CD</h2>
+<h3>28. 什么是 CI/CD？</h3>
+<p><strong>答案：</strong> <strong>CI</strong>（持续集成）：代码提交后自动触发构建、测试，尽早发现集成问题。<strong>CD</strong>（持续交付/部署）：CI 通过后自动将代码部署到测试/预发/生产环境。核心价值：缩短反馈循环、减少手动操作错误、提高发布频率和可靠性。常用工具：GitHub Actions、GitLab CI/CD、Jenkins、CircleCI。</p>
+<h3>29. GitHub Actions 的基本结构是什么？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-yaml"># .github/workflows/ci.yml
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: &#39;20&#39;
+          cache: &#39;pnpm&#39;
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run test
+      - run: pnpm run build</code></pre>
+<p>核心概念：<code>workflow</code>（工作流）→ <code>job</code>（任务，可并行）→ <code>step</code>（步骤，顺序执行）。</p>
+<h3>30. 前端项目的 CI 流程通常包含哪些步骤？</h3>
+<p><strong>答案：</strong> ① 代码检出（checkout）；② 安装依赖（<code>pnpm install --frozen-lockfile</code>，使用锁文件保证一致性）；③ 类型检查（<code>tsc --noEmit</code>）；④ Lint 检查（<code>eslint</code>）；⑤ 单元测试（<code>vitest run</code>/<code>jest --ci</code>）；⑥ 构建（<code>vite build</code>）；⑦ E2E 测试（Playwright/Cypress）；⑧ 产物部署/上传（OSS、CDN、Vercel、Netlify）；⑨ 性能检查（Lighthouse CI）。</p>
+<h3>31. 什么是语义化版本（Semantic Versioning）？</h3>
+<p><strong>答案：</strong> 版本格式 <code>MAJOR.MINOR.PATCH</code>：<strong>MAJOR</strong>（重大版本）：有破坏性变更（Breaking Change），不兼容旧版；<strong>MINOR</strong>（次版本）：新增功能，向后兼容；<strong>PATCH</strong>（修订版）：Bug 修复，向后兼容。<code>package.json</code> 依赖版本前缀：<code>^1.2.3</code>（允许 MINOR 和 PATCH 升级）、<code>~1.2.3</code>（只允许 PATCH 升级）、无前缀（锁定精确版本）。</p>
+<h2>环境配置</h2>
+<h3>32. <code>.env</code> 文件的使用规范是什么？</h3>
+<p><strong>答案：</strong></p>
+<pre><code>.env              # 所有环境通用的默认值
+.env.local        # 本地覆盖（不提交 git）
+.env.development  # 开发环境
+.env.production   # 生产环境
+.env.test         # 测试环境</code></pre>
+<p>Vite 中环境变量需以 <code>VITE<em></code> 开头才暴露给客户端（<code>import.meta.env.VITE</em>API_URL</code>），避免泄露服务端机密。敏感信息（API 密钥、数据库密码）不应进入前端 bundle，只在服务端读取。</p>
+<blockquote>ℹ️ <strong>补充（2026-09 核实）</strong>：Vite 6/7/8 的多模式（<code>--mode</code>）、<code>envDir</code>、<code>VITE_</code> 前缀暴露规则均无实质变化，上述规范继续适用；只有不带前缀的变量通过 <code>loadEnv</code> 在 Node 侧（配置文件/SSR）可见。</blockquote>
+<h3>33. Monorepo 下如何共享 TypeScript / ESLint 配置？</h3>
+<p><strong>答案：</strong> 创建共享配置包（如 <code>packages/tsconfig</code>、<code>packages/eslint-config</code>），其他包通过 <code>extends</code> 引用：</p>
+<pre><code class="language-json">// packages/web/tsconfig.json
+{ &quot;extends&quot;: &quot;@company/tsconfig/base.json&quot;, &quot;include&quot;: [&quot;src&quot;] }
+
+// packages/web/.eslintrc.json
+{ &quot;extends&quot;: [&quot;@company/eslint-config&quot;] }</code></pre>
+<p>包管理器 workspace 让内部包可像普通 npm 包一样引用，无需发布到 registry。</p>
+<blockquote>⚠️ <strong>版本更新（2026-09 核实）</strong>：示例中的 <code>.eslintrc.json</code> 写法在 ESLint 10 已失效。共享 ESLint 配置包现在直接导出 Flat Config 数组（<code>export default [ ... ]</code>），消费方在自己的 <code>eslint.config.js</code> 中 <code>import companyConfig from &#39;@company/eslint-config&#39;</code> 后展开即可；TS 配置的 <code>extends</code> 方式不变。</blockquote>
+<h3>34. 🆕 Monorepo 中如何做跨包的构建缓存？</h3>
+<p><strong>答案：</strong> Monorepo 的痛点是只改了一个包，CI 却全量 lint/test/build。<strong>Turborepo、Nx</strong> 这类任务编排工具按任务的<strong>输入哈希</strong>（源码、配置、锁文件、环境变量）决定是否命中缓存：声明 task 依赖图（如 <code>build</code> 依赖 <code>^build</code>，即先建依赖包）、<code>inputs</code> 和 <code>outputs</code>（如 <code>dist/<strong></code>、<code>.tsbuildinfo</code>），命中时直接还原产物、跳过执行。本地缓存让重复构建秒过；</strong>Remote Cache<strong>（Vercel Remote Cache、Nx Cloud 或自建 S3/MinIO 后端）让 CI 各任务甚至团队成员之间共享缓存，PR 上未改动的包不再重建。 </strong>与 Vite library 配合**：<code>packages/*</code> 各自用 Vite 库模式或 TypeScript project references 产出 <code>dist</code>，包间通过 workspace 协议引用；缓存 key 天然包含上游包的哈希，A 包变更才会让依赖它的 B 包缓存失效。注意事项：产物要确定性（固定 sourcemap/文件名策略）、把影响构建的 env 变量纳入 <code>inputs</code>、<code>.vite</code> 缓存目录与 <code>dist</code> 一起声明为 outputs。它与 pnpm 的内容寻址 store 是两层缓存（一个管依赖、一个管任务产物），互补不替代；超大规模仓库还可考虑 Rush、Bazel。</p>
+<h2>前端监控</h2>
+<h3>35. 前端错误监控应该捕获哪些错误？</h3>
+<p><strong>答案：</strong> ① <code>window.onerror</code>：JS 运行时错误（语法错误、引用错误等）；② <code>window.addEventListener(&#39;unhandledrejection&#39;)</code>：未处理的 Promise rejection；③ <code>try/catch</code> 手动捕获：业务关键路径错误；④ React <code>ErrorBoundary</code> / Vue <code>app.config.errorHandler</code>：组件渲染错误；⑤ Axios 响应拦截器：API 错误；⑥ 资源加载错误：<code>window.addEventListener(&#39;error&#39;, handler, true)</code>（捕获阶段）。</p>
+<h3>36. 如何实现前端性能数据上报？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-javascript">// 用 PerformanceObserver 采集指标
+const observer = new PerformanceObserver((list) =&gt; {
+  for (const entry of list.getEntries()) {
+    // 上报到后端
+    navigator.sendBeacon(&#39;/api/metrics&#39;, JSON.stringify({
+      name: entry.name,
+      value: entry.startTime,
+      id: generateId()
+    }));
+  }
+});
+observer.observe({ type: &#39;largest-contentful-paint&#39;, buffered: true });</code></pre>
+<p>用 <code>navigator.sendBeacon</code>（不阻塞页面卸载）而非 <code>fetch</code> 上报，确保页面关闭时数据不丢失。</p>
+<h3>37. 什么是前端灰度发布？</h3>
+<p><strong>答案：</strong> 灰度发布（Canary Release）是将新版本先发布给一小部分用户，观察指标（错误率、性能、业务转化），无问题再全量推进。前端实现方式：① CDN 版本控制（不同用户返回不同版本的 HTML/JS）；② Feature Flag（特性开关，通过配置服务控制功能开关，如 LaunchDarkly）；③ Nginx 按 Cookie/IP/比例路由不同版本。灰度发布降低发布风险，出问题可快速回滚。</p>
+<h2>总结</h2>
+<p>这些题目覆盖了构建工具（Vite 8/Rolldown/Oxc、Webpack、Rspack、Turbopack、Lightning CSS）、包管理（含 Corepack 与 pnpm 新变化）、代码质量（ESLint 10 Flat Config/Prettier/Husky v9/Biome）、测试（Vitest 4）、CI/CD（GitHub Actions）、Monorepo 缓存（Turborepo/Nx）、环境配置和前端监控，适合作为前端工程化面试系统复习资料。</p>
+</div>
+</body>
+</html>
