@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">98</span>
+          <span class="site-state-item-count">99</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,113 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/08/05/Algorithm-Three-Sum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/08/05/Algorithm-Three-Sum/" class="post-title-link" itemprop="url">算法 - 三数之和 (3Sum)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-08-05 20:11:47" itemprop="dateCreated datePublished" datetime="2021-08-05T20:11:47+08:00">2021-08-05</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个整数数组 <code>nums</code>，找出所有满足 <code>nums[i] + nums[j] + nums[k] == 0</code> 的<strong>三元组</strong> <code>[i, j, k]</code>，且要求：</p>
+<ul>
+<li><code>i</code>、<code>j</code>、<code>k</code> 两两不同。</li>
+<li>返回的三元组<strong>不能重复</strong>。</li>
+</ul>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [-1, 0, 1, 2, -1, -4]</span><br><span class="line">输出: [[-1, -1, 2], [-1, 0, 1]]</span><br><span class="line">解释: 满足条件的不重复三元组如上，注意 [-1, 0, 1] 和 [0, 1, -1] 视为同一个。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>暴力三重循环是 <code>O(n³)</code> 且难以去重。经典做法是<strong>排序 + 双指针</strong>，把复杂度降到 <code>O(n²)</code>。</p>
+<ol>
+<li><strong>排序</strong>：<code>nums.sort((a, b) =&gt; a - b)</code>，让双指针成为可能，也让重复值相邻便于跳过。</li>
+<li><strong>固定一个数</strong>：外层枚举 <code>nums[i]</code>，把问题转化为「在 <code>i</code> 右侧找两数之和等于 <code>-nums[i]</code>」——退化成 [两数之和 II（有序）]。</li>
+<li><strong>双指针夹逼</strong>：<code>left = i + 1</code>，<code>right = n - 1</code>：<ul>
+<li><code>sum === 0</code> → 记录答案，然后左右指针同时向内移动并跳过重复。</li>
+<li><code>sum &lt; 0</code> → 需要更大的数，<code>left++</code>。</li>
+<li><code>sum &gt; 0</code> → 需要更小的数，<code>right--</code>。</li>
+</ul>
+</li>
+<li><strong>三处去重</strong>：<ul>
+<li><code>i</code> 与前一个相同则跳过（避免重复的第一个数）。</li>
+<li>命中答案后，<code>left</code>、<code>right</code> 各自跳过相同值。</li>
+</ul>
+</li>
+</ol>
+<p>优化剪枝：排序后若 <code>nums[i] &gt; 0</code>，三数之和不可能为 0，直接结束。</p>
+<ul>
+<li>时间复杂度：<code>O(n²)</code>。</li>
+<li>空间复杂度：<code>O(log n)</code>（排序栈空间，不计输出）。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">threeSum</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    nums.<span class="title function_">sort</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n - <span class="number">2</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 剪枝：最小值已大于 0，不可能凑出 0</span></span><br><span class="line">        <span class="keyword">if</span> (nums[i] &gt; <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">// 去重：跳过相同的第一个数</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; nums[i] === nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> left = i + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">let</span> right = n - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">const</span> sum = nums[i] + nums[left] + nums[right];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (sum === <span class="number">0</span>) &#123;</span><br><span class="line">                res.<span class="title function_">push</span>([nums[i], nums[left], nums[right]]);</span><br><span class="line">                <span class="comment">// 去重：跳过第二个数、第三个数的重复值</span></span><br><span class="line">                <span class="keyword">while</span> (left &lt; right &amp;&amp; nums[left] === nums[left + <span class="number">1</span>]) left++;</span><br><span class="line">                <span class="keyword">while</span> (left &lt; right &amp;&amp; nums[right] === nums[right - <span class="number">1</span>]) right--;</span><br><span class="line">                left++;</span><br><span class="line">                right--;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                left++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">threeSum</span>([-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">4</span>]));</span><br><span class="line"><span class="comment">// [[-1, -1, 2], [-1, 0, 1]]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">threeSum</span>([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])); <span class="comment">// [[0, 0, 0]]</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>扩展到 k-Sum？</strong> 排序后递归地固定 <code>k-2</code> 个数，最后两数用双指针，通用模板时间 <code>O(n^{k-1})</code>。</li>
+<li><strong>最接近的三数之和（LeetCode 16）？</strong> 同样双指针，只是记录过程中 <code>|sum - target|</code> 的最小值。</li>
+<li><strong>去重是最大坑点</strong>：一定要在push之后跳过重复，而不是用 <code>Set</code> 序列化数组去重（后者能过但脏）。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 15 题 | 双指针标杆题</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -965,88 +1072,6 @@
 <h1 id="3-代码"><a href="#3-代码" class="headerlink" title="3. 代码"></a>3. 代码</h1><h2 id="3-1-C"><a href="#3-1-C" class="headerlink" title="3.1. C#"></a>3.1. C#</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     public int val;</span></span><br><span class="line"><span class="comment"> *     public ListNode next;</span></span><br><span class="line"><span class="comment"> *     public ListNode(int val=0, ListNode next=null) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.next = next;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">MergeTwoLists</span>(<span class="params">ListNode l1, ListNode l2</span>)</span> &#123;</span><br><span class="line">    ListNode preHead = <span class="keyword">new</span> ListNode(<span class="number">-1</span>);</span><br><span class="line">    ListNode pre = preHead;</span><br><span class="line">    <span class="keyword">while</span> (l1 != <span class="literal">null</span> &amp;&amp; l2 != <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(l1.val &gt; l2.val)&#123;</span><br><span class="line">            pre.next = l2;</span><br><span class="line">            l2 = l2.next;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            pre.next = l1;</span><br><span class="line">            l1 = l1.next;</span><br><span class="line">        &#125;</span><br><span class="line">        pre = pre.next;</span><br><span class="line">    &#125;</span><br><span class="line">    pre.next = l1==<span class="literal">null</span>? l2:l1;</span><br><span class="line">    <span class="keyword">return</span> preHead.next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="3-2-Javascript"><a href="#3-2-Javascript" class="headerlink" title="3.2. Javascript"></a>3.2. Javascript</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * function ListNode(val, next) &#123;</span></span><br><span class="line"><span class="comment"> *     this.val = (val===undefined ? 0 : val)</span></span><br><span class="line"><span class="comment"> *     this.next = (next===undefined ? null : next)</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> mergeTwoLists = <span class="keyword">function</span>(<span class="params">l1, l2</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(l1 === <span class="literal">null</span>) <span class="keyword">return</span> l2;</span><br><span class="line">    <span class="keyword">if</span>(l2 === <span class="literal">null</span>) <span class="keyword">return</span> l1;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> preHead = <span class="keyword">new</span> <span class="title class_">ListNode</span>();</span><br><span class="line">    <span class="keyword">let</span> last = preHead;</span><br><span class="line">    <span class="keyword">let</span> cur ;</span><br><span class="line">    <span class="keyword">while</span>(l1 !=<span class="literal">null</span> &amp;&amp; l2!= <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(l1.<span class="property">val</span> &gt; l2.<span class="property">val</span>)&#123;</span><br><span class="line">            cur = l2;</span><br><span class="line">            l2 = l2.<span class="property">next</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            cur = l1;</span><br><span class="line">            l1 = l1.<span class="property">next</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        last.<span class="property">next</span> = cur;</span><br><span class="line">        last = cur;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    last.<span class="property">next</span> = l1 === <span class="literal">null</span>? <span class="attr">l2</span>:l1;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> preHead.<span class="property">next</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/17/DotNet-Keyword/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/05/17/DotNet-Keyword/" class="post-title-link" itemprop="url">.NET 词汇表</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-05-17 08:04:22" itemprop="dateCreated datePublished" datetime="2021-05-17T08:04:22+08:00">2021-05-17</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li>CLR：公共语言运行库(Common Language Runtime)</li>
-<li>CIL：通用中间语言（Common Intermediate Language，简称CIL，亦称IL）</li>
-<li>CTS：通用类型系统(Common Type System)</li>
-<li>CLS：公共语言规范 (Common Language Specification)</li>
-<li>FCL：框架类库（Framework Class Library）</li>
-<li>BCL：基础类库（Base Class Library）</li>
-<li>DLL：Dynamic Link Library，动态链接库，也称为元件，CLR与BCL都是由元件构成。</li>
-<li>Assembly： 程序集，由编译器得到，供CLR进一步编译执行中间产物MSIL，一般表现为.DLL,或者.EXE格式，必须依靠CLR才能顺利执行。</li>
-<li>CoreFX： 是经过完全重写的BCL，除了自身就具有跨平台执行的能力之外，其提供的API也不再是统一定义在少数几个单一的程序集中，而是经过有效分组之后被定义在各自独立的模块中。</li>
-<li>PCL: 可移植类库 Portable Class Library (PCL)</li>
-<li>.NET Standard: 我们可以将.NET Standard称为新一代的PCL，PCL提供的可移植能力仅仅限于创建时就确定下来的几种目标平台，但是.NET Standard做得更加彻底，因为它在设计的时候就已经考虑针对三大分支的复用。</li>
-<li>POCO: Plain Old Class Object，也就是最基本的CLR Class</li>
-</ul>
-
       
     </div>
 

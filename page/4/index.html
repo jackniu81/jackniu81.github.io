@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">98</span>
+          <span class="site-state-item-count">99</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,111 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/05/09/Algorithm-Longest-Increasing-Subsequence/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/05/09/Algorithm-Longest-Increasing-Subsequence/" class="post-title-link" itemprop="url">算法 - 最长递增子序列 (LIS)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-05-09 19:24:06" itemprop="dateCreated datePublished" datetime="2024-05-09T19:24:06+08:00">2024-05-09</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个整数数组 <code>nums</code>，取出其中<strong>严格递增</strong>的最长子序列，返回其<strong>长度</strong>。子序列不要求连续，但要保持相对顺序。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [10, 9, 2, 5, 3, 7, 101, 18]</span><br><span class="line">输出: 4  （最长递增子序列为 [2, 3, 7, 101]）</span><br><span class="line"></span><br><span class="line">输入: nums = [0, 1, 0, 3, 2, 3]</span><br><span class="line">输出: 4  （[0, 1, 2, 3]）</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-动态规划-O-n²"><a href="#2-1-动态规划-O-n²" class="headerlink" title="2.1 动态规划 O(n²)"></a>2.1 动态规划 O(n²)</h2><p>定义 <code>dp[i]</code> &#x3D; 以 <code>nums[i]</code> <strong>结尾</strong>的最长递增子序列长度。</p>
+<p>对每个 <code>i</code>，回看所有 <code>j &lt; i</code>：若 <code>nums[j] &lt; nums[i]</code>，则可以把 <code>nums[i]</code> 接在以 <code>j</code> 结尾的序列后面：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dp[i] = max(dp[j] + 1)  对所有 nums[j] &lt; nums[i]</span><br></pre></td></tr></table></figure>
+
+<p>初始每个 <code>dp[i] = 1</code>（自己单独成列）。答案是 <code>max(dp)</code>，注意<strong>不是 <code>dp[n-1]</code></strong>（结尾不一定是全局最长）。</p>
+<h2 id="2-2-贪心-二分-O-n-log-n-（最优）"><a href="#2-2-贪心-二分-O-n-log-n-（最优）" class="headerlink" title="2.2 贪心 + 二分 O(n log n)（最优）"></a>2.2 贪心 + 二分 O(n log n)（最优）</h2><p>维护数组 <code>tails</code>：<code>tails[k]</code> 表示「长度为 k+1 的递增子序列的<strong>最小可能结尾</strong>」。直觉：同样长度下，结尾越小越容易再接更大的数，越有潜力。</p>
+<p>遍历 <code>nums</code> 中每个 <code>x</code>：</p>
+<ul>
+<li>用<strong>二分</strong>在 <code>tails</code> 中找第一个 <code>&gt;= x</code> 的位置：<ul>
+<li>找到 → 用 <code>x</code> 替换它（让这个长度的结尾更小）。</li>
+<li>没找到（<code>x</code> 比所有都大）→ push 到末尾，LIS 长度 +1。</li>
+</ul>
+</li>
+<li><code>tails</code> 的长度即为答案。</li>
+</ul>
+<blockquote>
+<p>注意：<code>tails</code> 本身<strong>不是</strong>某个真实的子序列，只是长度正确；不要试图从中还原路径。</p>
+</blockquote>
+<ul>
+<li>时间复杂度：<code>O(n log n)</code>；空间复杂度：<code>O(n)</code>。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2.1 DP：O(n²)</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">lengthOfLIS</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> ans = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[j] &lt; nums[i]) &#123;</span><br><span class="line">                dp[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ans = <span class="title class_">Math</span>.<span class="title function_">max</span>(ans, dp[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.2 贪心 + 二分：O(n log n)</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">lengthOfLISNLogN</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">tails</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> x <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="comment">// 二分找第一个 &gt;= x 的下标（lowerBound）</span></span><br><span class="line">        <span class="keyword">let</span> lo = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">let</span> hi = tails.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">while</span> (lo &lt; hi) &#123;</span><br><span class="line">            <span class="keyword">const</span> mid = (lo + hi) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (tails[mid] &lt; x) lo = mid + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span> hi = mid;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (lo === tails.<span class="property">length</span>) tails.<span class="title function_">push</span>(x); <span class="comment">// x 最大，延长</span></span><br><span class="line">        <span class="keyword">else</span> tails[lo] = x;                       <span class="comment">// 替换，压小结尾</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tails.<span class="property">length</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">lengthOfLIS</span>([<span class="number">10</span>, <span class="number">9</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">101</span>, <span class="number">18</span>])); <span class="comment">// 4</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">lengthOfLISNLogN</span>([<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span>]));       <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>非严格递增（允许相等）</strong>：把二分的 <code>lowerBound</code> 换成 <code>upperBound</code>（找第一个 <code>&gt; x</code>）。一个字符之差，常考。</li>
+<li><strong>俄罗斯套娃信封（354）</strong>：先按宽升序、宽相同按高降序排序，再对高求 LIS，是 LIS 的二维包装。</li>
+<li><strong>最长递增子序列的个数（673）</strong>：在 DP 里再维护一个 <code>count[]</code> 数组。</li>
+<li><strong>要求输出具体子序列</strong>：只能用 O(n²) DP + <code>parent[]</code> 回溯，贪心二分法无法直接还原（可另存下标）。</li>
+<li>面试写二分要能讲清 <code>lo</code> 的含义（第一个 <code>&gt;= x</code>），否则容易 off-by-one。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 300 题 | DP + 二分双考点</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1081,108 +1186,6 @@
 </ul>
 <blockquote>
 <p>难度：简单 | 前端手写题 Top 10 | 递归基本功</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2023/02/08/Algorithm-Quick-Sort/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/08/Algorithm-Quick-Sort/" class="post-title-link" itemprop="url">算法 - 快速排序 (Quick Sort)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-02-08 09:36:15" itemprop="dateCreated datePublished" datetime="2023-02-08T09:36:15+08:00">2023-02-08</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个整数数组 <code>nums</code>，把它按升序排序。要求手写<strong>快速排序</strong>，并分析平均与最坏时间复杂度、空间复杂度。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [5, 2, 9, 1, 5, 6]</span><br><span class="line">输出: [1, 2, 5, 5, 6, 9]</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>快速排序基于<strong>分治（Divide &amp; Conquer）</strong>：</p>
-<ol>
-<li><strong>选基准 pivot</strong>：从数组里挑一个值（首&#x2F;尾&#x2F;随机&#x2F;三数取中）。</li>
-<li><strong>分区 partition</strong>：重排数组，使「小于 pivot 的在左边、大于的在右边」，并把 pivot 放到它最终应在的位置 <code>p</code>。</li>
-<li><strong>递归</strong>：对左右两个子区间分别快排。</li>
-</ol>
-<p>分区是灵魂。最常用 <strong>Lomuto 方案</strong>：以最后一个元素为 pivot，用指针 <code>i</code> 维护「小于区」的右边界，遍历指针 <code>j</code>，遇到比 pivot 小的就与 <code>i+1</code> 交换。</p>
-<p>复杂度：</p>
-<ul>
-<li>平均时间 <code>O(n log n)</code>，每次大致对半分。</li>
-<li>最坏时间 <code>O(n²)</code>：数组已有序且总选端点为 pivot，退化为链式划分。<strong>随机化 pivot</strong> 可高概率避免。</li>
-<li>空间 <code>O(log n)</code>：递归栈（原地版本），非原地拼接版本为 <code>O(n)</code>。</li>
-<li>快排是<strong>不稳定</strong>排序（相等元素相对顺序可能改变）。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-简洁版（易记，额外空间-O-n-）"><a href="#3-1-简洁版（易记，额外空间-O-n-）" class="headerlink" title="3.1 简洁版（易记，额外空间 O(n)）"></a>3.1 简洁版（易记，额外空间 O(n)）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">quickSortSimple</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">if</span> (nums.<span class="property">length</span> &lt;= <span class="number">1</span>) <span class="keyword">return</span> nums;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> pivot = nums[<span class="title class_">Math</span>.<span class="title function_">floor</span>(nums.<span class="property">length</span> / <span class="number">2</span>)];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">left</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">mid</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">right</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> x <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; pivot) left.<span class="title function_">push</span>(x);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (x === pivot) mid.<span class="title function_">push</span>(x);</span><br><span class="line">        <span class="keyword">else</span> right.<span class="title function_">push</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> [...<span class="title function_">quickSortSimple</span>(left), ...mid, ...<span class="title function_">quickSortSimple</span>(right)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>用 <code>mid</code> 单独收集等于 pivot 的元素，能正确处理重复值且不重复比较，避免部分实现卡在相等上。</p>
-</blockquote>
-<h2 id="3-2-原地版（面试官更想看的）"><a href="#3-2-原地版（面试官更想看的）" class="headerlink" title="3.2 原地版（面试官更想看的）"></a>3.2 原地版（面试官更想看的）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">quickSort</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], lo = <span class="number">0</span>, hi = nums.length - <span class="number">1</span></span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">if</span> (lo &gt;= hi) <span class="keyword">return</span> nums;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> p = <span class="title function_">partition</span>(nums, lo, hi);</span><br><span class="line">    <span class="title function_">quickSort</span>(nums, lo, p - <span class="number">1</span>);</span><br><span class="line">    <span class="title function_">quickSort</span>(nums, p + <span class="number">1</span>, hi);</span><br><span class="line">    <span class="keyword">return</span> nums;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">partition</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">lo</span>: <span class="built_in">number</span>, <span class="attr">hi</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="comment">// 随机化 pivot，避免有序数据退化</span></span><br><span class="line">    <span class="keyword">const</span> rand = lo + <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (hi - lo + <span class="number">1</span>));</span><br><span class="line">    [nums[rand], nums[hi]] = [nums[hi], nums[rand]];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> pivot = nums[hi];</span><br><span class="line">    <span class="keyword">let</span> i = lo; <span class="comment">// i 指向「小于区」的下一个位置</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = lo; j &lt; hi; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums[j] &lt; pivot) &#123;</span><br><span class="line">            [nums[i], nums[j]] = [nums[j], nums[i]];</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [nums[i], nums[hi]] = [nums[hi], nums[i]]; <span class="comment">// pivot 归位</span></span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">quickSort</span>([<span class="number">5</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">6</span>])); <span class="comment">// [1,2,5,5,6,9]</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>为什么快排实践中比归并快？</strong> 原地、缓存友好、常数小；归并需要额外数组。</li>
-<li>** nth element &#x2F; Top-K（快速选择 215 题）**：partition 后只递归一边，平均 <code>O(n)</code> 找第 K 大，是快排的孪生应用。</li>
-<li><strong>三路快排（Dutch National Flag）</strong>：把区间分成 <code>&lt; == &gt;</code> 三段，专门治「大量重复元素」，此时等于段直接不再递归。</li>
-<li>手写必问：pivot 怎么选？最坏什么情况？是否稳定？——三点答上来就是满分。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | 手写排序基本功 | 快速选择衍生高频</p>
 </blockquote>
 
       

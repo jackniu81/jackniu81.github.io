@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="做网站这件事，很多人的认知还停留在十年前。 要么花几百块用凡科、建站之星套模板，页面千篇一律，一眼就是廉价流水线作品；要么找人定制开发，前端后端从头写起，改个新闻都要找程序员改代码，费时又费钱。 尤其是设计公司、品牌工作室这类靠颜值吃饭的行业，模板网站的土味质感，完全撑不起自身的高端定位。 今天给大家聊的 Strapi，就是目前开发者圈公认的「现代建站神器」。它完美解决了传统建站的所有痛点，也是现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="别再用老旧模板建站了！Strapi 才是现代网站的最优解">
+<meta property="og:url" content="https://jackniu81.github.io/2026/09/30/cms-strapi-v5/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="做网站这件事，很多人的认知还停留在十年前。 要么花几百块用凡科、建站之星套模板，页面千篇一律，一眼就是廉价流水线作品；要么找人定制开发，前端后端从头写起，改个新闻都要找程序员改代码，费时又费钱。 尤其是设计公司、品牌工作室这类靠颜值吃饭的行业，模板网站的土味质感，完全撑不起自身的高端定位。 今天给大家聊的 Strapi，就是目前开发者圈公认的「现代建站神器」。它完美解决了传统建站的所有痛点，也是现">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-30T01:11:47.000Z">
+<meta property="article:modified_time" content="2026-10-01T13:34:20.294Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="Strapi">
+<meta property="article:tag" content="node.js">
+<meta property="article:tag" content="建站">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/09/30/cms-strapi-v5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/09/30/cms-strapi-v5/","path":"2026/09/30/cms-strapi-v5/","title":"别再用老旧模板建站了！Strapi 才是现代网站的最优解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>别再用老旧模板建站了！Strapi 才是现代网站的最优解 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Strapi-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">Strapi 到底是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E7%94%A8%E5%86%99%E4%BB%A3%E7%A0%81%EF%BC%8C%E6%99%AE%E9%80%9A%E4%BA%BA%E4%B9%9F%E8%83%BD%E6%90%AD%E4%B8%93%E4%B8%9A%E5%90%8E%E5%8F%B0"><span class="nav-number">2.</span> <span class="nav-text">不用写代码，普通人也能搭专业后台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%93%E5%B1%9E%E7%8E%B0%E4%BB%A3%E6%9E%B6%E6%9E%84%EF%BC%8C%E9%80%9F%E5%BA%A6%E5%92%8C%E9%A2%9C%E5%80%BC%E5%8F%8C%E5%9C%A8%E7%BA%BF"><span class="nav-number">3.</span> <span class="nav-text">专属现代架构，速度和颜值双在线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%BB%E9%87%8F%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%EF%BC%8C%E6%8C%89%E9%9C%80%E5%AE%9A%E5%88%B6%E4%B8%8D%E8%87%83%E8%82%BF"><span class="nav-number">4.</span> <span class="nav-text">轻量二次开发，按需定制不臃肿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E4%B8%AD%E5%B0%8F%E4%BC%81%E4%B8%9A%EF%BC%8C%E6%80%A7%E4%BB%B7%E6%AF%94%E6%8B%89%E6%BB%A1"><span class="nav-number">5.</span> <span class="nav-text">适配中小企业，性价比拉满</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">99</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/30/cms-strapi-v5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="别再用老旧模板建站了！Strapi 才是现代网站的最优解 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          别再用老旧模板建站了！Strapi 才是现代网站的最优解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-30 09:11:47" itemprop="dateCreated datePublished" datetime="2026-09-30T09:11:47+08:00">2026-09-30</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>做网站这件事，很多人的认知还停留在十年前。</p>
+<p>要么花几百块用凡科、建站之星套模板，页面千篇一律，一眼就是廉价流水线作品；要么找人定制开发，前端后端从头写起，改个新闻都要找程序员改代码，费时又费钱。</p>
+<p>尤其是设计公司、品牌工作室这类靠颜值吃饭的行业，模板网站的土味质感，完全撑不起自身的高端定位。</p>
+<p>今天给大家聊的 <strong>Strapi</strong>，就是目前开发者圈公认的「现代建站神器」。它完美解决了传统建站的所有痛点，也是现在高端定制企业官网的主流后台方案。</p>
+<p>很多人听不懂「无头CMS」「前后端解耦」这些专业词，没关系，我用大白话带你彻底搞懂它。</p>
+<h2 id="Strapi-到底是什么？"><a href="#Strapi-到底是什么？" class="headerlink" title="Strapi 到底是什么？"></a>Strapi 到底是什么？</h2><p>简单说，Strapi 就是一个<strong>免费开源、自己掌控、零代码搭后台</strong>的内容管理系统。</p>
+<p>区别于凡科、有赞这类租即用的SaaS建站平台，Strapi 不是成品网站，而是一个「万能后台容器」。你可以把它理解成一个全自动的后端工人：不用手写代码，就能帮你建数据库、存内容、管权限、出接口。</p>
+<p>它最核心的特点就是<strong>无头（Headless）</strong>。通俗解释就是：它只负责管好所有数据内容，不捆绑任何前端页面样式。</p>
+<p>传统CMS是“捆绑一体机”，后台数据和前台页面焊死，想改设计、换风格处处受限。而Strapi 只做后端本职工作，前端页面你想用Next.js、Vue随便选，自由度直接拉满。</p>
+<h2 id="不用写代码，普通人也能搭专业后台"><a href="#不用写代码，普通人也能搭专业后台" class="headerlink" title="不用写代码，普通人也能搭专业后台"></a>不用写代码，普通人也能搭专业后台</h2><p>这是Strapi 最圈粉的优势，也是它吊打传统建站工具的关键。</p>
+<p>以往做企业官网后台，想要实现「项目案例、新闻动态、公司介绍、留言表单」的管理功能，后端开发者要手动建数据表、写增删改查接口、配置权限，至少大半天起步。</p>
+<p>但用Strapi，全程可视化拖拽操作。</p>
+<p>你在后台点点鼠标，就能创建各类内容模型：单页的官网配置、多条目的项目案例、可双语切换的新闻资讯、存储留言的表单库，全部一键生成。</p>
+<p>同时自带完整的权限体系，你可以设置管理员、普通编辑账号，区分谁能改内容、谁只能查看，完美适配企业运营场景。</p>
+<p>更贴心的是原生支持中英双语，不用自己折腾代码适配，做外贸、高端双语官网简直是量身定制。</p>
+<h2 id="专属现代架构，速度和颜值双在线"><a href="#专属现代架构，速度和颜值双在线" class="headerlink" title="专属现代架构，速度和颜值双在线"></a>专属现代架构，速度和颜值双在线</h2><p>现在的高端企业官网，都追求静态渲染、CDN加速、极速打开，这也是模板网站做不到的。</p>
+<p>Strapi 搭配Next.js 是目前行业顶配组合。前端用Next.js 写出高颜值、自适应的静态页面，通过CDN全网加速，打开速度飞快，SEO表现也远超模板站。</p>
+<p>后端交给Strapi 全权托管，所有项目、新闻、文案、图片都存在自己的PostgreSQL数据库里。</p>
+<p>这里必须提一句核心优势：<strong>数据完全归自己</strong>。</p>
+<p>凡科、建站之星这类SaaS平台，数据都存在厂商服务器里，年费一停，网站和数据直接清零。而Strapi 是自托管部署，服务器、数据库、所有内容全权掌控，安全感拉满。</p>
+<h2 id="轻量二次开发，按需定制不臃肿"><a href="#轻量二次开发，按需定制不臃肿" class="headerlink" title="轻量二次开发，按需定制不臃肿"></a>轻量二次开发，按需定制不臃肿</h2><p>很多人担心，零代码工具会功能受限，满足不了定制需求。Strapi 完美避开了这个坑。</p>
+<p>日常90%的建站需求，纯后台配置就能搞定，完全不用写代码。</p>
+<p>遇到特殊需求也不怕，它支持轻量化二次开发。比如表单提交后自动发邮件通知、留言数据统计、自动导出表格、IP防刷限流，简单写几行代码就能实现。</p>
+<p>而且扩展开发不会改动系统内核，后续升级版本、维护迭代都很方便，不会出现越改越乱的情况。</p>
+<h2 id="适配中小企业，性价比拉满"><a href="#适配中小企业，性价比拉满" class="headerlink" title="适配中小企业，性价比拉满"></a>适配中小企业，性价比拉满</h2><p>论成本，Strapi 优势也十分明显。</p>
+<p>开源免费无版权费用，只需要一台便宜的轻量服务器部署即可，不用每年花几千块续费SaaS模板。一次搭建，长期使用，自由迭代改版。</p>
+<p>不管是设计公司、小微企业、个人工作室，想要一个高颜值、可自主管控、支持定制的官网，这套架构都是最优解。</p>
+<p>不用将就千篇一律的模板，不用承担SaaS平台的数据绑架，用最低的成本，拿下高端定制网站的所有能力。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/node-js/" rel="tag"># node.js</a>
+              <a href="/tags/%E5%BB%BA%E7%AB%99/" rel="tag"># 建站</a>
+              <a href="/tags/Strapi/" rel="tag"># Strapi</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/25/Reuse-skill-qoder-trae-codebuddy/" rel="prev" title="别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理">
+                  <i class="fa fa-angle-left"></i> 别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

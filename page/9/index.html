@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">98</span>
+          <span class="site-state-item-count">99</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,214 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/css3-flex-box/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/29/css3-flex-box/" class="post-title-link" itemprop="url">CSS3 Flex Box 弹性盒子、弹性布局</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-01-29 13:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T13:06:00+08:00">2021-01-29</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
+<li><a href="#2-justify-content-%E5%B1%9E%E6%80%A7">2. justify-content 属性</a></li>
+<li><a href="#3-align-items-%E5%B1%9E%E6%80%A7">3. align-items 属性</a></li>
+<li><a href="#4-flex-wrap-%E5%B1%9E%E6%80%A7">4. flex-wrap 属性</a></li>
+<li><a href="#5-align-content-%E5%B1%9E%E6%80%A7">5. align-content 属性</a></li>
+<li><a href="#6-%E5%B1%85%E4%B8%AD">6. 居中</a></li>
+<li><a href="#7-align-self">7. align-self</a></li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8. 总结</a></li>
+</ul>
+<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>Flexible Box翻译过来就是弹性盒子、弹性布局，是css3中新增的一种布局方式，是当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。引入弹性布局模型的目的是提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间。</p>
+<p>弹性盒子由弹性容器(Flex container)和弹性子元素(Flex item)组成。</p>
+<ul>
+<li>弹性容器通过设置 display 属性的值为 flex 或 inline-flex将其定义为弹性容器。</li>
+<li>弹性容器内包含了一个或多个弹性子元素。</li>
+</ul>
+<table>
+    <tbody>
+        <tr>
+            <th style="width:25%">属性</th>
+            <th>描述</th>
+        </tr>
+        <tr>
+            <td>display
+            </td>
+            <td>指定 HTML 元素盒子类型。</td>
+        </tr>
+        <tr>
+            <td>flex-direction</td>
+            <td>指定了弹性容器中子元素的排列方式</td>
+        </tr>
+        <tr>
+            <td>justify-content
+            </td>
+            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td>
+        </tr>
+        <tr>
+            <td>align-items
+            </td>
+            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td>
+        </tr>
+        <tr>
+            <td>flex-wrap
+            </td>
+            <td>设置弹性盒子的子元素超出父容器时是否换行。</td>
+        </tr>
+        <tr>
+            <td>align-content
+            </td>
+            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td>
+        </tr>
+        <tr>
+            <td>flex-flow
+            </td>
+            <td>flex-direction 和 flex-wrap 的简写</td>
+        </tr>
+        <tr>
+            <td>order
+            </td>
+            <td>设置弹性盒子的子元素排列顺序。</td>
+        </tr>
+        <tr>
+            <td>align-self
+            </td>
+            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td>
+        </tr>
+        <tr>
+            <td>flex
+            </td>
+            <td>设置弹性盒子的子元素如何分配空间。</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<h1 id="2-justify-content-属性"><a href="#2-justify-content-属性" class="headerlink" title="2. justify-content 属性"></a>2. justify-content 属性</h1><p>内容对齐（justify-content）属性应用在弹性容器上，把弹性项沿着弹性容器的横轴（主轴线，main axis）对齐。</p>
+<p><code>·justify-content</code> 语法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">justify-content</span>: flex-start | flex-end | center | space-between | space-around</span><br></pre></td></tr></table></figure>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性项目向行头紧挨着填充。这个是默认值。第一个弹性项的main-start外边距边线被放置在该行的main-start边线，而后续弹性项依次平齐摆放。</li>
+<li>flex-end：弹性项目向行尾紧挨着填充。第一个弹性项的main-end外边距边线被放置在该行的main-end边线，而后续弹性项依次平齐摆放。</li>
+<li>center：弹性项目居中紧挨着填充。（如果剩余的自由空间是负的，则弹性项目将在两个方向上同时溢出）。</li>
+<li>space-between：弹性项目平均分布在该行上。如果剩余空间为负或者只有一个弹性项，则该值等同于flex-start。否则，第1个弹性项的外边距和行的main-start边线对齐，而最后1个弹性项的外边距和行的main-end边线对齐，然后剩余的弹性项分布在该行上，相邻项目的间隔相等。</li>
+<li>space-around：弹性项目平均分布在该行上，两边留有一半的间隔空间。如果剩余空间为负或者只有一个弹性项，则该值等同于center。否则，弹性项目沿该行分布，且彼此间隔相等（比如是20px），同时首尾两边和弹性容器之间留有一半的间隔（1&#x2F;2*20px&#x3D;10px）。</li>
+</ul>
+<h1 id="3-align-items-属性"><a href="#3-align-items-属性" class="headerlink" title="3. align-items 属性"></a>3. align-items 属性</h1><p>align-items 设置或检索弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</p>
+<p><code>align-items</code>语法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">align-items</span>: flex-start | flex-end | center | baseline | stretch</span><br></pre></td></tr></table></figure>
+<p>可选项：</p>
+<ul>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min&#x2F;max-width&#x2F;height’属性的限制。</li>
+</ul>
+<h1 id="4-flex-wrap-属性"><a href="#4-flex-wrap-属性" class="headerlink" title="4. flex-wrap 属性"></a>4. flex-wrap 属性</h1><p>flex-wrap 属性用于指定弹性盒子的子元素换行方式。</p>
+<p>语法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">flex-wrap</span>: nowrap|wrap|wrap-reverse|initial|inherit; </span><br></pre></td></tr></table></figure>
+<p>可选项:</p>
+<ul>
+<li>nowrap - 默认，弹性容器为单行。该情况下弹性子项可能会溢出容器。</li>
+<li>wrap - 弹性容器为多行。该情况下弹性子项溢出的部分会被放置到新行，子项内部会发生断行</li>
+<li>wrap-reverse -反转 wrap 排列。</li>
+</ul>
+<h1 id="5-align-content-属性"><a href="#5-align-content-属性" class="headerlink" title="5. align-content 属性"></a>5. align-content 属性</h1><p><code>align-content</code> 属性用于修改 flex-wrap 属性的行为。类似于 align-items, 但它不是设置弹性子元素的对齐，而是设置各个行的对齐。</p>
+<p>语法</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">align-content</span>: flex-start | flex-end | center | space-between | space-around | stretch</span><br></pre></td></tr></table></figure>
+<p>各个值解析:</p>
+<ul>
+<li>stretch - 默认。各行将会伸展以占用剩余的空间。</li>
+<li>flex-start - 各行向弹性盒容器的起始位置堆叠。</li>
+<li>flex-end - 各行向弹性盒容器的结束位置堆叠。</li>
+<li>center -各行向弹性盒容器的中间位置堆叠。</li>
+<li>space-between -各行在弹性盒容器中平均分布。</li>
+<li>space-around - 各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。</li>
+</ul>
+<h1 id="6-居中"><a href="#6-居中" class="headerlink" title="6. 居中"></a>6. 居中</h1><p>使用弹性盒子，居中变的很简单，只想要设置 margin: auto; 可以使得弹性子元素在两上轴方向上完全居中:</p>
+<p>如</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.flex-item</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="7-align-self"><a href="#7-align-self" class="headerlink" title="7. align-self"></a>7. align-self</h1><p>align-self 属性用于设置弹性元素自身在侧轴（纵轴）方向上的对齐方式。</p>
+<p>选项：</p>
+<ul>
+<li>auto：如果’align-self’的值为’auto’，则其计算值为元素的父元素的’align-items’值，如果其没有父元素，则计算值为’stretch’。</li>
+<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
+<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
+<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
+<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
+<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min&#x2F;max-width&#x2F;height’属性的限制。</li>
+</ul>
+<h1 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h1><p>1. </p>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1361,137 +1569,6 @@
 <blockquote>
 <p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
 </blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/11/Angular-Starter-5-Angular-Material/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/11/Angular-Starter-5-Angular-Material/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（5）- 第三方UI库（Angular Material）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-11 12:11:30" itemprop="dateCreated datePublished" datetime="2021-01-11T12:11:30+08:00">2021-01-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E7%AC%AC%E4%B8%89%E6%96%B9ui%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9">1. 第三方UI库的选择</a></li>
-<li><a href="#2-angular-material">2. Angular Material</a><ul>
-<li><a href="#21-%E4%BC%98%E7%BC%BA%E7%82%B9">2.1. 优缺点</a><ul>
-<li><a href="#211-%E4%BC%98%E7%82%B9">2.1.1. 优点</a></li>
-<li><a href="#212-%E7%BC%BA%E7%82%B9">2.1.2. 缺点</a></li>
-</ul>
-</li>
-<li><a href="#22-%E5%BC%95%E5%85%A5%E5%88%B0%E9%A1%B9%E7%9B%AE">2.2. 引入到项目</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: VSCode</li>
-</ul>
-</blockquote>
-<h1 id="1-第三方UI库的选择"><a href="#1-第三方UI库的选择" class="headerlink" title="1. 第三方UI库的选择"></a>1. 第三方UI库的选择</h1><p>Angular开发，除非你只有简单一两个页面，否则引入第三方UI库就是必不可少的。而具体用哪个库，就需要考虑多方面的东西了。比如：</p>
-<ol>
-<li>流行程度</li>
-<li>版本更新情况 （是否能跟进anuglar更新，bug是否及时修复）</li>
-<li>UI风格，是否适用于项目</li>
-<li>入手难易程度</li>
-<li>文档完善程度</li>
-</ol>
-<p>市面上有很多Angular可用的类库，可用根据项目、企业情况去选择。简单列一下可选的UI库。</p>
-<ol>
-<li><code>Angular Material</code>: angular 官方UI库。<a target="_blank" rel="noopener" href="https://material.angular.io/">https://material.angular.io/</a></li>
-<li><code>clarity</code>: 国外的一套比较流行的框架， <a target="_blank" rel="noopener" href="https://clarity.design/%E3%80%82">https://clarity.design/。</a> </li>
-<li><code>NG-ZORRO</code>: 阿里Ant Design的Angular版本。 <a target="_blank" rel="noopener" href="https://ng.ant.design/docs/introduce/en">https://ng.ant.design/docs/introduce/en</a> </li>
-<li><code>Element Angular</code>：国内非常流行的基于Vue的Element，同样有Angular版本。 <a target="_blank" rel="noopener" href="https://element-angular.faas.ele.me/">https://element-angular.faas.ele.me/</a></li>
-<li><code>Kendo UI</code>。很多很强大，只是要收费。<a target="_blank" rel="noopener" href="https://www.telerik.com/kendo-angular-ui">https://www.telerik.com/kendo-angular-ui</a></li>
-</ol>
-<h1 id="2-Angular-Material"><a href="#2-Angular-Material" class="headerlink" title="2. Angular Material"></a>2. Angular Material</h1><h2 id="2-1-优缺点"><a href="#2-1-优缺点" class="headerlink" title="2.1. 优缺点"></a>2.1. 优缺点</h2><h3 id="2-1-1-优点"><a href="#2-1-1-优点" class="headerlink" title="2.1.1. 优点"></a>2.1.1. 优点</h3><ul>
-<li>官方UI组件</li>
-<li>最标准的Material实现</li>
-<li>紧跟Angular核心组件的更新进度</li>
-<li>官方支持与Angular的同步升级</li>
-</ul>
-<h3 id="2-1-2-缺点"><a href="#2-1-2-缺点" class="headerlink" title="2.1.2. 缺点"></a>2.1.2. 缺点</h3><ul>
-<li>组件不像其他框架那么多，但是基本够用</li>
-<li>风格不是特别像国内的框架</li>
-</ul>
-<h2 id="2-2-引入到项目"><a href="#2-2-引入到项目" class="headerlink" title="2.2. 引入到项目"></a>2.2. 引入到项目</h2><ol>
-<li>根目录下执行下面命令：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng add @angular/material</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>import 到页面所属的module，或者是app.module.ts中。</li>
-</ol>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import MatSliderModule</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MatSliderModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/material/slider&#x27;</span>;</span><br><span class="line"></span><br><span class="line">…</span><br><span class="line"><span class="meta">@NgModule</span> (&#123;....</span><br><span class="line">  <span class="attr">imports</span>: [...,</span><br><span class="line">  <span class="title class_">MatSliderModule</span>,</span><br><span class="line">…]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
-<li>第三方组件各有优缺点</li>
-<li>根据公司、项目的需求去选择</li>
-<li>Angular Material升级更容易，官方支持。</li>
-</ol>
 
       
     </div>
