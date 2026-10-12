@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">99</span>
+          <span class="site-state-item-count">100</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,102 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/10/11/Algorithm-House-Robber/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/10/11/Algorithm-House-Robber/" class="post-title-link" itemprop="url">算法 - 打家劫舍</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-10-11 13:45:02" itemprop="dateCreated datePublished" datetime="2026-10-11T13:45:02+08:00">2026-10-11</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是<strong>相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警</strong>。</p>
+<p>给定一个代表每个房屋存放金额的非负整数数组，计算你<strong>不触动警报装置</strong>的情况下，一夜之内能够偷窃到的最高金额。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3,1]</span><br><span class="line">输出: 4</span><br><span class="line">解释: 偷 1 号(=1) 和 3 号(=3) 号房屋，1 + 3 = 4。</span><br><span class="line"></span><br><span class="line">输入: [2,7,9,3,1]</span><br><span class="line">输出: 12</span><br><span class="line">解释: 偷 1、3、5 号房屋，2 + 9 + 1 = 12。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>经典「选&#x2F;不选」线性 DP。</p>
+<h2 id="2-1-状态定义"><a href="#2-1-状态定义" class="headerlink" title="2.1 状态定义"></a>2.1 状态定义</h2><p><code>dp[i]</code> &#x3D; 考虑到第 i 间房时的最高金额。对第 i 间房有两种选择：</p>
+<ul>
+<li><strong>不偷 i</strong>：<code>dp[i] = dp[i-1]</code>（沿用前一间的最优）。</li>
+<li><strong>偷 i</strong>：则不能偷 i-1，<code>dp[i] = dp[i-2] + nums[i]</code>。</li>
+</ul>
+<p>转移：<code>dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code>。</p>
+<ul>
+<li>时间复杂度：O(n)，空间复杂度：O(n) → 优化到 O(1)。</li>
+</ul>
+<h2 id="2-2-滚动变量"><a href="#2-2-滚动变量" class="headerlink" title="2.2 滚动变量"></a>2.2 滚动变量</h2><p>只用两个变量 <code>prev</code>(dp[i-2]) 与 <code>curr</code>(dp[i-1]) 交替更新，无需数组：每步 <code>([prev, curr] = [curr, max(curr, prev + num)])</code>。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-O-1-空间（推荐）"><a href="#3-1-O-1-空间（推荐）" class="headerlink" title="3.1 O(1) 空间（推荐）"></a>3.1 O(1) 空间（推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">rob</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> prev = <span class="number">0</span>; <span class="comment">// dp[i-2]</span></span><br><span class="line">    <span class="keyword">let</span> curr = <span class="number">0</span>; <span class="comment">// dp[i-1]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> num <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">const</span> next = <span class="title class_">Math</span>.<span class="title function_">max</span>(curr, prev + num);</span><br><span class="line">        prev = curr;</span><br><span class="line">        curr = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">rob</span>([<span class="number">2</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">3</span>, <span class="number">1</span>])); <span class="comment">// 12</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-显式-DP-数组（便于理解）"><a href="#3-2-显式-DP-数组（便于理解）" class="headerlink" title="3.2 显式 DP 数组（便于理解）"></a>3.2 显式 DP 数组（便于理解）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">robDP</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (n === <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line">    dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(dp[i - <span class="number">1</span>], (dp[i - <span class="number">2</span>] ?? <span class="number">0</span>) + nums[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>进阶 II：环形街道（House Robber II）</strong>——首尾相邻不能同时偷，拆成「不偷首」和「不偷尾」两个线性子问题取 max，<code>max(rob(nums[0..n-2]), rob(nums[1..n-1]))</code>。</li>
+<li><strong>进阶 III：树形 DP（House Robber III）</strong>——在二叉树上做「偷当前根 vs 偷左右子」的决策，后序 DFS 返回 <code>[不偷, 偷]</code> 一对值，是树形 DP 模板。</li>
+<li>本题是「最大子序列和 &#x2F; 股票买卖」等同族「每步二选一」DP 的原型，掌握状态定义 + 滚动优化即可通吃。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 198 | 线性 DP</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1142,104 +1238,6 @@
 </ul>
 <blockquote>
 <p>难度：简单 | LeetCode 415 | 字符串&#x2F;模拟</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/02/07/Algorithm-First-Missing-Positive/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/07/Algorithm-First-Missing-Positive/" class="post-title-link" itemprop="url">算法 - 缺失的第一个正数</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-02-07 14:39:55" itemprop="dateCreated datePublished" datetime="2026-02-07T14:39:55+08:00">2026-02-07</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个未排序的整数数组 <code>nums</code>，请你找出其中没有出现的最小的正整数。</p>
-<p>要求：时间复杂度 O(n)，并且只使用常数级别额外空间。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [3,4,-1,1]</span><br><span class="line">输出: 2</span><br><span class="line">解释: 缺失的最小正整数是 2。</span><br><span class="line"></span><br><span class="line">输入: nums = [7,8,9,11,12]</span><br><span class="line">输出: 1</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>关键结论：长度为 n 的数组，答案一定落在 <code>[1, n + 1]</code> 区间内（最理想情况数组恰好是 1..n，则答案为 n+1）。</p>
-<h2 id="2-1-原地哈希（把-i-放到位置-i-1）"><a href="#2-1-原地哈希（把-i-放到位置-i-1）" class="headerlink" title="2.1 原地哈希（把 i 放到位置 i-1）"></a>2.1 原地哈希（把 i 放到位置 i-1）</h2><p>目标：让数组「归位」——值 <code>x</code>（1 ≤ x ≤ n）应放到下标 <code>x - 1</code>。</p>
-<ul>
-<li><p>遍历数组，对每个 <code>nums[i]</code>，只要它在 <code>[1, n]</code> 且「它该去的位置上的值还不等于它」，就交换过去（循环，因为换回来的值可能也需归位）。</p>
-</li>
-<li><p>归位后再扫一遍，第一个 <code>nums[i] !== i + 1</code> 的位置，<code>i + 1</code> 就是缺失的最小正数。</p>
-</li>
-<li><p>时间复杂度：O(n)（每个元素最多被交换归位一次），空间复杂度：O(1)。</p>
-</li>
-</ul>
-<h2 id="2-2-为什么不能用哈希集合？"><a href="#2-2-为什么不能用哈希集合？" class="headerlink" title="2.2 为什么不能用哈希集合？"></a>2.2 为什么不能用哈希集合？</h2><p>可以用 Set 存所有正数再从 1 开始找，满足 O(n) 时间，但空间 O(n)，不满足「常数空间」的进阶要求——面试先讲 Set 思路，再优化到原地哈希。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-原地哈希（交换法）"><a href="#3-1-原地哈希（交换法）" class="headerlink" title="3.1 原地哈希（交换法）"></a>3.1 原地哈希（交换法）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">firstMissingPositive</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="comment">// 只要 nums[i] 在 [1,n] 且没归位，就把它换到 nums[i]-1 处</span></span><br><span class="line">        <span class="keyword">while</span> (</span><br><span class="line">            nums[i] &gt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">            nums[i] &lt;= n &amp;&amp;</span><br><span class="line">            nums[nums[i] - <span class="number">1</span>] !== nums[i]</span><br><span class="line">        ) &#123;</span><br><span class="line">            <span class="keyword">const</span> target = nums[i] - <span class="number">1</span>;</span><br><span class="line">            [nums[i], nums[target]] = [nums[target], nums[i]];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums[i] !== i + <span class="number">1</span>) <span class="keyword">return</span> i + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> n + <span class="number">1</span>; <span class="comment">// 1..n 全在，答案为 n+1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">firstMissingPositive</span>([<span class="number">3</span>, <span class="number">4</span>, -<span class="number">1</span>, <span class="number">1</span>])); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>坑点：解构交换 <code>[nums[i], nums[target]] = [...]</code> 中 <code>target</code> 必须先算好；若写成 <code>nums[nums[i]-1]</code> 内联，赋值左侧求值顺序会导致索引错乱。</p>
-</blockquote>
-<h2 id="3-2-标记法（取负，等价思路）"><a href="#3-2-标记法（取负，等价思路）" class="headerlink" title="3.2 标记法（取负，等价思路）"></a>3.2 标记法（取负，等价思路）</h2><p>先把所有 ≤0 的数替换成 n+1（移出有效区），再对每个值的绝对值 <code>v</code>（1≤v≤n）把 <code>nums[v-1]</code> 取负作为「出现过」标记，最后第一个非负下标 +1 即答案。同样 O(n) 时间 O(1) 空间。</p>
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>原地哈希 vs 排序</strong>：排序 O(n log n)，原地哈希利用「答案范围有界」把空间压到 O(1)，是本题精髓。</li>
-<li>变形题「数组中重复的数字 &#x2F; 找丢失的数字」都能复用「下标当哈希表」这一模式。</li>
-<li>追问：为什么 while 而不是 if？因为一次交换换来的新值可能也需要归位，必须持续下沉。</li>
-</ul>
-<blockquote>
-<p>难度：困难 | LeetCode 41 | 原地哈希经典</p>
 </blockquote>
 
       

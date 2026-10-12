@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 题目你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。 给定一个代表每个房屋存放金额的非负整数数组，计算你不触动警报装置的情况下，一夜之内能够偷窃到的最高金额。 示例: 1234567输入: [1,2,3,1]输出: 4解释: 偷 1 号(&#x3D;1) 和 3 号(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 - 打家劫舍">
+<meta property="og:url" content="https://jackniu81.github.io/2026/10/11/Algorithm-House-Robber/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="1. 题目你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。 给定一个代表每个房屋存放金额的非负整数数组，计算你不触动警报装置的情况下，一夜之内能够偷窃到的最高金额。 示例: 1234567输入: [1,2,3,1]输出: 4解释: 偷 1 号(&#x3D;1) 和 3 号(">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-10-11T05:45:02.000Z">
+<meta property="article:modified_time" content="2026-09-24T03:15:28.779Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="next.js, React, node.js,dotnet core, .Net, C#">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/10/11/Algorithm-House-Robber/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/10/11/Algorithm-House-Robber/","path":"2026/10/11/Algorithm-House-Robber/","title":"算法 - 打家劫舍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>算法 - 打家劫舍 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1. 题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E7%8A%B6%E6%80%81%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 状态定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%BB%9A%E5%8A%A8%E5%8F%98%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 滚动变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-TypeScript-%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">3. TypeScript 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-O-1-%E7%A9%BA%E9%97%B4%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 O(1) 空间（推荐）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%98%BE%E5%BC%8F-DP-%E6%95%B0%E7%BB%84%EF%BC%88%E4%BE%BF%E4%BA%8E%E7%90%86%E8%A7%A3%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 显式 DP 数组（便于理解）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E9%9D%A2%E8%AF%95%E5%BB%B6%E4%BC%B8"><span class="nav-number">4.</span> <span class="nav-text">4. 面试延伸</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/10/11/Algorithm-House-Robber/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="算法 - 打家劫舍 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法 - 打家劫舍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-10-11 13:45:02" itemprop="dateCreated datePublished" datetime="2026-10-11T13:45:02+08:00">2026-10-11</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是<strong>相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警</strong>。</p>
+<p>给定一个代表每个房屋存放金额的非负整数数组，计算你<strong>不触动警报装置</strong>的情况下，一夜之内能够偷窃到的最高金额。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3,1]</span><br><span class="line">输出: 4</span><br><span class="line">解释: 偷 1 号(=1) 和 3 号(=3) 号房屋，1 + 3 = 4。</span><br><span class="line"></span><br><span class="line">输入: [2,7,9,3,1]</span><br><span class="line">输出: 12</span><br><span class="line">解释: 偷 1、3、5 号房屋，2 + 9 + 1 = 12。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>经典「选&#x2F;不选」线性 DP。</p>
+<h2 id="2-1-状态定义"><a href="#2-1-状态定义" class="headerlink" title="2.1 状态定义"></a>2.1 状态定义</h2><p><code>dp[i]</code> &#x3D; 考虑到第 i 间房时的最高金额。对第 i 间房有两种选择：</p>
+<ul>
+<li><strong>不偷 i</strong>：<code>dp[i] = dp[i-1]</code>（沿用前一间的最优）。</li>
+<li><strong>偷 i</strong>：则不能偷 i-1，<code>dp[i] = dp[i-2] + nums[i]</code>。</li>
+</ul>
+<p>转移：<code>dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code>。</p>
+<ul>
+<li>时间复杂度：O(n)，空间复杂度：O(n) → 优化到 O(1)。</li>
+</ul>
+<h2 id="2-2-滚动变量"><a href="#2-2-滚动变量" class="headerlink" title="2.2 滚动变量"></a>2.2 滚动变量</h2><p>只用两个变量 <code>prev</code>(dp[i-2]) 与 <code>curr</code>(dp[i-1]) 交替更新，无需数组：每步 <code>([prev, curr] = [curr, max(curr, prev + num)])</code>。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-O-1-空间（推荐）"><a href="#3-1-O-1-空间（推荐）" class="headerlink" title="3.1 O(1) 空间（推荐）"></a>3.1 O(1) 空间（推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">rob</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> prev = <span class="number">0</span>; <span class="comment">// dp[i-2]</span></span><br><span class="line">    <span class="keyword">let</span> curr = <span class="number">0</span>; <span class="comment">// dp[i-1]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> num <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">const</span> next = <span class="title class_">Math</span>.<span class="title function_">max</span>(curr, prev + num);</span><br><span class="line">        prev = curr;</span><br><span class="line">        curr = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">rob</span>([<span class="number">2</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">3</span>, <span class="number">1</span>])); <span class="comment">// 12</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-显式-DP-数组（便于理解）"><a href="#3-2-显式-DP-数组（便于理解）" class="headerlink" title="3.2 显式 DP 数组（便于理解）"></a>3.2 显式 DP 数组（便于理解）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">robDP</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (n === <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line">    dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(dp[i - <span class="number">1</span>], (dp[i - <span class="number">2</span>] ?? <span class="number">0</span>) + nums[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>进阶 II：环形街道（House Robber II）</strong>——首尾相邻不能同时偷，拆成「不偷首」和「不偷尾」两个线性子问题取 max，<code>max(rob(nums[0..n-2]), rob(nums[1..n-1]))</code>。</li>
+<li><strong>进阶 III：树形 DP（House Robber III）</strong>——在二叉树上做「偷当前根 vs 偷左右子」的决策，后序 DFS 返回 <code>[不偷, 偷]</code> 一对值，是树形 DP 模板。</li>
+<li>本题是「最大子序列和 &#x2F; 股票买卖」等同族「每步二选一」DP 的原型，掌握状态定义 + 滚动优化即可通吃。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 198 | 线性 DP</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/30/cms-strapi-v5/" rel="prev" title="别再用老旧模板建站了！Strapi 才是现代网站的最优解">
+                  <i class="fa fa-angle-left"></i> 别再用老旧模板建站了！Strapi 才是现代网站的最优解
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
