@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python</title>
+<title>Python 面试题（从简单到难）</title>
 <style>
   :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
           --code-bg:#161b22; --accent:#58a6ff; }
@@ -40,9 +40,11 @@
 <body>
 <div class="wrap">
   <a class="top-link" href="index.html">← 返回索引</a>
-<h1>Python</h1>
+<h1>Python 面试题（从简单到难）</h1>
 <blockquote>
-<p>目录：Python 基础 → Python 进阶 → Python 高级与工程 → Python 高频补充 → Django 基础 → Django 进阶 → Django 工程化/源码/性能调优</p>
+<p><strong>难度分级</strong>：🟢 初级（基础语法/概念）→ 🟡 中级（进阶特性/原理）→ 🔴 高级（并发/工程/源码/性能）</p>
+<p><strong>目录</strong>：Python 基础 🟢 → Python 进阶 🟡 → Python 高级与工程 🔴 → Python 高频补充 🟡🔴 → Django 基础 🟢 → Django 进阶 🟡 → Django 工程化/性能 🔴</p>
+<p>共 126 题，按从简单到难排列，适合 p1 级别系统复习。</p>
 </blockquote>
 <h2>Python 基础</h2>
 <h3>1. 什么是 Python？</h3>
@@ -577,6 +579,383 @@ QuerySet 是惰性加载：创建时不会执行 SQL，只有迭代、切片、<
 <li>多线程修改同一个模型数据会出现并发脏读/丢失更新，需要事务 + <code>select_for_update()</code> 或 <code>F()</code> 表达式做数据库侧原子更新；</li>
 <li>在子线程里执行 ORM 后忘记 <code>connection.close()</code> 会残留连接。</li>
 </ul>
+<hr>
+<h2>Python 补充题（按难度排列，102-126）</h2>
+<blockquote>
+<p>以下为高频补充题，覆盖前文未涉及的核心考点，按 🟢初级 → 🟡中级 → 🔴高级 排列。</p>
+</blockquote>
+<h3>🟢 102. Python 的优缺点是什么？</h3>
+<p><strong>答案：</strong>
+优点：语法简洁易读、开发效率高、生态丰富（AI/数据/Web/自动化）、跨平台、社区活跃、胶水语言（可调用 C/C++）。
+缺点：执行速度比编译型语言慢（GIL 限制多线程并行）、移动端和游戏开发较弱、运行时错误较多（动态类型）、打包体积大。</p>
+<h3>🟢 103. Python 是动态类型还是静态类型？强类型还是弱类型？</h3>
+<p><strong>答案：</strong>
+Python 是<strong>动态强类型</strong>语言。</p>
+<ul>
+<li>动态类型：变量类型在运行时确定，可随时赋值不同类型（<code>a = 1; a = &quot;x&quot;</code>）；</li>
+<li>强类型：类型检查严格，不同类型不会隐式转换（<code>&quot;1&quot; + 1</code> 会报错，而 JS/PHP 会隐式转换）。
+对比：C/Java 是静态强类型，JS 是动态弱类型。</li>
+</ul>
+<h3>🟢 104. Python 的作用域 LEGB 规则是什么？</h3>
+<p><strong>答案：</strong>
+变量查找顺序：<strong>L</strong>ocal（局部）→ <strong>E</strong>nclosing（嵌套函数外层）→ <strong>G</strong>lobal（全局）→ <strong>B</strong>uilt-in（内置）。</p>
+<pre><code class="language-python">x = &quot;global&quot;
+def outer():
+    x = &quot;enclosing&quot;
+    def inner():
+        x = &quot;local&quot;  # 先找 local，找到就用
+        print(x)
+    inner()
+</code></pre>
+<p>在函数内赋值默认创建局部变量，要修改外层需 <code>global</code>（改全局）或 <code>nonlocal</code>（改嵌套层）。</p>
+<h3>🟢 105. <code>global</code> 和 <code>nonlocal</code> 的区别是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>global</code>：声明变量来自<strong>全局作用域</strong>，用于在函数内修改全局变量；</li>
+<li><code>nonlocal</code>：声明变量来自<strong>最近的外层嵌套函数作用域</strong>（不能是全局），用于闭包中修改外层函数变量。</li>
+</ul>
+<pre><code class="language-python">def outer():
+    count = 0
+    def inner():
+        nonlocal count  # 引用 outer 的 count
+        count += 1
+    return inner
+</code></pre>
+<h3>🟢 106. 函数默认参数用可变对象有什么陷阱？</h3>
+<p><strong>答案：</strong>
+默认参数在函数<strong>定义时</strong>只计算一次，之后所有调用共享同一个对象。如果默认参数是可变对象（list/dict），多次调用会累积修改：</p>
+<pre><code class="language-python">def append(item, lst=[]):
+    lst.append(item)
+    return lst
+append(1)  # [1]
+append(2)  # [1, 2]  ← 不是预期的 [2]
+</code></pre>
+<p>正确做法：用 <code>None</code> 作默认值，函数内创建新对象：</p>
+<pre><code class="language-python">def append(item, lst=None):
+    if lst is None:
+        lst = []
+    lst.append(item)
+    return lst
+</code></pre>
+<h3>🟢 107. Python 函数参数传递是传值还是传引用？</h3>
+<p><strong>答案：</strong>
+都不是，Python 是<strong>传对象引用</strong>（Pass by Object Reference）。</p>
+<ul>
+<li>传入不可变对象（int/str/tuple）：函数内修改会创建新对象，外部不受影响（表现像传值）；</li>
+<li>传入可变对象（list/dict）：函数内修改对象内容，外部也会变化（表现像传引用）；</li>
+<li>但如果在函数内重新赋值变量（<code>lst = [1,2]</code>），只是让局部变量指向新对象，不影响外部。</li>
+</ul>
+<h3>🟢 108. 字典（dict）的底层实现是什么？</h3>
+<p><strong>答案：</strong>
+Python 3.6+ 的 dict 底层是<strong>哈希表 + 稀疏索引数组 + 紧凑数组</strong>：</p>
+<ol>
+<li>对 key 做 <code>hash()</code> 得到哈希值；</li>
+<li>哈希值对索引数组取模定位槽位；</li>
+<li>索引数组存实际数据在紧凑数组中的位置；</li>
+<li>紧凑数组按插入顺序存储 <code>(hash, key, value)</code>。
+这样既保持了 O(1) 查找，又实现了插入有序（3.7+ 正式特性），还节省了内存。哈希冲突用<strong>开放寻址法</strong>（探测下一个槽位）解决。</li>
+</ol>
+<h3>🟢 109. list、dict、set 常见操作的时间复杂度？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>list</th>
+<th>dict</th>
+<th>set</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>访问（按索引/key）</td>
+<td>O(1)</td>
+<td>O(1) 平均</td>
+<td>O(1) 平均</td>
+</tr>
+<tr>
+<td>插入末尾</td>
+<td>O(1) 均摊</td>
+<td>O(1) 平均</td>
+<td>O(1) 平均</td>
+</tr>
+<tr>
+<td>插入中间/头部</td>
+<td>O(n)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>删除</td>
+<td>O(n)（后续元素前移）</td>
+<td>O(1) 平均</td>
+<td>O(1) 平均</td>
+</tr>
+<tr>
+<td>查找（in）</td>
+<td>O(n)</td>
+<td>O(1) 平均</td>
+<td>O(1) 平均</td>
+</tr>
+<tr>
+<td>排序</td>
+<td>O(n log n)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>dict/set 的 O(1) 是平均情况，最坏 O(n)（哈希冲突严重时）。</p>
+<h3>🟢 110. Python 3.7+ 的 dict 为什么是有序的？</h3>
+<p><strong>答案：</strong>
+Python 3.6 重新实现了 dict 底层（PyPy 的方案），用&quot;稀疏索引 + 紧凑数组&quot;结构，紧凑数组按插入顺序存储，因此天然保持插入顺序。3.7 将其定为语言规范。有序 dict 节省了约 25% 内存，且迭代、<code>popitem</code> 等操作都按插入顺序。注意：有序指插入顺序，不是排序。</p>
+<h3>🟢 111. 类变量和实例变量的区别是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>类变量：定义在类中、方法外，所有实例共享一份，通过 <code>类名.变量</code> 或 <code>实例.变量</code> 访问；</li>
+<li>实例变量：在 <code>__init__</code> 中通过 <code>self.xxx</code> 定义，每个实例独立一份。</li>
+</ul>
+<pre><code class="language-python">class A:
+    count = 0  # 类变量
+    def __init__(self):
+        self.name = &quot;&quot;  # 实例变量
+</code></pre>
+<p>坑：通过实例修改类变量（<code>a.count = 1</code>）实际是创建了同名实例变量，不影响类变量和其他实例；要改类变量须用 <code>A.count = 1</code>。</p>
+<h3>🟡 112. Python 私有属性的名称改写（name mangling）是什么？</h3>
+<p><strong>答案：</strong>
+Python 没有真正的私有，双下划线开头的属性（如 <code>__name</code>）会被解释器自动改名为 <code>_类名__name</code>，防止子类意外覆盖。这只是一种约定和保护机制，并非强制隐藏——外部仍可通过 <code>obj._类名__name</code> 访问。单下划线开头（<code>_name</code>）只是约定&quot;内部使用&quot;，不做任何改写。</p>
+<h3>🟡 113. <code>super()</code> 在多继承中是如何工作的？</h3>
+<p><strong>答案：</strong>
+<code>super()</code> 不是简单调用&quot;父类&quot;，而是按 <strong>MRO（方法解析顺序）</strong> 调用下一个类。MRO 由 C3 线性化算法确定，保证每个类只调用一次、遵循继承拓扑顺序。</p>
+<pre><code class="language-python">class A:
+    def hello(self): print(&quot;A&quot;)
+class B(A):
+    def hello(self):
+        super().hello()  # 按 MRO 调用下一个，不一定是 A
+        print(&quot;B&quot;)
+</code></pre>
+<p>可用 <code>类名.__mro__</code> 查看解析顺序。多继承中 <code>super()</code> 配合 MRO 实现了协作式多继承（如 <code>__init__</code> 链）。</p>
+<h3>🟡 114. 多个装饰器叠加时的执行顺序是什么？</h3>
+<p><strong>答案：</strong>
+装饰器是自底向上应用（包装），自顶向下执行（调用时）。</p>
+<pre><code class="language-python">@decorator1
+@decorator2
+def func():
+    pass
+# 等价于 func = decorator1(decorator2(func))
+</code></pre>
+<p>调用 <code>func()</code> 时：先进入 decorator1 的 wrapper → 再进入 decorator2 的 wrapper → 执行原函数 → 从 decorator2 返回 → 从 decorator1 返回。即&quot;先装饰的后执行，后装饰的先执行&quot;。</p>
+<h3>🟡 115. 上下文管理器有哪两种实现方式？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li><strong>类实现</strong>：定义 <code>__enter__</code>（进入 with 时执行，返回值赋给 as 变量）和 <code>__exit__</code>（退出时执行，可捕获异常，返回 True 抑制异常）；</li>
+<li><strong>生成器 + <code>@contextmanager</code></strong>：用 <code>yield</code> 分割进入和退出逻辑：</li>
+</ol>
+<pre><code class="language-python">from contextlib import contextmanager
+@contextmanager
+def my_open(path):
+    f = open(path)
+    try:
+        yield f       # yield 之前 = __enter__，之后 = __exit__
+    finally:
+        f.close()
+</code></pre>
+<p>第二种更简洁，适合简单场景。</p>
+<h3>🟡 116. 描述符（Descriptor）的实际应用场景有哪些？</h3>
+<p><strong>答案：</strong>
+描述符是实现了 <code>__get__</code>/<code>__set__</code>/<code>__delete__</code> 的类，用于控制属性访问。实际应用：</p>
+<ul>
+<li><code>@property</code> 底层就是描述符；</li>
+<li><code>@classmethod</code>、<code>@staticmethod</code> 是描述符；</li>
+<li>ORM 框架（Django/SQLAlchemy）的字段类型（<code>IntegerField</code>）用描述符实现类型校验和数据库映射；</li>
+<li>自定义校验、懒加载、类型转换。</li>
+</ul>
+<pre><code class="language-python">class Positive:
+    def __get__(self, obj, cls): return obj.__dict__.get(self.name, 0)
+    def __set__(self, obj, val):
+        if val &lt; 0: raise ValueError
+        obj.__dict__[self.name] = val
+</code></pre>
+<h3>🟡 117. Python 垃圾回收的完整机制是什么？</h3>
+<p><strong>答案：</strong>
+Python GC 由三部分组成：</p>
+<ol>
+<li><strong>引用计数</strong>（主）：每个对象维护引用计数，归零时立即释放。实时性好，但无法处理循环引用；</li>
+<li><strong>标记-清除</strong>（辅助）：从根对象出发标记可达对象，清除不可达对象，专门解决循环引用；</li>
+<li><strong>分代回收</strong>（优化）：对象按存活时间分 0/1/2 三代，新对象在 0 代，存活则升代；代数越高回收频率越低，基于&quot;对象越老越不容易死&quot;的假设。
+可用 <code>gc</code> 模块手动控制（<code>gc.collect()</code>、<code>gc.disable()</code>）。</li>
+</ol>
+<h3>🟡 118. 循环引用是如何被回收的？</h3>
+<p><strong>答案：</strong>
+引用计数无法回收循环引用（A→B→A，计数永远不为 0）。分代 GC 的<strong>标记-清除</strong>阶段处理：</p>
+<ol>
+<li>从根对象（全局变量、栈上引用）出发，标记所有可达对象；</li>
+<li>未被标记的对象（包括循环引用组）被判定为垃圾，执行回收。
+但如果循环引用中的对象定义了 <code>__del__</code>（终结器），GC 无法安全判断调用顺序，会将其放入 <code>gc.garbage</code> 列表而不自动回收，造成内存泄漏——这是 <code>__del__</code> 的经典坑。</li>
+</ol>
+<h3>🟡 119. 进程、线程、协程的区别和适用场景？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>进程</th>
+<th>线程</th>
+<th>协程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>资源</td>
+<td>独立内存空间，开销大</td>
+<td>共享进程内存，开销小</td>
+<td>用户态，开销极小</td>
+</tr>
+<tr>
+<td>切换</td>
+<td>操作系统调度，开销大</td>
+<td>操作系统调度，开销中</td>
+<td>程序自行调度，开销极小</td>
+</tr>
+<tr>
+<td>并行</td>
+<td>可利用多核</td>
+<td>受 GIL 限制，CPU 密集不并行</td>
+<td>单线程内并发，不并行</td>
+</tr>
+<tr>
+<td>通信</td>
+<td>IPC（队列/管道/共享内存）</td>
+<td>共享内存，需锁</td>
+<td>直接共享，无需锁</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>CPU 密集、需隔离</td>
+<td>IO 密集、轻量并发</td>
+<td>高并发 IO、异步框架</td>
+</tr>
+</tbody></table>
+<p>Python 中：CPU 密集用多进程，IO 密集用多线程或协程（asyncio）。</p>
+<h3>🔴 120. 如何绕过 GIL？</h3>
+<p><strong>答案：</strong>
+GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 Python 字节码。绕过方式：</p>
+<ol>
+<li><strong>多进程</strong>（<code>multiprocessing</code>）：每个进程有独立 GIL，可真正并行，最常用；</li>
+<li><strong>C 扩展</strong>：在 C/C++ 代码中释放 GIL（<code>Py_BEGIN_ALLOW_THREADS</code>），如 NumPy、Pandas 内部计算；</li>
+<li><strong>ctypes/cffi</strong>：调用原生 C 库时可释放 GIL；</li>
+<li><strong>换解释器</strong>：Jython（JVM）、IronPython（.NET）无 GIL，但生态和兼容性差；</li>
+<li><strong>协程</strong>：不绕过 GIL，但在 IO 等待时切换，提高单线程并发度。
+注意：IO 密集型任务不需要绕过 GIL，因为等待 IO 时 GIL 会自动释放。</li>
+</ol>
+<h3>🔴 121. 死锁产生的条件和避免方法？</h3>
+<p><strong>答案：</strong>
+死锁四要素（同时满足才会死锁）：</p>
+<ol>
+<li><strong>互斥</strong>：资源不能共享，只能一个线程持有；</li>
+<li><strong>占有且等待</strong>：持有资源的同时等待其他资源；</li>
+<li><strong>不可抢占</strong>：资源不能被强行剥夺，只能主动释放；</li>
+<li><strong>循环等待</strong>：线程间形成环形等待链。</li>
+</ol>
+<p>避免方法：</p>
+<ul>
+<li>按固定顺序获取锁（破坏循环等待）；</li>
+<li>用 <code>try_acquire</code> + 超时（破坏占有且等待）；</li>
+<li>尽量用一把锁，减少嵌套加锁；</li>
+<li>用 <code>queue.Queue</code> 等线程安全容器替代手工锁；</li>
+<li>用 <code>concurrent.futures</code> 等高层抽象。</li>
+</ul>
+<h3>🔴 122. asyncio 事件循环的工作原理是什么？</h3>
+<p><strong>答案：</strong>
+事件循环（Event Loop）是 asyncio 的核心，单线程内调度所有协程：</p>
+<ol>
+<li>维护一个<strong>任务队列</strong>（就绪的协程/回调）；</li>
+<li>循环取出任务执行，遇到 <code>await</code> 时挂起当前协程，控制权交回事件循环；</li>
+<li>被等待的 IO 操作完成后（通过 selector 监听 fd 就绪），对应协程重新加入就绪队列；</li>
+<li>如此循环，直到所有任务完成。
+关键：协程在 <code>await</code> 处让出 CPU，而非被操作系统抢占，因此是<strong>协作式并发</strong>。事件循环用 <code>selectors</code>（epoll/kqueue）实现 IO 多路复用，单线程可处理大量并发连接。</li>
+</ol>
+<h3>🔴 123. multiprocessing 的 spawn/fork/forkserver 启动方式有什么区别？</h3>
+<p><strong>答案：</strong>
+<code>multiprocessing</code> 创建子进程有三种方式（<code>set_start_method</code>）：</p>
+<ul>
+<li><strong>fork</strong>（Linux 默认）：复制父进程全部内存（写时复制），启动快，可继承父进程对象；但多线程下 fork 不安全（只复制调用线程，其他线程状态不一致），且与某些库（如 macOS 上的 CoreFoundation）不兼容；</li>
+<li><strong>spawn</strong>（Windows/macOS 默认）：启动全新 Python 解释器，只传递必要参数，安全但启动慢、需 pickle 序列化；</li>
+<li><strong>forkserver</strong>：启动一个单线程服务进程，后续 fork 都从它复制，避免多线程 fork 问题，兼顾安全和速度。
+选择：Linux 多线程环境推荐 <code>spawn</code> 或 <code>forkserver</code>，避免 <code>fork</code> 的线程安全问题。</li>
+</ul>
+<h3>🔴 124. Python 3.11 / 3.12 / 3.13 有哪些重要新特性？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>3.11</strong>：速度提升约 10-60%（Faster CPython 项目）；更精准的错误提示（错误位置箭头）；<code>ExceptionGroup</code>/<code>except*</code> 批量异常；<code>tomllib</code> 标准库解析 TOML；<code>Self</code> 类型、<code>LiteralString</code>。</li>
+<li><strong>3.12</strong>：支持在 f-string 中嵌套同种引号和多行表达式；类型参数语法 <code>def f[T](x: T)</code>（PEP 695）；<code>override</code> 装饰器；进一步性能优化；支持 Linux perf 性能分析。</li>
+<li><strong>3.13</strong>：实验性<strong>移除 GIL</strong>（自由线程构建，<code>--disable-gil</code>）；JIT 编译器实验性支持；改进错误消息；<code>asyncio</code> 性能提升；更多模块支持自由线程。
+3.13 的无 GIL 是 Python 历史上的重大变革，目前是实验阶段，预计 3.14/3.15 逐步成熟。</li>
+</ul>
+<h3>🔴 125. 如何手写一个 LRU 缓存？</h3>
+<p><strong>答案：</strong>
+LRU（最近最少使用）缓存：容量满时淘汰最久未使用的项。用<strong>双向链表 + 哈希表</strong>实现 O(1) 读写：</p>
+<pre><code class="language-python">class Node:
+    def __init__(self, key=0, val=0):
+        self.key, self.val = key, val
+        self.prev = self.next = None
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = {}          # key -&gt; Node
+        self.head = Node()       # 哨兵头（最近使用）
+        self.tail = Node()       # 哨兵尾（最久未使用）
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def _remove(self, node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+
+    def _add_to_head(self, node):
+        node.next = self.head.next
+        node.prev = self.head
+        self.head.next.prev = node
+        self.head.next = node
+
+    def get(self, key):
+        if key not in self.cache: return -1
+        node = self.cache[key]
+        self._remove(node)
+        self._add_to_head(node)   # 访问后移到头部
+        return node.val
+
+    def put(self, key, value):
+        if key in self.cache:
+            node = self.cache[key]
+            node.val = value
+            self._remove(node)
+            self._add_to_head(node)
+        else:
+            if len(self.cache) &gt;= self.cap:
+                lru = self.tail.prev  # 淘汰尾部
+                self._remove(lru)
+                del self.cache[lru.key]
+            node = Node(key, value)
+            self.cache[key] = node
+            self._add_to_head(node)
+</code></pre>
+<p>也可用 <code>collections.OrderedDict</code> 的 <code>move_to_end</code> 和 <code>popitem(last=False)</code> 快速实现。</p>
+<h3>🔴 126. Python 性能优化的常见手段有哪些？</h3>
+<p><strong>答案：</strong>
+按投入产出比排序：</p>
+<ol>
+<li><strong>选对数据结构</strong>：集合/字典查找 O(1)，避免列表 <code>in</code> 的 O(n)；用 <code>deque</code> 做双端操作；</li>
+<li><strong>避免重复计算</strong>：<code>lru_cache</code> 缓存、预计算、局部变量缓存（<code>local = global_func</code> 减少查找）；</li>
+<li><strong>用内置函数和推导式</strong>：<code>sum</code>/<code>map</code>/<code>filter</code>/列表推导比手写循环快（底层 C 实现）；</li>
+<li><strong>减少函数调用和属性访问</strong>：循环内避免频繁 <code>.</code> 访问和函数调用；</li>
+<li><strong>批量 IO</strong>：批量读写数据库/文件，避免逐条操作；</li>
+<li><strong>并发</strong>：IO 密集用 asyncio/线程池，CPU 密集用多进程；</li>
+<li><strong>向量化</strong>：数值计算用 NumPy/Pandas 代替纯 Python 循环；</li>
+<li><strong>扩展</strong>：热点用 Cython、C 扩展、Rust（PyO3）重写；</li>
+<li><strong>先测量</strong>：用 <code>cProfile</code>、<code>py-spy</code>、<code>scalene</code> 定位瓶颈，不要盲目优化。</li>
+</ol>
+<hr>
+<h2>总结</h2>
+<p>本套题共 126 道，覆盖 Python 基础语法、进阶特性、高级并发与工程、高频考点，以及 Django 全栈方向。按 🟢初级 → 🟡中级 → 🔴高级 从简单到难排列，适合 p1 级别 Python 面试的系统复习与查漏补缺。</p>
 </div>
 </body>
 </html>

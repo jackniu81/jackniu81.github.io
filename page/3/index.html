@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,110 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/05/30/Algorithm-Call-Apply-Bind/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/05/30/Algorithm-Call-Apply-Bind/" class="post-title-link" itemprop="url">算法 - 手写 call / apply / bind</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-05-30 20:18:05" itemprop="dateCreated datePublished" datetime="2025-05-30T20:18:05+08:00">2025-05-30</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>在 <code>Function.prototype</code> 上实现三个方法（挂到自定义名字以免污染）：</p>
+<ul>
+<li><code>myCall(thisArg, ...args)</code>：以 <code>thisArg</code> 为 <code>this</code>、逐个传参，<strong>立即调用</strong>函数。</li>
+<li><code>myApply(thisArg, argsArray)</code>：同上，但参数以<strong>数组</strong>形式传入。</li>
+<li><code>myBind(thisArg, ...partialArgs)</code>：返回一个<strong>新函数</strong>，绑定 <code>this</code> 并可<strong>柯里化</strong>预置部分参数；新函数被 <code>new</code> 时，<code>this</code> 绑定失效（指向新建实例），但预置参数仍生效。</li>
+</ul>
+<p>要求处理 <code>thisArg</code> 为原始值（应装箱&#x2F;或在全局环境忽略）、<code>null</code>&#x2F;<code>undefined</code>（指向全局）等边界。</p>
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>三者核心都是一句话：<strong>让函数以某个对象作为 <code>this</code> 来执行</strong>。技巧是把函数临时设为该对象的属性，通过 <code>obj.fn()</code> 调用，此时 <code>this</code> 自然指向 <code>obj</code>，调用完删除临时属性。</p>
+<h2 id="2-1-call-apply"><a href="#2-1-call-apply" class="headerlink" title="2.1 call &#x2F; apply"></a>2.1 call &#x2F; apply</h2><ol>
+<li><code>thisArg</code> 为 <code>null/undefined</code> 时用全局对象（浏览器 <code>globalThis</code>）。</li>
+<li>把原始值 <code>Object(thisArg)</code> 装箱成对象（严格模式下 call 传入原始值 this 仍是原始值，这里按非严格近似）。</li>
+<li>用唯一的 <code>Symbol</code> 作为临时属性名，避免与已有 key 冲突。</li>
+<li>调用后 <code>delete</code> 掉临时属性。</li>
+<li><code>apply</code> 只是把数组参数展开传入。</li>
+</ol>
+<h2 id="2-2-bind"><a href="#2-2-bind" class="headerlink" title="2.2 bind"></a>2.2 bind</h2><p>bind 不立即执行，而是返回一个 <code>boundFunction</code>：</p>
+<ul>
+<li><p>普通调用时，<code>this</code> 固定为绑定对象，且把预置参数和调用时参数拼接（柯里化）。</p>
+</li>
+<li><p><strong>用 <code>new</code> 调用 boundFunction 时</strong>，ES 规范要求忽略绑定的 <code>this</code>，创建全新实例，但预置参数仍前置。实现关键：<code>new bind(Fn)</code> 时原型链上 <code>boundFunction.prototype === Fn.prototype</code>，因此判断 <code>this instanceof boundFunction</code> 来决定用 <code>thisArg</code> 还是新建对象。</p>
+</li>
+<li><p>时间复杂度：调用时才确定，均 <code>O(参数)</code>。</p>
+</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// myCall</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">myCall</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Function</span>, <span class="attr">thisArg</span>?: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> ctx = thisArg == <span class="literal">null</span> ? globalThis : <span class="title class_">Object</span>(thisArg);</span><br><span class="line">    <span class="keyword">const</span> key = <span class="title class_">Symbol</span>(<span class="string">&quot;fn&quot;</span>);</span><br><span class="line">    (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key] = <span class="variable language_">this</span>; <span class="comment">// this 即调用者函数</span></span><br><span class="line">    <span class="keyword">const</span> result = (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key](...args);</span><br><span class="line">    <span class="title function_">delete</span> (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// myApply</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">myApply</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Function</span>, <span class="attr">thisArg</span>?: <span class="built_in">any</span>, <span class="attr">argsList</span>?: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> ctx = thisArg == <span class="literal">null</span> ? globalThis : <span class="title class_">Object</span>(thisArg);</span><br><span class="line">    <span class="keyword">const</span> key = <span class="title class_">Symbol</span>(<span class="string">&quot;fn&quot;</span>);</span><br><span class="line">    (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key] = <span class="variable language_">this</span>;</span><br><span class="line">    <span class="keyword">const</span> result = argsList</span><br><span class="line">        ? (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key](...argsList)</span><br><span class="line">        : (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key]();</span><br><span class="line">    <span class="title function_">delete</span> (ctx <span class="keyword">as</span> <span class="built_in">any</span>)[key];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// myBind</span></span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">myBind</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Function</span>, <span class="attr">thisArg</span>?: <span class="built_in">any</span>, ...<span class="attr">boundArgs</span>: <span class="built_in">any</span>[]</span>): <span class="title class_">Function</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> original = <span class="variable language_">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用一个空函数承接原型链，保证 new bound() 能拿到 original.prototype</span></span><br><span class="line">    <span class="keyword">const</span> bound = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">callArgs</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> allArgs = [...boundArgs, ...callArgs]; <span class="comment">// 柯里化：预置参数在前</span></span><br><span class="line">        <span class="comment">// 被 new 调用时 this 是新建实例，忽略绑定的 thisArg</span></span><br><span class="line">        <span class="keyword">const</span> wasNew = <span class="keyword">new</span>.<span class="property">target</span> !== <span class="literal">undefined</span>;</span><br><span class="line">        <span class="keyword">if</span> (wasNew) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">new</span> (original <span class="keyword">as</span> <span class="built_in">any</span>)(...allArgs);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> original.<span class="title function_">apply</span>(thisArg, allArgs);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (original.<span class="property"><span class="keyword">prototype</span></span>) &#123;</span><br><span class="line">        bound.<span class="property"><span class="keyword">prototype</span></span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(original.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bound;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">name</span>: <span class="string">&quot;jack&quot;</span> &#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">greet</span>(<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, <span class="attr">a</span>: <span class="built_in">string</span>, <span class="attr">b</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;a&#125;</span> <span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span> <span class="subst">$&#123;b&#125;</span>`</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(greet.<span class="title function_">myCall</span>(obj, <span class="string">&quot;hi&quot;</span>, <span class="string">&quot;!&quot;</span>));          <span class="comment">// &quot;hi jack !&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(greet.<span class="title function_">myApply</span>(obj, [<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;?&quot;</span>]));    <span class="comment">// &quot;hello jack ?&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> boundGreet = greet.<span class="title function_">myBind</span>(obj, <span class="string">&quot;hey&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">boundGreet</span>(<span class="string">&quot;there&quot;</span>));                   <span class="comment">// &quot;hey jack there&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>bind 的 <code>new</code> 语义</strong>是本题最大的区分点：很多人 bind 只会 <code>apply</code>，答不出 <code>new.target</code> 判断与 <code>boundFunction.prototype</code> 的桥接，原型链一断 <code>instanceof</code> 就错。</li>
+<li><strong>Symbol 临时属性名</strong>：用 <code>Symbol()</code> 或 <code>fn_${Date.now()}</code> 避免覆盖对象上同名方法，比直接写 <code>ctx.fn</code> 严谨。</li>
+<li><strong>严格模式差异</strong>：严格模式下 <code>call(1)</code> 的 <code>this</code> 就是 <code>1</code> 而非装箱对象，<code>Object(thisArg)</code> 是近似；能点出这条即显深度。</li>
+<li>三者关系：<code>call</code>&#x2F;<code>apply</code> 只传参方式不同、都立即执行；<code>bind</code> 返回新函数且能柯里化，底层常复用 <code>apply</code>。</li>
+<li>关联：<code>instanceof</code> 手写见下一篇 [手写 instanceof]，同属「理解原型与 this」的必考组合。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 手写原型三件套 | this 绑定机制</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1058,109 +1162,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/07/03/Algorithm-Binary-Search-Boundaries/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/07/03/Algorithm-Binary-Search-Boundaries/" class="post-title-link" itemprop="url">算法 - 二分查找（含左右边界版本）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-07-03 09:11:47" itemprop="dateCreated datePublished" datetime="2024-07-03T09:11:47+08:00">2024-07-03</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个升序整数数组 <code>nums</code> 和目标值 <code>target</code>：</p>
-<ol>
-<li><strong>基础版</strong>：若存在 <code>target</code> 返回其下标，否则返回 <code>-1</code>。</li>
-<li><strong>边界版</strong>：找出 <code>target</code> 在数组中的<strong>起始和结束位置</strong>（存在重复时）；不存在返回 <code>[-1, -1]</code>。要求 <code>O(log n)</code>。</li>
-</ol>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nums = [5,7,7,8,8,10], target = 8</span><br><span class="line">基础版: 返回 3（任一 8 的下标）</span><br><span class="line">边界版: 返回 [3, 4]</span><br><span class="line"></span><br><span class="line">nums = [5,7,7,8,8,10], target = 6</span><br><span class="line">返回 [-1, -1]</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>二分最坑的是<strong>边界与死循环</strong>。用「左闭右闭 <code>[left, right]</code>」这一套统一写法最省心。</p>
-<h2 id="2-1-基础版"><a href="#2-1-基础版" class="headerlink" title="2.1 基础版"></a>2.1 基础版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">while (left &lt;= right) &#123;        // 区间非空的条件</span><br><span class="line">    mid = left + ((right-left) &gt;&gt; 1)  // 防两数相加溢出</span><br><span class="line">    if (nums[mid] === target) return mid</span><br><span class="line">    else if (nums[mid] &lt; target) left = mid + 1</span><br><span class="line">    else right = mid - 1</span><br><span class="line">&#125;</span><br><span class="line">return -1</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-2-边界版-两次「找第一个-第一个-」"><a href="#2-2-边界版-两次「找第一个-第一个-」" class="headerlink" title="2.2 边界版 &#x3D; 两次「找第一个 &gt;&#x3D; &#x2F; 第一个 &gt;」"></a>2.2 边界版 &#x3D; 两次「找第一个 &gt;&#x3D; &#x2F; 第一个 &gt;」</h2><p>关键抽象成两个函数：</p>
-<ul>
-<li><code>lowerBound(target)</code>：第一个 <code>&gt;= target</code> 的下标（左边界）。</li>
-<li><code>upperBound(target)</code>：第一个 <code>&gt; target</code> 的下标（右边界的下一位）。</li>
-</ul>
-<p>则 target 的区间是 <code>[lowerBound, upperBound - 1]</code>；若两者相等说明 target 不存在。</p>
-<p><strong>核心口诀</strong>：收缩时只要 <code>nums[mid] &gt;= target</code> 就 <code>right = mid</code>（否则 <code>left = mid + 1</code>），最终 <code>left</code> 落在第一个满足条件的位置。注意此时 <code>while (left &lt; right)</code> 且 <code>right = mid</code>（不减一），保持「找最左」不变量。</p>
-<ul>
-<li>时间复杂度：<code>O(log n)</code>；空间 <code>O(1)</code>。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基础版：精确匹配</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">search</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = nums.<span class="property">length</span> - <span class="number">1</span>; <span class="comment">// 左闭右闭</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="keyword">const</span> mid = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] === target) <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) left = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> right = mid - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找第一个 &gt;= target 的下标（可能返回 nums.length）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">lowerBound</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = nums.<span class="property">length</span>; <span class="comment">// 左闭右开 [left, right)</span></span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="keyword">const</span> mid = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) left = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> right = mid; <span class="comment">// mid 可能是答案，保留</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找第一个 &gt; target 的下标</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">upperBound</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="keyword">const</span> mid = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt;= target) left = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> right = mid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">searchRange</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">const</span> lo = <span class="title function_">lowerBound</span>(nums, target);</span><br><span class="line">    <span class="comment">// lo 越界或值不等，说明不存在</span></span><br><span class="line">    <span class="keyword">if</span> (lo === nums.<span class="property">length</span> || nums[lo] !== target) <span class="keyword">return</span> [-<span class="number">1</span>, -<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">return</span> [lo, <span class="title function_">upperBound</span>(nums, target) - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">searchRange</span>([<span class="number">5</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">10</span>], <span class="number">8</span>)); <span class="comment">// [3, 4]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">searchRange</span>([<span class="number">5</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">10</span>], <span class="number">6</span>)); <span class="comment">// [-1, -1]</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>两套写法别混用</strong>：<code>left&lt;=right / right=mid-1</code>（闭合）与 <code>left&lt;right / right=mid</code>（半开）各有约定，全程保持一致，中途换风格必死循环或漏元素。</li>
-<li><strong>旋转数组找 target（33&#x2F;153）</strong>：判断哪半边有序再决定收缩方向，是二分的最高频变体。</li>
-<li><strong>求平方根 &#x2F; 二分答案</strong>：把「在答案空间里二分」讲出来（找第一个满足条件的 x），体现你懂二分的本质是<strong>单调性</strong>。</li>
-<li>溢出：JS 的 number 是双精度浮点，<code>&gt;&gt;1</code> 会把值转成 32 位整数，<code>mid</code> 溢出风险比 C++ 小，但写 <code>left + (right-left)/2</code> 仍是好习惯。</li>
-<li>记住 <code>lowerBound === upperBound</code> 即「target 出现次数为 0」，<code>upperBound - lowerBound</code> 就是<strong>频次</strong>，一行搞定计数。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 34&#x2F;704 题 | 边界处理基本功</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

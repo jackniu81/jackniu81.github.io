@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,101 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/10/23/Algorithm-Longest-Substring-Without-Repeating-Characters/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/10/23/Algorithm-Longest-Substring-Without-Repeating-Characters/" class="post-title-link" itemprop="url">算法 - 无重复字符的最长子串</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-10-23 15:42:08" itemprop="dateCreated datePublished" datetime="2021-10-23T15:42:08+08:00">2021-10-23</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个字符串 <code>s</code>，请你找出其中<strong>不含有重复字符</strong>的<strong>最长子串</strong>的长度。</p>
+<p>注意「子串」是连续的，区别于「子序列」。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;abcabcbb&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 无重复字符的最长子串是 &quot;abc&quot;，长度为 3。</span><br><span class="line"></span><br><span class="line">输入: s = &quot;bbbbb&quot;</span><br><span class="line">输出: 1</span><br><span class="line"></span><br><span class="line">输入: s = &quot;pwwkew&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 最长子串是 &quot;wke&quot;，注意 &quot;pwke&quot; 是子序列不是子串。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>标准的<strong>滑动窗口</strong>问题。维护一个窗口 <code>[left, right]</code>，保证窗口内始终无重复字符。</p>
+<p>用 <code>Map&lt;字符, 最近一次出现的下标&gt;</code> 记录每个字符最后出现的位置。右指针 <code>right</code> 逐个字符向右扩展：</p>
+<ul>
+<li>如果 <code>s[right]</code> 之前出现过，且其位置在窗口内（<code>&gt;= left</code>），说明加入它会重复，于是把 <code>left</code> 直接跳到「重复字符上次位置 + 1」，一步到位，无需逐个收缩。</li>
+<li>更新 <code>s[right]</code> 的位置为 <code>right</code>。</li>
+<li>每一步用 <code>right - left + 1</code> 更新最大长度。</li>
+</ul>
+<p>关键技巧：<code>left</code> 只能右移不能回退，所以要取 <code>Math.max(left, lastPos + 1)</code>，避免像 <code>abba</code> 这类用例把 <code>left</code> 拉回左边。</p>
+<ul>
+<li>时间复杂度：<code>O(n)</code>，每个字符最多被访问一次。</li>
+<li>空间复杂度：<code>O(min(n, 字符集大小))</code>。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">lengthOfLongestSubstring</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> lastPos = <span class="keyword">new</span> <span class="title class_">Map</span>&lt;<span class="built_in">string</span>, <span class="built_in">number</span>&gt;();</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> maxLen = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> right = <span class="number">0</span>; right &lt; s.<span class="property">length</span>; right++) &#123;</span><br><span class="line">        <span class="keyword">const</span> ch = s[right];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 字符在窗口内出现过，left 跳到重复处之后</span></span><br><span class="line">        <span class="keyword">if</span> (lastPos.<span class="title function_">has</span>(ch)) &#123;</span><br><span class="line">            left = <span class="title class_">Math</span>.<span class="title function_">max</span>(left, lastPos.<span class="title function_">get</span>(ch)! + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        lastPos.<span class="title function_">set</span>(ch, right);</span><br><span class="line">        maxLen = <span class="title class_">Math</span>.<span class="title function_">max</span>(maxLen, right - left + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> maxLen;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">lengthOfLongestSubstring</span>(<span class="string">&quot;abcabcbb&quot;</span>)); <span class="comment">// 3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">lengthOfLongestSubstring</span>(<span class="string">&quot;bbbbb&quot;</span>));    <span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">lengthOfLongestSubstring</span>(<span class="string">&quot;pwwkew&quot;</span>));   <span class="comment">// 3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">lengthOfLongestSubstring</span>(<span class="string">&quot;abba&quot;</span>));     <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>不用 Map 的写法？</strong> 字符集有限（如 ASCII）时用长度为 128 的数组更快；也可用 <code>Set</code> 记录窗口内字符，重复时循环删除 <code>s[left++]</code> 直到不重复。</li>
+<li><strong>变形题：至多包含两个不同字符的最长子串（LeetCode 340）、最小覆盖子串（76）</strong> 都是滑动窗口的进阶，套路一致：右扩满足条件、左缩优化答案。</li>
+<li>记住模板：<code>for right</code> + <code>while 违反条件 then left++</code>，能覆盖绝大多数子串类题目。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 3 题 | 滑动窗口入门必刷</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1012,94 +1107,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/20/Web-Cache-etag/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/05/20/Web-Cache-etag/" class="post-title-link" itemprop="url">浏览器（Cache）的缓存逻辑（HTTP条件请求）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-05-20 13:29:30" itemprop="dateCreated datePublished" datetime="2021-05-20T13:29:30+08:00">2021-05-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43288714/article/details/117074624">浏览器（Cache）的缓存逻辑（HTTP条件请求）</a></p>
-</blockquote>
-<h1 id="1-浏览器缓存"><a href="#1-浏览器缓存" class="headerlink" title="1. 浏览器缓存"></a>1. 浏览器缓存</h1><p>一般来说，一个GET请求在目标资源存在的情况下会返回一个状态码为“200 OK”的响应，目标资源的内容将直接存放在响应报文的主体部分。如果资源的内容不会轻易改变，那么我们希望客户端（如浏览器）在本地缓存获取的资源。对于针对同一资源的后续请求来说，如果资源内容不曾改变，那么资源内容就无须再次作为网络荷载予以响应。</p>
-<p>确定资源是否发生变化可以采用两种策略。第一种就是让资源的提供者记录最后一次更新资源的时间，资源的荷载内容（Payload）和这个时间戳将一并作为响应提供给作为请求发送者的客户端。客户端在缓存资源内容时也会保存这个时间戳。等到下次需要针对同一资源发送请求时，它会将这个时间戳一并发送出去，此时服务端就可以根据这个时间戳判断目标资源在上次响应之后是否被修改过，然后做出针对性的响应。第二种是针对资源的内容生成一个“标签”，标签的一致性体现了资源内容的一致性，在HTTP规范中将这个标签称为ETag（Entity Tag）。</p>
-<h1 id="2-If-Modified-Since与If-None-Match"><a href="#2-If-Modified-Since与If-None-Match" class="headerlink" title="2. If-Modified-Since与If-None-Match"></a>2. If-Modified-Since与If-None-Match</h1><p>对于HTTP请求来说，缓存资源携带的最后修改时间戳和ETag分别保存在名为If-Modified-Since与If-None-Match的报头中。报头名称体现的含义如下：只有目标资源在指定的时间之后被修改（If-Modified-Since）或者目前资源的状态与提供的ETag不匹配（If-None-Match）的情况下才会返回资源的荷载内容。</p>
-<p>以Chrome为例， 当服务端接收到针对某个资源的GET请求时，如果请求不具有上述这两个报头或者根据这两个报头携带的信息判断资源已经发生改变，那么它返回一个状态码为“<code>200 OK</code>”的响应。除了将资源内容作为响应主体，如果能够获取到该资源最后一次修改的时间（一般精确到秒），那么格式化的时间戳还会通过一个名为<code>Last-Modified</code>的响应报头提供给客户端。针对资源自身内容生成的标签，则会以ETag响应报头的形式提供给客户端。反之，如果做出相反的判断，服务端就会返回一个状态码为“<code>304 Not Modified</code>”的响应，这个响应不包含主体内容。一般来说，这样的响应也会携带<code>Last-Modified</code>报头和ETag报头。</p>
-<h1 id="3-Chrome"><a href="#3-Chrome" class="headerlink" title="3. Chrome"></a>3. Chrome</h1><p><img src="https://jackniu81.github.io/img/chrome_cache.png" alt="Network in Chroem"><br>从Chrome的Network请求中可以看到，</p>
-<ol>
-<li>发送的请求的Header中包含了<code>If-Modified-Since</code>与<code>If-None-Match</code>；</li>
-<li>返回的内容，同样会包含<code>Modified-Since</code>与<code>ETag</code>；</li>
-<li>对于没有内容更改的请求，Status Code为<code>304 - Not Modified</code></li>
-<li>对于304返回，<code>Modified-Since</code>与<code>ETag</code> 必然与请求的<code>If-Modified-Since</code>与<code>If-None-Match</code>分别一致；</li>
-</ol>
-<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
-<li>客户端（浏览器）如果有缓存内容，发送请求时会在Header中包含<code>If-Modified-Since</code>与<code>If-None-Match</code></li>
-<li>当服务器内容没有修改时，服务器端会发送304给客户端，这是body内容可能为空；</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

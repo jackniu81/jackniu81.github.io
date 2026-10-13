@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,188 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/16/dotnet-core-interview-questions-and-answers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/04/16/dotnet-core-interview-questions-and-answers/" class="post-title-link" itemprop="url">2021 .NET/dotnet Core/C# 面试题及参考答案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-16 14:49:34" itemprop="dateCreated datePublished" datetime="2021-04-16T14:49:34+08:00">2021-04-16</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-NET-dotnet-core-NET-framework-的关系"><a href="#1-NET-dotnet-core-NET-framework-的关系" class="headerlink" title="1. NET&#x2F;dotnet core&#x2F;.NET framework 的关系?"></a>1. NET&#x2F;dotnet core&#x2F;.NET framework 的关系?</h1><p>先看 2 张图<br>最新的.NET 5 的示意图<br><img src="https://img-blog.csdnimg.cn/20210415135448910.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI4ODcxNA==,size_16,color_FFFFFF,t_70#pic_center" alt=".NET 5"><br>之前的（dotnet core3.x 时代）的示意图<br><img src="https://img-blog.csdnimg.cn/20210415135513293.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI4ODcxNA==,size_16,color_FFFFFF,t_70#pic_center" alt="dotnet core .3.1 "><br>总结如下：</p>
+<ol>
+<li>2016 年开始，分开了.NET Framework 和.NET Core，后者开源、面向跨平台应用；</li>
+<li>2019 年，.NET Framework 和.NET Core 被.NET5 完成了统一。未来只会有一个.NET，可以支持 Windows、Linux、macOS、iOS、Android、tvOS、watchOS 和 WebAssembly，等等</li>
+<li>.Net standard library 是之前.NET Framework 和.NET Core 公共的部分；</li>
+</ol>
+<h1 id="2-corefx-coreclr-都是什么？"><a href="#2-corefx-coreclr-都是什么？" class="headerlink" title="2. corefx, coreclr 都是什么？"></a>2. corefx, coreclr 都是什么？</h1><p>dotnet 组织包含了.NET Core 的核心代码, 包括 coreclr 和 corefx 等.</p>
+<ol>
+<li>coreclr 是运行时代码,</li>
+<li>corefx 是各种基础类库的代码. CoreFX 主要包含数个公共库，例如 System.Collections, System.IO, System.Xml 等。</li>
+</ol>
+<h1 id="3-asp-net-core"><a href="#3-asp-net-core" class="headerlink" title="3. asp.net core"></a>3. asp.net core</h1><h2 id="3-1-Kestrel"><a href="#3-1-Kestrel" class="headerlink" title="3.1. Kestrel"></a>3.1. Kestrel</h2><p>Kestrel 是 asp.net core 引入的跨平台的网络服务器，是默认配置。可以没有 iis, apache 和 nginx 就可以单独运行。<br>Kestrel 基于 libuv 实现；（node.js 也是基于 libuv）</p>
+<h2 id="3-2-asp-net-core-主要的特性"><a href="#3-2-asp-net-core-主要的特性" class="headerlink" title="3.2. asp.net core 主要的特性"></a>3.2. asp.net core 主要的特性</h2><ol>
+<li>依赖注入。</li>
+<li>日志系统架构。</li>
+<li>引入了一个跨平台的网络服务器，kestrel。可以没有 iis, apache 和 nginx 就可以单独运行。</li>
+<li>可以使用命令行创建应用。</li>
+<li>使用 AppSettings.json 来配置工程。</li>
+<li>使用 start up 来注册服务。</li>
+<li>更好的支持异步编程。</li>
+<li>支持 web socket 和 signal IR。</li>
+<li>对于跨网站的请求的预防和保护机制。</li>
+</ol>
+<h2 id="3-3-startup-class-的作用？"><a href="#3-3-startup-class-的作用？" class="headerlink" title="3.3. startup class 的作用？"></a>3.3. startup class 的作用？</h2><p>Startup class 是 dot net core 应用的入口。所有的 dot net core 应用必须有这个 class。这个类用来配置应用。这个类的调用是在 program main 函数里面进行配置的。类的名字可以自己定义。</p>
+<h2 id="3-4-Startup-class-的-config-service-方法有什么作用"><a href="#3-4-Startup-class-的-config-service-方法有什么作用" class="headerlink" title="3.4. Startup class 的 config service 方法有什么作用?"></a>3.4. Startup class 的 config service 方法有什么作用?</h2><p>在这个方法里我们可以添加一些 service 进入依赖注入容器。</p>
+<h2 id="3-5-startup-class-的-configure-方法有什么作用？"><a href="#3-5-startup-class-的-configure-方法有什么作用？" class="headerlink" title="3.5. startup class 的 configure 方法有什么作用？"></a>3.5. startup class 的 configure 方法有什么作用？</h2><p>这个方法来定义整个应用如何响应 HTTP 请求。它有几个比较重要的参数，application builder，Hosting environment, logo factory， 在这里我们可以配置一些中间件用来处理路径，验证和 session 等等。</p>
+<h2 id="3-6-什么是-meta-packages？"><a href="#3-6-什么是-meta-packages？" class="headerlink" title="3.6. 什么是 meta packages？"></a>3.6. 什么是 meta packages？</h2><p>Meta packages 是指包含所有 ASP dot net code 依赖的一个包。叫做 Microsoft.AspNetCore.All</p>
+<h2 id="3-7-什么是中间件？"><a href="#3-7-什么是中间件？" class="headerlink" title="3.7. 什么是中间件？"></a>3.7. 什么是中间件？</h2><p>中间件在这里是指注入到应用中处理请求和响应的组件。asp.net core 的中间件模型也是洋葱模型（和 node.js d Koa 一样）</p>
+<h2 id="3-8-application-builder-的-use-和-run-方法有什么区别？"><a href="#3-8-application-builder-的-use-和-run-方法有什么区别？" class="headerlink" title="3.8. application builder 的 use 和 run 方法有什么区别？"></a>3.8. application builder 的 use 和 run 方法有什么区别？</h2><p>这两个方法都在 start up class 的 configure 方法里面调用。都是用来向应用请求管道里面添加中间件的。Use 方法可以调用下一个中间件的添加，而 run 不会。</p>
+<h2 id="3-9-dot-net-core-管道（pipeline）里面的-map-拓展有什么作用"><a href="#3-9-dot-net-core-管道（pipeline）里面的-map-拓展有什么作用" class="headerlink" title="3.9. dot net core 管道（pipeline）里面的 map 拓展有什么作用?"></a>3.9. dot net core 管道（pipeline）里面的 map 拓展有什么作用?</h2><p>可以针对不同的路径添加不同的中间件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public <span class="type">void</span> <span class="title function_">Configure</span><span class="params">(IApplicationBuilder app)</span></span><br><span class="line">&#123;</span><br><span class="line">  app.Map(<span class="string">&quot;/path1&quot;</span>, Middleware1);</span><br><span class="line">  app.Map(<span class="string">&quot;/path2&quot;</span>, Middleware2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-10-如何在-dot-net-core-中激活-session-功能"><a href="#3-10-如何在-dot-net-core-中激活-session-功能" class="headerlink" title="3.10. 如何在 dot net core 中激活 session 功能?"></a>3.10. 如何在 dot net core 中激活 session 功能?</h2><ol>
+<li>首先要添加 session 包.</li>
+<li>其次要在 config service 方法里面添加 session。</li>
+<li>然后又在 configure 方法里面调用 usesession。</li>
+</ol>
+<h2 id="3-11-如何在-controller-中注入-service"><a href="#3-11-如何在-controller-中注入-service" class="headerlink" title="3.11. 如何在 controller 中注入 service?"></a>3.11. 如何在 controller 中注入 service?</h2><p>依赖注入的思想：</p>
+<ol>
+<li>在 config services 方法中配置这个 service。</li>
+<li>在 controller 的构造函数中，添加这个依赖注入。</li>
+</ol>
+<h2 id="3-12-dot-net-core-里面的路径是如何处理的？"><a href="#3-12-dot-net-core-里面的路径是如何处理的？" class="headerlink" title="3.12. dot net core 里面的路径是如何处理的？"></a>3.12. dot net core 里面的路径是如何处理的？</h2><p>路径处理是用来为进入的请求寻找处理函数的机制。所有的路径在函数运行开始时进行注册。</p>
+<p>主要有两种路径处理方式:</p>
+<ol>
+<li>常规路径处理就是用 MapRoute 的方式设定调用路径</li>
+<li>属性路径处理是指在调用函数的上方设定一个路径属性。</li>
+</ol>
+<h2 id="3-13-application-builder-的-use-和-run-方法有什么区别？"><a href="#3-13-application-builder-的-use-和-run-方法有什么区别？" class="headerlink" title="3.13. application builder 的 use 和 run 方法有什么区别？"></a>3.13. application builder 的 use 和 run 方法有什么区别？</h2><p>这两个方法都在 start up class 的 configure 方法里面调用。都是用来向应用请求管道里面添加中间件的。Use 方法可以调用下一个中间件的添加，而 run 不会。</p>
+<h2 id="3-14-依赖注入后的服务生命周期"><a href="#3-14-依赖注入后的服务生命周期" class="headerlink" title="3.14. 依赖注入后的服务生命周期?"></a>3.14. 依赖注入后的服务生命周期?</h2><p>在 dot net core 中，我们不需要关心如何释放这些服务, 因为系统会帮我们释放掉。有三种服务的生命周期。</p>
+<ol>
+<li>单实例服务， 通过 add singleton 方法来添加。在注册时即创建服务, 在随后的请求中都使用这一个服务。</li>
+<li>短暂服务, 通过 add transient 方法来添加。是一种轻量级的服务，用于无状态服务的操作。</li>
+<li>作用域服务，一个新的请求会创建一个服务实例。使用 add scoped 方法来添加。</li>
+</ol>
+<h2 id="3-15-什么么是-Razor-页面"><a href="#3-15-什么么是-Razor-页面" class="headerlink" title="3.15. 什么么是 Razor 页面?"></a>3.15. 什么么是 Razor 页面?</h2><p>是 dot net core 中支持 ASP 网页表格的一种开发模型。@page 作为页面的起始标志。可以看做是 asp.net core 使用的模板引擎。</p>
+<h2 id="3-16-如何在-Razor-页面中实现数据模型绑定"><a href="#3-16-如何在-Razor-页面中实现数据模型绑定" class="headerlink" title="3.16. 如何在 Razor 页面中实现数据模型绑定?"></a>3.16. 如何在 Razor 页面中实现数据模型绑定?</h2><p>使用 bindproperty 属性。</p>
+<h2 id="3-17-Server-Transfer-和-Response-Redirect-的区别是什么"><a href="#3-17-Server-Transfer-和-Response-Redirect-的区别是什么" class="headerlink" title="3.17. Server.Transfer 和 Response.Redirect 的区别是什么"></a>3.17. Server.Transfer 和 Response.Redirect 的区别是什么</h2><ol>
+<li>Server.Transfer 仅是服务器中控制权的转向，在客户端浏览器地址栏中不会显示出转向后的地址；</li>
+<li>Response.Redirect 则是完全的跳转，浏览器将会得到跳转的地址，并重新发送请求链接。这样，从浏览器的地址栏中可以看到跳转后的链接地址。</li>
+</ol>
+<h2 id="3-18-API，什么时候用-Get-Post-Put-Delete"><a href="#3-18-API，什么时候用-Get-Post-Put-Delete" class="headerlink" title="3.18. API，什么时候用 Get&#x2F;Post&#x2F;Put&#x2F;Delete"></a>3.18. API，什么时候用 Get&#x2F;Post&#x2F;Put&#x2F;Delete</h2><ol>
+<li>GET： 查询</li>
+<li>POST ：创建对象</li>
+<li>PUT： 修改对象</li>
+<li>DELETE：删除</li>
+</ol>
+<h1 id="4-C"><a href="#4-C" class="headerlink" title="4. C#"></a>4. C#</h1><h2 id="4-1-一个单例（Singleton）类"><a href="#4-1-一个单例（Singleton）类" class="headerlink" title="4.1. 一个单例（Singleton）类"></a>4.1. 一个单例（Singleton）类</h2><p>单线程下的简单实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public MySingleton</span><br><span class="line">&#123;</span><br><span class="line">  private <span class="title function_">MySingleton</span><span class="params">()</span>&#123;&#125;	<span class="comment">// 禁止被实例化</span></span><br><span class="line">  public readonly <span class="type">static</span> MySingletonInstance = new MySingleton();	<span class="comment">// 程序加载时就会初始化</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>线程安全的加锁双检查</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">MySingleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    private <span class="type">static</span> MySingleton _instance = null;</span><br><span class="line">    private <span class="type">static</span> readonly object SynObject = new object();</span><br><span class="line"></span><br><span class="line">    MySingleton() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public <span class="type">static</span> MySingleton Instance</span><br><span class="line">    &#123;</span><br><span class="line">        get</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (null == _instance)</span><br><span class="line">            &#123;</span><br><span class="line">                lock (SynObject)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (null == _instance)</span><br><span class="line">                    &#123;</span><br><span class="line">                        _instance = new MySingleton();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> _instance;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-2-abstract-class-和-interface-有什么区别"><a href="#4-2-abstract-class-和-interface-有什么区别" class="headerlink" title="4.2. abstract class 和 interface 有什么区别?"></a>4.2. abstract class 和 interface 有什么区别?</h2><p>相同点：都不能被直接实例化，都可以通过继承实现其抽象方法。</p>
+<p>不同点：</p>
+<ol>
+<li>接口支持多继承；抽象类不能实现多继承。</li>
+<li>接口只能定义行为；抽象类既可以定义行为，还可能提供实现。</li>
+<li>接口只包含方法(Method)、属性(Property)、索引器(Index)、事件(Event)的签名，但不能定义字段和包含实现的方法；</li>
+<li>抽象类可以定义字段、属性、包含有实现的方法。</li>
+</ol>
+<h2 id="4-3-是否可以继承-String-类"><a href="#4-3-是否可以继承-String-类" class="headerlink" title="4.3. 是否可以继承 String 类?"></a>4.3. 是否可以继承 String 类?</h2><p>String 类是 sealed 类故不可以继承。</p>
+<h2 id="4-4-StringBuilder-和-String-的区别？"><a href="#4-4-StringBuilder-和-String-的区别？" class="headerlink" title="4.4. StringBuilder 和 String 的区别？"></a>4.4. StringBuilder 和 String 的区别？</h2><p>String 在进行运算时（如赋值、拼接等）会产生一个新的实例，而 StringBuilder 则不会。所以在大量字符串拼接或频繁对某一字符串进行操作时最好使用 StringBuilder，不要使用 String。<br>但是简单的字符拼接，String 还是首选。（100？次以内用 String，以上用 StringBuilder）</p>
+<h2 id="4-5-什么情况下会用到虚方法？它与接口有什么不同？"><a href="#4-5-什么情况下会用到虚方法？它与接口有什么不同？" class="headerlink" title="4.5. 什么情况下会用到虚方法？它与接口有什么不同？"></a>4.5. 什么情况下会用到虚方法？它与接口有什么不同？</h2><ol>
+<li>子类重新定义父类的某一个方法时，必须把父类的方法定义为 virtual</li>
+<li>在定义接口中不能有方法体，虚方法可以。</li>
+<li>实现时,子类可以不重新定义虚方法，但如果一个类继承接口，那必须实现这个接口。</li>
+</ol>
+<h2 id="4-6-string、String；int、Int32；Boolean、bool-的区别"><a href="#4-6-string、String；int、Int32；Boolean、bool-的区别" class="headerlink" title="4.6. string、String；int、Int32；Boolean、bool 的区别"></a>4.6. string、String；int、Int32；Boolean、bool 的区别</h2><p>String、Int32、Boolean 等都属于.Net 中定义的类，而 string、int、bool 相当于 C#中对这些类定义的别名。CTS。</p>
+<h2 id="4-7-private、-protected、-public、-internal-修饰符的访问权限。"><a href="#4-7-private、-protected、-public、-internal-修饰符的访问权限。" class="headerlink" title="4.7. private、 protected、 public、 internal 修饰符的访问权限。"></a>4.7. private、 protected、 public、 internal 修饰符的访问权限。</h2><ol>
+<li>private : 私有成员, 在类的内部才可以访问。</li>
+<li>protected : 保护成员，该类内部和继承类中可以访问。</li>
+<li>public : 公共成员，完全公开，没有访问限制。</li>
+<li>internal: 当前程序集内可以访问。</li>
+</ol>
+<h2 id="4-8-C-中的委托是什么？事件是不是一种委托？事件和委托的关系。"><a href="#4-8-C-中的委托是什么？事件是不是一种委托？事件和委托的关系。" class="headerlink" title="4.8. C#中的委托是什么？事件是不是一种委托？事件和委托的关系。"></a>4.8. C#中的委托是什么？事件是不是一种委托？事件和委托的关系。</h2><p>委托可以把一个方法作为参数代入另一个方法，可以理解为指向一个函数的指针。<br>换个说法来解释，委托就是函数指针，事件就是保存多个函数指针的数组。</p>
+<p>事件和委托的区别如下：</p>
+<ol>
+<li>事件只能在方法的外部进行声明，而委在方法的外部和内部都可以声明。</li>
+<li>事件只能在类的内部触发，不能在类的外部触发。而委托在类的内部和外都都可以触发。</li>
+<li>委托一般用于回调，而事件用于外部接口。例如在观察者模式中，在被观察者中可以声明一个事件作为外部观察者注册的接口。</li>
+</ol>
+<h2 id="4-9-override-与重载（overload）的区别"><a href="#4-9-override-与重载（overload）的区别" class="headerlink" title="4.9. override 与重载（overload）的区别"></a>4.9. override 与重载（overload）的区别</h2><ol>
+<li>重载是方法的名称相同。参数或参数类型不同，进行多次重载以适应不同的需要。重载（overload）是面向过程的概念。</li>
+<li>Override 是进行基类中函数的重写。Override 是面向对象的概念</li>
+</ol>
+<h2 id="4-10-什么是装箱-boxing-和拆箱-unboxing"><a href="#4-10-什么是装箱-boxing-和拆箱-unboxing" class="headerlink" title="4.10. 什么是装箱(boxing)和拆箱(unboxing)"></a>4.10. 什么是装箱(boxing)和拆箱(unboxing)</h2><p>装箱：从值类型接口转换到引用类型。<br>拆箱：从引用类型转换到值类型。</p>
+<p>——–END——–</p>
+<blockquote>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://www.webtrainingroom.com/interview/asp-net-core-interview-questions-answers">https://www.webtrainingroom.com/interview/asp-net-core-interview-questions-answers</a> &gt; <a target="_blank" rel="noopener" href="https://www.talkingdotnet.com/asp-net-core-interview-questions/">https://www.talkingdotnet.com/asp-net-core-interview-questions/</a></p>
+</blockquote>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1575,136 +1757,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/02/07/js-speical/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/02/07/js-speical/" class="post-title-link" itemprop="url">javascript中常见的非人类（java/c#)知识</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-02-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-02-07T13:06:00+08:00">2021-02-07</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="/img/javascript.jpg"></p>
-<ul>
-<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
-<li><a href="#2-this">2. this</a></li>
-<li><a href="#3-%E5%8E%9F%E5%9E%8B%E9%93%BE-prototype">3. 原型链, prototype</a></li>
-<li><a href="#4-new%E6%93%8D%E4%BD%9C%E7%AC%A6%E9%83%BD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88">4. new操作符都做了什么</a></li>
-<li><a href="#5--vs-">5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</a></li>
-<li><a href="#6-%E9%97%AD%E5%8C%85">6. 闭包</a></li>
-<li><a href="#7-%E6%80%BB%E7%BB%93">7. 总结</a></li>
-</ul>
-<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>众所周期，javascript是一个很老的语言，起起伏伏，逐渐成为流行语言（主流语言），说白了，也是因为早期各个浏览器（ie&#x2F;firefox&#x2F;sarfari&#x2F;chrome)互不妥协，谁也说服不了对方接收自己的标准，不过却都同时支持javascript。对于广大程序员来说，随着web流行度越来越高，那么为了同时支持大多数浏览器，那么使用标准的javascript成为趋势。而第三方（coffeescript, typescript, dart等)也都是选择将代码编译为JavaScript，然后在浏览器端执行。</p>
-<p>作为从C#、java等语言转到javascript的同学来说，会发现不少C#、java的“我觉得应该是这样”的东西，JavaScript中却是不一样的。下面总结一下</p>
-<h1 id="2-this"><a href="#2-this" class="headerlink" title="2. this"></a>2. this</h1><p>对C#、Java等语言，this就是当前对象，但是javascript不是，简单来说：</p>
-<ul>
-<li>全局this 是window;</li>
-<li>函数this 是调用者;</li>
-<li>构造函数的this 是new 之后的新对象,</li>
-<li>call 和 apply bind的this第一个参数</li>
-</ul>
-<h1 id="3-原型链-prototype"><a href="#3-原型链-prototype" class="headerlink" title="3. 原型链, prototype"></a>3. 原型链, prototype</h1><ul>
-<li>函数对象都包含prototype属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
-<li>constructor属性的含义就是指向该对象的构造函数</li>
-<li>①__proto__和constructor属性是对象所独有的；② prototype属性是函数所独有的，因为函数也是一种对象，所以函数也拥有__proto__和constructor属性。</li>
-<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
-<li>每一个实例对象都有一个私有属性__proto__指向其构造函数的原型对象prototype；该原型对象也会作为实例对象有一个私有属性__proto__，层层向上直到一个对象的原型对象值为null。</li>
-<li>当访问一个对象的属性或方法时，js引擎会先查找该对象本身是否包含，如果没有，会去该对象的__proto__属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的__proto__值为null,这就是原型链。</li>
-<li>每个构造函数都有一个prototype属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
-</ul>
-<h1 id="4-new操作符都做了什么"><a href="#4-new操作符都做了什么" class="headerlink" title="4. new操作符都做了什么"></a>4. new操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
-<p>new Object()举例:</p>
-<ol>
-<li>创建一个新对象</li>
-<li>把新对象的原型指向构造函数的prototype</li>
-<li>把构造函数里的this指向新对象</li>
-<li>返回这个新对象</li>
-</ol>
-<h1 id="5-VS"><a href="#5-VS" class="headerlink" title="5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;"></a>5. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&#x27;100&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&#x27;&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&#x27;&#x27;</span> <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>很有意思吧， 看看这两个，是等效的：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span></span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="6-闭包"><a href="#6-闭包" class="headerlink" title="6. 闭包"></a>6. 闭包</h1><p>在JavaScript中的一大特点就是闭包，很多高级应用(早期的jquery，现在的angular、vue)都要依靠闭包来实现。由于闭包会使得函数中的变量都被保存在内存中，会消耗很大的内存，导致页面的性能问题，甚至导致内存泄漏。建议不要或者少用闭包。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">outerMethod</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line"> <span class="keyword">var</span> innerMethod = <span class="keyword">function</span>(<span class="params"></span>) &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>( a + <span class="string">&quot;!&quot;</span>) ;&#125;</span><br><span class="line"> <span class="title function_">innerMethod</span>(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h1><ol>
-<li>Javascipt 中有些内容和其他编程语言不一致，需要牢记</li>
-<li>JavaScript中拿不准的东西，可以简单测试一下，免得代码写好后出错。</li>
-<li>简单测试，可以打开浏览器，直接F12（进入Dev Tools），再选择Console(控制台)， 直接输入要测试的内容，查看返回结果</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

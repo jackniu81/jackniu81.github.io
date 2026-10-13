@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,107 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/07/03/Algorithm-Binary-Search-Boundaries/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/03/Algorithm-Binary-Search-Boundaries/" class="post-title-link" itemprop="url">算法 - 二分查找（含左右边界版本）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-07-03 09:11:47" itemprop="dateCreated datePublished" datetime="2024-07-03T09:11:47+08:00">2024-07-03</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个升序整数数组 <code>nums</code> 和目标值 <code>target</code>：</p>
+<ol>
+<li><strong>基础版</strong>：若存在 <code>target</code> 返回其下标，否则返回 <code>-1</code>。</li>
+<li><strong>边界版</strong>：找出 <code>target</code> 在数组中的<strong>起始和结束位置</strong>（存在重复时）；不存在返回 <code>[-1, -1]</code>。要求 <code>O(log n)</code>。</li>
+</ol>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nums = [5,7,7,8,8,10], target = 8</span><br><span class="line">基础版: 返回 3（任一 8 的下标）</span><br><span class="line">边界版: 返回 [3, 4]</span><br><span class="line"></span><br><span class="line">nums = [5,7,7,8,8,10], target = 6</span><br><span class="line">返回 [-1, -1]</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>二分最坑的是<strong>边界与死循环</strong>。用「左闭右闭 <code>[left, right]</code>」这一套统一写法最省心。</p>
+<h2 id="2-1-基础版"><a href="#2-1-基础版" class="headerlink" title="2.1 基础版"></a>2.1 基础版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">while (left &lt;= right) &#123;        // 区间非空的条件</span><br><span class="line">    mid = left + ((right-left) &gt;&gt; 1)  // 防两数相加溢出</span><br><span class="line">    if (nums[mid] === target) return mid</span><br><span class="line">    else if (nums[mid] &lt; target) left = mid + 1</span><br><span class="line">    else right = mid - 1</span><br><span class="line">&#125;</span><br><span class="line">return -1</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-边界版-两次「找第一个-第一个-」"><a href="#2-2-边界版-两次「找第一个-第一个-」" class="headerlink" title="2.2 边界版 &#x3D; 两次「找第一个 &gt;&#x3D; &#x2F; 第一个 &gt;」"></a>2.2 边界版 &#x3D; 两次「找第一个 &gt;&#x3D; &#x2F; 第一个 &gt;」</h2><p>关键抽象成两个函数：</p>
+<ul>
+<li><code>lowerBound(target)</code>：第一个 <code>&gt;= target</code> 的下标（左边界）。</li>
+<li><code>upperBound(target)</code>：第一个 <code>&gt; target</code> 的下标（右边界的下一位）。</li>
+</ul>
+<p>则 target 的区间是 <code>[lowerBound, upperBound - 1]</code>；若两者相等说明 target 不存在。</p>
+<p><strong>核心口诀</strong>：收缩时只要 <code>nums[mid] &gt;= target</code> 就 <code>right = mid</code>（否则 <code>left = mid + 1</code>），最终 <code>left</code> 落在第一个满足条件的位置。注意此时 <code>while (left &lt; right)</code> 且 <code>right = mid</code>（不减一），保持「找最左」不变量。</p>
+<ul>
+<li>时间复杂度：<code>O(log n)</code>；空间 <code>O(1)</code>。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基础版：精确匹配</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">search</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = nums.<span class="property">length</span> - <span class="number">1</span>; <span class="comment">// 左闭右闭</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="keyword">const</span> mid = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] === target) <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) left = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> right = mid - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找第一个 &gt;= target 的下标（可能返回 nums.length）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">lowerBound</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = nums.<span class="property">length</span>; <span class="comment">// 左闭右开 [left, right)</span></span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="keyword">const</span> mid = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) left = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> right = mid; <span class="comment">// mid 可能是答案，保留</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找第一个 &gt; target 的下标</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">upperBound</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="keyword">const</span> mid = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt;= target) left = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> right = mid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">searchRange</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">target</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">const</span> lo = <span class="title function_">lowerBound</span>(nums, target);</span><br><span class="line">    <span class="comment">// lo 越界或值不等，说明不存在</span></span><br><span class="line">    <span class="keyword">if</span> (lo === nums.<span class="property">length</span> || nums[lo] !== target) <span class="keyword">return</span> [-<span class="number">1</span>, -<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">return</span> [lo, <span class="title function_">upperBound</span>(nums, target) - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">searchRange</span>([<span class="number">5</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">10</span>], <span class="number">8</span>)); <span class="comment">// [3, 4]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">searchRange</span>([<span class="number">5</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">10</span>], <span class="number">6</span>)); <span class="comment">// [-1, -1]</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>两套写法别混用</strong>：<code>left&lt;=right / right=mid-1</code>（闭合）与 <code>left&lt;right / right=mid</code>（半开）各有约定，全程保持一致，中途换风格必死循环或漏元素。</li>
+<li><strong>旋转数组找 target（33&#x2F;153）</strong>：判断哪半边有序再决定收缩方向，是二分的最高频变体。</li>
+<li><strong>求平方根 &#x2F; 二分答案</strong>：把「在答案空间里二分」讲出来（找第一个满足条件的 x），体现你懂二分的本质是<strong>单调性</strong>。</li>
+<li>溢出：JS 的 number 是双精度浮点，<code>&gt;&gt;1</code> 会把值转成 32 位整数，<code>mid</code> 溢出风险比 C++ 小，但写 <code>left + (right-left)/2</code> 仍是好习惯。</li>
+<li>记住 <code>lowerBound === upperBound</code> 即「target 出现次数为 0」，<code>upperBound - lowerBound</code> 就是<strong>频次</strong>，一行搞定计数。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 34&#x2F;704 题 | 边界处理基本功</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1088,112 +1189,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2023/06/03/Algorithm-Debounce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/03/Algorithm-Debounce/" class="post-title-link" itemprop="url">算法 - 防抖 (Debounce) 手写实现</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-06-03 10:41:29" itemprop="dateCreated datePublished" datetime="2023-06-03T10:41:29+08:00">2023-06-03</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个防抖函数 <code>debounce(fn, wait, immediate)</code>：</p>
-<ul>
-<li>在事件被频繁触发时，只有在<strong>停止触发 <code>wait</code> 毫秒后</strong>，<code>fn</code> 才真正执行一次。</li>
-<li>每次新触发都会「重新计时」（把上一次的待执行取消）。</li>
-<li><code>immediate = true</code> 时，首次触发立即执行一次，之后的连续触发不再执行，直到静默 <code>wait</code> 后重新武装。</li>
-<li>要求保留正确的 <code>this</code> 与参数，并提供 <code>cancel</code> 方法取消待执行。</li>
-</ul>
-<p>典型场景：搜索框输入联想、窗口 resize 重排、按钮防连点、滚动监听。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户连续输入 &quot;typescript&quot;（每 50ms 一个字符）</span><br><span class="line">debounce(search, 300)  -&gt;  停止输入 300ms 后才发一次请求</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>一句话：<strong>用一个闭包持有的定时器 ID，每次触发先 <code>clearTimeout</code> 再重新 <code>setTimeout</code></strong>。这样只有「最后一次触发」的定时器能活到时间并执行回调。</p>
-<p>要点：</p>
-<ol>
-<li><code>timer</code> 存在闭包里，外界看不见，只在函数内部读写。</li>
-<li>执行回调时用 <code>fn.apply(this, args)</code>，保证 <code>this</code> 指向调用方（比如事件绑定的 DOM），参数也原样透传。</li>
-<li><code>immediate</code> 版本：若已立即执行过，就把 <code>timer</code> 设为一个哨兵值表示「冷却中」，静默期结束后置空以重新武装。</li>
-<li><code>cancel</code>：清掉当前定时器并把状态复位。</li>
-</ol>
-<ul>
-<li>时间复杂度：每次触发 <code>O(1)</code>。</li>
-<li>空间：闭包一份。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-标准版（延迟执行，最常用）"><a href="#3-1-标准版（延迟执行，最常用）" class="headerlink" title="3.1 标准版（延迟执行，最常用）"></a>3.1 标准版（延迟执行，最常用）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> debounce&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(</span><br><span class="line">    <span class="attr">fn</span>: T,</span><br><span class="line">    <span class="attr">wait</span>: <span class="built_in">number</span></span><br><span class="line">): (<span class="function">(<span class="params">...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) =&gt;</span> <span class="built_in">void</span>) &amp; &#123; <span class="attr">cancel</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span> &#125; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">timer</span>: <span class="title class_">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="built_in">setTimeout</span>&gt; | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> debounced = <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">ThisParameterType</span>&lt;T&gt;, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">        timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            timer = <span class="literal">null</span>;</span><br><span class="line">            fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;, wait);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    debounced.<span class="property">cancel</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">            timer = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> debounced;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-支持-immediate（首次立即执行）"><a href="#3-2-支持-immediate（首次立即执行）" class="headerlink" title="3.2 支持 immediate（首次立即执行）"></a>3.2 支持 immediate（首次立即执行）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> debounceImmediate&lt;T <span class="title function_">extends</span> (...<span class="attr">args</span>: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span>&gt;(</span><br><span class="line">    <span class="attr">fn</span>: T,</span><br><span class="line">    <span class="attr">wait</span>: <span class="built_in">number</span>,</span><br><span class="line">    immediate = <span class="literal">false</span></span><br><span class="line">) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">timer</span>: <span class="title class_">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="built_in">setTimeout</span>&gt; | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="title class_">Parameters</span>&lt;T&gt;</span>) &#123;</span><br><span class="line">        <span class="comment">// 用 timer 是否存在判断「是否处于冷却」</span></span><br><span class="line">        <span class="keyword">if</span> (timer !== <span class="literal">null</span>) <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (immediate) &#123;</span><br><span class="line">            <span class="keyword">const</span> callNow = timer === <span class="literal">null</span>; <span class="comment">// 首次或冷却结束</span></span><br><span class="line">            timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                timer = <span class="literal">null</span>; <span class="comment">// 重新武装</span></span><br><span class="line">            &#125;, wait);</span><br><span class="line">            <span class="keyword">if</span> (callNow) fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                timer = <span class="literal">null</span>;</span><br><span class="line">                fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">            &#125;, wait);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用法</span></span><br><span class="line"><span class="keyword">const</span> onSearch = <span class="title function_">debounce</span>(<span class="function">(<span class="params"><span class="attr">kw</span>: <span class="built_in">string</span></span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;fetch:&quot;</span>, kw), <span class="number">300</span>);</span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;input&quot;</span>, <span class="function">() =&gt;</span> <span class="title function_">onSearch</span>(<span class="string">&quot;abc&quot;</span>));</span><br><span class="line"><span class="comment">// 组件卸载 / 不再需要时：</span></span><br><span class="line">onSearch.<span class="title function_">cancel</span>();</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>防抖 vs 节流</strong>：防抖「等安静了再执行一次」，节流「固定频率最多执行一次」。二者常一起考，见下一篇 [节流]。</li>
-<li><strong>带返回值怎么办？</strong> 防抖天然会推迟结果，直接 return 拿不到。工程做法：返回 Promise，或用回调；能讲清这个取舍很加分。</li>
-<li><strong>leading &#x2F; trailing 配置</strong>：lodash 的 <code>debounce</code> 有 <code>leading</code>（是否先行执行）、<code>maxWait</code>（最长等待，防止永远不执行，此时退化为带节流的防抖）。</li>
-<li>React 中要配合 <code>useMemo</code>&#x2F;<code>useRef</code> 保存同一个 debounce 实例，否则每次渲染都新建、定时器互相打架。</li>
-</ul>
-<blockquote>
-<p>难度：简单 | 前端手写题必考 | 事件频率控制基石</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
