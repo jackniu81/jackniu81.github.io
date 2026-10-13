@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python 教程：给 TypeScript 开发者</title>
+<style>
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
+          --code-bg:#161b22; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+<h1>Python 教程：给 TypeScript 开发者</h1>
+<blockquote>
+<p>你已经会 TypeScript，这篇教程不重复&quot;什么是变量、什么是函数&quot;，只讲 <strong>Python 和 TS 的差异、Python 的独特玩法、以及 TS 开发者最容易踩的坑</strong>。每节都附 TS 对比代码，快速建立映射。</p>
+</blockquote>
+<hr>
+<h2>0. 核心差异速览（先建立心智模型）</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>TypeScript</th>
+<th>Python</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>运行时</td>
+<td>编译为 JS，在 Node/浏览器运行</td>
+<td>解释执行（<code>.py</code> → 字节码 → PVM）</td>
+</tr>
+<tr>
+<td>类型系统</td>
+<td>静态类型，编译期检查，<strong>运行时擦除</strong></td>
+<td>动态类型，<code>type hints</code> 仅作提示，<strong>运行时不检查</strong></td>
+</tr>
+<tr>
+<td>包管理</td>
+<td>npm / package.json</td>
+<td>pip / requirements.txt / pyproject.toml</td>
+</tr>
+<tr>
+<td>环境隔离</td>
+<td>node_modules（每项目）</td>
+<td>venv / conda（虚拟环境）</td>
+</tr>
+<tr>
+<td>异步模型</td>
+<td>Promise + event loop（libuv）</td>
+<td>asyncio + event loop（单线程协作式）</td>
+</tr>
+<tr>
+<td>空值</td>
+<td><code>null</code> / <code>undefined</code></td>
+<td>只有 <code>None</code></td>
+</tr>
+<tr>
+<td>相等</td>
+<td><code>===</code> / <code>==</code></td>
+<td><code>==</code>（值相等）/ <code>is</code>（身份相等）</td>
+</tr>
+<tr>
+<td>模块</td>
+<td>ES Modules（<code>import/export</code>）</td>
+<td><code>import</code> / <code>from ... import</code></td>
+</tr>
+<tr>
+<td>作用域</td>
+<td>块级作用域 <code>{}</code></td>
+<td>函数级作用域（无块级），LEGB 规则</td>
+</tr>
+<tr>
+<td>缩进</td>
+<td>不敏感（用 <code>{}</code>）</td>
+<td><strong>敏感</strong>，缩进就是语法</td>
+</tr>
+</tbody></table>
+<p><strong>一句话总结</strong>：Python 是&quot;动态类型 + 缩进语法 + 万物皆对象 + 强制可读&quot;的语言，TS 开发者最大的转变是从&quot;编译期抓错&quot;转向&quot;运行时 + 测试抓错&quot;。</p>
+<hr>
+<h2>1. 环境与工具链（对应 npm / node）</h2>
+<h3>1.1 安装 Python</h3>
+<pre><code class="language-bash">python --version   # 或 python3 --version，建议 3.10+
+</code></pre>
+<h3>1.2 虚拟环境（对应 node_modules）</h3>
+<p>Python 没有项目级 <code>node_modules</code>，用<strong>虚拟环境</strong>隔离依赖：</p>
+<pre><code class="language-bash">python -m venv .venv          # 创建虚拟环境（对应 npm init）
+source .venv/bin/activate     # Mac/Linux 激活
+.venv\Scripts\activate        # Windows 激活
+deactivate                    # 退出
+</code></pre>
+<p>激活后终端前缀会显示 <code>(.venv)</code>，此时 <code>pip install</code> 只装到当前环境。</p>
+<h3>1.3 包管理（对应 npm）</h3>
+<pre><code class="language-bash">pip install requests          # 安装包（对应 npm install）
+pip install requests==2.31.0  # 指定版本
+pip freeze &gt; requirements.txt # 导出依赖（对应 package.json dependencies）
+pip install -r requirements.txt  # 按文件安装
+</code></pre>
+<p>现代项目用 <code>pyproject.toml</code>（对应 package.json）+ <code>poetry</code> 或 <code>uv</code>（更快的现代包管理器，类似 pnpm）。</p>
+<h3>1.4 运行代码</h3>
+<pre><code class="language-bash">python script.py     # 运行文件
+python -i script.py  # 运行后进入交互模式（REPL）
+python               # 直接进 REPL，类似 node
+</code></pre>
+<hr>
+<h2>2. 基础语法</h2>
+<h3>2.1 变量与赋值</h3>
+<p>Python 变量不需要声明类型，直接赋值：</p>
+<pre><code class="language-python">name = &quot;Alice&quot;      # 字符串
+age = 25            # 整数
+pi = 3.14           # 浮点
+is_ok = True        # 布尔（注意首字母大写！）
+nothing = None      # 对应 null/undefined
+</code></pre>
+<p><strong>对比 TS</strong>：</p>
+<pre><code class="language-typescript">let name: string = &quot;Alice&quot;;
+const age = 25;
+let nothing: null = null;
+</code></pre>
+<p>Python 没有 <code>const</code>，约定<strong>全大写下划线</strong>表示常量：<code>MAX_RETRY = 3</code>。</p>
+<h3>2.2 缩进就是语法</h3>
+<p>Python 不用 <code>{}</code>，用<strong>缩进</strong>表示代码块（通常 4 空格）：</p>
+<pre><code class="language-python">if age &gt;= 18:
+    print(&quot;成年&quot;)      # 缩进 4 空格 = 代码块
+    print(&quot;可以投票&quot;)
+else:
+    print(&quot;未成年&quot;)
+</code></pre>
+<p><strong>坑</strong>：缩进错误会直接报 <code>IndentationError</code>，混用 Tab 和空格也会报错。TS 开发者一定要适应&quot;没有花括号&quot;。</p>
+<h3>2.3 控制流</h3>
+<pre><code class="language-python"># if-elif-else（对应 if/else if/else）
+if score &gt;= 90:
+    grade = &quot;A&quot;
+elif score &gt;= 80:
+    grade = &quot;B&quot;
+else:
+    grade = &quot;C&quot;
+
+# for 循环（对应 for...of，直接迭代元素，不是索引）
+fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+for fruit in fruits:
+    print(fruit)
+
+# 需要索引用 enumerate（对应 forEach 的 index）
+for i, fruit in enumerate(fruits):
+    print(i, fruit)
+
+# while 循环
+while count &lt; 10:
+    count += 1
+
+# 三元表达式（对应 condition ? a : b，语序不同！）
+result = &quot;及格&quot; if score &gt;= 60 else &quot;不及格&quot;
+# TS: const result = score &gt;= 60 ? &quot;及格&quot; : &quot;不及格&quot;;
+</code></pre>
+<h3>2.4 字符串</h3>
+<pre><code class="language-python">s = &quot;hello&quot;
+f&quot;{s} world&quot;        # f-string，对应模板字符串 `${s} world`
+s.upper()           # 方法调用，和 TS 类似
+s.split(&quot;,&quot;)        # 分割
+&quot;,&quot;.join([&quot;a&quot;,&quot;b&quot;]) # 拼接（注意是分隔符.join(列表)，不是 list.join）
+len(s)              # 内置函数，不是 s.length
+</code></pre>
+<p><strong>坑</strong>：Python 字符串是<strong>不可变</strong>的，<code>s[0] = &quot;H&quot;</code> 会报错；要修改需重新赋值或用 <code>list(s)</code>。</p>
+<hr>
+<h2>3. 数据结构（对应 TS 的 Array/Object/Map/Set）</h2>
+<h3>3.1 list（对应 Array）</h3>
+<pre><code class="language-python">arr = [1, 2, 3]
+arr.append(4)       # push
+arr.pop()           # pop
+arr[0]              # 索引访问
+len(arr)            # length
+arr[1:3]            # 切片，对应 slice(1,3)，返回 [2,3]
+arr + [4, 5]        # 拼接，对应 concat
+&quot;a&quot; in arr          # 对应 includes（但 list 是 O(n)）
+</code></pre>
+<p><strong>推导式</strong>（Python 特色，对应 <code>map/filter</code> 的语法糖）：</p>
+<pre><code class="language-python">[x * 2 for x in range(5)]              # [0,2,4,6,8] 对应 map
+[x for x in range(10) if x % 2 == 0]   # 过滤，对应 filter
+</code></pre>
+<h3>3.2 dict（对应 Object / Map）</h3>
+<pre><code class="language-python">d = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 25}
+d[&quot;name&quot;]             # 访问，key 不存在会报错
+d.get(&quot;email&quot;, &quot;无&quot;)  # 安全访问，带默认值（对应可选链 ?.）
+d[&quot;city&quot;] = &quot;Beijing&quot; # 新增/修改
+del d[&quot;age&quot;]          # 删除
+&quot;name&quot; in d           # key 是否存在（对应 key in obj）
+d.keys(), d.values(), d.items()  # 对应 Object.keys/values/entries
+</code></pre>
+<p><strong>Python 3.7+ dict 保持插入顺序</strong>（类似 TS 的 Map），且 key 必须是<strong>可哈希</strong>的（不可变类型）。</p>
+<h3>3.3 set（对应 Set）</h3>
+<pre><code class="language-python">s = {1, 2, 3}
+s.add(4)
+s.remove(1)
+1 in s               # O(1) 查找
+s &amp; {2, 3, 4}        # 交集
+s | {4, 5}           # 并集
+</code></pre>
+<p>集合去重极快：<code>list(set([1,1,2,3]))</code> → <code>[1,2,3]</code>。</p>
+<h3>3.4 tuple（TS 没有直接对应）</h3>
+<pre><code class="language-python">t = (1, 2, 3)        # 不可变的 list
+x, y, z = t          # 解构赋值（对应 [x,y,z] = arr）
+x, y = y, x          # 交换变量，不需要临时变量！
+</code></pre>
+<p>函数返回多个值时，Python 底层返回的就是 tuple：</p>
+<pre><code class="language-python">def get_user():
+    return &quot;Alice&quot;, 25  # 实际返回 (&quot;Alice&quot;, 25)
+name, age = get_user()  # 解构
+</code></pre>
+<hr>
+<h2>4. 函数</h2>
+<h3>4.1 基本定义</h3>
+<pre><code class="language-python">def add(a, b):
+    return a + b
+</code></pre>
+<p><strong>对比 TS</strong>：</p>
+<pre><code class="language-typescript">function add(a: number, b: number): number { return a + b; }
+</code></pre>
+<h3>4.2 默认参数</h3>
+<pre><code class="language-python">def greet(name, greeting=&quot;Hello&quot;):
+    return f&quot;{greeting}, {name}&quot;
+</code></pre>
+<p><strong>坑</strong>：默认参数在<strong>函数定义时</strong>求值一次，可变对象（list/dict）会被所有调用共享（详见面试题 106）。</p>
+<h3>4.3 *args 和 **kwargs（对应 rest 参数）</h3>
+<pre><code class="language-python">def func(*args, **kwargs):
+    print(args)    # tuple：位置参数打包
+    print(kwargs)  # dict：关键字参数打包
+
+func(1, 2, a=3, b=4)
+# args = (1, 2), kwargs = {&#39;a&#39;: 3, &#39;b&#39;: 4}
+</code></pre>
+<p><strong>对比 TS</strong>：</p>
+<pre><code class="language-typescript">function func(...args: number[]) {}  // 只有位置参数 rest
+</code></pre>
+<p>Python 的 <code>**kwargs</code> 相当于 TS 中没有的&quot;关键字参数 rest&quot;。</p>
+<p>调用时也可以解包：</p>
+<pre><code class="language-python">nums = [1, 2, 3]
+func(*nums)        # 对应 func(...nums)
+params = {&quot;a&quot;: 1}
+func(**params)     # 对应 func({...params})，但作为关键字参数
+</code></pre>
+<h3>4.4 lambda（对应箭头函数）</h3>
+<pre><code class="language-python">add = lambda a, b: a + b
+# 对应 const add = (a, b) =&gt; a + b;
+</code></pre>
+<p>lambda 只能写<strong>一个表达式</strong>，不能有语句和多行。复杂逻辑用 <code>def</code>。</p>
+<h3>4.5 高阶函数</h3>
+<pre><code class="language-python">list(map(lambda x: x*2, [1,2,3]))   # 对应 arr.map(x =&gt; x*2)
+list(filter(lambda x: x&gt;1, [1,2,3]))# 对应 arr.filter(x =&gt; x&gt;1)
+from functools import reduce
+reduce(lambda a,b: a+b, [1,2,3])    # 对应 arr.reduce((a,b)=&gt;a+b)
+</code></pre>
+<p>但 Python 更推荐用<strong>推导式</strong>代替 map/filter，更可读。</p>
+<hr>
+<h2>5. 面向对象</h2>
+<h3>5.1 类定义</h3>
+<pre><code class="language-python">class Dog:
+    def __init__(self, name):   # 对应 constructor
+        self.name = name        # self 对应 this，但必须显式写
+
+    def bark(self):             # 方法第一个参数永远是 self
+        print(f&quot;{self.name} says woof!&quot;)
+
+d = Dog(&quot;Buddy&quot;)
+d.bark()
+</code></pre>
+<p><strong>对比 TS</strong>：</p>
+<pre><code class="language-typescript">class Dog {
+    constructor(public name: string) {}
+    bark() { console.log(`${this.name} says woof!`); }
+}
+</code></pre>
+<p><strong>坑</strong>：Python 的 <code>self</code> 必须显式写在每个方法参数里，调用时不用传。忘记写 <code>self</code> 是新手最常见错误。</p>
+<h3>5.2 继承</h3>
+<pre><code class="language-python">class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        pass
+
+class Cat(Animal):          # 继承写在括号里，对应 extends
+    def speak(self):        # 重写，不需要 override 关键字
+        print(f&quot;{self.name} says meow&quot;)
+
+    def __init__(self, name, color):
+        super().__init__(name)  # 对应 super(name)
+        self.color = color
+</code></pre>
+<p>Python 支持<strong>多继承</strong>：<code>class C(A, B):</code>，通过 MRO（C3 算法）确定方法查找顺序。</p>
+<h3>5.3 魔术方法（对应 TS 的 Symbol 特殊方法）</h3>
+<pre><code class="language-python">class Point:
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+    def __str__(self):           # 对应 toString()
+        return f&quot;({self.x}, {self.y})&quot;
+    def __eq__(self, other):     # 对应 valueOf / ===
+        return self.x == other.x and self.y == other.y
+    def __add__(self, other):    # 运算符重载，对应 Symbol.plus
+        return Point(self.x + other.x, self.y + other.y)
+</code></pre>
+<p>魔术方法以双下划线开头结尾，Python 一切行为都可通过它们自定义。</p>
+<h3>5.4 没有接口，用抽象类或鸭子类型</h3>
+<pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self): ...
+
+class Circle(Shape):
+    def area(self): return 3.14 * self.r ** 2
+</code></pre>
+<p>Python 更常用<strong>鸭子类型</strong>：不要求继承，只要有 <code>area()</code> 方法就能用。</p>
+<hr>
+<h2>6. 类型系统（type hints vs TS 类型）</h2>
+<h3>6.1 基本用法</h3>
+<p>Python 3.5+ 支持类型注解，但<strong>运行时不检查</strong>：</p>
+<pre><code class="language-python">def greet(name: str) -&gt; str:
+    return f&quot;Hello {name}&quot;
+
+age: int = 25
+</code></pre>
+<p><strong>对比 TS</strong>：TS 编译期强制检查，Python 的类型注解只是给 IDE 和工具看的，运行时传错类型不会报错。</p>
+<h3>6.2 常用类型</h3>
+<pre><code class="language-python">from typing import List, Dict, Optional, Union, Any
+
+# Python 3.9+ 可以直接用内置类型
+def process(items: list[int]) -&gt; dict[str, int]: ...
+def find(id: int) -&gt; Optional[User]: ...   # 对应 User | null
+def parse(value: str | int) -&gt; Any: ...     # Python 3.10+ 联合类型
+</code></pre>
+<h3>6.3 静态检查工具</h3>
+<p>对应 TS 的 <code>tsc --noEmit</code>：</p>
+<pre><code class="language-bash">pip install mypy
+mypy script.py    # 静态类型检查
+</code></pre>
+<p>IDE（VS Code + Pylance）也会实时提示类型错误。</p>
+<h3>6.4 关键差异</h3>
+<table>
+<thead>
+<tr>
+<th>TS</th>
+<th>Python</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编译期强制类型检查</td>
+<td>运行时不检查，靠 mypy/pyright</td>
+</tr>
+<tr>
+<td>类型完全擦除</td>
+<td>类型注解保留在 <code>__annotations__</code> 中（反射可用）</td>
+</tr>
+<tr>
+<td><code>interface</code></td>
+<td>无，用 ABC 或 Protocol（结构化子类型）</td>
+</tr>
+<tr>
+<td>泛型 <code>&lt;T&gt;</code></td>
+<td><code>Generic[T]</code> 或 <code>list[T]</code></td>
+</tr>
+<tr>
+<td><code>unknown</code></td>
+<td><code>Any</code>（但 Any 会跳过所有检查，比 unknown 宽松）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>7. 模块与包（对应 ES Modules）</h2>
+<h3>7.1 导入</h3>
+<pre><code class="language-python">import math                  # 对应 import * as math from &#39;math&#39;
+math.sqrt(16)
+
+from math import sqrt, pi    # 对应 import { sqrt, pi } from &#39;math&#39;
+from math import *           # 对应 import *，不推荐（命名冲突）
+from math import sqrt as s   # 对应 import { sqrt as s }
+</code></pre>
+<h3>7.2 模块搜索路径</h3>
+<p>Python 按 <code>sys.path</code> 查找模块，包括：当前目录、标准库、第三方包（site-packages）。对应 Node 的 <code>node_modules</code> 查找。</p>
+<h3>7.3 包（对应目录模块）</h3>
+<p>目录下有 <code>__init__.py</code> 即为包（Python 3.3+ 可不写，但推荐写）：</p>
+<pre><code>mypackage/
+  __init__.py
+  module_a.py
+  module_b.py
+</code></pre>
+<pre><code class="language-python">from mypackage import module_a
+</code></pre>
+<h3>7.4 <code>if __name__ == &quot;__main__&quot;</code></h3>
+<pre><code class="language-python">if __name__ == &quot;__main__&quot;:
+    print(&quot;直接运行时执行&quot;)
+</code></pre>
+<p>对应 Node 中判断 <code>require.main === module</code>，用于&quot;被导入时不执行，直接运行时执行&quot;。</p>
+<hr>
+<h2>8. 异步编程（asyncio vs Promise）</h2>
+<h3>8.1 基本写法</h3>
+<pre><code class="language-python">import asyncio
+
+async def fetch_data():       # 对应 async function
+    await asyncio.sleep(1)    # 对应 await delay(1000)
+    return &quot;data&quot;
+
+async def main():
+    result = await fetch_data()
+    print(result)
+
+asyncio.run(main())           # 入口，对应 top-level await 或 IIFE
+</code></pre>
+<h3>8.2 并发执行（对应 Promise.all）</h3>
+<pre><code class="language-python">async def main():
+    results = await asyncio.gather(
+        fetch_data(),
+        fetch_data(),
+        fetch_data()
+    )
+    # 对应 Promise.all([...])
+</code></pre>
+<p><code>asyncio.gather</code> 按传入顺序返回结果列表，一个失败默认整体失败，可设 <code>return_exceptions=True</code> 收集异常。</p>
+<h3>8.3 关键差异</h3>
+<table>
+<thead>
+<tr>
+<th>TS (Promise)</th>
+<th>Python (asyncio)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Promise 创建即执行</td>
+<td>协程函数调用返回协程对象，<strong>不执行</strong>，需 <code>await</code> 或创建 Task</td>
+</tr>
+<tr>
+<td><code>Promise.all</code></td>
+<td><code>asyncio.gather</code></td>
+</tr>
+<tr>
+<td><code>Promise.race</code></td>
+<td><code>asyncio.wait(return_when=FIRST_COMPLETED)</code></td>
+</tr>
+<tr>
+<td><code>setTimeout</code></td>
+<td><code>asyncio.sleep</code></td>
+</tr>
+<tr>
+<td>事件循环由 Node 管理</td>
+<td>需手动 <code>asyncio.run()</code> 或获取事件循环</td>
+</tr>
+<tr>
+<td>可在顶层 <code>await</code>（ES2022）</td>
+<td>顶层不能直接 <code>await</code>，需包在 <code>asyncio.run()</code></td>
+</tr>
+</tbody></table>
+<p><strong>坑</strong>：在 async 函数里调用同步阻塞函数（如 <code>time.sleep</code>、<code>requests.get</code>）会<strong>卡住整个事件循环</strong>，必须用异步版本（<code>asyncio.sleep</code>、<code>aiohttp</code>）或 <code>await asyncio.to_thread(...)</code>。</p>
+<hr>
+<h2>9. 错误处理</h2>
+<h3>9.1 try-except（对应 try-catch）</h3>
+<pre><code class="language-python">try:
+    result = 10 / 0
+except ZeroDivisionError as e:   # 对应 catch (e)，可指定类型
+    print(f&quot;错误: {e}&quot;)
+except (TypeError, ValueError):  # 多个类型
+    print(&quot;类型或值错误&quot;)
+else:                            # 没有异常时执行（TS 没有）
+    print(&quot;成功&quot;)
+finally:                         # 对应 finally
+    print(&quot;总是执行&quot;)
+</code></pre>
+<h3>9.2 抛出异常（对应 throw）</h3>
+<pre><code class="language-python">raise ValueError(&quot;无效值&quot;)
+</code></pre>
+<p>Python 用异常做控制流很常见（如 <code>StopIteration</code>、<code>KeyError</code>），不像 TS 那样尽量避免。</p>
+<h3>9.3 自定义异常</h3>
+<pre><code class="language-python">class AppError(Exception): pass
+class NotFoundError(AppError): pass
+
+raise NotFoundError(&quot;用户不存在&quot;)
+</code></pre>
+<p>推荐继承 <code>Exception</code>，不要继承 <code>BaseException</code>（后者包含 <code>KeyboardInterrupt</code>）。</p>
+<hr>
+<h2>10. TS 开发者最容易踩的坑</h2>
+<h3>坑 1：缩进错误</h3>
+<p>没有 <code>{}</code>，缩进错了直接 <code>IndentationError</code>。用 4 空格，不要 Tab。</p>
+<h3>坑 2：可变默认参数</h3>
+<pre><code class="language-python">def append(item, lst=[]):  # 危险！所有调用共享同一个 list
+    lst.append(item)
+</code></pre>
+<p>正确：<code>lst=None</code>，函数内创建。</p>
+<h3>坑 3：<code>is</code> vs <code>==</code></h3>
+<pre><code class="language-python">a = [1, 2]
+b = [1, 2]
+a == b   # True（值相等）
+a is b   # False（不是同一个对象）
+</code></pre>
+<p><code>is</code> 对应 <code>===</code> 的&quot;引用相等&quot;，但 Python 小整数（-5~256）和短字符串有缓存，可能 <code>is</code> 也为 True。<strong>比较值永远用 <code>==</code>，比较 None 用 <code>is None</code></strong>。</p>
+<h3>坑 4：整数除法</h3>
+<pre><code class="language-python">7 / 2    # 3.5（真除法，对应 JS 的 /）
+7 // 2   # 3（整除，对应 Math.floor）
+7 % 2    # 1（取模）
+</code></pre>
+<p>TS 中 <code>/</code> 对整数也是浮点，Python 多了 <code>//</code> 整除。</p>
+<h3>坑 5：没有块级作用域</h3>
+<pre><code class="language-python">for i in range(3):
+    pass
+print(i)  # 2，循环变量泄漏到外部！
+</code></pre>
+<p>Python 是函数级作用域，循环/条件内的变量外部可见。</p>
+<h3>坑 6：字典 key 不存在报错</h3>
+<pre><code class="language-python">d = {&quot;a&quot;: 1}
+d[&quot;b&quot;]        # KeyError！不是 undefined
+d.get(&quot;b&quot;)    # None，安全
+d.get(&quot;b&quot;, 0) # 0，带默认值
+</code></pre>
+<p>对应 TS 的 <code>obj.b</code> 返回 <code>undefined</code>，Python 直接抛异常。</p>
+<h3>坑 7：GIL 限制多线程</h3>
+<p>Python 多线程不能真正并行 CPU 密集任务（GIL），需用多进程。IO 密集任务多线程/协程没问题。</p>
+<h3>坑 8：布尔值首字母大写</h3>
+<p><code>True</code> / <code>False</code> / <code>None</code>，不是 <code>true</code>/<code>false</code>/<code>null</code>。</p>
+<h3>坑 9：字符串不可变</h3>
+<pre><code class="language-python">s = &quot;hello&quot;
+s[0] = &quot;H&quot;   # TypeError！字符串不可变
+s = &quot;H&quot; + s[1:]  # 正确
+</code></pre>
+<h3>坑 10：<code>len()</code> 是内置函数，不是方法</h3>
+<pre><code class="language-python">len([1,2,3])   # 正确
+[1,2,3].len()  # 错误！没有 .length 属性
+</code></pre>
+<hr>
+<h2>11. 生态速查表（JS 库 → Python 对应）</h2>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>JS/TS 生态</th>
+<th>Python 生态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HTTP 请求</td>
+<td>axios / fetch</td>
+<td><code>requests</code> / <code>httpx</code>（异步）</td>
+</tr>
+<tr>
+<td>Web 框架</td>
+<td>Express / NestJS</td>
+<td>Flask / Django / FastAPI</td>
+</tr>
+<tr>
+<td>异步 Web</td>
+<td>Fastify</td>
+<td>FastAPI（ASGI）</td>
+</tr>
+<tr>
+<td>测试</td>
+<td>Jest / Vitest</td>
+<td>pytest / unittest</td>
+</tr>
+<tr>
+<td>代码检查</td>
+<td>ESLint</td>
+<td>flake8 / ruff</td>
+</tr>
+<tr>
+<td>格式化</td>
+<td>Prettier</td>
+<td>black / autopep8</td>
+</tr>
+<tr>
+<td>类型检查</td>
+<td>tsc</td>
+<td>mypy / pyright</td>
+</tr>
+<tr>
+<td>日期处理</td>
+<td>dayjs / date-fns</td>
+<td>datetime（标准库）</td>
+</tr>
+<tr>
+<td>数据处理</td>
+<td>lodash</td>
+<td>内置 + pandas</td>
+</tr>
+<tr>
+<td>数值计算</td>
+<td>math.js</td>
+<td>NumPy</td>
+</tr>
+<tr>
+<td>数据可视化</td>
+<td>Chart.js / D3</td>
+<td>Matplotlib / Seaborn</td>
+</tr>
+<tr>
+<td>机器学习</td>
+<td>TensorFlow.js</td>
+<td>scikit-learn / PyTorch</td>
+</tr>
+<tr>
+<td>爬虫</td>
+<td>Puppeteer / Cheerio</td>
+<td>requests + BeautifulSoup / Scrapy</td>
+</tr>
+<tr>
+<td>任务队列</td>
+<td>Bull</td>
+<td>Celery / RQ</td>
+</tr>
+<tr>
+<td>配置</td>
+<td>dotenv</td>
+<td>python-dotenv</td>
+</tr>
+<tr>
+<td>日志</td>
+<td>winston / pino</td>
+<td>logging（标准库）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>12. 学习路径建议</h2>
+<ol>
+<li><strong>第 1 周</strong>：过一遍本教程，用 Python 重写一个你熟悉的 TS 小工具（如文件处理、API 调用）；</li>
+<li><strong>第 2 周</strong>：学 <code>pytest</code> 写测试，学 <code>requests</code>/<code>FastAPI</code> 写接口，适应动态类型；</li>
+<li><strong>第 3 周</strong>：学 <code>asyncio</code> 异步编程，理解事件循环和 GIL；</li>
+<li><strong>持续</strong>：读 <code>PEP 8</code>（Python 代码风格），用 <code>black</code> + <code>mypy</code> 保持代码质量；</li>
+<li><strong>进阶</strong>：学装饰器、生成器、上下文管理器、描述符等 Pythonic 特性。</li>
+</ol>
+<p><strong>核心心态</strong>：从 TS 到 Python，最大的转变不是语法，而是从&quot;编译器帮我抓错&quot;到&quot;测试和运行时帮我抓错&quot;。拥抱动态类型的灵活性，同时用 type hints + mypy 保留类型安全的好处。</p>
+<hr>
+<h2>附：5 分钟速查卡</h2>
+<pre><code class="language-python"># 变量
+x = 1
+name: str = &quot;Alice&quot;  # 类型注解（不强制）
+
+# 数据结构
+lst = [1, 2, 3]          # list
+d = {&quot;a&quot;: 1}             # dict
+s = {1, 2}               # set
+t = (1, 2)               # tuple
+
+# 函数
+def f(a, b=1, *args, **kwargs):
+    return a + b
+
+# 类
+class C:
+    def __init__(self, x): self.x = x
+    def method(self): return self.x
+
+# 异步
+async def f(): await asyncio.sleep(1)
+asyncio.run(f())
+
+# 错误
+try: ...
+except Exception as e: ...
+finally: ...
+
+# 常用
+len(x), range(n), enumerate(lst), zip(a,b), sorted(lst)
+</code></pre>
+</div>
+</body>
+</html>
