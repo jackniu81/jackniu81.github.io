@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">102</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,112 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/06/13/Algorithm-Instanceof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/13/Algorithm-Instanceof/" class="post-title-link" itemprop="url">算法 - 手写 instanceof</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-06-13 11:47:29" itemprop="dateCreated datePublished" datetime="2025-06-13T11:47:29+08:00">2025-06-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个函数 <code>myInstanceof(left, right)</code>，等价于原生 <code>instanceof</code> 运算符：</p>
+<ul>
+<li>判断 <code>left</code> 是否是 <code>right</code> 的实例，即 <code>right.prototype</code> 是否出现在 <code>left</code> 的<strong>原型链</strong>上。</li>
+<li>是返回 <code>true</code>，否则返回 <code>false</code>。</li>
+</ul>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">myInstanceof([], Array)      // true</span><br><span class="line">myInstanceof([], Object)     // true（Array.prototype 的原型是 Object.prototype）</span><br><span class="line">myInstanceof(1, Number)      // false（原始值不在原型链上；new Number(1) 则 true）</span><br><span class="line">myInstanceof(null, Object)   // false</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p><code>instanceof</code> 的本质：<strong>沿 <code>left</code> 的原型链逐级向上查找，看能否碰到 <code>right.prototype</code></strong>。</p>
+<p>关键概念澄清：</p>
+<ul>
+<li><code>instanceof</code> 判断的不是「谁 new 出来的」，而是「<code>left.__proto__</code> 链上有没有 <code>right.prototype</code> 这个对象引用」。</li>
+<li>原型链靠 <code>__proto__</code>（即 <code>Object.getPrototypeOf</code>）向上走；构造函数的 <code>prototype</code> 挂在实例的 <code>__proto__</code> 上。</li>
+</ul>
+<p>算法步骤：</p>
+<ol>
+<li>若 <code>left</code> 是原始值或 <code>null</code>，直接 <code>false</code>（原始值没有原型链，原生也会返回 false）。</li>
+<li>取 <code>right.prototype</code> 作为目标。</li>
+<li>从 <code>Object.getPrototypeOf(left)</code> 开始，沿 <code>__proto__</code> 上溯：命中目标即 <code>true</code>；到 <code>null</code>（原型链顶）仍未命中则 <code>false</code>。</li>
+</ol>
+<blockquote>
+<p>进阶：原生 <code>instanceof</code> 会先调用 <code>right</code> 上的静态方法 <code>Symbol.hasInstance</code>（若定义），能提到这点是满分细节。</p>
+</blockquote>
+<ul>
+<li>时间复杂度：<code>O(原型链长度)</code>。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">myInstanceof</span>(<span class="params"><span class="attr">left</span>: <span class="built_in">any</span>, <span class="attr">right</span>: <span class="built_in">any</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="comment">// 原始值 / null / undefined 直接 false</span></span><br><span class="line">    <span class="keyword">if</span> (left === <span class="literal">null</span> || (<span class="keyword">typeof</span> left !== <span class="string">&quot;object&quot;</span> &amp;&amp; <span class="keyword">typeof</span> left !== <span class="string">&quot;function&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持 Symbol.hasInstance（对齐原生优先级）</span></span><br><span class="line">    <span class="keyword">const</span> hasInstance = right[<span class="title class_">Symbol</span>.<span class="property">hasInstance</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> hasInstance === <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> !!hasInstance.<span class="title function_">call</span>(right, left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> right !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&quot;Right-hand side of &#x27;instanceof&#x27; is not callable&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> proto = right.<span class="property"><span class="keyword">prototype</span></span>; <span class="comment">// 要找的目标</span></span><br><span class="line">    <span class="keyword">let</span> cursor = <span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(left);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cursor !== <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cursor === proto) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        cursor = <span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(cursor); <span class="comment">// 沿原型链上溯</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Animal</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Dog</span>));     <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Animal</span>));  <span class="comment">// true（继承链）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Object</span>));  <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="string">&quot;str&quot;</span>, <span class="title class_">String</span>));      <span class="comment">// false（原始值）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;s&quot;</span>), <span class="title class_">String</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>原型链三条铁律</strong>要能脱口而出：<code>实例.__proto__ === 构造函数.prototype</code>；<code>构造函数.__proto__ === Function.prototype</code>；<code>Object.prototype.__proto__ === null</code>（链顶）。</li>
+<li><strong><code>instanceof</code> vs <code>typeof</code> vs <code>Object.prototype.toString</code></strong>：<code>typeof</code> 只分原始类型、<code>instanceof</code> 查原型链判引用类型、<code>toString.call(x)</code> 最精确（能区分 Array&#x2F;Date&#x2F;RegExp）。三者的适用边界是高频追问。</li>
+<li><strong>跨 realm 失效</strong>：<code>iframe</code> 里的数组用 <code>instanceof Array</code> 会 false（不同全局的 <code>Array.prototype</code> 不同），此时应改用 <code>Array.isArray</code>。能点出这个坑非常加分。</li>
+<li><strong><code>class</code> 语法糖</strong>：<code>extends</code> 建立的正是一条 <code>Dog.prototype.__proto__ === Animal.prototype</code> 的链，<code>instanceof</code> 才因而能向上命中父类。</li>
+<li><code>Function instanceof Function === true</code>、<code>Object instanceof Function === true</code> 这些「鸡生蛋」常用来考你原型图是否清晰。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 手写题 | 原型链理解试金石</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1047,102 +1153,6 @@
 </ul>
 <blockquote>
 <p>难度：中等 | LeetCode 151 题 | 字符串与双指针</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/08/22/Algorithm-Spiral-Matrix/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/22/Algorithm-Spiral-Matrix/" class="post-title-link" itemprop="url">算法 - 螺旋矩阵 (Spiral Matrix)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-08-22 16:58:20" itemprop="dateCreated datePublished" datetime="2024-08-22T16:58:20+08:00">2024-08-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个 <code>m × n</code> 的矩阵 <code>matrix</code>，按照<strong>螺旋顺序</strong>返回矩阵中的所有元素（从外层到内层，顺时针）。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入: [[1,2,3],</span><br><span class="line">       [4,5,6],</span><br><span class="line">       [7,8,9]]</span><br><span class="line">输出: [1,2,3,6,9,8,7,4,5]</span><br><span class="line"></span><br><span class="line">输入: [[1,2,3,4],</span><br><span class="line">       [5,6,7,8],</span><br><span class="line">       [9,10,11,12]]</span><br><span class="line">输出: [1,2,3,4,8,12,11,10,9,5,6,7]</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>螺旋就是「右 → 下 → 左 → 上」四条边循环遍历，每走完一条边就把这条边界向内收缩一格。</p>
-<p>维护四个边界：<code>top</code>、<code>bottom</code>、<code>left</code>、<code>right</code>。循环执行：</p>
-<ol>
-<li><strong>向左到右</strong>遍历第 <code>top</code> 行，然后 <code>top++</code>（这一行用完）。</li>
-<li><strong>从上到下</strong>遍历第 <code>right</code> 列，然后 <code>right--</code>。</li>
-<li>若 <code>top &lt;= bottom</code>，<strong>从右到左</strong>遍历第 <code>bottom</code> 行，然后 <code>bottom--</code>。</li>
-<li>若 <code>left &lt;= right</code>，<strong>从下到上</strong>遍历第 <code>left</code> 列，然后 <code>left++</code>。</li>
-</ol>
-<p>关键：第 3、4 步在收缩后要<strong>再判断边界是否仍合法</strong>，否则单行&#x2F;单列矩阵会重复遍历回去。</p>
-<ul>
-<li>时间复杂度：<code>O(m × n)</code>，每个元素访问一次。</li>
-<li>空间复杂度：<code>O(1)</code>（不计输出）。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">spiralOrder</span>(<span class="params"><span class="attr">matrix</span>: <span class="built_in">number</span>[][]</span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">if</span> (matrix.<span class="property">length</span> === <span class="number">0</span>) <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> top = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> bottom = matrix.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> right = matrix[<span class="number">0</span>].<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (top &lt;= bottom &amp;&amp; left &lt;= right) &#123;</span><br><span class="line">        <span class="comment">// → 顶行</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> col = left; col &lt;= right; col++) res.<span class="title function_">push</span>(matrix[top][col]);</span><br><span class="line">        top++;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ↓ 右列</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> row = top; row &lt;= bottom; row++) res.<span class="title function_">push</span>(matrix[row][right]);</span><br><span class="line">        right--;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ← 底行（确保还有一行）</span></span><br><span class="line">        <span class="keyword">if</span> (top &lt;= bottom) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> col = right; col &gt;= left; col--) res.<span class="title function_">push</span>(matrix[bottom][col]);</span><br><span class="line">            bottom--;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ↑ 左列（确保还有一列）</span></span><br><span class="line">        <span class="keyword">if</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> row = bottom; row &gt;= top; row--) res.<span class="title function_">push</span>(matrix[row][left]);</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">spiralOrder</span>([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]]));</span><br><span class="line"><span class="comment">// [1,2,3,6,9,8,7,4,5]</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>生成螺旋矩阵 II（59 题）</strong>：反向操作，按螺旋顺序往空矩阵里填 1..n²，边界收缩逻辑复用。</li>
-<li><strong>方向数组写法</strong>：用 <code>dirs = [[0,1],[1,0],[0,-1],[-1,0]]</code> + 记录已访问 + 撞墙&#x2F;撞已访问就转向，是更通用的「螺旋&#x2F;蛇形」模板，扩展性强但需 O(mn) 的 visited。</li>
-<li>模拟类题目没有算法难度，考的是<strong>边界严谨性</strong>和代码条理性，务必手推 <code>1×n</code>、<code>n×1</code>、<code>1×1</code> 三种退化用例。</li>
-<li>相似题：<strong>旋转图像（48）</strong>、<strong>矩阵置零（73）</strong> 都在训练你在二维坐标下干净地操作边界。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 54 题 | 边界模拟</p>
 </blockquote>
 
       

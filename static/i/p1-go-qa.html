@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go 语言高频面试题 80 道（附答案）</title>
+<style>
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
+          --code-bg:#161b22; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+<h1>Go 语言高频面试题 80 道（附答案）</h1>
+<blockquote>
+<p>按从简单到难排列，覆盖 Go 基础语法、并发（goroutine/channel）、内存管理、接口、错误处理、工程实践。Go 面试<strong>并发是核心</strong>，占比通常超过 50%。</p>
+</blockquote>
+<h2>一、基础语法</h2>
+<h3>1. Go 有什么特点？为什么选 Go？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>编译为原生机器码，启动快、无运行时依赖；2) 内置 goroutine 和 channel，并发编程简单高效；3) 语法极简，学习曲线平缓；4) 标准库强大；5) 静态类型但代码表达接近动态语言；6) 跨平台编译方便。适合云原生、微服务、CLI 工具、高并发服务。</li>
+</ol>
+<h3>2. Go 是编译型还是解释型？</h3>
+<p><strong>答案：</strong>
+编译型，直接编译为机器码（区别于 Java 的 JVM、C# 的 CLR JIT）。编译产物是单个可执行文件，部署简单，启动快。</p>
+<h3>3. 值类型和引用类型有哪些？</h3>
+<p><strong>答案：</strong>
+值类型：int、float、bool、string、array、struct；引用类型：slice、map、channel、pointer、function、interface、slice 底层是引用类型。</p>
+<h3>4. <code>var x int = 1</code> 和 <code>x := 1</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>var x int = 1</code> 是完整声明，可用于包级变量（全局变量不能用 <code>:=</code>）；<code>x := 1</code> 是短变量声明，只能在函数内使用，类型自动推导。</p>
+<h3>5. 未使用的变量会怎样？</h3>
+<p><strong>答案：</strong>
+<strong>编译错误</strong>。这是 Go 的强制代码卫生，TS/C# 只警告。未使用的包导入也会报错。</p>
+<h3>6. <code>const</code> 和 <code>var</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>const</code> 编译期确定，不能修改；<code>var</code> 可以是运行时确定。Go 的 const 不支持结构体常量（除非用 <code>iota</code> 或无类型常量）。</p>
+<h3>7. iota 是什么？</h3>
+<p><strong>答案：</strong>
+<code>iota</code> 是 Go 枚举生成器，在 const 块中从 0 开始递增，常用于定义枚举：</p>
+<pre><code class="language-go">const (
+    Sunday = iota  // 0
+    Monday         // 1
+    Tuesday        // 2
+)
+</code></pre>
+<h3>8. 基本类型有哪些？</h3>
+<p><strong>答案：</strong>
+int（含 int8/16/32/64）、uint（无符号）、float32/64、complex64/128、bool、string、byte（uint8 别名）、rune（int32 别名，代表 Unicode 码点）。</p>
+<h3>9. <code>string</code> 是可变的吗？</h3>
+<p><strong>答案：</strong>
+不可变。<code>s[0] = &#39;a&#39;</code> 编译错误。要修改需转换为 <code>[]byte</code>，修改后再转回 <code>string</code>（会分配新内存）。</p>
+<h3>10. 数组和切片的区别？</h3>
+<p><strong>答案：</strong>
+数组固定长度，是值类型（赋值/传参会拷贝整个数组）；切片动态长度，是引用类型（底层共享数组）。项目中几乎只用切片。</p>
+<h3>11. 切片的底层结构？</h3>
+<p><strong>答案：</strong>
+<code>slice = { ptr, len, cap }</code>：</p>
+<ul>
+<li>ptr：指向底层数组；</li>
+<li>len：当前长度；</li>
+<li>cap：容量（从 ptr 到底层数组末尾的长度）。
+<code>append</code> 超过 cap 时会分配新数组并拷贝（通常翻倍）。</li>
+</ul>
+<h3>12. <code>make</code> 和 <code>new</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>new(T)</code> 分配零值内存并返回指针 <code>*T</code>；<code>make(T, args)</code> 只用于 slice/map/channel，返回初始化后的类型（不是指针）。因为这三种类型必须初始化才能用（slice 的底层数组、map 的哈希表、channel 的缓冲区）。</p>
+<h3>13. <code>len</code> 和 <code>cap</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>len</code> 返回当前元素个数；<code>cap</code> 返回底层容量。对切片，<code>cap &gt;= len</code>；对 map，<code>cap</code> 不存在；对 channel，<code>cap</code> 返回缓冲区大小。</p>
+<h3>14. 切片扩容规则？</h3>
+<p><strong>答案：</strong>
+Go 1.18+：小切片（&lt;256）翻倍，大切片按因子 1.25 增长。具体：</p>
+<ul>
+<li>老容量 &lt; 256：新容量 = 老容量 * 2；</li>
+<li>老容量 &gt;= 256：新容量 = 老容量 * 1.25。
+扩容会分配新数组并拷贝旧数据，有性能开销。预分配（<code>make([]T, 0, n)</code>）可避免。</li>
+</ul>
+<h3>15. 如何复制切片？</h3>
+<p><strong>答案：</strong>
+<code>copy(dst, src)</code> 复制元素；或 <code>s2 = append([]int{}, s1...)</code>。注意切片赋值 <code>s2 = s1</code> 只是复制了 slice header，底层数组还是共享的。</p>
+<h3>16. map 的底层实现？</h3>
+<p><strong>答案：</strong>
+哈希表。bucket 数组 + 链地址法解决冲突。每个 bucket 存 8 个 key-value，溢出链表扩展。负载因子超过阈值时扩容（rehash）。</p>
+<h3>17. map 可以并发读写吗？</h3>
+<p><strong>答案：</strong>
+<strong>不可以</strong>，直接 fatal error（concurrent map read and write）。解决方案：用 <code>sync.RWMutex</code> 保护，或用 <code>sync.Map</code>（读多写少场景）。</p>
+<h3>18. <code>for-range</code> 遍历是值拷贝还是引用？</h3>
+<p><strong>答案：</strong>
+值拷贝。修改 <code>for i, v := range s</code> 中的 <code>v</code> 不影响原切片。要修改原值用 <code>s[i]</code>。</p>
+<h3>19. <code>defer</code> 是什么？执行顺序？</h3>
+<p><strong>答案：</strong>
+<code>defer</code> 注册一个函数调用，在当前函数返回前执行。多个 defer 按 LIFO（后进先出）顺序执行。常用于资源释放（关闭文件、解锁）。</p>
+<h3>20. <code>defer</code> 的参数何时求值？</h3>
+<p><strong>答案：</strong>
+<strong>注册时就求值</strong>，但执行延迟到函数返回。这是常见坑：</p>
+<pre><code class="language-go">i := 1
+defer fmt.Println(i)  // 输出 1
+i = 2
+</code></pre>
+<h3>21. <code>panic</code> 和 <code>recover</code> 是什么？</h3>
+<p><strong>答案：</strong>
+<code>panic</code> 是运行时恐慌，中断正常流程，沿调用栈回溯（类似异常抛出）；<code>recover</code> 在 defer 中捕获 panic，恢复正常执行。<strong>不推荐用 panic 做常规错误处理</strong>，只用于不可恢复的错误。</p>
+<h3>22. Go 没有异常，如何处理错误？</h3>
+<p><strong>答案：</strong>
+多返回值返回 <code>error</code>：<code>result, err := f()</code>。<code>err != nil</code> 时处理。错误是值，可包装、比较、类型断言。</p>
+<h3>23. <code>errors.Is</code> 和 <code>errors.As</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>errors.Is(err, target)</code> 判断错误链中是否有等于 target 的错误（对应 C# 的 <code>is</code>）；<code>errors.As(err, &amp;target)</code> 提取错误链中某个类型的错误（对应 C# 的 <code>as</code>）。</p>
+<h3>24. 如何包装错误？</h3>
+<p><strong>答案：</strong>
+<code>fmt.Errorf(&quot;上下文: %w&quot;, err)</code>，<code>%w</code> 保留错误链。<code>%v</code> 也可以包装但丢失链。</p>
+<h3>25. Go 有构造函数吗？</h3>
+<p><strong>答案：</strong>
+没有内置构造函数，用工厂函数约定：<code>func NewT(...) *T { return &amp;T{...} }</code>。</p>
+<h3>26. 方法和函数的区别？</h3>
+<p><strong>答案：</strong>
+方法有接收者（receiver），绑定到某个类型；函数没有接收者。接收者可以是值类型或指针类型。</p>
+<h3>27. 值接收者和指针接收者的区别？</h3>
+<p><strong>答案：</strong>
+值接收者：操作的是副本，不修改原对象；指针接收者：操作的是原对象。如果方法需要修改接收者、或结构体较大，用指针接收者。同一类型的方法集应该统一（要么全用值接收者，要么全用指针接收者）。</p>
+<h3>28. Go 有继承吗？</h3>
+<p><strong>答案：</strong>
+没有。用**组合（嵌入）**替代继承。<code>type Child struct { Parent }</code> 嵌入 Parent，Child 自动获得 Parent 的方法和字段（提升），但不是 is-a 关系。</p>
+<h3>29. 接口是什么？如何实现？</h3>
+<p><strong>答案：</strong>
+接口定义了方法集。任何类型只要实现了接口的所有方法，就<strong>自动</strong>实现了该接口（隐式实现，不需要 <code>implements</code> 关键字）。这是 Go 的鸭子类型风格。</p>
+<h3>30. 空接口 <code>any</code> 是什么？</h3>
+<p><strong>答案：</strong>
+<code>interface{}</code> 的别名（Go 1.18+ 叫 <code>any</code>），可以表示任何类型。类似 C# 的 <code>object</code>。</p>
+<h3>31. 类型断言是什么？</h3>
+<p><strong>答案：</strong>
+从接口中提取具体类型：<code>v, ok := i.(int)</code>。安全写法带 <code>ok</code>；不安全写法 <code>v := i.(int)</code>，类型不对会 panic。</p>
+<h3>32. 类型开关？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-go">switch v := i.(type) {
+case int: ...
+case string: ...
+default: ...
+}
+</code></pre>
+<h3>33. 什么是接口的 nil 陷阱？</h3>
+<p><strong>答案：</strong>
+接口值 = (type, value)。即使 value 是 nil，如果 type 不是 nil，接口也不是 nil：</p>
+<pre><code class="language-go">var err error = (*os.PathError)(nil)  // type=*PathError, value=nil
+err != nil  // true！
+</code></pre>
+<p>这是 Go 著名坑，返回 error 时要注意。</p>
+<h3>34. Go 有泛型吗？</h3>
+<p><strong>答案：</strong>
+Go 1.18+ 引入。用 <code>[T Constraint]</code> 语法：</p>
+<pre><code class="language-go">func Max[T Ordered](a, b T) T {
+    if a &gt; b { return a }
+    return b
+}
+</code></pre>
+<p>泛型相对简单，不支持协变逆变、默认类型参数等高级特性。</p>
+<h2>二、并发（核心考点）</h2>
+<h3>35. goroutine 是什么？和线程的区别？</h3>
+<p><strong>答案：</strong>
+goroutine 是 Go 轻量协程，初始栈 2KB（可动态伸缩），由 Go 调度器（GMP）管理，用户态调度，切换开销极小。OS 线程栈 ~1MB，由 OS 调度，切换开销大。一个 Go 程序可跑几十万个 goroutine，OS 线程通常几千个就到极限。</p>
+<h3>36. GMP 模型是什么？</h3>
+<p><strong>答案：</strong>
+Go 调度器的三个核心组件：</p>
+<ul>
+<li><strong>G（Goroutine）</strong>：goroutine，存栈和指令；</li>
+<li><strong>M（Machine）</strong>：OS 线程，真正执行代码；</li>
+<li><strong>P（Processor）</strong>：逻辑处理器，持有本地 goroutine 队列，M 必须绑定 P 才能执行 G。
+P 的数量由 <code>GOMAXPROCS</code> 决定（默认 CPU 核数）。这样减少了全局锁竞争，实现了高效调度。</li>
+</ul>
+<h3>37. channel 是什么？</h3>
+<p><strong>答案：</strong>
+channel 是 goroutine 间通信的管道，类型安全。发送 <code>ch &lt;- v</code>，接收 <code>&lt;-ch</code>。Go 哲学：&quot;不要通过共享内存来通信，而要通过通信来共享内存&quot;。</p>
+<h3>38. 无缓冲 channel 和有缓冲 channel 的区别？</h3>
+<p><strong>答案：</strong>
+无缓冲：发送和接收必须同时就绪，否则阻塞（同步通信，类似 rendezvous）。有缓冲：缓冲未满时发送不阻塞，缓冲未空时接收不阻塞（异步，类似队列）。</p>
+<h3>39. 如何关闭 channel？</h3>
+<p><strong>答案：</strong>
+<code>close(ch)</code>。关闭后：接收方可以继续接收剩余值，返回 <code>(零值, false)</code>；发送方向已关闭的 channel 发送会 panic。通常由发送方关闭，不要由接收方关闭（可能导致 panic）。</p>
+<h3>40. <code>for range ch</code> 是什么？</h3>
+<p><strong>答案：</strong>
+持续从 channel 接收值，直到 channel 被关闭：</p>
+<pre><code class="language-go">for v := range ch {
+    fmt.Println(v)
+}
+</code></pre>
+<h3>41. <code>select</code> 是什么？</h3>
+<p><strong>答案：</strong>
+同时监听多个 channel，哪个就绪就执行哪个 case。如果都没就绪，执行 <code>default</code>（非阻塞）或阻塞等待。<code>time.After</code> 常用于超时控制。</p>
+<h3>42. <code>sync.WaitGroup</code> 是什么？</h3>
+<p><strong>答案：</strong>
+等待一组 goroutine 完成。<code>Add(n)</code> 增加计数，<code>Done()</code> 减一，<code>Wait()</code> 阻塞直到计数为 0。常用于主 goroutine 等待所有 worker 完成。</p>
+<h3>43. <code>sync.Mutex</code> 和 <code>sync.RWMutex</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>Mutex</code>：互斥锁，同一时刻只有一个 goroutine 访问。<code>RWMutex</code>：读写锁，多个读可并发，写独占。读多写少场景用 RWMutex 性能更好。</p>
+<h3>44. <code>sync.Once</code> 是什么？</h3>
+<p><strong>答案：</strong>
+保证某个操作只执行一次，常用于单例初始化：</p>
+<pre><code class="language-go">var once sync.Once
+once.Do(func() { init() })
+</code></pre>
+<h3>45. <code>context</code> 包的作用？</h3>
+<p><strong>答案：</strong>
+跨 goroutine 传递取消信号、超时、截止时间、请求元数据。<code>context.WithCancel</code>、<code>context.WithTimeout</code>、<code>context.WithDeadline</code>。是 Go 并发的标准做法（对应 C# 的 CancellationToken）。</p>
+<h3>46. <code>context.Background()</code> 和 <code>context.TODO()</code> 的区别？</h3>
+<p><strong>答案：</strong>
+都是空 Context。<code>Background()</code> 用于主入口、根 context；<code>TODO()</code> 用于还没确定用什么 context 时的占位。</p>
+<h3>47. 如何优雅地关闭 goroutine？</h3>
+<p><strong>答案：</strong>
+用 <code>context.Done()</code> 或关闭 channel 通知。goroutine 内部 <code>select</code> 监听取消信号：</p>
+<pre><code class="language-go">select {
+case data := &lt;-ch:
+    process(data)
+case &lt;-ctx.Done():
+    return  // 退出
+}
+</code></pre>
+<h3>48. 常见并发模式有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li><strong>扇出/扇入</strong>（fan-out/fan-in）：多个 worker 从 channel 读，结果汇总到另一个 channel；2) <strong>pipeline</strong>：多个 stage 串联；3) <strong>worker pool</strong>：固定数量 worker 处理任务队列；4) <strong>pub/sub</strong>：一个发送者，多个接收者。</li>
+</ol>
+<h3>49. 什么是竞态条件？如何检测？</h3>
+<p><strong>答案：</strong>
+多个 goroutine 并发访问共享资源，至少一个写，且没有同步机制。用 <code>go run -race</code> 或 <code>go test -race</code> 检测。</p>
+<h3>50. goroutine 泄漏是什么？</h3>
+<p><strong>答案：</strong>
+goroutine 永远阻塞（比如向无接收方的 channel 发送、或接收已关闭的 channel），无法退出。原因：没传 context、没正确关闭 channel。用 <code>pprof</code> 监控 goroutine 数量。</p>
+<h2>三、内存与性能</h2>
+<h3>51. Go 的内存模型？</h3>
+<p><strong>答案：</strong>
+堆分配 vs 栈分配。编译器做逃逸分析：如果变量不逃逸出函数，分配在栈（函数结束自动回收，无 GC 开销）；否则分配在堆（GC 管理）。</p>
+<h3>52. 逃逸分析是什么？</h3>
+<p><strong>答案：</strong>
+编译器分析变量是否&quot;逃逸&quot;出函数（比如被返回、被闭包引用、存入堆）。不逃逸的变量在栈上分配，逃逸的在堆上。用 <code>go build -gcflags=&quot;-m&quot;</code> 查看逃逸分析结果。</p>
+<h3>53. Go 的 GC 是什么算法？</h3>
+<p><strong>答案：</strong>
+并发、三色标记、混合写屏障的分代 GC。目标是 STW（Stop The World）时间短（通常 &lt; 1ms）。不是引用计数，不是分代收集（Go 1.5+ 是并发标记清除）。</p>
+<h3>54. 如何优化 Go 程序性能？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>用 <code>pprof</code> 定位 CPU/内存热点；2) 减少逃逸（避免不必要的指针/闭包）；3) 预分配 slice/map 容量；4) 复用对象（sync.Pool）；5) 减少字符串拼接（用 <code>strings.Builder</code>）；6) 用 <code>atomic</code> 替代 mutex。</li>
+</ol>
+<h3>55. <code>sync.Pool</code> 是什么？</h3>
+<p><strong>答案：</strong>
+对象池，复用频繁分配/回收的对象，减少 GC 压力。适合临时对象（如 buffer）。注意：Pool 中的对象可能在 GC 时被自动回收，不能存需要长期持有的对象。</p>
+<h3>56. <code>atomic</code> 包的作用？</h3>
+<p><strong>答案：</strong>
+原子操作，无锁并发。<code>atomic.AddInt32</code>、<code>atomic.CompareAndSwapUint64</code> 等。比 mutex 轻量，但只支持基本类型。</p>
+<h3>57. 值拷贝和指针的选择？</h3>
+<p><strong>答案：</strong>
+小结构体（&lt; 几十字节）用值拷贝，避免逃逸；大结构体或需要修改原值用指针。但指针会导致逃逸到堆，增加 GC 压力。权衡可读性和性能。</p>
+<h2>四、工程实践</h2>
+<h3>58. Go 项目标准布局？</h3>
+<p><strong>答案：</strong></p>
+<pre><code>myapp/
+  cmd/          # 主程序入口
+    server/
+      main.go
+  internal/     # 私有包（不能被外部 import）
+    handler/
+    service/
+  pkg/          # 可被外部引用的公共包
+  go.mod
+</code></pre>
+<h3>59. <code>internal</code> 包的作用？</h3>
+<p><strong>答案：</strong>
+<code>internal/</code> 下的包只能被 <code>internal/</code> 的父目录树内的包引用，外部项目无法 import。类似 C# 的 <code>internal</code> 访问修饰符。</p>
+<h3>60. Go 的错误处理最佳实践？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>错误要带上下文（<code>fmt.Errorf(&quot;xxx: %w&quot;, err)</code>）；2) 不要吞错误（至少 log）；3) error 是值，可以比较、判断类型；4) 不要用 panic 做常规流程；5) 只在真正不可恢复时用 panic。</li>
+</ol>
+<h3>61. 如何写单元测试？</h3>
+<p><strong>答案：</strong>
+测试文件命名 <code>xxx_test.go</code>，测试函数 <code>TestXxx(t *testing.T)</code>。用标准库 <code>testing</code>，断言自己写或用 <code>testify</code>。表驱动测试是 Go 惯例：</p>
+<pre><code class="language-go">func TestAdd(t *testing.T) {
+    tests := []struct{ a, b, want int }{
+        {1, 2, 3}, {0, 0, 0}, {-1, 1, 0},
+    }
+    for _, tt := range tests {
+        if got := Add(tt.a, tt.b); got != tt.want {
+            t.Errorf(&quot;Add(%d,%d)=%d, want %d&quot;, tt.a, tt.b, got, tt.want)
+        }
+    }
+}
+</code></pre>
+<h3>62. Go 的包导入习惯？</h3>
+<p><strong>答案：</strong>
+标准库、第三方库、本地包分组：</p>
+<pre><code class="language-go">import (
+    &quot;fmt&quot;           // 标准库
+    &quot;os&quot;
+
+    &quot;github.com/gin-gonic/gin&quot;  // 第三方
+
+    &quot;myapp/internal/handler&quot;     // 本地
+)
+</code></pre>
+<h3>63. Go module 的版本管理？</h3>
+<p><strong>答案：</strong>
+语义化版本（semver）：v1.2.3。<code>go.mod</code> 记录依赖，<code>go.sum</code> 校验哈希。<code>go get package@version</code> 升级。</p>
+<h3>64. 如何避免循环导入？</h3>
+<p><strong>答案：</strong>
+循环依赖编译错误。解决方案：1) 提取公共接口到独立包；2) 依赖倒置（高层包定义接口，低层包实现）；3) 重新划分包职责。</p>
+<h3>65. Go 有异常吗？为什么不喜欢？</h3>
+<p><strong>答案：</strong>
+没有 try-catch。panic 类似异常但不推荐。Go 哲学：错误是值，显式处理。好处：1) 编译期强制处理错误；2) 不会有隐藏的控制流跳转；3) 性能更好（无展开栈）。</p>
+<h2>五、高频考点补充</h2>
+<h3>66. <code>make([]int, 5)</code> 和 <code>make([]int, 0, 5)</code> 的区别？</h3>
+<p><strong>答案：</strong>
+前者 len=5, cap=5（已有 5 个零值元素）；后者 len=0, cap=5（空切片，但底层数组预分配了 5 个位置，append 时不用扩容）。</p>
+<h3>67. <code>map</code> 遍历顺序？</h3>
+<p><strong>答案：</strong>
+<strong>随机</strong>。Go 故意打乱遍历顺序，避免依赖顺序的代码。每次遍历顺序可能不同。</p>
+<h3>68. 如何判断 channel 是否关闭？</h3>
+<p><strong>答案：</strong>
+<code>v, ok := &lt;-ch</code>。<code>ok=false</code> 表示 channel 已关闭。</p>
+<h3>69. 向已关闭的 channel 发送数据会怎样？</h3>
+<p><strong>答案：</strong>
+<strong>panic</strong>。从已关闭的 channel 接收可以（返回零值和 false）。</p>
+<h3>70. nil channel 有什么行为？</h3>
+<p><strong>答案：</strong>
+向 nil channel 发送/接收都会<strong>永久阻塞</strong>。常用于 select 中动态禁用某个 case。</p>
+<h3>71. <code>defer</code> 在循环中要注意什么？</h3>
+<p><strong>答案：</strong>
+defer 直到函数返回才执行，循环中多次 defer 会累积。如果需要在每次迭代结束时释放资源，要用匿名函数包裹：</p>
+<pre><code class="language-go">for _, f := range files {
+    func() {
+        defer f.Close()
+        // 处理 f
+    }()
+}
+</code></pre>
+<h3>72. Go 的字符串拼接最佳方式？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>少量拼接用 <code>+</code> 或 fmt.Sprintf；2) 大量拼接用 <code>strings.Builder</code>（预分配，避免多次拷贝）；3) 不要用 <code>+</code> 在循环中拼接（每次都分配新字符串）。</li>
+</ol>
+<h3>73. <code>rune</code> 和 <code>byte</code> 的区别？</h3>
+<p><strong>答案：</strong>
+<code>byte = uint8</code>，代表一个字节（ASCII 字符）；<code>rune = int32</code>，代表一个 Unicode 码点（可多字节）。遍历字符串时 <code>for _, r := range s</code> 是按 rune 遍历，<code>s[i]</code> 是按 byte 遍历（可能拆坏中文）。</p>
+<h3>74. Go 如何处理 JSON？</h3>
+<p><strong>答案：</strong>
+标准库 <code>encoding/json</code>。<code>json.Marshal</code> / <code>json.Unmarshal</code>。结构体字段首字母必须大写（导出），用 tag 自定义字段名：</p>
+<pre><code class="language-go">type User struct {
+    Name string `json:&quot;name&quot;`
+    Age  int    `json:&quot;age,omitempty&quot;`
+}
+</code></pre>
+<h3>75. Go 的接口为什么能隐式实现？</h3>
+<p><strong>答案：</strong>
+Go 设计者认为显式 <code>implements</code> 是负担，隐式实现更灵活。这样：1) 可以为第三方包定义的类型实现自己的接口；2) 依赖倒置更容易（消费者定义接口）。但也有缺点：不能在接口定义处查看所有实现。</p>
+<h3>76. Go 有构造函数，但为什么推荐 <code>NewT()</code> 而不是 <code>T{}</code>？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>可以做校验、初始化；2) 返回指针避免大结构体拷贝；3) 文档清晰；4) 后续加参数不破坏调用方（如果返回的是接口）。</li>
+</ol>
+<h3>77. Go 的错误和异常的本质区别？</h3>
+<p><strong>答案：</strong>
+错误是预期内的失败（文件不存在、网络超时），是普通返回值；异常是不可预期的运行时错误（数组越界、空指针），会 panic。Go 鼓励用错误，panic 只作为最后的兜底。</p>
+<h3>78. 什么是 CSP 模型？</h3>
+<p><strong>答案：</strong>
+Communicating Sequential Processes，顺序通信进程。Go 的并发模型基于 CSP：goroutine 是独立执行单元，channel 是它们之间的通信管道。哲学：&quot;不要共享内存来通信，要通过通信来共享内存&quot;。</p>
+<h3>79. Go 适合做什么？不适合做什么？</h3>
+<p><strong>答案：</strong>
+适合：云原生/微服务（Docker、K8s 都是 Go 写的）、CLI 工具、高并发后端、网络服务、中间件。不适合：前端 GUI、游戏开发、强面向对象的复杂领域（Go 没有继承和泛型高级特性）、机器学习（Python 生态更成熟）。</p>
+<h3>80. 如何系统回答&quot;为什么选择 Go 而不是 Java/C#&quot;？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>部署简单（单二进制，无 JVM）；2) 并发模型现代（goroutine vs 线程池）；3) 启动快（毫秒级 vs JVM 秒级）；4) 语法极简（学习成本低）；5) 标准库强大；6) 云原生生态统治地位（K8s/Docker/Prometheus）。代价：GC 不如 JVM 成熟、泛型弱、无继承。</li>
+</ol>
+<hr>
+<h2>总结</h2>
+<p>Go 面试<strong>并发是绝对核心</strong>（goroutine/channel/select/context/WaitGroup/竞态），占比通常一半以上。其次是切片/map 底层、defer、错误处理、接口隐式实现。建议重点准备并发编程题和实际项目中的并发场景。</p>
+</div>
+</body>
+</html>

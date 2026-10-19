@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Agent 工程师面试题（基础概念 + LangChain / LangGraph / Deep Agents 实战，附答案）</title>
+<title>AI Agent / 大模型应用开发面试题库（150 问，附答案）</title>
 <style>
   :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
           --code-bg:#161b22; --accent:#58a6ff; }
@@ -40,77 +40,160 @@
 <body>
 <div class="wrap">
   <a class="top-link" href="index.html">← 返回索引</a>
-<h1>AI Agent 工程师面试题（基础概念 + LangChain / LangGraph / Deep Agents 实战，附答案）</h1>
+<h1>AI Agent / 大模型应用开发面试题库（150 问，附答案）</h1>
 <blockquote>
-<p>一篇覆盖：Agent / ReAct / 记忆 / RAG / Function Calling / 多 Agent / A2A 等通用概念，以及主流框架的<strong>编码能力与工程决策</strong>（代码手写、机制原理、排错与方案设计）。</p>
+<p>覆盖：Agent 与 ReAct、Prompt 与结构化输出、RAG 与检索基础设施、记忆、工具调用、MCP / A2A / Agent Skills、LangChain / LangGraph / Deep Agents、平台集成、可靠性与安全、评测与可观测、部署推理与成本、场景设计、岗位与面试实战。</p>
+<p><strong>本文档由 <code>p0-ai-agent-qa.md</code> 与《AI 智能体与大模型应用开发面试题库.md》合并而成</strong>，统一为「问题 + 答案」形式，并对已有答案中的错误与过时内容做了更正（见各题内的 <code>❌ 更正</code> 标注）。</p>
+<p>标记说明：<code>必刷 / 高频 / 中频 / 低频</code> 来自真实面经出现频次；<code>基础 / 中等 / 较难</code> 为难度；<code>2026 新增</code> 为本次联网检索后补充的热点题；<code>腾讯一面</code> 表示来自大厂真实面试。文中框架 API、协议版本与价格以写作时点（2026-10）为准，实际以官方文档为准。</p>
 </blockquote>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E4%B8%80%E5%9F%BA%E7%A1%80%E8%AE%A4%E7%9F%A5%E4%B8%8E%E5%B7%A5%E7%A8%8B%E8%8C%83%E5%BC%8F1-15">一、基础认知与工程范式（1-15）</a></li>
+<li><a href="#%E4%BA%8Cprompt%E7%BB%93%E6%9E%84%E5%8C%96%E8%BE%93%E5%87%BA%E4%B8%8E%E6%8A%A4%E6%A0%8F16-23">二、Prompt、结构化输出与护栏（16-23）</a></li>
+<li><a href="#%E4%B8%89rag-%E4%B8%8E%E6%A3%80%E7%B4%A2%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD24-42">三、RAG 与检索基础设施（24-42）</a></li>
+<li><a href="#%E5%9B%9B%E8%AE%B0%E5%BF%86%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%8643-46">四、记忆与上下文管理（43-46）</a></li>
+<li><a href="#%E4%BA%94%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E4%B8%8E-function-calling47-55">五、工具调用与 Function Calling（47-55）</a></li>
+<li><a href="#%E5%85%AD%E5%8D%8F%E8%AE%AE%E5%B1%82mcpa2a-%E4%B8%8E-agent-skills56-70">六、协议层：MCP、A2A 与 Agent Skills（56-70）</a></li>
+<li><a href="#%E4%B8%83%E6%A1%86%E6%9E%B6%E4%B8%8E%E7%BC%96%E6%8E%92langchain--langgraph--deep-agents71-97">七、框架与编排：LangChain / LangGraph / Deep Agents（71-97）</a></li>
+<li><a href="#%E5%85%AB%E5%B9%B3%E5%8F%B0%E4%B8%8E%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%9098-100">八、平台与系统集成（98-100）</a></li>
+<li><a href="#%E4%B9%9D%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%AE%89%E5%85%A8%E4%B8%8E%E6%B2%BB%E7%90%86101-112">九、可靠性、安全与治理（101-112）</a></li>
+<li><a href="#%E5%8D%81%E8%AF%84%E6%B5%8B%E4%B8%8E%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7113-117">十、评测与可观测性（113-117）</a></li>
+<li><a href="#%E5%8D%81%E4%B8%80%E9%83%A8%E7%BD%B2%E6%8E%A8%E7%90%86%E6%80%A7%E8%83%BD%E4%B8%8E%E6%88%90%E6%9C%AC118-128">十一、部署、推理性能与成本（118-128）</a></li>
+<li><a href="#%E5%8D%81%E4%BA%8C%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF%E8%AE%BE%E8%AE%A1%E9%A2%98129-142">十二、典型场景设计题（129-142）</a></li>
+<li><a href="#%E5%8D%81%E4%B8%89%E4%BA%A7%E5%93%81%E6%8A%80%E8%83%BD%E4%B8%8E%E9%9D%A2%E8%AF%95%E5%AE%9E%E6%88%98143-150">十三、产品、技能与面试实战（143-150）</a></li>
+</ul>
 <hr>
-<h2>一、基础概念</h2>
-<h3>1. 什么是 AI Agent？它与普通 LLM 聊天有什么区别？</h3>
+<h2>一、基础认知与工程范式</h2>
+<h3>1. 什么是 AI Agent？它和普通 LLM 聊天、传统 AI 应用的区别是什么？ <strong>｜必刷 ｜基础</strong></h3>
 <p><strong>答案：</strong>
-AI Agent（智能体）是一种能够感知环境、自主规划、调用工具并执行动作以实现目标的 AI 系统。与普通 LLM 聊天不同，Agent 具备<strong>自主决策、多步执行、工具调用</strong>的能力。</p>
+一句话定义：<strong>Agent = 模型 + 工具集 + 运行循环 + 当前状态</strong>。</p>
+<ul>
+<li><strong>模型</strong>负责理解目标、分析当前局面、决定下一步；</li>
+<li><strong>工具集</strong>负责提供外部能力（搜索、数据库、文件系统、业务 API）；</li>
+<li><strong>运行循环</strong>负责让系统不是只回答一次，而是能&quot;想一步、做一步、看结果、再决定下一步&quot;；</li>
+<li><strong>当前状态</strong>负责保存消息、工具返回、中间结论。</li>
+</ul>
+<p>与传统 AI 应用的对比：</p>
 <table>
 <thead>
 <tr>
-<th>对比维度</th>
-<th>普通 LLM</th>
+<th>维度</th>
+<th>普通 LLM / 传统 AI 应用</th>
 <th>AI Agent</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>交互方式</td>
-<td>单轮/多轮对话</td>
-<td>自主规划、多步执行</td>
+<td>单轮请求 → 单轮结果</td>
+<td>围绕目标持续决策、多步执行</td>
 </tr>
 <tr>
-<td>工具使用</td>
+<td>决策</td>
+<td>被动回答 / 规则驱动</td>
+<td>主动规划、动态选择工具</td>
+</tr>
+<tr>
+<td>工具</td>
+<td>无或固定</td>
+<td>动态选择和调用</td>
+</tr>
+<tr>
+<td>状态</td>
 <td>无</td>
-<td>可调用外部工具、API、数据库</td>
+<td>有消息历史与任务状态</td>
 </tr>
 <tr>
-<td>记忆能力</td>
-<td>有限上下文窗口</td>
-<td>持久记忆（短期+长期）</td>
-</tr>
-<tr>
-<td>自主性</td>
-<td>被动回答</td>
-<td>主动规划和行动</td>
-</tr>
-<tr>
-<td>任务复杂度</td>
-<td>简单、单步</td>
-<td>复杂、多步、长周期</td>
+<td>任务</td>
+<td>简单、单步、路径已知</td>
+<td>复杂、多步、路径依赖中间结果</td>
 </tr>
 </tbody></table>
-<h3>2. AI Agent 的四大核心组件是什么？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li><strong>感知（Perception）</strong>：接收用户输入、环境状态、工具返回结果</li>
-<li><strong>规划（Planning）</strong>：分解任务、制定执行计划（如 ReAct、Chain-of-Thought）</li>
-<li><strong>记忆（Memory）</strong>：存储上下文（短期）和知识（长期），支持跨步骤推理</li>
-<li><strong>行动（Action）</strong>：调用工具、执行代码、调用 API、操作文件等</li>
-</ul>
-<h3>3. 什么是 ReAct 架构？</h3>
+<p>关键判断：<strong>不是所有 AI 应用都该叫 Agent</strong>。固定表单生成、固定知识问答、固定流程审批，用普通链路或 Workflow 就够了；只有路径不固定、需要根据中间结果继续选工具或改路线时，Agent 才真正合适。</p>
+<p>另外要澄清一个常见误区：很多人把&quot;长期记忆、复杂规划、多智能体协作&quot;当成 Agent 的必备条件——不是。能做到&quot;理解目标 → 决定是否调工具 → 拿到结果再继续判断&quot;，就已经是 Agent 了；记忆、规划、反思、多智能体是往上叠的扩展能力。</p>
+<p><strong>追问</strong>：单工具助手算不算 Agent？ ｜ 构建复杂 Agent 最主要的挑战是什么？ ｜ 为什么说很多 Agent 不是能力不够，而是状态、边界、治理没设计好？</p>
+<h3>2. Agent 的四大核心组件是什么？工程上真正要控制的是哪几件事？ <strong>｜必刷 ｜中等</strong></h3>
 <p><strong>答案：</strong>
-ReAct（Reasoning + Acting）是一种 Agent 推理框架，让 LLM 交替进行<strong>思考（Thought）<strong>和</strong>行动（Action）</strong>：</p>
-<pre><code>Thought: 我需要搜索今天的天气
+经典四组件（适合打底）：</p>
+<ul>
+<li><strong>感知 Perception</strong>：接收用户输入、环境状态、工具返回结果；</li>
+<li><strong>规划 Planning</strong>：分解任务、制定执行计划（ReAct、Plan-and-Execute 等）；</li>
+<li><strong>记忆 Memory</strong>：短期上下文 + 长期知识，支撑跨步骤推理；</li>
+<li><strong>行动 Action</strong>：调用工具、执行代码、调 API、操作文件。</li>
+</ul>
+<p>但工程落地时，更值钱的说法是&quot;要控制五件事&quot;：</p>
+<ol>
+<li><strong>目标和职责</strong>：一个 Agent 解决什么问题，尽量单一，别什么都做；</li>
+<li><strong>工具边界</strong>：只暴露完成任务真正需要的能力，不给模型一把通吃的权限；</li>
+<li><strong>状态设计</strong>：任务进展、中间结论、消息历史放在哪里，要显式设计；</li>
+<li><strong>停止条件</strong>：什么时候继续、什么时候澄清、什么时候转人工、什么时候结束，不能模糊；</li>
+<li><strong>治理能力</strong>：日志、Trace、重试、超时、审计、人工接管都要补齐。</li>
+</ol>
+<p>一句话：<strong>Agent 设计的重点不是&quot;堆更多能力&quot;，而是围绕模型、工具、循环、状态四条主线，把系统做得更可控、可追踪、能稳定交付结果。</strong></p>
+<p><strong>追问</strong>：这四组件分别对应 LangGraph 里的什么？（模型=节点里的 LLM 调用，工具=ToolNode，循环=边与条件边，状态=State + checkpointer） ｜ 记忆放在哪一层？（见第 43、44 题）</p>
+<h3>3. 什么是 ReAct 架构？它解决了什么问题？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+ReAct = <strong>Reasoning + Acting</strong>，让模型交替进行思考和行动，典型形态是 <code>Thought → Action → Observation</code> 循环：</p>
+<pre><code>Thought: 我需要先查今天的天气
 Action: search_web(&quot;今天北京天气&quot;)
 Observation: 晴天，25°C
 Thought: 已获得结果，整理回答
 Action: 返回结果给用户
 </code></pre>
-<p>这种模式使 LLM 的推理过程透明、可调试，是目前最主流的 Agent 模式之一。LangGraph 手写实现见第 23 题。</p>
-<h3>4. Agent 的规划模式有哪些？</h3>
+<p>它解决的是&quot;一次性生成搞不定多步决策和外部信息依赖&quot;的问题：模型先做当前判断，再决定调用什么工具，然后根据工具返回更新判断，直到任务完成。同时推理过程透明、可调试。</p>
+<p><strong>一个重要补充</strong>：现代 Tool Calling Agent 不一定把 <code>Thought</code> 明文输出。真实代码里更常见的是 <code>AIMessage.tool_calls</code> → 工具执行 → <code>ToolMessage</code> → 下一轮。所以更准确的理解是：<strong>ReAct 是一种工作机制，不是一个固定 Prompt 模板</strong>。</p>
+<p>代价也要说清：链路更长、成本更高、调试更复杂，不是所有场景都值得上完整循环。LangGraph 手写实现见第 80 题。</p>
+<h3>4. Chain-of-Thought 是什么？它和 ReAct 有什么区别？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+CoT（思维链）是让模型&quot;一步一步想&quot;——把中间推理显式展开再给结论，靠的是<strong>模型内部已有的知识和计算</strong>，典型收益在数学、逻辑、多跳推理类题目上；常见变体有 self-consistency（多次采样投票取多数）、ToT（树状展开多路径）。</p>
+<p>区别在一句话：<strong>CoT 只&quot;想&quot;，ReAct 会&quot;做&quot;</strong>。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CoT</th>
+<th>ReAct</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>信息来源</td>
+<td>模型参数内的知识</td>
+<td>外部工具实时获取</td>
+</tr>
+<tr>
+<td>是否能改变环境</td>
+<td>否</td>
+<td>是（可以调 API、写数据）</td>
+</tr>
+<tr>
+<td>幻觉风险</td>
+<td>高（推理链可能自圆其说地编）</td>
+<td>低（有 Observation 纠偏）</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>一次调用，便宜</td>
+<td>多轮循环，贵</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>算术、逻辑、需要展示推导</td>
+<td>需要查事实、操作外部系统</td>
+</tr>
+</tbody></table>
+<p>所以：<strong>只靠模型内部推理就能解题，CoT 够了；需要外部事实或多步动作，才升级到 ReAct。</strong> 实践中两者常叠加——ReAct 的 Thought 阶段本身就是一次 CoT。</p>
+<h3>5. Agent 的规划模式有哪些？各自的适用边界是什么？ <strong>｜高频 ｜中等</strong></h3>
 <p><strong>答案：</strong></p>
 <ul>
-<li><strong>ReAct</strong>：思考与行动交替，动态规划，适合未知环境</li>
-<li><strong>Plan-and-Execute</strong>：先整体规划，再逐步执行，适合复杂任务</li>
-<li><strong>Reflection</strong>：执行后自我反思，迭代改进，提升输出质量</li>
-<li><strong>Self-Ask</strong>：将复杂问题分解为子问题逐步回答</li>
-<li><strong>Tree of Thoughts（ToT）</strong>：并行探索多个推理路径，选最优解</li>
+<li><strong>ReAct</strong>：思考与行动交替、动态规划。适合路径未知、强依赖外部反馈的任务。缺点是没有全局视野，容易局部绕圈。</li>
+<li><strong>Plan-and-Execute</strong>：先整体规划出步骤清单，再逐步执行（执行器常用小模型）。适合长任务、需要看得见进度的场景；缺点是计划会过期，中间变化要能重新规划。</li>
+<li><strong>Reflection / Evaluator-Optimizer</strong>：生成 → 评审 → 按意见修订的循环。适合有明确质量标准的任务（代码、翻译、写作）；需要评审信号足够可靠，否则只是自我复读。</li>
+<li><strong>Self-Ask</strong>：把复杂问题拆成子问题逐个解答再汇总。适合多跳问答。</li>
+<li><strong>Tree of Thoughts（ToT）</strong>：并行探索多条推理路径并回溯搜索。适合搜索空间大的推理题，成本高，工程上少用。</li>
+<li><strong>Orchestrator-Workers</strong>：主模型动态拆任务、派给 worker。适合子项数量预先未知的任务（见第 8 题）。</li>
 </ul>
-<h3>5. Agentic AI 与传统 AI 的区别是什么？</h3>
+<p>选型心法：规划模式的价值随&quot;任务长度 × 不确定性&quot;上升，成本也同步上升。<strong>能用一次增强 LLM 调用解决的，别加规划。</strong></p>
+<p><strong>追问</strong>：Deep Agents 的 todo 清单属于哪一种？（Plan-and-Execute 的工程化版本，见第 96 题） ｜ 怎么防止 Agent 规划失焦、无限重规划？（步数与预算上限 + 显式完成条件，见第 103 题）</p>
+<h3>6. Agentic AI 与传统 AI 的区别是什么？ <strong>｜中频 ｜基础</strong></h3>
 <p><strong>答案：</strong></p>
 <table>
 <thead>
@@ -141,15 +224,208 @@ Action: 返回结果给用户
 <td>动态选择和调用工具</td>
 </tr>
 <tr>
+<td>失败处理</td>
+<td>报错终止</td>
+<td>重试、换路径、降级、求助人工</td>
+</tr>
+<tr>
 <td>代表</td>
 <td>图像识别、推荐系统</td>
-<td>AutoGPT、Devin、Manus</td>
+<td>Devin、Manus、Claude Code</td>
 </tr>
 </tbody></table>
-<h3>6. 🆕 什么是 Context Engineering？为什么 2025 年后它比 Prompt Engineering 更常被提起？</h3>
-<p><strong>答案：</strong></p>
-<p>Context Engineering（上下文工程）是指<strong>系统性地设计和管理进入模型上下文窗口的全部信息</strong>：系统提示、工具定义、检索结果、历史消息、子代理回传、scratchpad 内容等。2025 年中由 Tobi Lütke（6/19）、Harrison Chase（6/23）、Andrej Karpathy（6/25）等人在公开讨论中带火，Anthropic 于 2025 年末发表《Effective Context Engineering for AI Agents》。</p>
-<p>与 Prompt Engineering 的关系：<strong>上下文工程是超集</strong>——prompt 只是上下文中的一个可控片段。Agent 是多轮、自主、带工具的，真正决定成败的往往不是某一句 prompt，而是每一步&quot;上下文里到底有什么&quot;。</p>
+<p>补一句工程视角：Agentic AI 的难点不在&quot;模型会不会想&quot;，而在<strong>长链路的可控性</strong>——状态怎么存、什么时候停、错了怎么回滚、成本怎么兜住。这也是为什么 2025-2026 的重心从&quot;能力&quot;转向&quot;harness 与治理&quot;（见第 14 题）。</p>
+<h3>7. Workflow 和 Agent 的分界线在哪？什么时候工作流比 Agent 更合适？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+Anthropic 的定义最清晰：</p>
+<ul>
+<li><strong>Workflow（工作流）</strong>：LLM 与工具按<strong>预定义的代码路径</strong>编排，流程由开发者写死，确定可审计；</li>
+<li><strong>Autonomous Agent（自主智能体）</strong>：模型自己决定路径、动态决定用什么工具、什么时候结束，流程开放。</li>
+</ul>
+<p>判断口诀：<strong>人能不能提前画出确定的流程图。</strong> 能画出来 → Workflow；画不出来（下一步依赖中间结果）→ Agent。</p>
+<p>工作流更合适的场景：业务步骤固定、输出格式明确、要求强可控与易审计——分类、摘要、内容审核、报告生成、表单填充、固定审批链。这类任务用工作流能清楚定义节点职责、失败重试、人工介入点和 SLA。Agent 更适合开放任务和动态决策，代价是延迟、成本、不确定性、调试难度全都上升。</p>
+<p>另一个高频追问点：<strong>Workflow 里哪些节点该交给 LLM？</strong> 答案是&quot;语义判断和文本生成&quot;的节点（意图分类、抽取、改写、总结），而&quot;精确计算、查表、校验、权限判断&quot;应该用代码规则，不要用模型。</p>
+<h3>8. Anthropic《Building Effective Agents》提出了哪五种工作流模式？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+该文（2024-12-19）首先区分 Workflow 与 Autonomous Agent（见第 7 题），基本构件是<strong>增强型 LLM</strong>（带工具调用、检索、结构化输出的单次模型调用），然后给出五种工作流模式：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>结构</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prompt Chaining</td>
+<td>多个 prompt 串行，前一步输出喂下一步</td>
+<td>可拆成固定子任务（生成→校对→翻译）</td>
+</tr>
+<tr>
+<td>Routing</td>
+<td>分类后分流到不同处理链</td>
+<td>客服意图分流、模型分级路由（见第 77 题）</td>
+</tr>
+<tr>
+<td>Parallelization</td>
+<td>并行调用后聚合：sectioning（分片）/ voting（投票）</td>
+<td>多维度同时评审、多次投票降方差</td>
+</tr>
+<tr>
+<td>Orchestrator-Workers</td>
+<td>主模型动态拆任务、派给 worker</td>
+<td>子任务数量预先未知（如跨多文件代码修改）</td>
+</tr>
+<tr>
+<td>Evaluator-Optimizer</td>
+<td>生成→评审→按意见修订循环</td>
+<td>翻译、代码、写作等可反复打磨的任务</td>
+</tr>
+</tbody></table>
+<p>核心建议：<strong>先用最简方案</strong>——单次增强 LLM → 再加工作流 → 最后才考虑完全自主 agent；框架会增加抽象成本，能不引入就不引入。</p>
+<p>Orchestrator-Workers 与 Deep Agents 的&quot;规划 + 子代理&quot;、Evaluator-Optimizer 与 Reflection 模式都一脉相承（见第 96、5 题）。</p>
+<h3>9. 什么时候该用 Prompt、RAG、微调、Workflow、Agent？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+最稳的判断方式，是先看问题到底<strong>缺知识、缺行为，还是缺流程能力</strong>：</p>
+<ul>
+<li>模型本来就会，只是任务没描述清楚 → <strong>Prompt</strong>；</li>
+<li>缺私有知识、最新知识、外部知识 → <strong>RAG</strong>；</li>
+<li>缺稳定行为（固定格式、语气、分类习惯）→ <strong>微调</strong>；</li>
+<li>流程固定、节点明确、要稳定和可审计 → <strong>Workflow</strong>；</li>
+<li>路径不固定、需要边做边决定下一步、动态调工具 → <strong>Agent</strong>。</li>
+</ul>
+<p>压缩成一句话：</p>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>解决的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prompt</td>
+<td>任务表达</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>知识来源</td>
+</tr>
+<tr>
+<td>微调</td>
+<td>行为稳定</td>
+</tr>
+<tr>
+<td>Workflow</td>
+<td>固定流程</td>
+</tr>
+<tr>
+<td>Agent</td>
+<td>动态决策</td>
+</tr>
+</tbody></table>
+<p>真实项目通常不会一开始就说&quot;必须做 Agent&quot;。大部分需求先用 <code>Prompt + RAG + Workflow</code> 就能覆盖，只有在任务开放度高、工具选择依赖中间结果、流程没法提前写死时，Agent 的价值才真正体现。</p>
+<p><strong>追问</strong>：为什么很多项目不一开始做微调？（数据、算力、回滚成本、模型迭代会让微调贬值） ｜ 预算有限先做哪个？（先 Prompt + RAG，它们可回滚、可评测、见效快）</p>
+<h3>10. RAG 和微调（SFT）的核心区别是什么？能不能一起用？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+<strong>RAG 解决&quot;知识从哪里来&quot;，微调解决&quot;模型应该怎么表现&quot;。</strong></p>
+<p>RAG 不改模型参数，运行时把相关资料检索出来交给模型生成，所以适合时效性强、更新频繁、需要可溯源的知识；微调会改模型参数，更适合提升输出风格一致性、结构化能力、分类能力或领域行为稳定性。</p>
+<p>对比要点：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RAG</th>
+<th>微调</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>改什么</td>
+<td>上下文</td>
+<td>参数</td>
+</tr>
+<tr>
+<td>更新成本</td>
+<td>重建索引即可</td>
+<td>重训 + 重新评测 + 发版</td>
+</tr>
+<tr>
+<td>可溯源</td>
+<td>有引用</td>
+<td>无</td>
+</tr>
+<tr>
+<td>适合</td>
+<td>事实、文档、私有数据</td>
+<td>格式、风格、语气、判别任务</td>
+</tr>
+<tr>
+<td>失效场景</td>
+<td>检索不准就答不对</td>
+<td>知识过期、幻觉依旧存在</td>
+</tr>
+</tbody></table>
+<p>它们<strong>当然可以一起用</strong>，很多企业项目就是这么落地的：产品政策靠 RAG 保持最新，回复格式和字段输出靠微调或结构化输出保证稳定。注意微调不会给模型新知识，硬塞事实反而容易诱发幻觉。</p>
+<p><strong>追问</strong>：为什么不优先做续训（继续预训练）？（算力门槛、数据配比、灾难性遗忘、性价比远低于 RAG） ｜ 什么场景适合 RAG + 微调组合？（领域术语/格式行为不稳 + 知识高频更新）</p>
+<h3>11. Token 和上下文窗口是什么？它们在工程上意味着什么？ <strong>｜高频 ｜基础 ｜腾讯一面</strong></h3>
+<p><strong>答案：</strong>
+Token 是模型处理文本的基本计量单位，不等于&quot;字数&quot;或&quot;单词数&quot;——模型看到的不是原始文本，而是 tokenizer 切出来的一串 token。上下文窗口则是单次推理最多能看到多少 token 的上限，工程上说的 <code>8K / 32K / 128K</code>，本质是&quot;系统提示 + 历史对话 + 检索结果 + 用户问题加起来最多塞多少 token&quot;。</p>
+<p>工程意义很直接：</p>
+<ul>
+<li>窗口决定你能不能做长文问答、多轮对话、大段 RAG 上下文拼接；</li>
+<li>token 越多成本越高、延迟越高（且多数厂商按输入分档计价，长上下文更贵）；</li>
+<li>超出窗口的内容会被截断或进不了模型，<strong>不是塞得越多越好</strong>（长上下文还有注意力衰减问题，见第 30 题）。</li>
+</ul>
+<p>换算口径必须说清 tokenizer（详见下方更正）：</p>
+<blockquote>
+<p>❌ <strong>更正</strong>：原答案给的&quot;1 个中文字符约 0.6 token、128K ≈ 二十万中文字符&quot;是<strong>低估口径</strong>（旧版词表 + 极简文本的理想值）。实测更稳妥的说法是：</p>
+<ul>
+<li>同一句 45 字中文，<code>cl100k_base</code>（GPT-4 早期）切出约 57 token（≈1.27 token/字），<code>o200k_base</code>（GPT-4o 及之后）约 37 token（≈0.82 token/字），<strong>同一文本差约 1.5 倍</strong>；</li>
+<li>中文类语料的 token/字符均值约 1.48，英文与代码约 0.315，<strong>差约 4.7 倍</strong>；</li>
+<li>国产模型自有词表（Qwen / DeepSeek 等）普遍约 0.6~1 token/字；</li>
+<li>因此&quot;1 汉字 ≈ 1<del>1.5 token（新词表 0.6</del>0.8）&quot;，<strong>128K 大约对应 8~16 万汉字</strong>，而不是二十万。
+结论：<strong>任何换算都必须指明是哪个 tokenizer</strong>，估算留 30% 余量，真实对账一律以目标模型的 tokenizer 或 API 返回的 <code>usage</code> 字段为准。另外，模型换代常伴随分词器升级，同一文本的 token 数会变（部分换代涨幅可达三成），旧系数不能沿用。</li>
+</ul>
+</blockquote>
+<p>还有一个容易被忽略的点：<strong>标称窗口 ≠ 有效窗口</strong>。2026 年旗舰模型普遍宣传 1M token 上下文，但公开模型卡里的长文检索测试显示，同一模型在 128K 与 1M 位置上的准确率可以差出几十个百分点。所以窗口大小只是上限，能不能&quot;用满&quot;要靠检索与压缩来保证（见第 13、31 题）。</p>
+<p><strong>追问</strong>：如果上下文被截断了你优先怎么处理？（先砍低信号内容 → 摘要压缩 → 检索式补充，见第 44 题） ｜ 怎么估算一个 Agent 会话的 token 成本？（按步数 × 每步上下文重传量算，不是只算用户输入）</p>
+<h3>12. 大模型应用上线前你最关心哪些工程指标？ <strong>｜高频 ｜中等 ｜腾讯一面</strong></h3>
+<p><strong>答案：</strong>
+从五个维度看：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>指标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>效果</td>
+<td>准确率、忠实度、任务完成率、引用正确率</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>首 token 延迟（TTFT）、端到端延迟、P95/P99</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>token 消耗、检索成本、工具调用成本、单任务平均成本</td>
+</tr>
+<tr>
+<td>稳定性</td>
+<td>超时率、错误率、重试率、降级命中率</td>
+</tr>
+<tr>
+<td>治理性</td>
+<td>日志、Trace、Prompt 版本、索引版本、权限审计</td>
+</tr>
+</tbody></table>
+<p>如果是 RAG / Agent 项目，还会额外看：<strong>检索召回质量、工具调用成功率、人工兜底比例、badcase 回灌效率</strong>——这些才是真正影响线上体验的。</p>
+<p>运维指标的完整分层见第 119 题，评测方法见第 113、115 题。</p>
+<p><strong>追问</strong>：怎么设计降级策略？（缓存 → 规则链路 → 小模型 → 兜底话术 + 转人工） ｜ 成本超预算先优化哪一层？（先上下文与检索层，再模型路由，最后才是换供应商，见第 121 题） ｜ Prompt / 模型 / 索引怎么做回滚？（三者一起版本化 + 灰度，见第 20 题）</p>
+<h3>13. 什么是 Context Engineering？为什么 2025 年后它比 Prompt Engineering 更常被提起？ <strong>｜必刷 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+Context Engineering（上下文工程）指<strong>系统性地设计和管理进入模型上下文窗口的全部信息</strong>：系统提示、工具定义、检索结果、历史消息、子代理回传、scratchpad 内容等。2025 年中由 Tobi Lütke、Harrison Chase、Andrej Karpathy 等人公开讨论带火，Anthropic 随后发表《Effective Context Engineering for AI Agents》。</p>
+<p>与 Prompt Engineering 的关系：<strong>上下文工程是超集</strong>——prompt 只是上下文里一个可控片段。Agent 是多轮、自主、带工具的，真正决定成败的往往不是某一句 prompt，而是每一步&quot;上下文里到底有什么&quot;。</p>
 <p>核心做四件事：</p>
 <table>
 <thead>
@@ -171,7 +447,7 @@ Action: 返回结果给用户
 </tr>
 <tr>
 <td>压缩（Compress）</td>
-<td>上下文逼近窗口时摘要/裁剪</td>
+<td>逼近窗口时摘要 / 裁剪</td>
 <td>compaction、滑窗、对话摘要（经验阈值约 70% 窗口占用即触发）</td>
 </tr>
 <tr>
@@ -180,82 +456,825 @@ Action: 返回结果给用户
 <td>子代理（Manus 总结为 reduce / offload / isolate 三策）</td>
 </tr>
 </tbody></table>
-<p>为什么必须做：研究表明长上下文下所有模型都会出现性能衰减——Chroma 的 Context Rot 实验中 18 个模型全部随上下文长度衰减；&quot;Lost in the Middle&quot; 证明位于中间位置的信息利用率最低。Anthropic 总结四类上下文失败：<strong>poisoning（污染/投毒）、distraction（干扰）、confusion（混淆）、clash（指令冲突）</strong>。2025-09-29 Claude Code 推出 context editing（自动写文件、压缩对话），是该理念落地的代表。</p>
-<h3>7. 🆕 Anthropic《Building Effective Agents》提出了哪几种工作流模式？</h3>
-<p><strong>答案：</strong></p>
-<p>Anthropic 于 2024-12-19 发表该文，首先区分两个概念：</p>
+<p><strong>为什么必须做</strong>：长上下文下所有模型都会出现性能衰减——Chroma 的 Context Rot 实验中 18 个模型全部随上下文长度衰减；&quot;Lost in the Middle&quot; 证明中间位置的信息利用率最低。Anthropic 总结四类上下文失败：<strong>poisoning（污染/投毒）、distraction（干扰）、confusion（混淆）、clash（指令冲突）</strong>。2025-09-29 Claude Code 推出 context editing（自动写文件 + 压缩对话），是该理念落地的代表。</p>
+<p><strong>追问</strong>：上下文工程会不会取代 prompt 工程？（不会，是包含关系，见第 14 题的三代范式） ｜ 你的项目里具体怎么落地？（工具分层暴露、检索精排后只留 Top-K、历史摘要、子代理只回传摘要、固定前缀缓存）</p>
+<h3>14. 什么是 Harness Engineering？它和 Prompt / Context Engineering 是什么关系？ <strong>｜必刷 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+Harness（脚手架 / 挽具）指<strong>模型之外的一切运行装置</strong>：工具与权限、上下文装配策略、执行循环、验证与反馈信号、沙箱、重试与回滚、评测与可观测。Harness Engineering 就是把这些设计成工程系统。</p>
+<p>时间线（可作为&quot;是否跟进前沿&quot;的证据）：</p>
 <ul>
-<li><strong>Workflow（工作流）</strong>：LLM 与工具按<strong>预定义的代码路径</strong>编排，流程确定；</li>
-<li><strong>Autonomous Agent（自主智能体）</strong>：模型自己决定路径、动态调用工具，流程开放。</li>
+<li><strong>2026-02-05</strong> Mitchell Hashimoto（Terraform 作者）给出定义；</li>
+<li><strong>2026-02-11</strong> OpenAI Ryan Lopopolo 发表《Harness engineering: leveraging Codex in an agent-first world》：一个 3 人团队从 2025-08 底的空仓库开始，5 个月产出约 100 万行代码、约 1500 个 PR，<strong>应用逻辑、测试、CI、文档、可观测几乎零手写</strong>；结论是&quot;早期慢不是模型能力不足，而是环境定义不充分&quot;；</li>
+<li><strong>2026-04</strong> Birgitta Böckeler 在 martinfowler.com 提出 harness 的两类部件：<strong>guides（前馈引导：规范、AGENTS.md、示例、约束解码）</strong> 与 <strong>sensors（反馈传感：lint、测试、覆盖率、类型检查、CI 信号）</strong>；</li>
+<li><strong>2026-09-02</strong> Google Shir Meir Lador 称其为编程 Agent 最重要的趋势，并给出基于 ADK 2.0 的最小实现。</li>
 </ul>
-<p>基本构件是&quot;增强型 LLM&quot;（带工具调用、检索、结构化输出的单次模型调用）。五种工作流模式：</p>
+<p>三代范式是<strong>嵌套而非替代</strong>：</p>
 <table>
 <thead>
 <tr>
-<th>模式</th>
-<th>结构</th>
-<th>适用场景</th>
+<th>范式</th>
+<th>关注</th>
+<th>回答的问题</th>
+<th>时期</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Prompt Chaining</td>
-<td>多个 prompt 串行，前一步输出喂下一步</td>
-<td>可拆成固定子任务（生成→校对→翻译）</td>
+<td>Prompt Engineering</td>
+<td>告诉模型什么</td>
+<td>怎么说清楚任务</td>
+<td>2022-2024</td>
 </tr>
 <tr>
-<td>Routing</td>
-<td>分类后分流到不同处理链</td>
-<td>客服意图分流、模型分级路由（见第 22 题）</td>
+<td>Context Engineering</td>
+<td>模型看到什么</td>
+<td>每一步上下文里放什么</td>
+<td>2025</td>
 </tr>
 <tr>
-<td>Parallelization</td>
-<td>并行调用后聚合：sectioning（分片）/ voting（投票）</td>
-<td>多维度同时评审、多次投票降方差</td>
-</tr>
-<tr>
-<td>Orchestrator-Workers</td>
-<td>主模型动态拆任务、派给 worker</td>
-<td>任务子项预先未知（如跨多文件代码修改）</td>
-</tr>
-<tr>
-<td>Evaluator-Optimizer</td>
-<td>生成→评审→按意见修订循环</td>
-<td>翻译、代码、写作等可反复打磨的任务</td>
+<td>Harness Engineering</td>
+<td>Agent 能做什么、做错怎么办</td>
+<td>怎么让它在真实系统里不出事</td>
+<td>2026 起</td>
 </tr>
 </tbody></table>
-<p>核心建议：<strong>先用最简方案</strong>（单次增强 LLM → 再加工作流 → 最后才考虑完全自主 agent）；框架会增加抽象成本，能不引入就不引入。Orchestrator-Workers 与 Deep Agents 的规划 + 子代理机制一脉相承（见第 35 题）。</p>
+<p>常见公式：<strong>Agent = Model + Harness</strong>。同一个模型换一套 harness，基准分数能差出几十个点（跨论文比较要先对齐评测协议，见第 115 题）。</p>
+<p><strong>追问</strong>：AGENTS.md 起什么作用？（把项目约定、构建命令、测试方式、边界规则固化成前馈引导，让 Agent 不必每次猜） ｜ 只有大模型团队才需要 harness 吗？（任何把 Agent 接进真实系统的团队都需要，因为它本质是可观测 + 可回滚 + 权限边界）</p>
+<h3>15. Vibe Coding 和 Agentic Engineering 有什么区别？ <strong>｜中频 ｜基础 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+<strong>Vibe Coding</strong> 由 Andrej Karpathy 于 2025-02 提出：完全交给模型、顺着感觉走、不怎么细看代码的编程方式。它描述的是&quot;人有多放手&quot;。</p>
+<p><strong>Agentic Engineering</strong>（也叫 agentic coding）是<strong>刻意配置 harness</strong> 的工程实践：定义清晰的目标、边界、验证信号、权限和回滚路径，让 Agent 在受控环境里自主完成任务（Claude Code、Codex CLI、Devin 这类产品的正确用法）。</p>
+<p>两者的区别<strong>不在&quot;用不用 AI&quot;，而在有没有刻意设计约束与反馈</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>无约束 Vibe Coding</th>
+<th>Agentic Engineering</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>规格</td>
+<td>一句话让它写</td>
+<td>先有任务拆解与验收标准</td>
+</tr>
+<tr>
+<td>验证</td>
+<td>跑起来看着对</td>
+<td>测试 / lint / CI / 覆盖率做传感器</td>
+</tr>
+<tr>
+<td>权限</td>
+<td>全给它</td>
+<td>沙箱 + 最小权限 + 人审写操作</td>
+</tr>
+<tr>
+<td>代码归属</td>
+<td>生成即接受</td>
+<td>评审、重构、可回滚</td>
+</tr>
+<tr>
+<td>曲线</td>
+<td>起步极快 → 中期混乱 → 后期崩盘</td>
+<td>起步稍慢（环境定义成本）→ 持续变快</td>
+</tr>
+</tbody></table>
+<p>面试里最讨喜的说法：<strong>Vibe Coding 适合原型和一次性脚本；进入长期维护的真实代码库，就必须转成 agentic engineering，也就是把 harness 补齐。</strong></p>
 <hr>
-<h2>二、记忆、RAG 与知识</h2>
-<h3>8. Agent 的记忆系统如何设计？</h3>
+<h2>二、Prompt、结构化输出与护栏</h2>
+<h3>16. System Message 和 User Message 应该怎么分工？ <strong>｜必刷 ｜基础</strong></h3>
 <p><strong>答案：</strong>
-Agent 记忆分为三类：</p>
+<strong>System 放稳定约束，User 放动态任务。</strong></p>
 <ul>
-<li><strong>短期记忆（In-context Memory）</strong>：当前对话的上下文，存在 LLM 的 context window 中，不持久</li>
-<li><strong>长期记忆（External Memory）</strong>：持久化存储，通过向量数据库（RAG）或数据库检索，跨会话保留</li>
-<li><strong>工作记忆（Working Memory）</strong>：当前任务执行中的中间状态、变量、步骤结果</li>
+<li>System：角色、目标、边界、安全规则、输出格式要求、工具使用规范——这些应该尽量稳定、少改；</li>
+<li>User：用户当次任务、输入数据、补充上下文、个性化要求。</li>
 </ul>
-<p>工程实现上，短期记忆对应 LangGraph 的 state + checkpointer（第 24 题），长期记忆对应跨 thread 的 Store / RAG 知识库。</p>
-<h3>9. 什么是 RAG？与 Agent 有何关系？</h3>
-<p><strong>答案：</strong>
-RAG（Retrieval-Augmented Generation，检索增强生成）是将外部知识库与 LLM 结合的技术：</p>
+<p>这样拆分的好处：结构清晰、便于版本管理，也更适合模板化、灰度和评测。全混在一段 prompt 里，后面排查效果波动会非常困难。</p>
+<p>工程上还有两个附带收益：</p>
 <ol>
-<li>将文档分块，向量化后存入向量数据库</li>
-<li>用户提问时，检索相关文档片段</li>
-<li>将检索结果注入 LLM prompt 生成回答</li>
+<li><strong>缓存友好</strong>——固定前缀（System + 工具定义 + 资料）放前面、易变内容放后面，才能命中 prompt caching（见第 122 题）；</li>
+<li><strong>安全分层</strong>——很多注入防御依赖&quot;指令层与数据层不同权&quot;，把外部内容当数据而不是指令（见第 108 题）。</li>
 </ol>
-<p>在 Agent 中，RAG 通常作为<strong>长期记忆工具</strong>，Agent 可以决定是否调用 RAG 检索来补充知识。</p>
-<h3>10. 常见向量数据库有哪些？</h3>
+<h3>17. 如何设计一个高质量的 Prompt？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+六要素结构（Role / Task / Context / Constraints / Output / Few-shot）：</p>
+<pre><code>1. 角色定义（Role）：You are an expert ...
+2. 任务描述（Task）：Your goal is to ...
+3. 上下文（Context）：Given the following information ...
+4. 约束条件（Constraints）：You must only ..., avoid ...
+5. 输出格式（Output Format）：Respond in JSON with fields ...
+6. 示例（Few-shot）：Example input/output
+</code></pre>
+<p>常用技巧：</p>
+<ul>
+<li><strong>CoT</strong>：要求&quot;step by step&quot;思考（复杂推理题有效，见第 4 题）；</li>
+<li><strong>Self-consistency</strong>：多次采样取最优，降方差；</li>
+<li><strong>Structured Output</strong>：用 JSON Schema 强约束输出，而不是文字要求&quot;请返回 JSON&quot;（见第 21 题）；</li>
+<li><strong>正反例</strong>：给&quot;什么是错的&quot;往往比抽象要求更有效；</li>
+<li><strong>明确拒答与澄清策略</strong>：说清&quot;信息不足时应该问，而不是猜&quot;。</li>
+</ul>
+<p>另外三个实操细节：把长约束拆成编号列表（比长段落更易遵循）、把格式要求放在结尾附近（开头也行，但别埋在中部）、few-shot 示例的分布要覆盖边界情况。</p>
+<h3>18. 在 Prompt 工程里，如何系统优化提示词并把准确率做上去？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+不该把 Prompt 优化理解成&quot;反复手改几句提示词&quot;，而是一个小型工程闭环。核心不是玄学技巧，而是<strong>任务拆解、样例驱动、评测回归、边界收敛</strong>：</p>
+<ol>
+<li><strong>先定义任务边界</strong>：什么叫答对、什么叫答错、哪些情况必须拒答或澄清；</li>
+<li><strong>输入分层</strong>：稳定规则放 System，动态任务放 User；</li>
+<li><strong>先修大问题再修措辞</strong>：如果本质是缺知识、缺工具、缺流程，不要靠 Prompt 硬抬效果；</li>
+<li><strong>用样例和反例</strong>：few-shot、反例约束、输出格式示例，通常比抽象要求更稳定；</li>
+<li><strong>结构化约束</strong>：能用 schema / parser / structured output 的地方，不要只写&quot;请返回 JSON&quot;；</li>
+<li><strong>建 badcase 集</strong>：把线上错例沉淀成固定评测集，每次改 Prompt 都跑回归，而不是靠体感判断&quot;好像更准了&quot;；</li>
+<li><strong>版本与灰度</strong>：Prompt、模型版本、温度、输出格式一起管理，避免改了一个点却查不清影响。</li>
+</ol>
+<p>务实补一句：所谓&quot;准确率 &gt; 95%&quot;<strong>必须绑定具体任务</strong>（分类、抽取、格式生成、客服问答），它不是通用承诺值。真正的目标是&quot;某个具体任务在固定评测集上稳定达标&quot;，而不是追一个脱离场景的数字。</p>
+<p><strong>追问</strong>：Prompt 怎么改都上不去，如何判断该切 RAG / Tool / Workflow / 微调？（看缺口是知识、执行能力、行为还是流程，见第 9 题） ｜ badcase 集怎么建才有用？（按失败类型分层采样 + 标注修复状态 + 每次上线前必跑） ｜ 线上效果突然下降怎么归因？（见第 150 题）</p>
+<h3>19. Prompt 工程的边界是什么？为什么不能把一切问题都交给 Prompt？ <strong>｜中频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+Prompt 是&quot;任务表达和约束手段&quot;，它解决不了<strong>知识缺失、复杂状态管理、强执行需求</strong>三类问题：</p>
+<ul>
+<li>资料太多 → 靠塞上下文会出现成本高、噪声多、丢关键信息 → 转 <strong>RAG</strong>；</li>
+<li>多步复杂流程全靠 Prompt 硬编排 → 变成不可维护的长指令 → 转 <strong>Workflow / LangGraph</strong>；</li>
+<li>需要稳定调用外部系统 → 应该走 <strong>Tools / Function Calling</strong>，而不是让模型在文本里&quot;假装调用了接口&quot;。</li>
+</ul>
+<p>合理分工：<strong>Prompt 负责表达规则，RAG 负责补知识，Tools 负责执行能力，Graph / Workflow 负责流程控制。</strong></p>
+<p>再加一条容易被忽视的边界：Prompt 是&quot;概率性约束&quot;，不是硬保证。真要&quot;必须是这个格式&quot;要靠 schema / 约束解码（见第 22 题），真要&quot;不许越权&quot;要靠权限和沙箱，而不是写一句&quot;你不能删数据&quot;。</p>
+<h3>20. 如何做 Prompt 版本管理与回归？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+Prompt 进入生产环境后，就不能当成&quot;临时改改的字符串&quot;，要当<strong>配置资产 / 代码资产</strong>管理。通常同时管四样东西：</p>
+<ul>
+<li><strong>Prompt 模板本身</strong>：System、User 模板、few-shot 示例、输出格式要求；</li>
+<li><strong>运行参数</strong>：模型名、模型版本、temperature、top_p、max_tokens；</li>
+<li><strong>评测集</strong>：固定 golden questions、典型 badcase、失败样例；</li>
+<li><strong>发布信息</strong>：模板版本号、发布时间、负责人、灰度范围、回滚版本。</li>
+</ul>
+<p>更稳的做法：</p>
+<ol>
+<li>Prompt 和代码一起版本化，或放进配置中心统一管理；</li>
+<li>每次改 Prompt 都跑固定回归集，不只看主观感觉；</li>
+<li>记录模板 hash、模型版本与关键参数，避免&quot;明明没改 Prompt，效果却变了&quot;时查不清；</li>
+<li>上线前灰度 + 抽样人工复核，高风险链路保留快速回滚能力。</li>
+</ol>
+<p>一个常被忽略的点：<strong>换底层模型后，旧 Prompt 不一定还保持原效果</strong>（换代模型 + 分词器变化都会影响表现）。所以回归的对象不是&quot;这段 Prompt 对不对&quot;，而是&quot;Prompt 与当前模型组合起来还稳不稳&quot;。</p>
+<p><strong>追问</strong>：golden set 怎么建？（覆盖高频意图 + 边界 + 历史 badcase，每类若干条，标注期望断言） ｜ Prompt、模型、索引三者同时变更时怎么回滚？（三者打同一 release tag，按 tag 整体回滚，禁止只回滚一项）</p>
+<h3>21. 结构化输出有哪些常见做法？各自优缺点是什么？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+从 Model I/O 主线看，可分成&quot;后处理解析&quot;和&quot;前约束生成&quot;两类：</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>定位</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>纯 Prompt 约束</td>
+<td>直接要求按 JSON 返回</td>
+<td>最简单、起步快、通用</td>
+<td>多说一句话、少个逗号程序就崩，稳定性最差</td>
+</tr>
+<tr>
+<td>Output Parser</td>
+<td><code>StrOutputParser</code> / <code>JsonOutputParser</code> / <code>PydanticOutputParser</code></td>
+<td>契合 <code>prompt | model | parser</code> 链路，解耦</td>
+<td>仍是&quot;模型已输出，我再转&quot;，错了只能重试</td>
+</tr>
+<tr>
+<td>Structured Output</td>
+<td><code>with_structured_output(TypedDict / Pydantic / JSON Schema)</code></td>
+<td>输出前先定 schema，模型按结构生成并自动解析，约束力强</td>
+<td>依赖平台能力，复杂 schema 成本高</td>
+</tr>
+<tr>
+<td>Function / Tool Calling</td>
+<td>结构化输出的一种特例</td>
+<td>生成调用意图 + 参数，有协议级契约</td>
+<td>只覆盖&quot;要调工具&quot;的场景</td>
+</tr>
+</tbody></table>
+<p>细分 schema 选型：<code>TypedDict</code> 适合字段固定但不追求强运行时校验；<code>Pydantic</code> 适合类型、范围、必填项严格的业务；<code>JSON Schema</code> 适合跨语言跨系统共享协议。</p>
+<p>生产上的优先顺序：</p>
+<ol>
+<li>能用<strong>原生结构化输出</strong>就优先用；</li>
+<li>需要强校验时优先用 Pydantic 一类 schema；</li>
+<li>即使模型已经结构化输出，也要补<strong>业务校验、缺省值处理、失败重试</strong>。</li>
+</ol>
+<blockquote>
+<p>❌ <strong>更正</strong>：原答案有一句自相矛盾的表述——&quot;通常会优先采用只保证&#39;返回合法 JSON&#39;的模式，因为前者更接近&#39;按 schema 生成&#39;&quot;。逻辑是反的。正确说法：<strong>平台支持更强的结构化输出时，应优先用原生结构化输出 / schema 约束；JSON Mode 只保证&quot;是合法 JSON&quot;，并不保证符合你的字段与枚举，很多时候只是&quot;长得像 JSON&quot;。</strong></p>
+</blockquote>
+<p>一句话收口：Prompt 只能&quot;尽量要求它长成这样&quot;，Parser 与 Structured Output 才是在把模型输出真正接进程序系统。</p>
+<h3>22. JSON Mode、Structured Outputs、约束解码三者有什么区别？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+按&quot;约束力从弱到强&quot;排：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>保证什么</th>
+<th>实现方式</th>
+<th>失败模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JSON Mode</td>
+<td>输出是<strong>语法合法的 JSON</strong></td>
+<td>采样时限制为 JSON token 序列</td>
+<td>字段缺、枚举值错、类型错、字段名幻觉</td>
+</tr>
+<tr>
+<td>Structured Output（schema 引导）</td>
+<td>输出<strong>符合给定 schema</strong></td>
+<td>function calling / JSON Schema 约束生成，服务端校验</td>
+<td>复杂嵌套 schema 表现下降；深层可选字段仍可能缺</td>
+</tr>
+<tr>
+<td>约束解码 / Grammar（GBNF、outlines、vLLM guided decoding）</td>
+<td>输出<strong>逐 token 都在语法允许集合内</strong></td>
+<td>推理引擎用有限状态机 / 文法屏蔽非法 token</td>
+<td>需自托管引擎与文法；文法设计不当会过度限制语义</td>
+</tr>
+</tbody></table>
+<p>工程要点：</p>
+<ul>
+<li><strong>调第三方 API</strong>：优先 <code>response_format</code> / <code>json_schema</code>（strict）或 function calling；OpenAI 的 strict 模式会做 schema 强制，但复杂 schema（大量 union / 深层可选）支持有限，常见做法是把 schema 拍平、字段名简单化、枚举用 <code>Literal</code>。</li>
+<li><strong>自托管推理</strong>：可以直接上约束解码（vLLM 的 guided decoding / SGLang 的文法约束），确定性最强，代价是要维护文法和吞吐。</li>
+<li><strong>无论哪一层都要补业务校验</strong>：schema 只能保证&quot;形状对&quot;，不能保证&quot;值合理&quot;（比如金额是负数、日期是 2050-13-40）。所以典型链路是 <code>structured output → Pydantic 校验 → 一次自动修复重试 → 兜底降级</code>。</li>
+</ul>
+<pre><code class="language-python">class Ticket(BaseModel):
+    category: Literal[&quot;billing&quot;, &quot;tech&quot;, &quot;other&quot;]
+    priority: int = Field(ge=1, le=5)
+    summary: str
+
+structured = llm.with_structured_output(Ticket)
+ticket = structured.invoke(&quot;我付了钱但没开通，很急&quot;)   # -&gt; Ticket 实例
+</code></pre>
+<h3>23. Function Calling 和&quot;让模型输出 JSON 再自己解析&quot;有什么区别？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+表面上都像&quot;输出结构化结果&quot;，但稳定性和工程边界差别很大：</p>
+<ul>
+<li><strong>输出 JSON + 自解析</strong>：在 Prompt 层提要求。简单、通用、起步快，但模型多说一句自然语言、少一个字段、类型写错，程序端就要自己兜底；</li>
+<li><strong>Function Calling</strong>：协议级结构化输出。模型不是随便返回一段文本，而是明确返回<strong>工具名 + 参数</strong>，宿主按约定解析和执行，可靠性通常更高。</li>
+</ul>
+<p>生产上的判断：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>只是抽字段、轻量结构化返回，平台原生能力有限</td>
+<td>JSON + parser</td>
+</tr>
+<tr>
+<td>要进入真实工具调用、外部系统编排、有副作用</td>
+<td>原生 Function Calling / Tool Use</td>
+</tr>
+</tbody></table>
+<p>更关键的区别在<strong>职责边界</strong>：JSON 解析是&quot;你让模型尽量长成这个格式&quot;；Function Calling 是&quot;模型和宿主之间有一层明确契约&quot;。契约越清楚，后面的校验、审计、重试、观测越好做。</p>
+<p><strong>追问</strong>：平台没有原生 FC 时怎么把 JSON 方案做稳？（few-shot 示例 + 停止序列 + JSON 修复解析 + 一次重试 + schema 校验） ｜ 为什么生产更推荐原生 Tool Calling？（见第 47 题的链路职责划分）</p>
+<h2>三、RAG 与检索基础设施</h2>
+<h3>24. 请描述一个完整的 RAG 流水线。 <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+完整 RAG 分<strong>索引阶段</strong>和<strong>检索阶段</strong>：</p>
+<pre><code>索引：文档加载 → 清洗 → 切块 → 向量化 → 写入向量库（+ 元数据）
+检索：接收问题 → query 改写 → 召回（稠密/稀疏/混合）→ 重排过滤 → 上下文组装 → 生成 → 引用/脱敏/格式化
+</code></pre>
+<p>工程上真正难的通常不是&quot;把模型接起来&quot;，而是三件事：</p>
+<ol>
+<li><strong>文档是否被正确解析</strong>（PDF、扫描件、表格、图文混排）；</li>
+<li><strong>切块是否保留语义</strong>（太大噪声多，太小丢上下文）；</li>
+<li><strong>检索结果是否真的对当前问题有帮助</strong>（召回准不准、排序对不对、噪声多不多）。</li>
+</ol>
+<p>线上效果差，大多数时候卡在这三层，而不是卡在最后一轮生成。</p>
+<p>四代 RAG 的演进脉络可以顺手带一句：<strong>Naive RAG（top-k 拼上下文）→ Advanced RAG（预处理/混合检索/rerank/后处理）→ Modular &amp; Agentic RAG（检索成为可决策的模块）→ Graph RAG（引入实体关系与多跳）</strong>。</p>
+<p><strong>追问</strong>：chunk 应该怎么切？（见第 26 题） ｜ metadata 应该存哪些字段？（见第 26、35 题） ｜ 为什么要加 rerank？（见第 28 题）</p>
+<h3>25. 什么是 RAG？它和 Agent 是什么关系？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+RAG（Retrieval-Augmented Generation，检索增强生成）是把外部知识库与 LLM 结合的技术：文档分块向量化入库 → 提问时检索相关片段 → 注入 prompt 生成回答。它解决的是&quot;知识从哪里来、能不能溯源、能不能低成本更新&quot;。</p>
+<p>在 Agent 里，RAG 通常扮演<strong>可被调用的知识工具 / 长期记忆载体</strong>：Agent 决定要不要查、查什么、查几轮。两者的关系不是替代而是嵌套——Agent 是决策循环，RAG 是循环里的一个能力环节。RAG 接入 Agent 的三种接法见第 32 题，Agentic RAG 见第 33 题。</p>
+<p>一个常见误区：<strong>RAG 不是安全层</strong>。知识库文档本身也可能带恶意指令，把&quot;检索到的内容&quot;当&quot;可信提示词&quot;是很危险的（见第 108 题）。</p>
+<h3>26. 文本切块应该怎么设计？有哪些常见坑和新做法？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+切块的目标不是&quot;切得均匀&quot;，而是<strong>尽量保留对检索有意义的语义单元</strong>。通常结合固定长度、段落边界、标题层级和重叠窗口来设计：太大噪声多、命中不准；太小丢上下文，检索回来也答不了。手册、FAQ、制度文档、图文混排 PDF 不能只按字符数切，要结合版面结构、标题、表格和语义边界。</p>
+<p>常见坑：</p>
+<ul>
+<li>切块过碎，语义被截断；</li>
+<li>忽略标题层级，chunk 里丢失&quot;这段属于哪一节&quot;的上下文；</li>
+<li>重叠（overlap）不足，边界信息丢失；</li>
+<li>纯 OCR 文本脏乱不清洗（页眉页脚、水印、断行）；</li>
+<li>表格被打散成几段残缺文本；</li>
+<li>多个主题塞进一个 chunk，导致向量语义污染。</li>
+</ul>
+<p>两个 2025-2026 已被验证有效的做法：</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>出处 / 时间</th>
+<th>原理</th>
+<th>收益与代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Contextual Retrieval</strong></td>
+<td>Anthropic，2025-09</td>
+<td>入库前让 LLM 为每个 chunk 生成一句&quot;本片段在整个文档中的背景说明&quot;并前置拼接，配合 prompt caching 摊薄成本</td>
+<td>检索失败率显著下降（官方口径：结合 BM25 + rerank 时最高降约 49%）；代价是索引阶段多一次 LLM 调用</td>
+</tr>
+<tr>
+<td><strong>Late Chunking</strong></td>
+<td>2024 末提出，2025 广泛采用</td>
+<td>先把<strong>整篇文档</strong>送入 embedding 模型拿到 token 级向量，再按切块边界做 mean pooling</td>
+<td>每块天然带全文上下文；在 BeIR 类基准上约 +3~3.6%；依赖能输出 token 级向量的模型</td>
+</tr>
+</tbody></table>
+<p>metadata 至少建议存：来源文件、文档 ID 与版本、章节标题路径、页码/坐标、权限与租户标签、更新时间、内容类型（正文/表格/图注）。这些字段决定了后面能不能做权限过滤、增量重建和引用溯源（见第 35 题）。</p>
+<p><strong>追问</strong>：chunk_size 和 overlap 怎么定？（没有普适值，用你自己的评测集扫参：常见起点 256<del>512 token、overlap 10</del>20%，看召回质量和上下文组装成本） ｜ 结构化文档怎么办？（按结构块切，见第 34 题）</p>
+<h3>27. RAG 效果不好时，你会怎么排查？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+按<strong>检索前 / 检索中 / 检索后</strong>三层展开：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>检查项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>检索前</td>
+<td>query 是否表达清楚，要不要改写、拆问、补历史上下文</td>
+</tr>
+<tr>
+<td>检索中</td>
+<td>切块质量、Embedding 选型、索引参数、top_k、过滤条件、rerank 是否合理</td>
+</tr>
+<tr>
+<td>检索后</td>
+<td>拼给模型的上下文是否过长/噪声多、关键信息是否被淹没、生成提示是否要求&quot;无依据就拒答&quot;</td>
+</tr>
+</tbody></table>
+<p>企业知识库还要额外查：<strong>文档质量、版本是否最新、权限过滤是否误伤</strong>。</p>
+<p>区分&quot;召回问题&quot;还是&quot;生成问题&quot;的方法很实用：把 gold 文档人工塞进上下文再跑一次——<strong>如果塞对了就能答对，问题在检索；如果塞对了还答错，问题在生成/提示</strong>。</p>
+<p>很多所谓&quot;模型不聪明&quot;的问题，最后都能定位到文档解析脏、chunk 太碎、召回噪声大或上下文组装差。</p>
+<p><strong>追问</strong>：top_k 是不是越大越好？（不是，受 Lost in the Middle 与成本限制，通常召回 20<del>50 → rerank 后取 3</del>8） ｜ 什么是 Lost in the Middle？（见第 30 题）</p>
+<h3>28. 混合检索、重排序、查询改写分别解决什么问题？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+三者解决三个层次的问题：</p>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>解决的问题</th>
+<th>常见做法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>查询改写</strong></td>
+<td>用户问题不像检索语句</td>
+<td>指代消解 / 补全历史、多查询（multi-query）、拆子问题、HyDE（先假想答案再拿它去检索）</td>
+</tr>
+<tr>
+<td><strong>混合检索</strong></td>
+<td>只靠稠密向量会漏关键词命中</td>
+<td>向量召回 + BM25/稀疏召回，用 RRF（倒数排名融合）或加权分数合并</td>
+</tr>
+<tr>
+<td><strong>重排序 rerank</strong></td>
+<td>召回了一批候选但顺序不够准</td>
+<td>Cross-Encoder 精排：Cohere Rerank、BGE-Reranker、ColBERT（晚交互，性价比好）</td>
+</tr>
+</tbody></table>
+<p>真实项目里，制度、产品参数、订单字段、错误码这类知识<strong>关键词常常非常重要</strong>，只靠 dense retrieval 不够。比较稳的组合是：<code>query 改写 + 稠密检索 + 稀疏检索 + rerank</code>，再结合 metadata 过滤收口。</p>
+<p>Rerank 放在哪一层：放在<strong>召回之后、上下文组装之前</strong>——召回追求覆盖率（多召回），rerank 追求精度（精选 Top-K），最后只让高信号片段进窗口。</p>
+<p>成本要如实说：混合检索 + rerank 会比单路向量检索贵（多一次稀疏查询和 N 次 cross-encoder 打分），但通常比&quot;把 top_k 拉到 50 全塞进长上下文&quot;便宜，因为省的是更贵的生成 token。</p>
+<p><strong>追问</strong>：稠密和稀疏的区别与 2026 年的新变化？（见第 29 题） ｜ Adaptive RAG 是什么？（先判问题难度，简单问题不检索、单跳检索一次、复杂问题才多轮检索——把&quot;要不要查&quot;变成一个路由决策）</p>
+<h3>29. 稠密检索和稀疏检索怎么选？为什么 2026 年 BM25 又回潮了？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>稀疏检索（BM25 / TF-IDF）</th>
+<th>稠密检索（Embedding + ANN）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>匹配依据</td>
+<td>词频与逆文档频率，字面命中</td>
+<td>语义向量距离，&quot;意思接近&quot;</td>
+</tr>
+<tr>
+<td>优势</td>
+<td>专有名词、型号、错误码、代码标识符、人名精确命中强；可解释；索引便宜</td>
+<td>同义改写、跨语言表达、模糊意图更鲁棒</td>
+</tr>
+<tr>
+<td>短板</td>
+<td>同义词、换说法就召不回；跨语言弱</td>
+<td>稀有 token 容易被&quot;平滑&quot;掉；幻觉式近邻；需 GPU/推理成本</td>
+</tr>
+<tr>
+<td>典型失败</td>
+<td>&quot;服务器型号 R740xd&quot;被写成&quot;这台机器&quot;就查不到</td>
+<td>把&quot;禁止删除数据库&quot;和&quot;如何删除数据库&quot;判成近邻</td>
+</tr>
+</tbody></table>
+<p><strong>为什么 2026 年 BM25 重新被重视</strong>：</p>
+<ol>
+<li>有研究在<strong>大规模、深层嵌套语料</strong>（如 28 层层级文档）上发现，纯稠密检索明显劣于 BM25，差距可达近 20 个百分点——层级越深、专有术语越多，字面命中越关键；</li>
+<li>企业 RAG 的语料以&quot;制度 + 参数表 + 工单 + 错误码&quot;为主，<strong>恰恰是稀疏检索的主场</strong>；</li>
+<li>长上下文与 GraphRAG 的成本压力下，&quot;便宜且确定性强的召回路径&quot;性价比凸显；</li>
+<li>主流向量库（Qdrant、Milvus、ES/OpenSearch、pgvector）都把 sparse vector / 全文检索做成一等公民，混合检索的接入成本大幅下降；Learned sparse（SPLADE）作为折中方案也在普及。</li>
+</ol>
+<p>工程结论：<strong>默认就该做混合检索 + rerank，把&quot;要不要稀疏&quot;当默认而不是优化项</strong>；只有在纯语义改写型任务（跨语言、口语化问答）里才考虑只上稠密。</p>
+<p><strong>追问</strong>：RRF 融合怎么算？（对各路结果按排名取 <code>1/(k+rank)</code> 求和，k 常取 60，不需要统一分数尺度） ｜ learned sparse 和 BM25 怎么选？（SPLADE 效果通常更好但要额外维护模型与索引体积，BM25 零模型成本、可解释）</p>
+<h3>30. 什么是 Lost in the Middle？对 RAG 设计有什么启示？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+Lost in the Middle 指：上下文一长，模型往往更容易利用<strong>开头和结尾</strong>的信息，而把中间那部分关键证据&quot;看见了但没用好&quot;（U 型性能曲线，原始论文来自 Liu et al., TACL 2024）。</p>
+<p>启示很直接：<strong>不是把更多 chunk 塞进上下文就一定更好</strong>。中间噪声太多，真正关键的证据反而更容易被淹没。工程处理：</p>
+<ol>
+<li>先做 rerank 和过滤，再决定谁能进上下文；</li>
+<li>尽量减少低价值片段，别把&quot;可能相关&quot;都塞进去；</li>
+<li>重要证据优先放前面（或把结论前置），必要时先做摘要；</li>
+<li>复杂问题采用分阶段检索，而不是一次性把大段材料全塞进去。</li>
+</ol>
+<p>可以结合第 13 题的 Context Rot 一起说：<strong>长上下文不等于高质量上下文，RAG 的核心仍然是&quot;把最有用的证据放到最容易被模型用到的位置&quot;。</strong></p>
+<h3>31. 有了超长上下文模型，还需要 RAG 吗？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+多数场景仍然需要，因为**&quot;能塞进去&quot;和&quot;应该塞进去&quot;完全不是一回事**。</p>
+<p>超长上下文确实让长文理解、少量文档内推理更方便（2026 年旗舰普遍宣传 1M token），但企业场景里常见的问题不是&quot;窗口不够大&quot;，而是：</p>
+<ul>
+<li>知识总量太大，没法每次都全塞；</li>
+<li>长上下文的<strong>成本和延迟都显著更高</strong>（输入按 token 计费，且很多厂商对超长输入有分档溢价）；</li>
+<li><strong>标称窗口 ≠ 有效窗口</strong>：公开模型卡的长文检索测试显示同一模型在 128K 与 1M 位置准确率能差几十个点（见第 11、30 题）；</li>
+<li>权限过滤、租户隔离、版本控制不能靠窗口硬塞解决；</li>
+<li>审计和引用追溯更适合通过检索链路来做。</li>
+</ul>
+<p>合理理解：<strong>长上下文扩大了可处理范围，但没有消灭检索的价值。</strong> 它更适合少量长文档分析、上下文整合和复杂推理；RAG 更适合海量知识缩圈、权限过滤、证据引用和持续更新。</p>
+<p>一句话：<strong>长上下文不是 RAG 的替代品，更接近 RAG 的补充能力。</strong>（常见组合：RAG 先缩圈到 Top-K，再用长窗口承载这些证据 + 多步推理。）</p>
+<h3>32. RAG 应该如何接入 Agent 执行链路？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+不能只理解成&quot;先查一遍资料再回答&quot;，更稳的做法是把检索能力做成 Agent 可<strong>按需调用</strong>的一环。三种接法：</p>
+<table>
+<thead>
+<tr>
+<th>接法</th>
+<th>说明</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>前置检索</strong></td>
+<td>问题一进来先统一检索，把证据交给 Agent 继续规划</td>
+<td>明确的问答型请求、单轮知识库场景；延迟可控、流程简单</td>
+</tr>
+<tr>
+<td><strong>按需检索</strong></td>
+<td>把 Retriever / Search 封成 Tool，Agent 在需要事实依据时主动调用</td>
+<td>多步任务、并非每步都需要资料；<strong>推荐作为主线</strong></td>
+</tr>
+<tr>
+<td><strong>后置校验</strong></td>
+<td>先生成结果，再用检索做证据核对或引用补全</td>
+<td>作为增强，不适合主链路——增加延迟，且一旦前面跑偏，后面修正成本更高</td>
+</tr>
+</tbody></table>
+<p>真实项目通常&quot;<strong>按需检索为主，前置检索为辅</strong>&quot;：很多步骤是规划、路由、参数确认或工具执行，不需要查知识库，做成可调用能力能减少无效检索。</p>
+<p><strong>追问</strong>：什么情况下该从&quot;一次检索&quot;升级成&quot;多轮检索 + 中途补检&quot;？（badcase 集中在证据不足、多跳、需要交叉验证时 → Agentic RAG，见第 33 题）</p>
+<h3>33. 什么是 Agentic RAG？它和&quot;一次检索后直接生成&quot;有什么区别？ <strong>｜中频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+传统 RAG 是固定流水线：先检索一次，再把结果交给模型生成。Agentic RAG 是闭环过程：模型 / Agent 根据当前进展<strong>决定要不要检索、检索什么、是否改写 query、是否继续补检，甚至在证据不足时主动回头重查</strong>。</p>
+<p>最大区别不在&quot;有没有检索&quot;，而在于<strong>检索是否被当成一个动态决策过程来管理</strong>：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>传统 RAG</th>
+<th>Agentic RAG</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>流程</td>
+<td>固定、可预测</td>
+<td>动态、依中间结果</td>
+</tr>
+<tr>
+<td>成本 / 延迟</td>
+<td>可控</td>
+<td>显著更高</td>
+</tr>
+<tr>
+<td>适合</td>
+<td>单轮问答、标准知识库</td>
+<td>复杂问题、多跳证据、需自检补检</td>
+</tr>
+<tr>
+<td>风险</td>
+<td>召回一次不到位就答错</td>
+<td>可能变成&quot;更贵的随机游走&quot;</td>
+</tr>
+</tbody></table>
+<p>工程上不会一上来就Agentic RAG，先看 badcase 是否真的集中在这几类：一次检索经常拿不到足够证据；问题需要拆问 / 多轮求证 / 多源交叉验证；生成前需要判断&quot;该查知识库、查网页还是查业务系统&quot;。</p>
+<p><strong>如果真要落地，必须同时补上步数上限、预算限制、失败退出条件和可观测性。</strong></p>
+<h3>34. 复杂文档 RAG 或多模态 RAG 应该怎么做？ <strong>｜中频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+最大的坑是把 PDF、扫描件、表格、图片、网页全都当&quot;普通纯文本&quot;处理。更稳的做法是把<strong>解析层单独看待</strong>：</p>
+<ol>
+<li>先做版面分析、OCR、表格提取、标题层级恢复，而不是一开始就按字符切块；</li>
+<li>chunk 尽量按<strong>结构块</strong>切——标题、段落、表格、图注各成单元，不要把一张表切成几段残缺文本；</li>
+<li>metadata 保留页码、章节标题、文档版本、来源文件、坐标或结构位置，方便引用和追溯；</li>
+<li>查询时走<strong>多路召回</strong>：文本召回、表格召回、图片说明召回，再统一重排和组装；</li>
+<li>表格建议额外存&quot;表格的自然语言摘要 + 结构化行列&quot;双份，兼顾语义召回与精确取数；</li>
+<li>图片 / 图表用 VLM 生成描述文本入库（多模态 embedding 是另一条路线，跨模态检索更直接但对模型和成本要求更高）。</li>
+</ol>
+<p>如果是企业知识库，<strong>复杂文档 RAG 往往比&quot;模型选型&quot;更影响上限</strong>——解析错了、表格碎了、图文对应关系丢了，后面再强的模型也很难补回来。</p>
+<p><strong>追问</strong>：为什么设备手册、制度 PDF 特别难做 RAG？（双栏排版、页眉页脚污染、跨页表格、大量图示与编号引用、版本多且权限复杂） ｜ OCR 准确率和最终问答效果是什么关系？（不是线性关系：OCR 错在关键数字/型号上是致命的，错在正文虚词上影响很小，所以要按字段重要性看） ｜ 多模态 RAG 什么时候值得上？（图 / 表承载了不可替代的信息时才上，纯装饰性图片直接丢）</p>
+<h3>35. 为什么企业项目里的 RAG 必须重视权限、版本和引用？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+因为企业知识不是&quot;能查到就行&quot;，而是&quot;要查对、查对权限范围、还能追溯来源&quot;。</p>
+<ul>
+<li><strong>权限</strong>：向量检索必须做租户隔离、角色过滤、文档级或段落级权限控制，不能把安全寄希望于模型&quot;自觉不回答&quot;。工程上一般在<strong>检索层过滤</strong>（metadata filter / 集合隔离）而不是生成层事后拦截；常见难点是源系统 ACL 变更后的同步——用权限位图、行级安全（RLS）或按用户/角色分集合等方式。</li>
+<li><strong>版本</strong>：索引和源文档要可追踪，文档更新后要知道哪些向量需要增量重建；要能回滚到旧索引（蓝绿双集合 + 别名切换是常见做法）。</li>
+<li><strong>引用</strong>：答案不能回溯到原文片段时，业务方很难建立信任，也不利于审计和复盘。引用要能落到具体文档 + 页码/章节 + chunk_id。</li>
+</ul>
+<p>所以企业里 <strong>RAG 不只是检索效果问题，更是数据治理问题</strong>。</p>
+<p><strong>追问</strong>：如何避免用户问到权限外文档？（召回时就按 user_id/role 过滤 + 向量库层隔离 + 不把敏感内容写进共享摘要） ｜ 知识更新时怎么兼顾一致性与成本？（增量 upsert + 软删除旧版本 + 定时全量校对）</p>
+<h3>36. 什么是向量数据库？和传统数据库有什么区别？主流产品怎么选？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+向量数据库是专门面向&quot;相似度检索&quot;的存储系统，保存向量、原始内容和元数据，支持近邻搜索、过滤和召回。传统数据库擅长精确过滤、事务和结构化查询；两者不是替代而是<strong>分工</strong>：结构化条件走关系库，语义召回走向量库，再通过 metadata 把两边结合起来。</p>
+<p>只用 MySQL 当然也能存 Embedding，但数据量一上来，ANN 索引、混合检索、大规模召回都会低效，工程复杂度明显上升。</p>
+<p>主流产品盘点（选型看&quot;团队现有技术栈 + 规模 + 合规&quot;，不看热度）：</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>定位</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>pgvector</strong></td>
+<td>Postgres 扩展</td>
+<td>中小规模、已有 PG、想少一个组件、需要强事务与行级权限；运维最简单</td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>开源，Rust，性能/性价比好</td>
+<td>中型生产，支持 payload 过滤、稀疏向量、量化</td>
+</tr>
+<tr>
+<td><strong>Milvus</strong></td>
+<td>开源，分布式，云原生</td>
+<td>大规模（亿级）、多集合、高并发</td>
+</tr>
+<tr>
+<td><strong>Pinecone</strong></td>
+<td>托管 SaaS</td>
+<td>不想自运维、海外业务、快速上线</td>
+</tr>
+<tr>
+<td><strong>Weaviate</strong></td>
+<td>开源，内置模块化向量化与混合检索</td>
+<td>想一站式做混合检索</td>
+</tr>
+<tr>
+<td><strong>ES / OpenSearch</strong></td>
+<td>搜索引擎带向量能力</td>
+<td>已有 ES 且本来重度依赖全文检索</td>
+</tr>
+<tr>
+<td><strong>Chroma / FAISS</strong></td>
+<td>轻量 / 纯库</td>
+<td>原型、本地、离线实验；不适合多副本在线服务</td>
+</tr>
+</tbody></table>
+<p>一个常见追问：<strong>已经有 ES 了还需要专门的向量库吗？</strong> 回答思路是看规模与延迟要求：千万级以内、混合检索为主，ES 足够；高 QPS、大向量、低延迟、需要 GPU 索引与量化时，专业向量库更合适。</p>
+<h3>37. Embedding 是什么？它在应用开发里最核心的价值是什么？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+Embedding 把文本、图片等原始内容变成固定长度的向量，让&quot;语义关系&quot;尽量映射成&quot;空间关系&quot;——把&quot;意思接近&quot;变成&quot;距离接近&quot;，程序才能做相似度计算。</p>
+<p>最核心的价值不只是&quot;把文本编码成数字&quot;，而是<strong>让系统第一次具备了按语义检索的能力</strong>：语义搜索、相似匹配、去重、聚类、推荐、RAG 召回。放到 RAG 里，Embedding 决定的是&quot;问题和知识能不能在向量空间里正确相遇&quot;——选错了，后面的向量库、重排、Prompt 只能在一个偏掉的召回基础上做优化。</p>
+<p>两个必须强调的工程细节：</p>
+<ol>
+<li><strong>建库和查询用同一套 Embedding 模型</strong>，这是底线——不然要么维度对不上，要么维度一样但相似度没有意义（换模型必须重建索引）；</li>
+<li>Embedding 只是&quot;把文本变成稠密向量&quot;这一层，真正检索时往往还要和标量字段过滤、稀疏检索配合，不能把它理解成检索系统的全部。</li>
+</ol>
+<h3>38. 如何选择合适的 Embedding 模型？评估它好坏看什么？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+不要先看榜单，先看自己的知识类型和检索目标，再反推选型。先看三件事：</p>
+<ul>
+<li><strong>语言与领域适配</strong>：中文、英文、多语言、代码、法律、金融，适合的模型可能完全不同；中文场景优先看 C-MTEB / 自有样本；</li>
+<li><strong>建库与查询一致性</strong>：同一套模型，必要时保留模型版本号以支持双索引；</li>
+<li><strong>成本与延迟</strong>：不是维度越高越好、不是模型越大越好，要看知识库规模和查询量能不能撑住。</li>
+</ul>
+<p>真正评估时分三层看，而不是只盯一个榜单分数：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>看什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>检索层</td>
+<td>相关片段有没有更容易被召回、坏例子有没有减少、重排前后差距大不大（nDCG@k、Recall@k、MRR）</td>
+</tr>
+<tr>
+<td>业务层</td>
+<td>最终答案的忠实度、引用准确性、任务完成率有没有变好（RAGAs / DeepEval 类）</td>
+</tr>
+<tr>
+<td>工程层</td>
+<td>延迟、成本、接入复杂度、向量存储体积能不能接受</td>
+</tr>
+</tbody></table>
+<p>还要补两句：</p>
+<ul>
+<li>Embedding 选型不是孤立问题，它会和切块策略、索引参数、混合检索、rerank 一起决定上限；</li>
+<li>公开榜单（MTEB / C-MTEB）只能做初筛，真正决定要不要上线的是<strong>你自己的知识样本和 badcase</strong>。</li>
+</ul>
+<p>更稳的做法：先选 2~3 套候选模型跑通，再在自己的知识库样本上小规模对比，看召回质量、最终回答质量、成本延迟，最后再定。</p>
+<h3>39. 近似检索（ANN）和精确检索怎么权衡？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+精确（暴力）检索把查询向量和库里每一个向量都算一遍，结果确定但成本高、延迟高；ANN 用索引换速度——HNSW（图索引，召回高、内存大）、IVF（倒排聚类，可配 PQ 量化省内存）、DiskANN（磁盘友好）等，牺牲一点精确度换吐量与响应速度。所以大部分线上系统优先用 ANN。</p>
+<p>工程上不是二选一，而是看业务：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高风险检索、数据量不大、结果一致性要求极高</td>
+<td>精确或更保守的索引参数（高 ef/高 nprobe）</td>
+</tr>
+<tr>
+<td>通用知识问答、商品搜索、海量文档召回</td>
+<td>ANN + rerank 做精度补偿</td>
+</tr>
+<tr>
+<td>成本敏感、内存受限</td>
+<td>标量/二进制量化 + 精排拉回精度</td>
+</tr>
+</tbody></table>
+<p>关键参数要会说：HNSW 的 <code>M</code> 与 <code>ef_construction</code>（建索引时定）、<code>ef_search</code>（查询时可调，越大越准越慢）；IVF 的 <code>nlist</code> 与 <code>nprobe</code>。调优的本质是<strong>召回率 vs 延迟的曲线</strong>，拿自己的评测集扫参，不要背固定值。</p>
+<h3>40. GraphRAG、LightRAG 适合什么场景？和传统向量 RAG 怎么选？ <strong>｜中频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+先说两个基础判断题：</p>
+<ul>
+<li><strong>什么场景下知识图谱比纯向量检索更有价值？</strong> 当问题核心不只是&quot;语义相似&quot;，而是&quot;实体关系、路径推理、多跳关联、结构化约束&quot;时——设备故障排查、商品属性关联、组织关系、法规条文引用、依赖链分析。只靠向量容易召回到&quot;语义接近但关系错误&quot;的内容。工程上把它理解成<strong>增强而不是替代</strong>：向量负责语义召回，图谱负责结构化约束、实体消歧和关系推理。</li>
+<li><strong>GraphRAG 适合什么？</strong> 实体关系密、需要多跳推理、社区摘要（全局性问题如&quot;这批文档主要在讨论什么主题&quot;）、结构化约束强的场景。</li>
+</ul>
+<p>2025-2026 的演进主要在于<strong>降成本</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GraphRAG（微软）</strong></td>
+<td>效果开创者，但索引要逐实体抽取 + 社区摘要，<strong>token 成本高</strong>，适合一次性建库、反复回答全局问题</td>
+</tr>
+<tr>
+<td><strong>LightRAG</strong>（港大，EMNLP 2025）</td>
+<td>双层检索（低层实体关系 / 高层主题），支持 local/global/hybrid/mix 四种模式与多模态；v1.5 引入多模态 + 四种分块 + 角色 LLM。索引成本比 GraphRAG 低很多（官方口径约三个数量级）、检索更快，35k+ stars</td>
+</tr>
+<tr>
+<td><strong>LazyGraphRAG</strong>（微软）</td>
+<td>思路是&quot;用轻量 LLM 标注代替预先详细摘要&quot;，把索引成本降到传统 GraphRAG 的约 0.1%，查询时才按需深入</td>
+</tr>
+<tr>
+<td><strong>KAG / nano-GraphRAG</strong></td>
+<td>KAG 强调逻辑形式与知识对齐；nano 系列适合学习与小规模落地</td>
+</tr>
+</tbody></table>
+<p>落地路径通常是：先用传统向量 RAG 打底 → badcase 明显集中在多跳关系、实体消歧、结构约束时再引入图谱增强 → 真正上线时常常是&quot;向量召回 + 图谱召回 + 融合重排&quot;一起做。<strong>只有问题核心在关系结构上时，图谱路线的收益才会大于复杂度。</strong></p>
+<p><strong>追问</strong>：图谱更新和维护成本会不会太高？（会，实体抽取与消歧质量直接决定上限；要评估源数据变更频率与抽取成本） ｜ 多路召回比纯图谱主路更现实吗？（在大部分企业混合场景下是的）</p>
+<h3>41. RAG 系统在实际部署中面临哪些挑战？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+难点不在&quot;能不能检索&quot;，而在&quot;从索引到回答的完整链路能不能长期稳定运行&quot;。拆成六类：</p>
+<table>
+<thead>
+<tr>
+<th>侧</th>
+<th>挑战</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据侧</td>
+<td>文档解析质量、切块策略、表格与 PDF 处理、知识更新时效</td>
+</tr>
+<tr>
+<td>检索侧</td>
+<td>Embedding 选型、召回质量、混合检索、重排效果、metadata 过滤</td>
+</tr>
+<tr>
+<td>生成侧</td>
+<td>上下文组装、引用溯源、忠实度控制、拒答策略</td>
+</tr>
+<tr>
+<td>治理侧</td>
+<td>权限隔离、版本管理、引用可追溯、知识回滚</td>
+</tr>
+<tr>
+<td>评测侧</td>
+<td>badcase 建设、离线评测与在线指标闭环</td>
+</tr>
+<tr>
+<td>工程侧</td>
+<td>延迟、成本、缓存、可观测、索引重建与线上运维</td>
+</tr>
+</tbody></table>
+<p>面试里更稳的答法不是只说&quot;部署会有很多工程问题&quot;，而是明确讲出：<strong>RAG 是一条从数据接入、索引构建、检索召回到生成回答的完整链路，任何一层出问题，最终答案都会出问题。</strong></p>
+<p><strong>追问</strong>：知识库频繁更新时怎么处理索引重建与版本回滚？（增量 upsert + 双集合别名切换 + 旧版本保留一个回滚窗口） ｜ 查询慢卡在哪个环节？（分段计时：向量化/召回/rerank/组装/生成，rerank 与生成为最常见热点，见第 120 题）</p>
+<h3>42. RAGFlow、Dify 还是自研链路？开源 RAG 平台怎么选？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+不要答成&quot;谁更强&quot;，而要答成&quot;当前知识库场景更需要什么&quot;：</p>
+<table>
+<thead>
+<tr>
+<th>重点</th>
+<th>推荐方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文档导入、解析、切块、检索与 RAG 编排体验</td>
+<td>RAGFlow 这类专项平台更有吸引力（深度文档解析是它的长板）</td>
+</tr>
+<tr>
+<td>多类 Agent、工作流、插件生态、业务 API 编排</td>
+<td>Dify / Coze 边界更宽</td>
+</tr>
+<tr>
+<td>深度定制、复杂状态治理、合规审计、内部系统耦合</td>
+<td>自研代码链路（LangChain/LangGraph + 自建检索）更稳</td>
+</tr>
+</tbody></table>
+<p>真正选型时优先看四类因素：<strong>文档导入与解析质量、权限与多租户能力、对接业务系统的方便程度、二次开发空间</strong>。很多项目不是卡在&quot;能不能做 RAG&quot;，而是卡在&quot;解析质量稳不稳、权限做不做得住、后续能不能接进企业系统&quot;。</p>
+<p><strong>追问</strong>：平台转自研的迁移边界怎么划？（把检索、权限、评测三层抽成独立服务，平台只做上层编排；迁移时先换编排层不动数据层）</p>
+<hr>
+<h2>四、记忆与上下文管理</h2>
+<h3>43. 上下文窗口、短期记忆、长期记忆分别是什么关系？ <strong>｜必刷 ｜中等</strong></h3>
 <p><strong>答案：</strong></p>
 <ul>
-<li><strong>Chroma</strong>：轻量级，本地部署，适合原型和小型项目</li>
-<li><strong>Pinecone</strong>：云托管，高性能，适合生产环境</li>
-<li><strong>Milvus</strong>：开源，高性能，支持大规模向量检索</li>
-<li><strong>Weaviate</strong>：开源，支持混合检索（语义+关键词）</li>
-<li><strong>FAISS</strong>：Facebook 出品，纯本地，适合离线场景</li>
+<li><strong>上下文窗口</strong>：模型单次推理能看到的内容上限，是昂贵的计算资源；</li>
+<li><strong>短期记忆</strong>（In-context / Session Memory）：会话或线程级状态，当前对话上下文，不持久；</li>
+<li><strong>长期记忆</strong>（External Memory）：跨会话保留的用户或任务信息，落在数据库/向量库/图谱，按需检索；</li>
+<li><strong>工作记忆</strong>（Working Memory）：当前任务执行中的中间状态、变量、步骤结果。</li>
 </ul>
-<h3>11. 🆕 Agent 的长期记忆基建有哪些方案？和直接做 RAG 有什么区别？</h3>
-<p><strong>答案：</strong></p>
-<p>代表方案（截至 2026-09）：</p>
+<p>工程上不能把这三者混为一谈：窗口不能无限塞历史；短期记忆保留当前任务相关的历史、摘要、线程状态；长期记忆更适合存偏好、画像、历史结论和可复用事实，<strong>按需检索，不应该每次全量放进 prompt</strong>。</p>
+<p>成熟系统的典型形态：<strong>窗口里只放高信号上下文，短期记忆保证当前线程不断档，长期记忆通过数据库或向量库按需召回。</strong></p>
+<p>对应到 LangGraph：短期记忆 = State + checkpointer（按 <code>thread_id</code>，见第 82 题），长期记忆 = Store（跳 thread、按 namespace/key）或 RAG 知识库。</p>
+<p><strong>追问</strong>：记忆和 RAG 的区别？为什么说记忆不是训练模型？Redis 适合做什么？（均见第 46 题） ｜ 上下文被截断时选滑窗、摘要还是检索式补充？（见第 44 题）</p>
+<h3>44. 如何为 Agent 设计短期与长期记忆系统？超长多轮对话怎么既不断档又省 token？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+先把记忆拆两层，不然很容易把所有信息都塞进上下文，最后又贵又乱：</p>
+<ul>
+<li><strong>短期记忆</strong>：解决&quot;当前会话/线程不断档&quot;，核心是 <code>读历史 → 拼进提示 → 调模型 → 写回历史</code>；</li>
+<li><strong>长期记忆</strong>：解决&quot;跳会话保留偏好、画像、历史结论、可复用事实&quot;，核心是&quot;存结构化信息，按需召回&quot;，而不是每轮全量塞 prompt。</li>
+</ul>
+<p>技术落地：短期常见做法是把消息历史或线程状态持久化到内存、Redis 或 checkpointer，再通过 <code>MessagesPlaceholder</code> 或图状态在下一轮重新注入；长期更适合放在数据库、向量库，关系很重要的场景里放进知识图谱。</p>
+<p>在 LangChain / LangGraph 体系下要能讲清两套定位：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>定位</th>
+<th>适合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>RunnableWithMessageHistory + BaseChatMessageHistory</code></td>
+<td>对话历史注入</td>
+<td>聊天助手、轻量多轮问答</td>
+</tr>
+<tr>
+<td>LangGraph persistence / checkpointer</td>
+<td>线程级状态持久化（图在每一步的快照）</td>
+<td>复杂 Agent、图编排、断点恢复、人机协同</td>
+</tr>
+<tr>
+<td>Store / 向量库 / DB</td>
+<td>跳线程长期存储，按需检索</td>
+<td>偏好、画像、历史结论</td>
+</tr>
+</tbody></table>
+<p>超长多轮对话的四种常见手段（必须能说差异）：</p>
+<ol>
+<li><strong>滑动窗口</strong>：只保留最近 N 轮原文，简单直接，但容易丢早期约束；</li>
+<li><strong>周期性摘要</strong>：每隔几轮把历史压成结构化总结，保留目标、已确认事实、待办和偏好；</li>
+<li><strong>检索式补充</strong>：旧对话写入向量库或长期存储，按当前问题召回相关片段，而不是把所有旧消息都塞回窗口；</li>
+<li><strong>结构化记忆槽</strong>：城市、会员等级、偏好、关键状态这类固定信息直接落键值或数据库，不让模型每次&quot;回忆&quot;。</li>
+</ol>
+<p>所以记忆系统不是&quot;历史保存得越多越好&quot;，而是要区分：<strong>什么该原样保留，什么该摘要，什么该结构化，什么该按需检索。</strong></p>
+<p><strong>追问</strong>：四种手段怎么组合？（近期原文 + 中段摘要 + 远期检索 + 关键槽位直存，是生产常见四合一） ｜ 摘要会丢信息怎么办？（摘要只作为补充索引，关键事实另入结构化字段）</p>
+<h3>45. Agent 的长期记忆基建有哪些方案？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+代表方案（截至 2026-10）：</p>
 <table>
 <thead>
 <tr>
@@ -265,71 +1284,146 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是将外部知识�
 </tr>
 </thead>
 <tbody><tr>
-<td>Mem0</td>
+<td><strong>Mem0</strong></td>
 <td>向量 + 图谱的 drop-in 记忆层</td>
-<td>接入简单，有 ECAI 2025 论文（arXiv:2504.19413）与 LoCoMo 基准</td>
+<td>接入简单，有论文（arXiv:2504.19413）与 LoCoMo 基准；写入侧做事实抽取与 UPDATE/DELETE 决策</td>
 </tr>
 <tr>
-<td>Zep</td>
+<td><strong>Zep</strong></td>
 <td>Graphiti 时序知识图谱</td>
-<td>支持带时间维度的事实，官方称检索 &lt;200ms（示例口径）</td>
+<td>支持带时间维度的事实（&quot;什么时候成立、何时失效&quot;），官方称检索 &lt;200ms（示例口径）</td>
 </tr>
 <tr>
-<td>Letta（前身 MemGPT，UCB）</td>
+<td><strong>Letta</strong>（前身 MemGPT，UCB）</td>
 <td>OS 式 memory blocks，Agent 自编辑记忆</td>
-<td>显式区分核心记忆/归档记忆</td>
+<td>显式区分核心记忆 / 归档记忆，把上下文当内存分页管理</td>
 </tr>
 <tr>
-<td>LangMem</td>
+<td><strong>LangMem</strong></td>
 <td>LangChain 原生记忆模块</td>
-<td>与 LangGraph Store 深度集成</td>
+<td>与 LangGraph Store 深度集成，区分 semantic / episodic / procedural</td>
 </tr>
 </tbody></table>
-<p>与纯 RAG 的关键区别：</p>
-<ol>
-<li><strong>写入侧做事实抽取与更新</strong>：不是原样存文档块，而是从对话中抽取&quot;用户偏好/实体关系&quot;，并处理更新与冲突（旧事实失效）；</li>
-<li><strong>时序与关系</strong>：支持&quot;用户上个月在 A 团队、这个月换到 B 团队&quot;这类带时间的事实，图谱维护实体关系；</li>
-<li><strong>召回侧个性化</strong>：按用户/会话作用域检索，而非全局相似度。</li>
-</ol>
-<p>常用评测基准：<strong>LoCoMo、LongMemEval、BEAM</strong>。注意各厂商常引用<strong>自测分数</strong>，跨方案比较时以独立基准为准。</p>
-<hr>
-<h2>三、工具调用</h2>
-<h3>12. 什么是 Function Calling / Tool Use？</h3>
-<p><strong>答案：</strong>
-Function Calling 是让 LLM 能够决定&quot;调用哪个工具、传入什么参数&quot;的能力：</p>
-<ol>
-<li>开发者定义工具的名称、描述和参数 schema（通常是 JSON Schema）</li>
-<li>LLM 根据用户意图选择合适的工具并生成调用参数</li>
-<li>代码执行实际的工具调用，将结果返回给 LLM</li>
-<li>LLM 基于结果继续推理或生成最终回答</li>
-</ol>
-<pre><code class="language-python">tools = [{
-    &quot;name&quot;: &quot;get_weather&quot;,
-    &quot;description&quot;: &quot;获取指定城市的天气&quot;,
-    &quot;parameters&quot;: {
-        &quot;type&quot;: &quot;object&quot;,
-        &quot;properties&quot;: {
-            &quot;city&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;城市名称&quot;}
-        },
-        &quot;required&quot;: [&quot;city&quot;]
-    }
-}]
-</code></pre>
-<p>不借助框架的手写调用循环与消息流转见第 20 题。</p>
-<h3>13. Agent 常见的工具类型有哪些？</h3>
-<p><strong>答案：</strong></p>
+<p>记忆类型也可以顺带说清（面试官很吃这套）：</p>
 <ul>
-<li><strong>搜索工具</strong>：Google Search、Bing、SerpAPI、Tavily</li>
-<li><strong>代码执行</strong>：Python Interpreter、Node.js 运行环境</li>
-<li><strong>文件操作</strong>：读写文件、解析 PDF/Excel/Word</li>
-<li><strong>数据库查询</strong>：SQL 查询、向量数据库检索</li>
-<li><strong>API 调用</strong>：REST API、GraphQL、第三方服务</li>
-<li><strong>浏览器控制</strong>：Playwright、Puppeteer（用于 Web 自动化）</li>
-<li><strong>计算器</strong>：数学计算，避免 LLM 幻觉</li>
+<li><strong>语义记忆</strong>：关于用户/世界的稳定事实（偏好、身份、术语习惯）；</li>
+<li><strong>情景记忆</strong>：发生过什么（历史会话、任务结果、时间线）；</li>
+<li><strong>程序性记忆</strong>：该怎么做（规则、SOP、提示模板的迭代结果）。</li>
 </ul>
-<h3>14. <code>@tool</code> 装饰器生成的工具，其 schema 从哪里来？怎么写复杂参数？</h3>
+<p>常用评测基准：<strong>LoCoMo、LongMemEval、BEAM</strong>。注意各厂商常引用<strong>自测分数</strong>，跳方案比较时以独立基准为准。</p>
+<p><strong>追问</strong>：记忆污染怎么办？（写入前做冲突检测与时间失效，对应 OWASI ASI06 记忆投毒，见第 107 题） ｜ 为什么不自己写一张表就够？（小量场景确实够用；规模上去后需要抽取、去重、时间推理、作用域隔离，这些都是基建层能力）</p>
+<h3>46. 记忆和 RAG 的区别是什么？记忆算训练吗？Redis 在记忆里适合做什么？ <strong>｜高频 ｜基础 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+三个追问都有标准答法：</p>
+<p><strong>1）记忆 vs RAG</strong>：形式上都是&quot;存下来、检索回来&quot;，区别在<strong>写入侧与作侧</strong>：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RAG（知识库）</th>
+<th>记忆</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>写入</td>
+<td>文档原样切块入库</td>
+<td>从对话中<strong>抽取事实</strong>，处理更新与冲突（旧事实失效）</td>
+</tr>
+<tr>
+<td>内容</td>
+<td>领域知识、文档</td>
+<td>用户偏好、实体关系、历史结论</td>
+</tr>
+<tr>
+<td>时序</td>
+<td>一般不管</td>
+<td>要区分&quot;上月在 A 团队、本月在 B 团队&quot;</td>
+</tr>
+<tr>
+<td>检索</td>
+<td>全局相似度为主</td>
+<td>按用户/会话<strong>作用域</strong>检索，带个性化</td>
+</tr>
+<tr>
+<td>质变</td>
+<td>知识库更新即可答新内容</td>
+<td>写错会<strong>持续误导</strong>后续所有会话</td>
+</tr>
+</tbody></table>
+<p><strong>2）记忆不是训练</strong>：记忆只改上下文内容，不改参数，因此可随时增删、可解释、可按用户隔离；微调才改参数，贵、慢、难回滚、无法按用户区分。面试里能把这句说清就赢一半。</p>
+<p><strong>3）Redis 的定位</strong>：适合做<strong>短期记忆 / 会话缓存</strong>——按 session_id 存最近 N 轮消息、TTL 自动过期、低延迟高并发；也能做语义缓存（向量相似度检索）与频控。不适合做长期记忆主存储（语义检索、事实抽取、时间推理不是它的主场），长期记忆还是向量库 / 图谱 / 关系库更合适。</p>
+<p><strong>追问</strong>：记忆该存哪些字段？（user_id/namespace、事实内容、类型标签、时间戳与有效期、来源会话、置信度） ｜ 如何防止用户 A 的记忆泄到用户 B？（命名空间硬隔离 + 检索时强制带作用域过滤 + 写入时禁存敏感原文）</p>
+<h2>五、工具调用与 Function Calling</h2>
+<h3>47. Function Calling 的基本原理是什么？消息是怎么流转的？ <strong>｜必刷 ｜中等 ｜腾讯一面</strong></h3>
+<p><strong>答案：</strong>
+核心分工一句话：<strong>模型负责决策，程序负责执行。</strong></p>
+<p>完整链路：</p>
+<ol>
+<li>宿主程序把工具的 <code>name</code>、<code>description</code>、参数 schema（通常是 JSON Schema）一起发给模型；</li>
+<li>模型判断要不要调用工具，如果要，先返回结构化的 <code>tool_calls</code>，而不是直接给最终自然语言；</li>
+<li>宿主程序读取 <code>AIMessage.tool_calls</code>，真正去执行 Python 函数、HTTP API、数据库查询或业务服务；</li>
+<li>程序把执行结果封成 <code>ToolMessage</code>（带 <code>tool_call_id</code>）再交回模型；</li>
+<li>模型基于工具结果生成最终答复。</li>
+</ol>
+<p>消息流转是 Agent 的命门，必须能默写：</p>
+<pre><code>Human → AI(tool_calls) → Tool(tool_call_id 一一对应) → AI … → AI(无 tool_calls = 终态)
+</code></pre>
+<p>所以 Function Calling <strong>不是模型自己去调 API</strong>，它只是生成&quot;调用哪个工具、传什么参数&quot;的结构化意图。真正的鉴权、参数校验、超时、幂等、重试和安全控制，全部在宿主程序这一层。</p>
+<p>工程补一句：Function Calling 解决的是&quot;模型如何表达调用意图&quot;，不解决&quot;工具是否安全、是否允许调用、调用失败怎么兜底&quot;。</p>
+<p><strong>追问</strong>：为什么生产更推荐原生 Tool Calling？（协议级契约，见第 23 题） ｜ 工具执行失败怎么处理？（见第 55 题）</p>
+<h3>48. Tool、Function Calling、Agent 三者是什么关系？ <strong>｜必刷 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+<strong>Tool 是能力单元，Function Calling 是调用机制，Agent 是把模型、工具、状态和决策流程组织起来的运行模式。</strong></p>
+<ul>
+<li>Tool 解决&quot;能做什么&quot;；</li>
+<li>Function Calling 解决&quot;怎么发起结构化调用&quot;；</li>
+<li>Agent 解决&quot;如何围绕目标多轮地决定要不要调用、调用谁、调用几次&quot;。</li>
+</ul>
+<p>所以 <strong>Tool 不等于 Agent，单次 Tool Calling 也不一定等于 Agent</strong>。真实项目里很多需求只需要 Tool Calling（意图识别 + 调一个工具 + 结果整合），不一定要上完整 Agent；只有任务需要多步规划、反复决策和状态推进时，Agent 才值得引入。</p>
+<p>Agent 决定调用与否的那个字段就是 <code>finish_reason</code> / 有无 <code>tool_calls</code>：无工具调用即视为终态（见第 47、51 题）。</p>
+<p><strong>追问</strong>：单工具助手算不算 Agent？（看是否有循环与状态推进，不看工具个数） ｜ Tool 设计的最小粒度应该是什么？（见第 52 题）</p>
+<h3>49. Agent 常见的工具类型有哪些？ <strong>｜高频 ｜基础</strong></h3>
 <p><strong>答案：</strong></p>
-<p>schema 来自三处的自动提取：<strong>函数名</strong>、<strong>docstring</strong>（作为工具描述）、<strong>类型注解 + Pydantic</strong>（作为参数 JSON Schema）。复杂参数用 Pydantic Model：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>搜索</td>
+<td>Tavily、SerpAPI、Bing、内置 web_search</td>
+</tr>
+<tr>
+<td>代码执行</td>
+<td>Python Interpreter、Node.js 运行环境</td>
+</tr>
+<tr>
+<td>文件操作</td>
+<td>读写文件、解析 PDF/Excel/Word</td>
+</tr>
+<tr>
+<td>数据查询</td>
+<td>SQL、向量检索、指标查询</td>
+</tr>
+<tr>
+<td>API 调用</td>
+<td>REST、GraphQL、第三方服务、内部业务接口</td>
+</tr>
+<tr>
+<td>浏览器控制</td>
+<td>Playwright、Puppeteer、browser-use</td>
+</tr>
+<tr>
+<td>计算与校验</td>
+<td>计算器、单位换算、正则校验（避免 LLM 幻觉）</td>
+</tr>
+</tbody></table>
+<p>面试里比背名字更重要的是：<strong>按&quot;读/写、可逆/不可逆&quot;给工具分级</strong>。只读工具可以直接给模型用；写操作工具（发消息、下单、退款、改数据）必须加确认、幂等与审计（见第 83、107 题）。</p>
+<h3>50. <code>@tool</code> 生成的工具，schema 从哪里来？复杂参数怎么写？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+schema 来自三处的自动提取：<strong>函数名</strong>、<strong>docstring</strong>（作为工具描述）、<strong>类型注解 + Pydantic</strong>（作为参数 JSON Schema）。复杂参数用 Pydantic Model：</p>
 <pre><code class="language-python">from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 
@@ -343,10 +1437,972 @@ def apply_refund(order_id: str, reason: str, amount: float | None) -&gt; str:
     &quot;&quot;&quot;提交退款。写操作，调用前必须先与用户确认金额与原因。&quot;&quot;&quot;
     ...
 </code></pre>
-<p>追问&quot;如何提升工具调用准确率&quot;的标准答案：动宾命名、docstring 写清何时用/何时不用、参数给示例与约束、工具数量控制在约 20 个以内、返回精炼结构化结果。</p>
-<h3>15. 🆕 OpenAI Responses API 与 Chat Completions、Assistants API 是什么关系？</h3>
+<p>追问&quot;如何提升工具调用准确率&quot;的标准答案：</p>
+<ol>
+<li><strong>动宾命名</strong>（<code>get_weather</code> 而不是 <code>weather</code>），名字即可读；</li>
+<li><strong>docstring 写清何时用 / 何时不用</strong>（包括反例）；</li>
+<li>参数给<strong>描述、示例与约束</strong>（枚举用 <code>Literal</code>，范围用 <code>Field(ge=, le=)</code>）；</li>
+<li>工具数量收敛（经验上 <strong>约 20 个以内</strong>，多了就要分层暴露或 Tool Retrieval，见第 54 题）；</li>
+<li>返回<strong>精炼的结构化结果</strong>，不要把整个 HTML 丢回去。</li>
+</ol>
+<h3>51. 现场手写一个带工具的 Agent（不用 AgentExecutor）。 <strong>｜必刷 ｜中等</strong></h3>
 <p><strong>答案：</strong></p>
-<p>Responses API 是 OpenAI 于 2025-03 推出的统一接口（<code>POST /v1/responses</code>），定位为 Assistants API 的替代者：</p>
+<pre><code class="language-python">from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, ToolMessage
+from langchain_core.tools import tool
+
+@tool
+def get_weather(city: str) -&gt; str:
+    &quot;&quot;&quot;查询指定城市的天气。city 为城市名。&quot;&quot;&quot;
+    return f&quot;{city}：晴，25°C&quot;
+
+llm = ChatOpenAI(model=&quot;gpt-5-mini&quot;).bind_tools([get_weather])
+tools = {&quot;get_weather&quot;: get_weather}
+
+messages = [HumanMessage(&quot;北京天气如何？&quot;)]
+
+for _ in range(10):                       # 最大步数，防死循环
+    ai = llm.invoke(messages)
+    messages.append(ai)
+    if not ai.tool_calls:                # 无工具调用 = 终态
+        break
+    for call in ai.tool_calls:           # 执行所有请求的工具
+        result = tools[call[&quot;name&quot;]].invoke(call[&quot;args&quot;])
+        messages.append(ToolMessage(str(result), tool_call_id=call[&quot;id&quot;]))
+
+print(messages[-1].content)
+</code></pre>
+<p>两个高频扣分点：</p>
+<ol>
+<li><code>ToolMessage</code> 必须带 <code>tool_call_id</code>，与请求<strong>一一对应</strong>；</li>
+<li>每轮要把 <strong>AI 消息和 Tool 消息都追加进历史</strong>，漏任一边模型都会报错。</li>
+</ol>
+<p>加分点：工具名不存在时要拒绝执行（防工具幻觉）；<code>call[&quot;args&quot;]</code> 要过 Pydantic 校验而不是直接 <code>**</code> 展开；工具执行要有超时与异常捕获，失败时把错误作为 observation 回传而不是直接抛异常。</p>
+<blockquote>
+<p>注：示例中的 <code>gpt-5-mini</code> 是现役型号占位写法；旧版示例里的 <code>gpt-4o / gpt-4o-mini</code> 自 <strong>2026-02-13 起陆续退役</strong>，新代码应改用现役型号。<code>init_chat_model(&quot;provider:model&quot;)</code> 的用法本身不变，迁移通常只需改模型字符串。</p>
+</blockquote>
+<h3>52. 设计 Tool 时最值得重视的工程原则是什么？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+四点：<strong>单一职责、明确 schema、可观测、可失败</strong>。</p>
+<ul>
+<li><strong>单一职责</strong>：一个 Tool 只做一件清晰的事，避免&quot;大而全万能工具&quot;；</li>
+<li><strong>明确 schema</strong>：让模型更稳定地理解参数含义，不依赖它猜；</li>
+<li><strong>可观测</strong>：每次调用都能追踪请求、参数、耗时、结果和错误；</li>
+<li><strong>可失败</strong>：必须有超时、异常码、重试策略和降级逻辑，而不是假设一定成功。</li>
+</ul>
+<p>如果 Tool 要连业务系统，还要加<strong>权限校验、幂等控制和审计日志</strong>。因为工具一旦从&quot;查天气&quot;变成&quot;发消息、下工单、写数据库&quot;，风险等级就完全不同了。</p>
+<p><strong>追问</strong>：Tool 粒度多细算合适？（以&quot;业务动作&quot;为粒度，而不是以&quot;底层 API&quot;为粒度——模型擅长选意图，不擅长拼参数链路） ｜ 写操作工具怎么设防？（interrupt 人审 + 幂等键 + 作用域限制，见第 83、104 题）</p>
+<h3>53. 什么是&quot;工具幻觉&quot;？工程上怎么缓解？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+工具幻觉指：模型调用了<strong>不存在的工具</strong>、传了<strong>不合理的参数</strong>，或者<strong>在只该读数据时却试图触发写操作</strong>。在工具数量多、描述模糊、schema 不清晰时特别常见——模型有时不是&quot;不会用工具&quot;，而是&quot;对工具边界理解错了&quot;。</p>
+<p>兜底措施：</p>
+<ol>
+<li><strong>工具注册表白名单</strong>：不存在的工具名直接拒绝；</li>
+<li><strong>schema 强校验</strong>：参数类型、必填项、枚举值运行时校验，不信任模型返回；</li>
+<li><strong>工具集收敛</strong>：按场景暴露最小工具集，别让模型在几十个相近工具里乱猜；</li>
+<li><strong>描述治理</strong>：工具名、description、参数说明里明确读写边界和适用场景；</li>
+<li><strong>高风险确认</strong>：发消息、写数据库、发工单、下单类副作用动作必须审批或二次确认；</li>
+<li><strong>失败反馈</strong>：把错误原因回传给模型，让它有机会修正，但要<strong>限制重试次数</strong>防死循环。</li>
+</ol>
+<p>一句话：<strong>Tool Calling 不是&quot;接上就行&quot;，而是要让模型&quot;调得准、调得住、调错了也出不了大事&quot;。</strong></p>
+<h3>54. 工具很多时，如何控制上下文长度和调用稳定性？ <strong>｜中频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+工具一多，问题不再是&quot;会不会调工具&quot;，而是&quot;会不会在一堆相似工具里选错、调错、越调越乱&quot;。四类做法：</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>分层暴露</strong></td>
+<td>先按业务域拆成搜索类、数据类、执行类、写操作类，不要一次把所有工具塞给同一个 Agent</td>
+</tr>
+<tr>
+<td><strong>动态选择</strong></td>
+<td>先做 <strong>Tool Retrieval</strong> 或路由，只把 Top-N 个最相关工具描述放进当前上下文，而不是全量列出</td>
+</tr>
+<tr>
+<td><strong>工具聚合</strong></td>
+<td>把过细的底层 API 封装成更高层的业务动作，减少模型在几十个相近函数里猜名字</td>
+</tr>
+<tr>
+<td><strong>描述治理</strong></td>
+<td>工具名、description、参数说明里明确&quot;什么时候用、什么时候不用、有没有副作用&quot;</td>
+</tr>
+</tbody></table>
+<p>再往前走一步：生产里可以把&quot;工具选择&quot;本身做成<strong>独立阶段</strong>（先意图分类或子域路由，再进入具体工具调用）。既控上下文长度，也降工具幻觉和误调用概率。</p>
+<p>一句话：<strong>工具多不是问题，关键是别让模型在一个没有层次的工具海里盲选。</strong></p>
+<p><strong>追问</strong>：优先做路由还是先改工具粒度？（先改粒度与描述，成本最低；工具数仍爆炸时再上 Tool Retrieval） ｜ Tool Retrieval 和知识检索有什么区别？（检索对象是工具 schema/描述，召回后注入的是 tools 字段而不是上下文文本） ｜ MCP 工具一多同样有这个问题（见第 65 题）</p>
+<h3>55. 工具调用失败了怎么办？返回内容过长、多工具依赖顺序又怎么处理？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+这三问是 2026 年面试里考得最实的工具细节题。</p>
+<p><strong>1）失败后的四级策略</strong>（优先级从上到下）：</p>
+<ol>
+<li><strong>重试</strong>：只对瞬时错误重试（超时、429、5xx），指数退避 + 抖动；参数错不盲重试；</li>
+<li><strong>修正参数重试</strong>：把结构化错误码和原因作为 observation 回传给模型，让它自己改参数再调（限次，通常 ≤ 2）；</li>
+<li><strong>换工具 / 降级</strong>：主工具不可用时走备用数据源，或降级为&quot;缓存 / 规则 / 人工&quot;；</li>
+<li><strong>上抛与止损</strong>：仍失败就终止当前分支，记录现场并转人工，不要继续消耗上下文。</li>
+</ol>
+<p>关键设计：错误返回给模型的应该是<strong>可行动的结构化信息</strong>（<code>{&quot;error_code&quot;: &quot;INVALID_DATE&quot;, &quot;hint&quot;: &quot;需要 YYYY-MM-DD&quot;}</code>），而不是一大段 Python traceback。</p>
+<p><strong>2）返回内容过长</strong>：这是上下文膨胀的头号杀手。常用手段：</p>
+<ul>
+<li>工具层先做<strong>结果裁剪</strong>：只返结构化摘要 + 必要字段，支持 <code>limit</code> / <code>fields</code> 参数；</li>
+<li>分页或字段选择，让模型按需再拉；</li>
+<li><strong>落文件只回路径</strong>：超长 observation 写入文件/虚拟文件系统，上下文里只留句柄与摘要（Manus、Deep Agents、Claude Code 都是这个思路）；</li>
+<li>截断时<strong>显式标注</strong> <code>...(已截断，共 N 条)</code>，避免模型把部分结果当全量下结论。</li>
+</ul>
+<p><strong>3）多工具顺序与依赖</strong>：</p>
+<ul>
+<li>能并行的就并行：独立查询（同时查天气和查新闻）一轮内并发发出，省掉串行延迟；</li>
+<li>有依赖的要拆成多步，<strong>前一步输出作为参数契约</strong>进入下一步（先查 user_id 再查订单）；常见做法是用结构化状态或 schema 存中间产物，而不是靠模型&quot;记得上一步说了什么&quot;；</li>
+<li>依赖关系能写进流程的别交给模型：固定顺序用 Workflow / LangGraph 边定义（见第 7、81 题），只把真正需要临时决策的部分留给 Agent；</li>
+<li>副作用工具要特别注意幂等与执行次数（重试不能重复下单，见第 104 题）。</li>
+</ul>
+<p><strong>追问</strong>：怎么防止模型拿到工具结果后乜二次编造？（要求只引用字段值、带来源、生成后做一致性校验，见第 110 题） ｜ 工具描述怎么写模型才不选错？（见第 50、54 题）</p>
+<h2>六、协议层：MCP、A2A 与 Agent Skills</h2>
+<h3>56. 什么是 MCP？它解决的核心问题是什么？ <strong>｜高频 ｜中等 ｜腾讯一面</strong></h3>
+<p><strong>答案：</strong>
+MCP（<strong>Model Context Protocol</strong>）由 Anthropic 于 <strong>2024-11-25</strong> 发布，是一套开放标准，用来规范 AI 应用如何以统一方式连接外部工具、资源和提示模板——常被比喻成&quot;工具侧的 USB-C&quot;。</p>
+<p>它解决的不是&quot;模型能不能调工具&quot;，而是&quot;<strong>不同 AI 应用怎样用统一方式接外部能力</strong>&quot;。MCP 统一的是模型本身之外的部分：Host、Client、Server 之间发现、暴露和调用能力的方式。</p>
+<p>参与角色：</p>
+<ul>
+<li><strong>Host</strong>：真正跑模型的应用（IDE、Claude Desktop、自研 Agent）；</li>
+<li><strong>Client</strong>：Host 内部的连接器，一个 Server 对应一个 Client，保持 1:1 隔离；</li>
+<li><strong>Server</strong>：对外暴露 Tools / Resources / Prompts 的服务进程。</li>
+</ul>
+<p>企业关心 MCP 的理由很实在：<strong>一次暴露、多处复用、统一 schema、降低接入成本</strong>——内部把业务系统封装成 MCP Server 后，Cursor、Claude、自研 Agent 都能直接用，不必每个应用写一套集成。</p>
+<p>治理进展：MCP 已于 <strong>2025-12-09 捐赠给 Linux Foundation 旗下新成立的 Agentic AI Foundation（AAIF）</strong>（由 Anthropic、Block、OpenAI 联合发起，创始项目含 MCP、goose、AGENTS.md）。</p>
+<h3>57. MCP 和 Tool / Function Calling / RAG / Agent 怎么区分？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+四句话分工：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>解决什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tool / Function Calling</strong></td>
+<td>模型如何表达&quot;我要调用哪个工具、传什么参数&quot;</td>
+</tr>
+<tr>
+<td><strong>RAG</strong></td>
+<td>模型如何拿到外部知识</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td>谁来规划、决策、调用这些能力</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>这些外部能力如何被标准化暴露和接入</td>
+</tr>
+</tbody></table>
+<p>和 Function Calling 的关系是<strong>上下层而不是替代</strong>：Function Calling 更靠近模型决策（怎么表达调用意图），MCP 更靠近生态接入和协议标准化（能力从哪里来、怎么发现）。真正落地时，Agent 完全可以在 MCP 暴露的能力之上继续用 Function Calling 做调用决策。</p>
+<p>和 RAG 的区别：MCP 不是一种检索算法，它可以<strong>把检索能力做成一个 MCP Server</strong>（如知识库检索、向量库查询），但 RAG 本身的切块/召回/重排优化与 MCP 无关。</p>
+<h3>58. MCP 是如何做到跨平台兼容的？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+本质上来自&quot;<strong>统一协议，而不是统一实现</strong>&quot;：不同平台、不同语言、不同宿主程序，只要都遵循同一套消息结构（JSON-RPC 2.0）、能力暴露方式和调用约定，就能在协议层互通。客户端不需要为每个外部系统写一套私有接入方式，服务端也能按标准暴露能力。</p>
+<p>所以 MCP 的价值不在于它绑定了某个技术栈，而在于把接入差异收敛成了统一的协议面。类比：MCP 之于 AI 应用，相当于 LSP 之于编辑器与语言服务器、USB-C 之于设备接口。</p>
+<p>工程上还要补一句：兼容的是协议面，<strong>不是体验面</strong>——鉴权方式、部署形态、工具质量、安全边界都仍需自己做治理（见第 61、65 题）。</p>
+<h3>59. MCP 协议的主体内容是什么？原语是怎么演进的？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+按四层讲最清楚：</p>
+<ol>
+<li><strong>参与角色</strong>：Host、Client、Server；</li>
+<li><strong>能力类型</strong>：Tools、Resources、Prompts；</li>
+<li><strong>通信机制</strong>：能力发现、请求、响应、错误、通知；</li>
+<li><strong>传输方式</strong>：stdio、Streamable HTTP 等承载协议的通道。</li>
+</ol>
+<p>三类原语的控制权归属要分得清：</p>
+<table>
+<thead>
+<tr>
+<th>原语</th>
+<th>谁控制</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tools</strong></td>
+<td>model-controlled</td>
+<td>模型可自动决定要不要调用的动作</td>
+</tr>
+<tr>
+<td><strong>Resources</strong></td>
+<td>application-driven</td>
+<td>由宿主决定如何纳入上下文的资料</td>
+</tr>
+<tr>
+<td><strong>Prompts</strong></td>
+<td>user-controlled</td>
+<td>可复用的提示/工作流模板（斜杠命令类）</td>
+</tr>
+<tr>
+<td>客户端侧原语：<strong>Sampling</strong>（服务器反过来请求宿主生成）、<strong>Roots</strong>（宿主告知可操作目录范围）；后来新增 <strong>Elicitation</strong>（<code>elicitation/create</code>，服务器向用户弹结构化表单收集输入）。</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>规范按日期版本演进：2024-11-05 → 2025-03-26 → 2025-06-18 → 2025-11-25 → <strong>2026-07-28</strong>（当前最新版）。原语与特性的时间线：</p>
+<ul>
+<li><strong>2025-03-26</strong>：OAuth 2.1 授权框架、Streamable HTTP 取代旧 HTTP+SSE；</li>
+<li><strong>2025-06-18</strong>：Elicitation、<code>structuredContent</code>、<code>resource_link</code>，并<strong>取消 JSON-RPC 批处理</strong>；</li>
+<li><strong>2025-11-25</strong>：Elicitation 增加 URL 模式、扩展与实验性特性框架成型；</li>
+<li><strong>2026-07-28</strong>：史上最大修订，全面无状态化（见第 60 题）。</li>
+</ul>
+<p>和 OpenAPI / Function Calling 的区别：Function Calling 只是单次请求里的工具 schema；OpenAPI 描述 HTTP 接口但没有会话/资源/提示协商；MCP 是<strong>有生命周期、可发现、双向通信</strong>的协议（只是 2026 版把&quot;会话&quot;从协议层拿掉了，见下一题）。</p>
+<h3>60. MCP 2026-07-28 新版规范改了什么？为什么去掉会话？ <strong>｜必刷 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+2026-07-28 是 MCP 第五版规范，被称为&quot;史上最大修订&quot;，主题是<strong>全面无状态化（stateless）</strong>——目标是让 MCP 能直接跑在普通 HTTP 负载均衡、Serverless 和企业网关上，而不是还得维持粘性会话。</p>
+<p><strong>删除 / 移除</strong>：</p>
+<ul>
+<li>移除协议级会话概念与 <strong><code>Mcp-Session-Id</code></strong> 头；不再要求服务端维护会话表；</li>
+<li>删除 <strong><code>initialize</code> / <code>notifications/initialized</code> 握手</strong>；</li>
+<li>取消 JSON-RPC batch（2025-06-18 已删）；服务端<strong>不得主动向客户端发请求</strong>（要反 ask 只能走 Sampling / Elicitation 等声明式原语）。</li>
+</ul>
+<p><strong>新增 / 替代</strong>：</p>
+<ul>
+<li>版本与能力协商从&quot;握手&quot;改为<strong>每个请求自带</strong>：在 <code>_meta</code> 里带 <code>io.modelcontextprotocol/protocolVersion</code>、<code>clientCapabilities</code>（<code>clientInfo</code> 可选）；</li>
+<li>新增必须实现的 <strong><code>server/discover</code></strong> 方法，返回 <code>supportedVersions</code> / <code>capabilities</code> / <code>instructions</code> / <code>ttlMs</code> / <code>cacheScope</code>，把&quot;一次性发现&quot;变成可缓存的查询；</li>
+<li>结果对象必须带 <strong><code>resultType</code></strong>（如 <code>&quot;complete&quot;</code>），流式/不完整结果能被显式标识；</li>
+<li>新错误码：<code>-32602</code> Invalid params、<strong><code>-32020</code> HeaderMismatch</strong>、<strong><code>-32021</code> MissingRequiredClientCapability<code>**、**</code>-32022` UnsupportedProtocolVersion</strong>（下文简写，实际名为 HeaderMismatch / MissingRequiredClientCapability / UnsupportedProtocolVersion）；</li>
+<li>引入<strong>版本化扩展框架</strong>（Extensions），官方示例：<strong>MCP Apps</strong>（服务端渲染交互界面）与 <strong>Tasks</strong>（长任务轮询）；</li>
+<li>强化 <strong>OAuth 2.0 / 2.1</strong>：明确服务器作为资源服务器的元数据发现、resource indicator、PKCE；</li>
+<li><strong>stdio 三条硬规矩</strong>：消息不得内嵌换行、stdout 只放协议消息、日志一律走 stderr（否则换行分帧会被破坍）。</li>
+</ul>
+<p><strong>收益实测</strong>（官方示例口径）：同一个工具调用的握手路径从 <strong>7 条消息 / 837 字节</strong> 降到 <strong>2 条消息 / 257 字节</strong>，下行流量约省 <strong>69%</strong>。</p>
+<p>为什么去会话：有状态设计下，服务端必须记住&quot;这个 session 里已经初始化过了、已打开哪些资源流&quot;，导致<strong>必须粘性路由 + 内存状态 + 重启丢会话</strong>，这三点在云原生环境里都是成本。无状态后，每个请求自带版本与能力，任意实例都能服务，缓存、重试、水平扩展都回到普通 HTTP 那一套。</p>
+<p><strong>追问</strong>：旧客户端怎么兼容？（靠版本协商与 <code>server/discover</code> 的 <code>supportedVersions</code>，服务端可同时声明多个版本） ｜ 无状态后长任务怎么办？（Tasks 扩展 + 轮询，或自己接消息队列） ｜ stdio 为什么还留着？（本地工具首选：零网络攻击面、无需鉴权、由客户端拉起子进程）</p>
+<h3>61. MCP 的传输方式怎么选？鉴权怎么做？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+两种官方传输：</p>
+<table>
+<thead>
+<tr>
+<th>传输</th>
+<th>形态</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>stdio</strong></td>
+<td>客户端拉起本地子进程，换行分隔 JSON-RPC</td>
+<td>无网络攻击面、无需鉴权，适合本地工具；严格 stdout/stderr 分离</td>
+</tr>
+<tr>
+<td><strong>Streamable HTTP</strong></td>
+<td>单端点：POST 请求 + 可选 GET/SSE 流</td>
+<td>取代旧的 HTTP+SSE；本地部署必须绑 127.0.0.1 并校验 Origin 防 DNS rebinding；远端走 OAuth 2.1</td>
+</tr>
+</tbody></table>
+<p>选型一句话：<strong>本地单人工具用 stdio，需要多用户/跨网络/可观测用 Streamable HTTP</strong>（2026 版无状态化后，后者部署明显变简单，见第 60 题）。</p>
+<p>鉴权实践（按优先级）：</p>
+<ol>
+<li>远程服务用 <strong>OAuth 2.1</strong>（授权码 + PKCE），服务器实现为资源服务器，通过 RFC9728 元数据发现、RFC8707 resource indicator 定位受众；</li>
+<li>企业内部可用网关代理鉴权（mTLS / JWT），但<strong>不要把长期 API Key 写进客户端配置</strong>；</li>
+<li>服务器侧必须做<strong>调用者身份→工具权限</strong>的映射（不是&quot;能连上就能调所有工具&quot;），并按用户做数据作用域过滤；</li>
+<li>写操作额外加二次确认/审批（见第 83、107 题）。</li>
+</ol>
+<h3>62. MCP 服务器开发流程是什么？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+典型流程：</p>
+<ol>
+<li><strong>明确能力边界</strong>：要暴露的是工具、资源还是提示模板（对应不同控制权，见第 59 题）；</li>
+<li><strong>定义输入输出 schema 和错误处理方式</strong>：参数、返回结构、错误码、能否分页/裁剪；</li>
+<li><strong>选择传输方式</strong>：stdio 或 Streamable HTTP；</li>
+<li><strong>实现服务端逻辑</strong>，补齐鉴权、日志、超时、异常处理；</li>
+<li><strong>客户端联调</strong>：注册、发现、调用、真实模型下的选择准确率测试。</li>
+</ol>
+<p>工程上最容易被忽略的是<strong>能力边界和错误处理</strong>。MCP Server 不是简单把现有 API 套一层壳，而是要把能力设计成真正适合模型消费的接口：名字可读、描述说清何时不用、返回精炼结构化摘要（同第 50、52 题的原则）。</p>
+<p><strong>追问</strong>：怎么测 MCP Server 质景？（官方 Inspector / 客户端手工验证 + 自己搭一套&quot;该调/不该调&quot;用例集，看工具选择准确率与参数合法率）</p>
+<h3>63. Agent 应该如何接入 MCP 工具？ <strong>｜中频 ｜中等 ｜腾讯一面</strong></h3>
+<p><strong>答案：</strong>
+核心是把 MCP 暴露的能力<strong>纳入自己的工具注册与调度体系</strong>：</p>
+<ol>
+<li>发现 MCP Server 暴露的工具/资源（2026 版走 <code>tools/list</code> + <code>server/discover</code>）；</li>
+<li>把能力转换成 Agent 能消费的工具描述与 schema（填进模型的 <code>tools</code> 字段）；</li>
+<li>执行时由模型决定何时调用，宿主负责真正发起 MCP 请求；</li>
+<li>把结果回传给 Agent，进入下一轮决策。</li>
+</ol>
+<p>真正的关键不在&quot;接通&quot;，而在&quot;<strong>接通之后仍然可控</strong>&quot;：权限映射、超时、失败重试、观测、审计。多服务器场景下工具名要加命名空间前缀（避免两个 Server 同名工具造成歧义），工具总量大时要做 Tool Retrieval（见第 54 题）。</p>
+<p><strong>高频追问</strong>：MCP 在你的架构里是只做权限检查，还是会和环境级安全沙箱一起工作？——标准答案是<strong>职责分层</strong>：MCP / Tool 负责&quot;能不能调&quot;，沙箱负责&quot;即使调了也跑不出边界&quot;，两者不可互替（见第 105、106 题）。如果只有 MCP 没有隔离，一旦模型被注入，文件与命令仍可造成真实破坏。</p>
+<h3>64. MCP 的流式与并发怎么保证？ <strong>｜中频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+<strong>流式（SSE）的价值</strong>：结果边产生边返回，而不是等整次调用结束才一次性返回。三个直接收益：降首包延迟、支持长任务中途进度回传（减少&quot;卡死感&quot;）、更利于宿主做取消/超时/部分结果处理。对研究型任务尤其重要。</p>
+<p><strong>并发不是协议单方面决定的</strong>，要看&quot;协议层 + 服务层 + 工具层&quot;一起设计：</p>
+<ul>
+<li>协议层：每个请求有唯一 <code>id</code>，避免响应错配（注意 JSON-RPC batch 已取消，并发靠多请求并行而不是打包）；</li>
+<li>服务层：服务端要支持并行处理而非串行阻塞，2026 无状态后可直接交给普通负载均衡；</li>
+<li>工具层：超时、限流、优先级、幂等；</li>
+<li>客户端：正确管理多请求上下文与背压。</li>
+</ul>
+<p>补一句：如果底层工具本身很慢，协议再好也救不了——先去看工具层的瓶颈。</p>
+<h3>65. MCP 有哪些安全风险？怎么防御？ <strong>｜必刷 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+2025-2026 集中暴露的典型威胁：</p>
+<table>
+<thead>
+<tr>
+<th>威胁</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tool poisoning</strong></td>
+<td>工具描述里藏恶意指令，模型读到就执行（Invariant Labs，2025-04）</td>
+</tr>
+<tr>
+<td><strong>Rug pull</strong></td>
+<td>工具描述/行为上线后被悄悄篡改，客户端缓存的 schema 已不是当前版本</td>
+</tr>
+<tr>
+<td><strong>间接参数注入</strong></td>
+<td>工具返回内容里带指令，或参数被拼接后直接进 shell/SQL</td>
+</tr>
+<tr>
+<td><strong>slopsquatting</strong></td>
+<td>幻觉包名抢注（Seth Larson 命名）。USENIX Security 2025 论文：19.7% 样本引用幻觉包、43% 可每次复现，抢注的 <code>huggingface-cli</code> 曾获约 3 万下载</td>
+</tr>
+<tr>
+<td><strong>无鉴权公网暴露</strong></td>
+<td>Trend Micro 2025 年发现 492 个无鉴权暴露在公网的 MCP 服务器；另有恶意 MCP 代理包 RCE、Kaspersky 2025-09 报告相关攻击活动</td>
+</tr>
+<tr>
+<td><strong>SDK / 注册表缺陷</strong></td>
+<td>OX Security 报告 MCP SDK 缺陷波及约 1.5 亿次下载的包；11 个知名注册表里 9 个接受恶意条目</td>
+</tr>
+<tr>
+<td><strong>供应链投毒</strong></td>
+<td>2026-03 LiteLLM 生态发生投毒事件（示例，截至 2026-10）</td>
+</tr>
+</tbody></table>
+<p>防御按六层落地：</p>
+<ol>
+<li><strong>allowlist</strong>：工具/服务器白名单，新工具默认不可信；</li>
+<li><strong>锁定与哈希校验</strong>：锁版本、记录工具描述哈希，变更就告警（防 rug pull）；</li>
+<li><strong>把所有工具返回内容一律当不可信数据</strong>处理（与第 108 题间接注入同一套防护）；</li>
+<li><strong>最小权限 + 作用域</strong>：只读优先、按用户隔离、限额；</li>
+<li><strong>沙箱执行</strong>：容器 + 网络隔离 + 域名 allowlist（见第 106 题）；</li>
+<li><strong>写操作人审 + 全量审计日志</strong>。</li>
+</ol>
+<p>另可提一句：OWASP 已经有 <strong>MCP Top 10（2025）</strong> 与 <strong>Agentic Skills Top 10（AST 2026）</strong> 专项清单（见第 107、69 题），以及 Agent Skills 生态也出现了恶意 skills 攻击现象。</p>
+<h3>66. 有哪些热门的 MCP 工具？ <strong>｜低频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+集中在几类（面试里更重要的不是背全名字，而是知道<strong>为什么流行</strong>——它们覆盖了 Agent 最常见的外部能力需求）：</p>
+<ul>
+<li><strong>浏览器自动化</strong>：Playwright MCP（微软，走可访问性树，见第 138 题）；</li>
+<li><strong>数据与后端</strong>：数据库类（Postgres / Supabase）、电子表格；</li>
+<li><strong>文件与代码</strong>：本地文件系统、GitHub、代码库检索；</li>
+<li><strong>搜索与知识</strong>：网页搜索（Tavily 等）、知识库检索；</li>
+<li><strong>办公与设计</strong>：Notion、Slack、Figma、Canva、Cloudflare 等厂商官方 Server；</li>
+<li><strong>开发与可观测</strong>：Sentry、Ramp 类业务系统。</li>
+</ul>
+<p>值得补的洞察：MCP 生态里&quot;工具多&quot;很快就不是卖点了，<strong>治理（鉴权、审计、版本、质景评分）才是</strong>——这也是企业关心 MCP 目录与签名/认证机制的原因。</p>
+<h3>67. 什么是 A2A 协议？现在发展到什么阶段了？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+<strong>A2A（Agent2Agent）</strong> 是 Google 于 <strong>2025-04-09</strong> 发布的开放标准，解决不同框架、不同厂商的 AI Agent 之间的互操作问题（MCP 管 Agent ↔ 工具，A2A 管 Agent ↔ Agent）。</p>
+<p>关键时间线：</p>
+<ul>
+<li>2025-06-23 捐赠给 <strong>Linux Foundation</strong>；IBM 的 ACP 于 2025-06 合并入 A2A；</li>
+<li><strong>v1.0.0 于 2026-03-12 发布</strong>（首个生产稳定版），v1.0.1 约 2026-05；</li>
+<li>2026-08-27 加入 <strong>Agentic AI Foundation（AAIF）</strong> Growth Stage；150+ 组织参与，TSC 覆盖 AWS、Cisco、Google、IBM Research、Microsoft、Salesforce、SAP、ServiceNow 八家；</li>
+<li>SDK：Python / JS / Java（1.0.0.Final GA 2026-06-10）/ Go / .NET；平台集成：Azure AI Foundry / Copilot Studio（2025-12）、AWS Bedrock AgentCore（2025-11）、Semantic Kernel。</li>
+</ul>
+<p><strong>v1.0 四大主题</strong>（能说出这四个就是真的跟进过）：</p>
+<ol>
+<li><strong>多协议绑定</strong>：JSON-RPC 2.0 / gRPC / HTTP+JSON（REST）三者平等，同一语义三种载体；</li>
+<li><strong>版本协商</strong>：<code>A2A-Version</code> Header；</li>
+<li><strong>签名 Agent Card</strong>：密码学身份，解决&quot;这个 Agent 到底是谁发布的&quot;；</li>
+<li><strong>零信任安全模型</strong>：不假设内网可信，能力与权限声明化。</li>
+</ol>
+<p>核心概念：<strong>Agent Card</strong>（能力名片，供发现与路由）、<strong>Task</strong>（有状态、可长时间运行的工作单元，支持流式更新与推送通知）、<strong>Artifact</strong>（产出物）、<strong>Message/Part</strong>（多模态内容块）。典型流程：</p>
+<pre><code>用户请求 → Orchestrator Agent →（A2A 委托）→ Research Agent / Writing Agent
+                                                  ↓（通过 MCP 调用工具）
+                                       搜索、数据库、文件系统
+</code></pre>
+<p>意义：<strong>A2A + MCP 构成了 AI Agent 的完整协议栈</strong>，类比 HTTP（应用层）+ TCP（传输层）。</p>
+<h3>68. A2A 和 MCP 的区别是什么？什么时候真的需要多智能体？ <strong>｜高频 ｜中等 ｜腾讯一面</strong></h3>
+<p><strong>答案：</strong>
+MCP 更关注&quot;模型和外部能力怎么接&quot;，A2A 更关注&quot;Agent 和 Agent 之间怎么协作&quot;。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>MCP</th>
+<th>A2A</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>通信对象</td>
+<td>Agent ↔ Tool（工具）</td>
+<td>Agent ↔ Agent（智能体）</td>
+</tr>
+<tr>
+<td>通信方向</td>
+<td>Agent 主动调用工具</td>
+<td>Agent 委托另一个 Agent</td>
+</tr>
+<tr>
+<td>标准化内容</td>
+<td>工具 schema、资源接口</td>
+<td>Agent 发现、任务委托、结果返回</td>
+</tr>
+<tr>
+<td>发起方</td>
+<td>Anthropic（现 LF/AAIF）</td>
+<td>Google（现 LF/AAIF）</td>
+</tr>
+<tr>
+<td>抽象层次</td>
+<td>能力接入层</td>
+<td>代理协作层</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>❌ <strong>更正</strong>：原表里&quot;发起方&quot;这一行出现了两次，实际第一行内容应为&quot;<strong>通信方向</strong>&quot;（主动调用 vs 委托），第二行才是协议发起方（MCP=Anthropic，A2A=Google）。上表已改正。</p>
+</blockquote>
+<p>什么时候需要多智能体：如果系统只是需要接搜索、数据库、文件系统，MCP 的价值更明显；只有已经演化出多个角色明确、职责分离的 Agent（规划、检索、执行、审阅各自独立），A2A 或多智能体编排才有意义。<strong>多智能体不是越早越好</strong>：单 Agent 能清晰处理时，多智能体只会增加通信、调试和治理成本。拆分划算的信号：职责边界清晰、单 Agent 的 prompt 已经过载、流程确实需要角色分治（见第 87-89 题）。</p>
+<p><strong>追问</strong>：Supervisor 和 Handoff 怎么选？（见第 89、92 题） ｜ 多智能体最常见的失败点？（目标漂移、死循环互等、上下文不一致、错误传播、成本膨胀） ｜ A2A 与 LangGraph 这类应用内编排框架的边界？（LangGraph 管一个应用内部的图与状态，A2A 管跳应用/跳厂商的委托，两者不重叠）</p>
+<h3>69. 什么是 Agent Skills / SKILL.md？为什么说它是 2026 年的新标准？ <strong>｜必刷 ｜基础 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+<strong>Agent Skills</strong> 是 Anthropic 于 <strong>2025-12-18</strong> 发布的开放标准（agentskills.io），用可移植的文件目录把&quot;领域知识 + 操作规程&quot;交给 Agent。</p>
+<p>一个 Skill 就是一个目录，核心是 <code>SKILL.md</code>：</p>
+<pre><code class="language-markdown">---
+name: pdf-form-fill
+description: 用于读取 PDF 表单并填写字段。当用户要求“填表/提交表单”时使用；仅阅读合同时不要用。
+---
+
+正文工作流：1) 先提取字段清单 → 2) 向用户确认 → 3) 写入表单 → 4) 导出并校验
+</code></pre>
+<p>目录可附带 <code>scripts/</code>（可执行脚本）、<code>references/</code>（长文档按需加载）、<code>assets/</code>（模板与素材）。</p>
+<p>最关键的设计是<strong>渐进式披露（progressive disclosure）</strong>，分三层加载：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>加载内容</th>
+<th>成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1 元数据</td>
+<td><code>name</code> + <code>description</code>（frontmatter，description 上限 1024 字符）</td>
+<td>常驻，极小</td>
+</tr>
+<tr>
+<td>L2 正文</td>
+<td>SKILL.md 全文</td>
+<td>被触发时才读</td>
+</tr>
+<tr>
+<td>L3 附属</td>
+<td>scripts / references / assets</td>
+<td>真正需要时才读或执行</td>
+</tr>
+</tbody></table>
+<p>这正好回应了上下文工程的核心矛盾：知识想常驻但窗口不够（见第 13 题）。<code>description</code> 写得好不好直接决定&quot;该用时不被错过、不该用时不被误触&quot;，写法与工具描述同源。</p>
+<p>为什么是&quot;新标准&quot;：已被 <strong>40+ 客户端采纳</strong>（GitHub Copilot、VS Code、Cursor、OpenAI Codex、Gemini CLI、Goose、OpenCode、Roo Code、Amp、Factory、Kiro、Mistral Vibe、Spring AI、Databricks、Snowflake 等），<code>anthropics/skills</code> 仓库约 149k stars；2026 年又补上了<strong>企业管理员控制</strong>（集中分发/禁用/审计）与<strong>合作伙伴技能目录</strong>（Atlassian、Canva、Cloudflare、Figma、Notion、Ramp、Sentry）。</p>
+<p>安全提醒：Skill 里可以带可执行脚本，也能指示 Agent 做什么，本质上是一个&quot;能影响行为的代码包&quot;——已出现恶意 skills 攻击现象，所以也要白名单 + 审计 + 版本锁定（对应 OWASP Agentic Skills Top 10，见第 65、107 题）。</p>
+<p><strong>追问</strong>：Skills 和 MCP 什么关系？（不冲突：MCP 管&quot;外部能力接入&quot;，Skills 管&quot;流程知识注入&quot;；一个 Skill 可以调用 MCP 工具） ｜ 和 AGENTS.md / rules 文件的区别？（AGENTS.md 是全仓常驻，Skills 是按需加载的能力包）</p>
+<h3>70. Skill、Tool、独立 Agent 的边界在哪里？什么时候该拆成 Skill 而不是再开一个 Agent？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+三者是不同粒度的能力封装：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tool</th>
+<th>Skill</th>
+<th>Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本质</td>
+<td>一个可调用函数</td>
+<td>一段可复用的操作规程/知识</td>
+<td>一个有自主循环的执行体</td>
+</tr>
+<tr>
+<td>谁控制执行</td>
+<td>宿主代码</td>
+<td>模型按文档执行</td>
+<td>模型自己规划与决策</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>无（单次调用）</td>
+<td>无自主状态（寄生于宿主 Agent）</td>
+<td>有（自己的上下文与任务状态）</td>
+</tr>
+<tr>
+<td>上下文成本</td>
+<td>一段 schema</td>
+<td>按需加载（渐进式）</td>
+<td><strong>独立窗口</strong>，只回传摘要</td>
+</tr>
+<tr>
+<td>适合</td>
+<td>确定性的原子动作</td>
+<td>固定套路的领域流程</td>
+<td>开放目标、多步探索</td>
+</tr>
+</tbody></table>
+<p>决策口诀：</p>
+<ul>
+<li><strong>能写成一个函数的，不要做成 Skill</strong>（Skill 不会增加新能力，只是把行为知识化）；</li>
+<li><strong>流程可预测、只需套 SOP 的，用 Skill</strong>（比拆一个 Agent 便宜：没有额外推理循环、没有跨 Agent 传递损耗）；</li>
+<li><strong>子任务高噪音、需要独立探索、会撑爆主上下文的，才拆子 Agent</strong>（见第 97 题）。</li>
+</ul>
+<p>换句话说：<strong>Skill 解决&quot;怎么做才对&quot;，子 Agent 解决&quot;在哪里想&quot;。</strong> 2026 年的普遍教训是多 Agent 滥用：拆 Agent 带来通信成本、一致性难题和调试黑盒，而很多场景用一个带完整 SOP 的 Skill 就能解决。</p>
+<hr>
+<h2>七、框架与编排：LangChain / LangGraph / Deep Agents</h2>
+<h3>71. 用一句话说清 LangChain、LangGraph、Deep Agents 的关系，并给出选型依据。 <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+三者是<strong>分层依赖</strong>而非竞争关系：</p>
+<ul>
+<li><strong>LangChain</strong>：组件层——ChatModel、Tool、Prompt、Retriever、OutputParser 的统一抽象，LCEL 做线性编排；</li>
+<li><strong>LangGraph</strong>：编排层——在 LangChain 组件之上提供有状态的图（State/Node/Edge），解决循环、分支、持久化、人机协同；</li>
+<li><strong>Deep Agents</strong>：应用层——基于 LangGraph 预置了规划（todo）、子代理、虚拟文件系统、长短期记忆的&quot;深度智能体&quot;模板。</li>
+</ul>
+<p>选型依据：</p>
+<table>
+<thead>
+<tr>
+<th>任务特征</th>
+<th>选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单次调用 / 固定线性 RAG</td>
+<td>LCEL 或裸 SDK（OpenAI / Anthropic）</td>
+</tr>
+<tr>
+<td>简单 ReAct 单 Agent</td>
+<td>LangChain <code>create_agent</code></td>
+</tr>
+<tr>
+<td>流程可画出确定流程图、需审批/回放/多 Agent</td>
+<td>LangGraph <code>StateGraph</code></td>
+</tr>
+<tr>
+<td>多角色对话协作、研究型分工</td>
+<td>AutoGen / CrewAI（或 LangGraph Supervisor）</td>
+</tr>
+<tr>
+<td>只能描述目标、路径靠 Agent 自主探索的长任务</td>
+<td>Deep Agents</td>
+</tr>
+</tbody></table>
+<p>核心判断：<strong>固定流程用图，开放目标用深度智能体，线性任务别上框架。</strong></p>
+<h3>72. LangChain 在今天的价值是什么？为什么不是直接手写 SDK 就够了？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+LangChain 的价值不在于&quot;能不能调模型&quot;，而在于把模型输入输出、Prompt、Parser、Retriever、Tools、Memory、Callbacks 等常见能力<strong>统一成了一套可组合接口</strong>。</p>
+<p>如果只做一个最小 Demo，手写 SDK 当然可以。但一旦进入多模型接入、链式编排、结构化输出、可观测和长期维护阶段，统一抽象会明显降低代码分散度。它真正解决的是&quot;<strong>应用层编排和生态整合</strong>&quot;问题，而不是&quot;替你发一个 HTTP 请求&quot;。</p>
+<p>也要诚实说出它的代价：抽象层带来调试成本（报错看不到底层）、版本迭代快（旧 API 大量废弃）、容易诱导新手把简单问题复杂化。所以&quot;什么时候不用 LangChain&quot;也是合格答案：<strong>需求单一、厂商固定、流程线性时，直接裸 SDK 更便宜。</strong></p>
+<h3>73. 各类 Agent 开发框架应该如何选取？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+框架选型不看热度，看<strong>任务复杂度、团队能力、交付要求</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>快速原型、生态丰富、常见组件齐全</td>
+<td>LangChain</td>
+</tr>
+<tr>
+<td>显式状态、循环、条件路由、人机协同、多智能体</td>
+<td>LangGraph</td>
+</tr>
+<tr>
+<td>低代码、快速验证业务流程</td>
+<td>Coze / Dify</td>
+</tr>
+<tr>
+<td>系统边界简单、需求非常明确</td>
+<td>直接手写 SDK</td>
+</tr>
+<tr>
+<td>多角色对话协作</td>
+<td>AutoGen / CrewAI / MAF</td>
+</tr>
+<tr>
+<td>绑定某家模型生态且要轻</td>
+<td>各家官方 SDK（见第 91 题）</td>
+</tr>
+</tbody></table>
+<p>成熟的回答不是简比较&quot;哪个最好&quot;，而是说明&quot;什么场景下用什么更划算&quot;，并能给出<strong>替代方案和迁移路径</strong>：能说出指标（交付周期、可观测粒度、故障定位成本、人员上手时间）比能背名字更值钱。</p>
+<p><strong>追问</strong>：用什么指标判断这次选型成功？（上线周期、故障定位时长、单位任务成本、回归覆盖率） ｜ 平台转代码框架的迁移边界？（把工具、检索、权限抽成独立服务，只换编排层）</p>
+<h3>74. LangChain 1.0 / LangGraph 1.0 之后有哪些重要的 API 变化？ <strong>｜必刷 ｜中等 ｜2026 更新</strong></h3>
+<p><strong>答案：</strong>
+关键节点：<strong>LangChain 1.0.0 与 LangGraph 1.0.0 于 2025-10-17 同日发布</strong>（PyPI 可验证），之后 1.0.1（10-20）→ 1.1.0（2025-11-24）→ 1.3.x（2026-08），仓库描述改为 &quot;The agent engineering platform&quot;。主要变化：</p>
+<ul>
+<li><strong>模型按 provider 分包</strong>：<code>from langchain_openai import ChatOpenAI</code>，旧的 <code>langchain.chat_models</code> 入口废弃；</li>
+<li><strong>Agent 统一为 <code>create_agent</code></strong>：<code>from langchain.agents import create_agent</code>；旧的 <code>initialize_agent</code>、<code>AgentExecutor</code>、各堆 <code>AgentType</code> 枚举全部废弃；</li>
+<li><strong>中间件（middleware）体系</strong>：1.0 把 Agent 循环开放为可钩入点（before_model / after_model / wrap_tool_call 等），用于上下文压缩、护栏、人工审批，而不必自己重画图；</li>
+<li><strong>高层快捷 API</strong>：<code>init_chat_model(&quot;openai:gpt-5&quot;)</code> 按 &quot;provider:model&quot; 字符串实例化，便于切换厂商；</li>
+<li><strong>消息与状态</strong>：消息类型统一走 <code>langchain_core.messages</code>；状态更新走 LangGraph 的 reducer 机制（见第 80 题）；</li>
+<li><strong>LangGraph 1.1（2026-03）</strong>：类型安全增强、事件流、checkpoint 性能优化；</li>
+<li><strong>可观测性</strong>：统一为 LangSmith v2 环境变量（<code>LANGSMITH_TRACING=true</code>，旧版为 <code>LANGCHAIN_TRACING_V2</code>）。</li>
+</ul>
+<p>面试要点：能说出&quot;<strong>Chain/AgentExecutor 那套老 API 已被 LCEL + LangGraph（以及 create_agent）取代</strong>&quot;即可看出是否持续跟进版本。</p>
+<h3>75. 用 LangChain 开发一个 Agent，有哪两条路线？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>classic 路线</strong>（理解原理用）：模型、工具、Prompt、<code>create_tool_calling_agent(...)</code>、<code>AgentExecutor(...)</code> 一层层组起来；</li>
+<li><strong>1.x 路线</strong>（生产首选）：直接用 <code>create_agent(...)</code>，背后由基于 LangGraph 的运行时驱动循环、状态和工具调用，支持 middleware、checkpointer、HITL。</li>
+</ul>
+<p>不管哪条路线，底层都是同一条主线：</p>
+<ol>
+<li>先定义 Tools，把外部能力封成清晰的能力单元；</li>
+<li>选择 LLM，并让模型知道可调用的工具 schema；</li>
+<li>设计 Prompt，明确角色、工具使用规则、停止条件和输出边界；</li>
+<li>形成&quot;模型决策 → 工具执行 → 结果回传 → 继续或结束&quot;的闭环。</li>
+</ol>
+<p>面试里真正加分的不是背 API 名，而是能说清 <strong>Agent 为什么会调用工具、什么时候停、失败了怎么兜底</strong>（见第 47、51、103 题）。</p>
+<h3>76. LCEL 的 <code>|</code> 语法底层是什么？为什么它能免费获得流式/重试/并行？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+<code>|</code> 调用的是对象的 <code>__or__</code>，把每个 <strong>Runnable</strong> 串成 <code>RunnableSequence</code>。LangChain 的组件（prompt、llm、parser、retriever）都实现了统一的 <code>Runnable</code> 接口（<code>invoke / stream / batch / ainvoke / astream</code>）。</p>
+<p>因为接口统一，序列就能把能力<strong>整条链透传</strong>：</p>
+<ul>
+<li><code>.stream()</code>：逐段向前后传播，最后一个组件边产边出；</li>
+<li><code>.batch()</code> / <code>.abatch()</code>：自动并发执行多条输入；</li>
+<li><code>.with_retry()</code>、<code>.with_config()</code>：包裹在任意 Runnable 外层，不侵入业务代码。</li>
+</ul>
+<pre><code class="language-python">chain = (prompt | llm | StrOutputParser()).with_retry(
+    stop_after_attempt=3, wait_exponential_jitter=True
+)
+</code></pre>
+<p>它的价值不只是写法短，而是让顺序链、分支链、并行链、函数链能用同一种接口去拼装、调试和替换——做日志、流式、批处理、回调和局部替换时可维护性明显更好。</p>
+<p><strong>适用边界必须说清</strong>：LCEL 只擅长<strong>无环的线性/并行</strong>结构；一旦需要根据模型输出循环或回跳到前面节点，LCEL 表达不了，必须用 LangGraph（见第 78 题）。</p>
+<h3>77. 怎么做模型分级路由（省成本）？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+用 LCEL 的 <code>RunnableBranch</code> 按输入特征选择不同模型：</p>
+<pre><code class="language-python">from langchain_core.runnables import RunnableBranch, RunnableLambda
+
+mini = ChatOpenAI(model=&quot;gpt-5-mini&quot;)
+pro  = ChatOpenAI(model=&quot;gpt-5&quot;)
+
+def is_complex(msg: dict) -&gt; bool:
+    return any(k in msg[&quot;question&quot;] for k in (&quot;架构&quot;, &quot;排查&quot;, &quot;多步&quot;, &quot;权衡&quot;))
+
+router = RunnableBranch(
+    (is_complex, pro),
+    mini,                       # 默认分支
+)
+chain = RunnableLambda(lambda x: x) | router | StrOutputParser()
+</code></pre>
+<p>工程上还会配合：意图识别用小模型 + <code>with_structured_output</code>、子 Agent 强制用便宜模型、超长固定前缀开 prompt caching、对每一步记账设预算。</p>
+<p>完整的路由三层设计（意图路由 / 复杂度路由 / 成本路由）见第 121 题，与意图识别的区别见第 112 题。</p>
+<h3>78. LangGraph 相比普通 Workflow 或链式调用，最大的价值是什么？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+LangGraph 最大的价值是把复杂流程中的<strong>状态、节点、边和循环显式表达出来</strong>，让大模型驱动的动态流程真正可设计、可追踪、可恢复。</p>
+<p>普通链式调用适合简单串行，Workflow 适合固定路径，而 LangGraph 更适合：<strong>分支、循环、人工中断、状态持久化、多 Agent 协作</strong>。它不是&quot;换一种写法&quot;，而是把复杂控制流从隐式逻辑变成显式图结构。</p>
+<p>当你发现系统开始出现这些问题时，LangGraph 的优势就出来了：要不要继续查？什么时候结束？失败后从哪里恢复？状态怎么跳轮保留？</p>
+<p>代价也要说：图本身有学习曲线和维护成本，节点粒度拆不好会变成&quot;什么都塞一个节点&quot;的黑盒；简单线性任务用它属于过度设计（见第 71、73 题）。</p>
+<h3>79. LangGraph 里 State、Node、Edge 分别代表什么？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+<strong>State 是共享状态，Node 是处理逻辑，Edge 是流转规则。</strong></p>
+<ul>
+<li>State 决定图里&quot;大家共同操作的上下文&quot;是什么（TypedDict / Pydantic + reducer）；</li>
+<li>Node 决定每一步具体做什么（调模型、查库、执行工具），本质是 <code>(state) → state_update</code> 的函数；</li>
+<li>Edge 决定执行完当前节点后去哪里，可以是固定边（<code>add_edge</code>）或条件路由（<code>add_conditional_edges</code>）。</li>
+</ul>
+<p>真实项目里，LangGraph 设计得好不好，往往取决于 <strong>State 是否清晰、Node 粒度是否合理、Edge 条件是否可解释</strong>。很多图写得难维护，不是因为图本身复杂，而是把太多隐式逻辑塞进了一个节点。</p>
+<h3>80. 现场手写 StateGraph 版 ReAct，并解释 reducer 的作用。 <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-python">from typing import Annotated, TypedDict
+from langgraph.graph import StateGraph, START, END
+from langgraph.graph.message import add_messages
+from langgraph.prebuilt import ToolNode, tools_condition
+
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+
+llm_tools = ChatOpenAI(model=&quot;gpt-5-mini&quot;).bind_tools([get_weather])
+
+def chat(state: State):
+    return {&quot;messages&quot;: [llm_tools.invoke(state[&quot;messages&quot;])]}
+
+g = StateGraph(State)
+g.add_node(&quot;chat&quot;, chat)
+g.add_node(&quot;tools&quot;, ToolNode([get_weather]))
+g.add_edge(START, &quot;chat&quot;)
+g.add_conditional_edges(&quot;chat&quot;, tools_condition)   # 有 tool_calls→tools，否则→END
+g.add_edge(&quot;tools&quot;, &quot;chat&quot;)
+app = g.compile()
+</code></pre>
+<p><strong>reducer 是高频考点</strong>：节点返回的是&quot;对 state 的更新&quot;而不是整个新状态。<code>Annotated[list, add_messages]</code> 声明该字段用 <code>add_messages</code> 做<strong>追加合并</strong>（并按消息 id 去重/更新），而不是默认的整体覆盖。若不写 reducer，第二个节点返回 <code>{&quot;messages&quot;: [...]}</code> 会把整个列表替换掉，历史丢失。自定义场景常用 <code>operator.add</code>（列表拼接）或自己写 reducer 函数（如取最大值、合并 dict）。</p>
+<p>加分点：并行分支同时更新同一个 key 时，<strong>必须有 reducer</strong>，否则报 InvalidUpdateError；这就是 LangGraph 把&quot;并发写入语义&quot;显式化的地方。</p>
+<h3>81. 条件边怎么写？<code>tools_condition</code> 内部判断逻辑是什么？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+条件边接收一个返回&quot;下一节点名&quot;的路由函数：</p>
+<pre><code class="language-python">def route(state: State) -&gt; str:
+    last = state[&quot;messages&quot;][-1]
+    if getattr(last, &quot;tool_calls&quot;, None):
+        return &quot;tools&quot;
+    return END
+
+g.add_conditional_edges(&quot;chat&quot;, route, {&quot;tools&quot;: &quot;tools&quot;, END: END})
+</code></pre>
+<p><code>tools_condition</code> 就是这个逻辑的预置版：检查最后一条 AIMessage 是否带非空 <code>tool_calls</code>，有则路由到工具节点名（默认 <code>&quot;tools&quot;</code>），否则路由到 <code>END</code>。</p>
+<p>注意第三个参数是<strong>返回值 → 真实节点名的映射</strong>，重命名节点时必须同步改映射（否则会出现&quot;路由函数返了 tools 但图里没有这个节点&quot;的经典型报错）。路由函数也可以返回列表，实现并行扇出（fan-out）。</p>
+<h3>82. Checkpointer 解决什么问题？写一段&quot;跨次请求保持记忆 + 恢复执行&quot;的代码。 <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+Checkpointer 在每个**超步（super-step）**后把 state 快照持久化，带来三个能力：<strong>同 thread 多轮记忆、进程重启后续跑、历史回放与分叉（time travel）</strong>。</p>
+<pre><code class="language-python">from langgraph.checkpoint.memory import InMemorySaver  # 生产换 PostgresSaver
+
+app = g.compile(checkpointer=InMemorySaver())
+cfg = {&quot;configurable&quot;: {&quot;thread_id&quot;: &quot;user-123&quot;}}
+
+app.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;查 ORD-12345678&quot;)]}, cfg)
+app.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;它现在到哪了&quot;)]}, cfg)  # 自动带历史
+
+snapshot = app.get_state(cfg)             # 当前状态快照
+for hist in app.get_state_history(cfg):   # 全部历史，可回到任意步分叉
+    ...
+</code></pre>
+<p>要点：</p>
+<ul>
+<li><strong><code>thread_id</code> 是会话隔离键</strong>，一个会话一个 thread（多用户场景下这同时是安全边界，必须服务端生成、不能信客户端传入）；</li>
+<li>内存版只用于开发，<strong>生产必须用 Postgres/Redis 等持久实现</strong>，否则重启即失忆；</li>
+<li>恢复执行用 <code>invoke(None, cfg)</code>（见第 101 题）；</li>
+<li><strong>Checkpointer（thread 内） vs Store（跨 thread）</strong>：前者是会话级快照，后者是长期记忆（见第 43、44 题）。</li>
+</ul>
+<p><strong>追问</strong>：checkpoint 会不会涨得很大？（会，消息列表不压缩时线性增长；需要配清理/摘要策略，见第 44 题）</p>
+<h3>83. 什么是 Human-in-the-Loop？现场编码：给&quot;退款&quot;这类写操作加人工审批。 <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+HITL 是在 Agent 工作流中加入人工干预的机制：关键决策节点暂停、等待人工确认后再继续；防止 Agent 执行高风险操作（删数据、退款、发邮件），也支持人工修正中间输出或补信息。LangGraph 用 <code>interrupt</code> 原生实现。</p>
+<pre><code class="language-python">from langgraph.types import interrupt, Command
+from langchain_core.messages import AIMessage
+
+def refund_node(state: State):
+    payload = {&quot;order_id&quot;: &quot;ORD-12345678&quot;, &quot;amount&quot;: 299.0}
+    decision = interrupt({&quot;ask&quot;: &quot;确认退款 ¥299？&quot;, &quot;payload&quot;: payload})
+    if decision == &quot;approve&quot;:
+        apply_refund.invoke(payload)
+        return {&quot;messages&quot;: [AIMessage(&quot;退款已提交&quot;)]}
+    return {&quot;messages&quot;: [AIMessage(&quot;已取消退款&quot;)]}
+</code></pre>
+<p>调用方两次调用：</p>
+<pre><code class="language-python">app.invoke(inputs, cfg)                       # 在 interrupt 处暂停，state 已落盘
+app.invoke(Command(resume=&quot;approve&quot;), cfg)    # 人工审批后恢复
+</code></pre>
+<p>关键区分（常追问）：让模型&quot;先问一句用户&quot;只是生成文本，请求结束状态即丢；<code>interrupt</code> 是<strong>真正暂停图执行并持久化</strong>，可以隔数小时、跨进程重启后用 <code>Command(resume=...)</code> 精确恢复。典型场景：高风险写操作、补信息、等待外部回调。</p>
+<p>工程细节：恢复时传入的可以是字符串，也可以是 dict（<code>Command(resume={&quot;approved&quot;: True, &quot;operator&quot;: &quot;zhang&quot;})</code>）；审批请求要落库（带超时与升级链路），否则 interrupt 会无限挂起；审批人看到的 payload 要包含可决策的信息（金额、用户、历史相似案例）。</p>
+<h3>84. LangGraph 的流式有哪几种 stream_mode？分别用在什么场景？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>stream_mode</th>
+<th>产出</th>
+<th>场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>values</code></td>
+<td>每个节点后的完整 state</td>
+<td>调试、要看全局最新状态</td>
+</tr>
+<tr>
+<td><code>updates</code></td>
+<td>每个节点本次的增量更新</td>
+<td>最常用，前端展示&quot;当前执行到哪步/在干什么&quot;</td>
+</tr>
+<tr>
+<td><code>messages</code></td>
+<td>LLM 的 token 级分片 + 元数据</td>
+<td>聊天打字机效果</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>节点内主动推送的业务进度</td>
+<td>&quot;正在检索知识库&quot;类自定义事件</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>含检查点/任务调度的详细事件</td>
+<td>深度排错</td>
+</tr>
+</tbody></table>
+<p>可传列表同时订阅多种：<code>stream_mode=[&quot;updates&quot;, &quot;messages&quot;]</code>，配合异步 SSE/WebSocket 推给前端。</p>
+<p>LangGraph 的流式不只是&quot;模型 token 一点点吐出来&quot;，更重要的是<strong>把整张图的执行过程流出来</strong>——这是它比单纯 SDK 流式更好用的地方（对应第 85 题的&quot;可观察&quot;）。</p>
+<h3>85. LangGraph 的进阶特性里，最有工程价值的是哪四类？ <strong>｜中频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+<strong>流式处理、持久化、时间回溯、子图</strong>——四句口诀：<strong>流式解决可观察，持久化解决可恢复，时间回溯解决可复盘，子图解决可维护。</strong></p>
+<ul>
+<li><strong>流式</strong>：五种 <code>stream_mode</code>（见第 84 题）；</li>
+<li><strong>持久化</strong>：<code>checkpointer</code> 是线程内、会话内的短期记忆，按 <code>thread_id</code> 保存图状态，用于断点恢复、人机协同、多轮任务承接；跨线程跨会话的长期信息走 <strong>Store</strong>；</li>
+<li><strong>时间回溯（Time-Travel）</strong>：<code>get_state_history</code> + 从任意 checkpoint 分叉重跑。排障价值极大：很多复杂 Agent 不是最后结果错了，而是中间某一步状态被污染了；</li>
+<li><strong>子图（Subgraphs）</strong>：把&quot;检索子图&quot;&quot;审批子图&quot;&quot;报告生成子图&quot;独立封装，主图只做更高层编排；好处是复用、隔离命名空间、团队并行开发；注意父子图的 state key 要显式映射，子图自己的 checkpointer 会形成嵌套 checkpoint。</li>
+</ul>
+<p>四个一起上，LangGraph 才真正像生产基础设施，而不只是一个能跑通的 Demo 图。</p>
+<h3>86. Checkpoint、HITL、Time-Travel 在面试里怎么讲得更工程化？ <strong>｜中频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+这三个概念适合放在一起讲，因为它们共同解决的问题是：<strong>复杂 Agent 不是&quot;能跑起来&quot;就够了，还要能停、能看、能批、能继续。</strong></p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>一句话定位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Checkpoint</strong></td>
+<td>负责<strong>可恢复</strong>：长任务、断点续跑、失败重放</td>
+</tr>
+<tr>
+<td><strong>HITL</strong></td>
+<td>负责<strong>可控制</strong>：支付、删改数据、对外发送前的确认权</td>
+</tr>
+<tr>
+<td><strong>Time-Travel</strong></td>
+<td>负责<strong>可复盘</strong>：排障、调试、重跑特定阶段</td>
+</tr>
+</tbody></table>
+<p>这三个能力放在一起，面试官通常会感觉你理解的不是&quot;图会不会画&quot;，而是&quot;系统上线以后怎么治理&quot;。</p>
+<p><strong>追问</strong>：哪些节点一定会加人工审批？（不可逆副作用：退款/下单/删数据/对外发消息/改权限；以及低置信度的高风险判断） ｜ 什么时候时间回溯从调试利器变成生产必需？（需要事故回溯与合规审计、需要 A/B 重放同一起点、需要&quot;修正某一步后继续跑&quot;的业务流程时）</p>
+<h3>87. 什么是多智能体系统？它的真实价值是什么？ <strong>｜高频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+多智能体系统由多个 AI Agent 组成，每个有独立角色和职责，通过协作完成复杂任务：</p>
+<ul>
+<li><strong>分工</strong>：每个 Agent 专注特定任务（规划、编码、测试、审查）；</li>
+<li><strong>并行</strong>：同时处理不同子任务，提升效率；</li>
+<li><strong>检验</strong>：一个 Agent 验证另一个的输出，减少错误；</li>
+<li><strong>上下文隔离</strong>（最重要的一个）：每个子任务有自己的窗口，不被主线噪声干扰（见第 97 题）。</li>
+</ul>
+<p>但要记住反面：<strong>&quot;单 Agent + 多工具够用，就不要上多 Agent&quot;</strong>。拆分的三个划算信号：职责边界清晰、单 Agent 的 prompt 已经过载、流程确实需要角色分治（见第 68 题）。</p>
+<h3>88. 多智能体有哪些架构模式？通信如何实现？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+架构模式：</p>
+<ul>
+<li><strong>Supervisor（监督者）</strong>：一个主 Agent 负责协调分配任务给子 Agent；</li>
+<li><strong>Network / Peer-to-Peer</strong>：Agent 之间直接通信，无中心节点；</li>
+<li><strong>Pipeline（流水线）</strong>：串行执行，上一个输出是下一个输入；</li>
+<li><strong>Hierarchical（层级）</strong>：树形结构，高层 Agent 管理低层 Agent；</li>
+<li><strong>Swarm / Handoff</strong>：无固定主管，当前 Agent 把控制权交给下一个（OpenAI Agents SDK 模式，见第 92 题）。</li>
+</ul>
+<p>通信方式：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>消息传递</td>
+<td>结构化消息（JSON）、A2A（跨应用）</td>
+</tr>
+<tr>
+<td>共享状态</td>
+<td>共享 State / 数据库（LangGraph 同图内首选）</td>
+</tr>
+<tr>
+<td>工具调用</td>
+<td>一个 Agent 以&quot;工具&quot;形式调用另一个 Agent（最简单、最可控）</td>
+</tr>
+<tr>
+<td>事件驱动</td>
+<td>消息队列（Kafka、RabbitMQ）异步通信</td>
+</tr>
+</tbody></table>
+<p>选型建议：<strong>能用&quot;Agent 当工具&quot;就不要上自由对话</strong>——工具式调用天然有入参出参 schema、可超时、可重试、可观测；而&quot;多个 Agent 在一个共享消息列表里聊天&quot;最难治理。</p>
+<h3>89. Supervisor 模式怎么实现？为什么默认不推荐 Network 模式？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-python">from langgraph_supervisor import create_supervisor
+
+sup = create_supervisor(
+    agents=[researcher_agent, writer_agent],
+    model=ChatOpenAI(model=&quot;gpt-5&quot;),
+    prompt=&quot;你是主管，把任务分给调研员/写作者，全部完成后回复 FINISH。&quot;,
+).compile(checkpointer=InMemorySaver())
+</code></pre>
+<p>主管 Agent 每轮决定&quot;派给谁或结束&quot;，子 Agent 作为被调度的节点，上下文由主管统一管理。</p>
+<p>不默认用去中心化 Network 的原因：Agent 互相喊话会形成<strong>不可控的调用图</strong>——容易互相等待/死循环、token 与延迟随对话轮次膨胀、出错时难以定位是哪个 Agent 的决策、状态一致性难保证。只有确实需要对等协商且能接受这些代价时才用。</p>
+<p>Supervisor 自己的坑也要说：主管成为<strong>瓶颈与单点</strong>（它误判则全盘错）、主管上下文容易被子 Agent 回传的长结果撑爆（所以只收摘要，见第 97 题）、多轮仲裁时任务目标漂移。应对：主管只做路由不写内容、子 Agent 输出强制 schema、给主管的上下文加预算与压缩、冲突时固定仲裁规则（优先级/人工）。</p>
+<p><strong>追问</strong>：子 Agent 冲突仲裁怎么做？（确定性规则优先，如&quot;写操作以审阅意见为准、事实以检索为准&quot;；仍冲突则升级人工）</p>
+<h3>90. AutoGen 和 CrewAI 分别是什么？现在该怎么选？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+<strong>AutoGen</strong>（微软）专注<strong>多智能体对话协作</strong>：每个 Agent 有独立角色（Planner / Coder / Reviewer），通过消息传递协作，支持人机混合。</p>
+<p><strong>CrewAI</strong> 是基于角色的多智能体框架，用&quot;船员&quot;比喻分工：<strong>Agent</strong>（role / goal / backstory）、<strong>Task</strong>（分给某 Agent 的任务）、<strong>Crew</strong>（编排器）、<strong>Process</strong>（顺序或层级执行）。</p>
+<p>与 LangChain 系的区别：LangChain/LangGraph 更侧重工作流编排和工具调用、可控性强；AutoGen / CrewAI 更侧重多 Agent 角色扮演与对话协作，适合&quot;研究员 + 写作者 + 审核员&quot;这类专业化分工。</p>
+<blockquote>
+<p>⚠️ <strong>选型必读（截至 2026-10）</strong>：AutoGen v0.4 已于 2025-01 完全重写（改为异步事件驱动的 Actor 模型，分层 <code>autogen-core</code> / <code>autogen-agentchat</code> / <code>autogen-ext</code>，内置 OpenTelemetry，支持 Python + .NET）；2025-10 微软宣布 <strong>Microsoft Agent Framework（MAF，合并 AutoGen + Semantic Kernel）</strong>，其 1.0 于 <strong>2026-04-03</strong> 发布，AutoGen 随后进入维护模式。因此：<strong>新项目选型应评估 MAF，而不是直接上手旧 AutoGen API</strong>；CrewAI 仍是独立活跃项目，上手快、适合角色化内容任务，但细粒度控制和持久化不如 LangGraph。</p>
+</blockquote>
+<p><strong>追问</strong>：什么时候用 CrewAI 而不是 LangGraph？（任务本质是&quot;几个固定角色接力产出内容&quot;且过控要求不高时用 CrewAI；需要审批、回放、强状态管控时用 LangGraph）</p>
+<h3>91. 2025-2026 主流 Agent SDK 与编码 CLI 的格局是怎样的？ <strong>｜高频 ｜中等 ｜2026 更新</strong></h3>
+<p><strong>答案：</strong>
+Agent SDK 四强（截至 2026-10）：</p>
+<table>
+<thead>
+<tr>
+<th>SDK</th>
+<th>厂商</th>
+<th>关键时间 / 特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Agent SDK</strong></td>
+<td>Anthropic</td>
+<td>2025-09-29 随 Sonnet 4.5 发布，与 Claude Code 同栈；权限系统、子代理、MCP 原生支持；Python + TS（见第 95 题）</td>
+</tr>
+<tr>
+<td><strong>OpenAI Agents SDK</strong></td>
+<td>OpenAI</td>
+<td>2025-03 发布，由 Swarm 演变；Agent / Handoff / Guardrails / Runner 四概念（见第 92 题）</td>
+</tr>
+<tr>
+<td><strong>Google ADK</strong></td>
+<td>Google</td>
+<td>2025-04 发布，原生 A2A + MCP，可部署到 Agent Engine；已有 ADK 2.0（见第 94 题）</td>
+</tr>
+<tr>
+<td><strong>Vercel AI SDK</strong></td>
+<td>Vercel</td>
+<td>TS 生态；4.2（2025-03）支持 MCP/Responses；6（2025-12）推 ToolLoopAgent；7（2026-06）WorkflowAgent 支持持久化执行与语音</td>
+</tr>
+</tbody></table>
+<p>微软侧为 <strong>Microsoft Agent Framework</strong>（合并 AutoGen + Semantic Kernel，1.0 于 2026-04-03 发布，见第 90 题）。</p>
+<p>编码类 CLI（Agentic Coding）：<strong>Claude Code、OpenAI Codex CLI、Gemini CLI、Deep Agents CLI</strong>；GitHub Copilot Agent、Cursor 等走 IDE 形态（工具对比见第 146 题）。</p>
+<p>选型要点：各家 SDK 都在收敛到同一组概念——<strong>agent 定义、handoff、护栏、MCP 工具、可持久化的执行循环</strong>；优先选与主用模型同厂的 SDK，跨厂商需求再考虑 LangChain/LangGraph。</p>
+<h3>92. 什么是 OpenAI Agents SDK？ <strong>｜中频 ｜基础</strong></h3>
+<p><strong>答案：</strong>
+2025-03 发布、由 Swarm 演变而来的轻量 Agent 框架，四个核心概念：</p>
+<ul>
+<li><strong>Agent</strong>：有 <code>instructions</code>（角色描述）和 <code>tools</code>（工具列表）的 LLM 执行单元；</li>
+<li><strong>Handoff（移交）</strong>：一个 Agent 把任务移交给另一个更专业的 Agent（去中心化路由）；</li>
+<li><strong>Guardrails（护栏）</strong>：对输入/输出做验证的过滤器（可并行运行、触发则中断）；</li>
+<li><strong>Runner</strong>：协调 Agent 执行循环的调度器。</li>
+</ul>
+<pre><code class="language-python">from openai import OpenAI
+from agents import Agent, Runner, tool
+
+@tool
+def get_weather(city: str) -&gt; str:
+    return f&quot;{city} 今天晴天，25°C&quot;
+
+weather_agent = Agent(
+    name=&quot;天气助手&quot;,
+    instructions=&quot;你是一个天气查询助手，帮用户查询城市天气。&quot;,
+    tools=[get_weather],
+)
+
+result = Runner.run_sync(weather_agent, &quot;北京今天天气怎么样？&quot;)
+print(result.final_output)
+</code></pre>
+<p>与 LangChain 的区别：Agents SDK 更轻、官方支持、原生 Handoff，学习曲线低；LangChain/LangGraph 生态更广、跳厂商，持久化与人机协同更成熟（Handoff vs Supervisor 的选择见第 89、68 题）。</p>
+<h3>93. OpenAI Responses API 与 Chat Completions、Assistants API 是什么关系？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+Responses API 是 OpenAI 于 2025-03 推出的统一接口（<code>POST /v1/responses</code>），定位为 Assistants API 的替代者：</p>
 <table>
 <thead>
 <tr>
@@ -384,500 +2440,40 @@ def apply_refund(order_id: str, reason: str, amount: float | None) -&gt; str:
 print(resp.output_text)
 </code></pre>
 <p>迁移口径：<strong>Assistants API 已于 2025-08-26 弃用、2026-08-26 关闭</strong>；简单单轮/多轮对话继续用 Chat Completions 即可；需要内置工具与服务端状态管理的 Agent 场景用 Responses API。</p>
-<hr>
-<h2>四、框架与选型</h2>
-<h3>16. 用一句话说清 LangChain、LangGraph、Deep Agents 的关系，并给出选型依据。</h3>
-<p><strong>答案：</strong></p>
-<p>三者是<strong>分层依赖</strong>而非竞争关系：</p>
-<ul>
-<li><strong>LangChain</strong>：组件层——ChatModel、Tool、Prompt、Retriever、OutputParser 的统一抽象，LCEL 做线性编排。</li>
-<li><strong>LangGraph</strong>：编排层——在 LangChain 组件之上提供有状态的图（State/Node/Edge），解决循环、分支、持久化、人机协同。</li>
-<li><strong>Deep Agents</strong>：应用层——基于 LangGraph 预置了规划（todo）、子代理、虚拟文件系统、长短期记忆的&quot;深度智能体&quot;模板。</li>
-</ul>
-<p>选型依据：</p>
-<table>
-<thead>
-<tr>
-<th>任务特征</th>
-<th>选择</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单次调用 / 固定线性 RAG</td>
-<td>LCEL 或裸 SDK（OpenAI / Anthropic）</td>
-</tr>
-<tr>
-<td>简单 ReAct 单 Agent</td>
-<td>LangChain <code>create_agent</code></td>
-</tr>
-<tr>
-<td>流程可画出确定流程图、需审批/回放/多 Agent</td>
-<td>LangGraph <code>StateGraph</code></td>
-</tr>
-<tr>
-<td>多角色对话协作、研究型分工</td>
-<td>AutoGen / CrewAI（或 LangGraph Supervisor）</td>
-</tr>
-<tr>
-<td>只能描述目标、路径靠 Agent 自主探索的长任务</td>
-<td>Deep Agents</td>
-</tr>
-</tbody></table>
-<p>核心判断：<strong>固定流程用图，开放目标用深度智能体，线性任务别上框架。</strong></p>
-<h3>17. AutoGen 和 CrewAI 分别是什么？适合什么场景？</h3>
-<p><strong>答案：</strong></p>
-<p><strong>AutoGen</strong>（微软出品）专注于<strong>多智能体对话协作</strong>，让多个 Agent 相互交流完成任务：</p>
-<ul>
-<li>每个 Agent 有独立角色（如 Planner、Coder、Reviewer）</li>
-<li>Agent 之间通过消息传递协作</li>
-<li>支持人机混合（Human-in-the-loop）</li>
-</ul>
-<p><strong>CrewAI</strong> 是基于角色的多智能体框架，用船员（Crew）来比喻多个 Agent 分工协作：</p>
-<ul>
-<li><strong>Agent</strong>：有 role、goal、backstory，定义具体角色</li>
-<li><strong>Task</strong>：分配给某个 Agent 的具体任务</li>
-<li><strong>Crew</strong>：管理所有 Agent 和 Task 的编排器</li>
-<li><strong>Process</strong>：顺序或层级执行模式</li>
-</ul>
-<p>与 LangChain 系的区别：LangChain/LangGraph 更侧重工作流编排和工具调用、可控性强；AutoGen / CrewAI 更侧重多 Agent 角色扮演与对话协作，适合&quot;研究员 + 写作者 + 审核员&quot;这类专业化分工场景。</p>
-<blockquote>
-<p>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>：AutoGen v0.4 已于 2025-01 完全重写（2025-01-14/17 发布），改为异步事件驱动的 Actor 模型，分层为 <code>autogen-core</code> / <code>autogen-agentchat</code> / <code>autogen-ext</code>，内置 OpenTelemetry，支持 Python + .NET。2025-10 微软宣布 <strong>Microsoft Agent Framework（MAF，合并 AutoGen + Semantic Kernel）</strong>，其 1.0 于 2026-04-03 发布，AutoGen 随后进入维护模式。新项目选型应评估 MAF，而非直接上手旧 AutoGen；SDK 整体格局见第 19 题。</p>
-</blockquote>
-<h3>18. LangChain v1 之后有哪些重要的 API 变化？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li>模型按 provider 分包：<code>from langchain_openai import ChatOpenAI</code>，旧的 <code>langchain.chat_models</code> 入口废弃。</li>
-<li>Agent 统一为 <code>from langchain.agents import create_agent</code>；旧的 <code>initialize_agent</code>、<code>AgentExecutor</code>、各堆 <code>AgentType</code> 枚举全部废弃。</li>
-<li>推荐用 <code>init_chat_model(&quot;openai:gpt-4o&quot;)</code> 按&quot;provider:model&quot;字符串实例化，便于切换厂商。</li>
-<li>消息类型统一走 <code>langchain_core.messages</code>；状态更新走 LangGraph 的 reducer 机制。</li>
-<li>可观测性统一到 LangSmith v2 环境变量（<code>LANGSMITH_TRACING=true</code>）。</li>
-</ul>
-<p>面试要点：能说出&quot;<strong>Chain/AgentExecutor 那套老 API 已被 LCEL + LangGraph 取代</strong>&quot;即可看出是否持续跟进版本。</p>
-<blockquote>
-<p>⚠️ <strong>过时/存疑标注（2026-09 核实，适用于全文代码示例）</strong>：本文示例中出现的 <code>gpt-4o</code> / <code>gpt-4o-mini</code> 自 <strong>2026-02-13 起陆续退役</strong>，新代码应改用 gpt-5 系列（或对应厂商的现役型号）；<code>init_chat_model(&quot;provider:model&quot;)</code> 的用法本身不变，迁移通常只需改模型字符串。</p>
-</blockquote>
-<h3>19. 🆕 2025-2026 主流 Agent SDK 与编码 CLI 的格局是怎样的？</h3>
-<p><strong>答案：</strong></p>
-<p>Agent SDK 四强（截至 2026-09）：</p>
-<table>
-<thead>
-<tr>
-<th>SDK</th>
-<th>厂商</th>
-<th>关键时间 / 特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Claude Agent SDK</td>
-<td>Anthropic</td>
-<td>2025-09-29 随 Sonnet 4.5 发布，与 Claude Code 同栈；权限系统、子代理、MCP 原生支持；Python + TS</td>
-</tr>
-<tr>
-<td>OpenAI Agents SDK</td>
-<td>OpenAI</td>
-<td>2025-03 发布，由 Swarm 演变；Agent / Handoff / Guardrails / Runner 四概念（见第 31 题）</td>
-</tr>
-<tr>
-<td>Google ADK</td>
-<td>Google</td>
-<td>2025-04 发布，原生 A2A + MCP，可部署到 Agent Engine（见第 32 题）</td>
-</tr>
-<tr>
-<td>Vercel AI SDK</td>
-<td>Vercel</td>
-<td>TS 生态；4.2（2025-03）支持 MCP/Responses；6（2025-12）推 ToolLoopAgent；7（2026-06）WorkflowAgent 支持持久化执行与语音</td>
-</tr>
-</tbody></table>
-<p>编码类 CLI（Agentic Coding）：<strong>Claude Code、OpenAI Codex CLI、Gemini CLI、Deep Agents CLI</strong>；GitHub Copilot Agent、Cursor 等走 IDE 形态。微软侧为 <strong>Microsoft Agent Framework</strong>（合并 AutoGen + Semantic Kernel，1.0 于 2026-04-03 发布，AutoGen 进入维护模式，见第 17 题标注）。</p>
-<p>选型要点：各家 SDK 都在收敛到同一组概念——agent 定义、handoff、护栏、MCP 工具、可持久化的执行循环；优先选与主用模型同厂的 SDK，跨厂商需求再考虑 LangChain/LangGraph。</p>
-<hr>
-<h2>五、LangChain 编码题</h2>
-<h3>20. 手写一个带工具的 Agent（不使用 AgentExecutor），说明消息流转。</h3>
-<p><strong>答案：</strong></p>
-<pre><code class="language-python">from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage, ToolMessage
-from langchain_core.tools import tool
-
-@tool
-def get_weather(city: str) -&gt; str:
-    &quot;&quot;&quot;查询指定城市的天气。city 为城市名。&quot;&quot;&quot;
-    return f&quot;{city}：晴，25°C&quot;
-
-llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;).bind_tools([get_weather])
-tools = {&quot;get_weather&quot;: get_weather}
-
-messages = [HumanMessage(&quot;北京天气如何？&quot;)]
-
-for _ in range(10):                       # 最大步数，防死循环
-    ai = llm.invoke(messages)
-    messages.append(ai)
-    if not ai.tool_calls:                # 无工具调用 = 终态
-        break
-    for call in ai.tool_calls:           # 执行所有请求的工具
-        result = tools[call[&quot;name&quot;]].invoke(call[&quot;args&quot;])
-        messages.append(ToolMessage(str(result), tool_call_id=call[&quot;id&quot;]))
-
-print(messages[-1].content)
-</code></pre>
-<p>消息流转是 Agent 的命门，必须能默写：</p>
-<pre><code>Human → AI(tool_calls) → Tool(tool_call_id 对应) → AI … → AI(无 tool_calls=终态)
-</code></pre>
-<p>两个高频扣分点：① <code>ToolMessage</code> 必须带 <code>tool_call_id</code> 与请求一一对应；② 每轮要把 AI 消息和 Tool 消息都追加进历史，漏任一边模型都会报错。</p>
-<h3>21. LCEL 的 <code>|</code> 语法底层是什么？为什么它能免费获得流式/重试/并行？</h3>
-<p><strong>答案：</strong></p>
-<p><code>|</code> 调用的是对象的 <code>__or__</code>，把每个 <strong>Runnable</strong> 串成 <code>RunnableSequence</code>。LangChain 的组件（prompt、llm、parser、retriever）都实现了统一的 <code>Runnable</code> 接口（<code>invoke / stream / batch / ainvoke / astream</code>）。</p>
-<p>因为接口统一，序列就能把能力<strong>整条链透传</strong>：</p>
-<ul>
-<li><code>.stream()</code>：逐段向前后传播，最后一个组件边产边出；</li>
-<li><code>.batch()</code> / <code>.abatch()</code>：自动并发执行多条输入；</li>
-<li><code>.with_retry()</code>、<code>.with_config()</code>：包裹在任意 Runnable 外层，不侵入业务代码。</li>
-</ul>
-<pre><code class="language-python">chain = (prompt | llm | StrOutputParser()).with_retry(
-    stop_after_attempt=3, wait_exponential_jitter=True
-)
-</code></pre>
-<p>适用边界要能说清：LCEL 只擅长<strong>无环的线性/并行</strong>结构；一旦需要根据模型输出循环或回跳到前面节点，LCEL 表达不了，必须用 LangGraph。</p>
-<h3>22. 怎么做模型分级路由（省成本）？给出代码。</h3>
-<p><strong>答案：</strong></p>
-<p>用 LCEL 的 <code>RunnableBranch</code> 按输入特征选择不同模型：</p>
-<pre><code class="language-python">from langchain_core.runnables import RunnableBranch, RunnableLambda
-
-mini = ChatOpenAI(model=&quot;gpt-4o-mini&quot;)
-pro  = ChatOpenAI(model=&quot;gpt-4o&quot;)
-
-def is_complex(msg: dict) -&gt; bool:
-    return any(k in msg[&quot;question&quot;] for k in (&quot;架构&quot;, &quot;排查&quot;, &quot;多步&quot;, &quot;权衡&quot;))
-
-router = RunnableBranch(
-    (is_complex, pro),
-    mini,                       # 默认分支
-)
-chain = RunnableLambda(lambda x: x) | router | StrOutputParser()
-</code></pre>
-<p>工程上还会配合：意图识别用小模型 + <code>with_structured_output</code>、子 Agent 强制用便宜模型、超长固定前缀开 prompt caching、对每一步记账设预算。</p>
-<hr>
-<h2>六、LangGraph 编码题</h2>
-<h3>23. 手写 StateGraph 版 ReAct，并解释 reducer 的作用。</h3>
-<p><strong>答案：</strong></p>
-<pre><code class="language-python">from typing import Annotated, TypedDict
-from langgraph.graph import StateGraph, START, END
-from langgraph.graph.message import add_messages
-from langgraph.prebuilt import ToolNode, tools_condition
-
-class State(TypedDict):
-    messages: Annotated[list, add_messages]
-
-llm_tools = ChatOpenAI(model=&quot;gpt-4o-mini&quot;).bind_tools([get_weather])
-
-def chat(state: State):
-    return {&quot;messages&quot;: [llm_tools.invoke(state[&quot;messages&quot;])]}
-
-g = StateGraph(State)
-g.add_node(&quot;chat&quot;, chat)
-g.add_node(&quot;tools&quot;, ToolNode([get_weather]))
-g.add_edge(START, &quot;chat&quot;)
-g.add_conditional_edges(&quot;chat&quot;, tools_condition)   # 有 tool_calls→tools，否则→END
-g.add_edge(&quot;tools&quot;, &quot;chat&quot;)
-app = g.compile()
-</code></pre>
-<p><strong>reducer 是高频考点</strong>：节点返回的是&quot;对 state 的更新&quot;，<code>Annotated[list, add_messages]</code> 声明该字段用 <code>add_messages</code> 做<strong>追加合并</strong>（按消息 id 去重/更新），而不是默认的整体覆盖。若不写 reducer，第二个节点返回 <code>{&quot;messages&quot;: [...]}</code> 会把整个列表替换掉，历史丢失。自定义场景常用 <code>operator.add</code>（列表拼接）或自己写 reducer 函数。</p>
-<h3>24. Checkpointer 解决什么问题？写一段&quot;跨次请求保持记忆 + 恢复执行&quot;的代码。</h3>
-<p><strong>答案：</strong></p>
-<p>Checkpointer 在每个**超步（super-step）**后把 state 快照持久化，带来三个能力：同 thread 多轮记忆、进程重启后续跑、历史回放/分叉（time travel）。</p>
-<pre><code class="language-python">from langgraph.checkpoint.memory import InMemorySaver  # 生产换 PostgresSaver
-
-app = g.compile(checkpointer=InMemorySaver())
-cfg = {&quot;configurable&quot;: {&quot;thread_id&quot;: &quot;user-123&quot;}}
-
-app.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;查 ORD-12345678&quot;)]}, cfg)
-app.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;它现在到哪了&quot;)]}, cfg)  # 自动带历史
-
-snapshot = app.get_state(cfg)             # 当前状态快照
-for hist in app.get_state_history(cfg):   # 全部历史，可回到任意步分叉
-    ...
-</code></pre>
-<p>要点：<strong>thread_id 是会话隔离键</strong>，一个会话一个 thread；内存版只用于开发，生产必须用 Postgres 等持久实现，否则重启即失忆。</p>
-<h3>25. 什么是 Human-in-the-Loop？现场编码：给&quot;退款&quot;这类写操作加人工审批（interrupt）。</h3>
-<p><strong>答案：</strong></p>
-<p>Human-in-the-Loop 是在 Agent 工作流中加入人工干预的机制：在关键决策节点暂停，等待人工确认后再继续；防止 Agent 执行高风险操作（删除数据、退款、发邮件）；也支持人工修正 Agent 的中间输出或补充信息。LangGraph 用 <code>interrupt</code> 原生实现。</p>
-<pre><code class="language-python">from langgraph.types import interrupt, Command
-from langchain_core.messages import AIMessage
-
-def refund_node(state: State):
-    payload = {&quot;order_id&quot;: &quot;ORD-12345678&quot;, &quot;amount&quot;: 299.0}
-    decision = interrupt({&quot;ask&quot;: &quot;确认退款 ¥299？&quot;, &quot;payload&quot;: payload})
-    if decision == &quot;approve&quot;:
-        apply_refund.invoke(payload)
-        return {&quot;messages&quot;: [AIMessage(&quot;退款已提交&quot;)]}
-    return {&quot;messages&quot;: [AIMessage(&quot;已取消退款&quot;)]}
-</code></pre>
-<p>调用方两次调用：</p>
-<pre><code class="language-python">app.invoke(inputs, cfg)                       # 在 interrupt 处暂停，state 已落盘
-app.invoke(Command(resume=&quot;approve&quot;), cfg)    # 人工审批后恢复
-</code></pre>
-<p>关键区分（常追问）：让模型&quot;先问一句用户&quot;只是生成文本，请求结束状态即丢；<code>interrupt</code> 是<strong>真正暂停图执行并持久化</strong>，可以隔数小时、跨进程重启后用 <code>Command(resume=...)</code> 精确恢复。典型场景：高风险写操作、补信息、等待外部回调。</p>
-<h3>26. 条件边怎么写？<code>tools_condition</code> 内部判断逻辑是什么？</h3>
-<p><strong>答案：</strong></p>
-<p>条件边接收一个返回&quot;下一节点名&quot;的路由函数：</p>
-<pre><code class="language-python">def route(state: State) -&gt; str:
-    last = state[&quot;messages&quot;][-1]
-    if getattr(last, &quot;tool_calls&quot;, None):
-        return &quot;tools&quot;
-    return END
-
-g.add_conditional_edges(&quot;chat&quot;, route, {&quot;tools&quot;: &quot;tools&quot;, END: END})
-</code></pre>
-<p><code>tools_condition</code> 就是这个逻辑的预置版：检查最后一条 AIMessage 是否带非空 <code>tool_calls</code>，有则路由到工具节点名（默认 <code>&quot;tools&quot;</code>），否则路由到 <code>END</code>。注意第三个参数是返回值→真实节点名的映射，重命名节点时必须同步改映射。</p>
-<h3>27. LangGraph 的流式有哪几种 stream_mode？分别用在什么场景？</h3>
-<p><strong>答案：</strong></p>
-<table>
-<thead>
-<tr>
-<th>stream_mode</th>
-<th>产出</th>
-<th>场景</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>values</code></td>
-<td>每个节点后的完整 state</td>
-<td>调试、要看全局最新状态</td>
-</tr>
-<tr>
-<td><code>updates</code></td>
-<td>每个节点本次的增量更新</td>
-<td>最常用，前端展示&quot;当前执行到哪步/在干什么&quot;</td>
-</tr>
-<tr>
-<td><code>messages</code></td>
-<td>LLM 的 token 级分片 + 元数据</td>
-<td>聊天打字机效果</td>
-</tr>
-<tr>
-<td><code>debug</code></td>
-<td>含检查点/任务调度的详细事件</td>
-<td>深度排错</td>
-</tr>
-</tbody></table>
-<p>可传列表同时订阅多种：<code>stream_mode=[&quot;updates&quot;, &quot;messages&quot;]</code>，配合异步 SSE/WebSocket 推给前端。</p>
-<hr>
-<h2>七、多智能体与互操作协议</h2>
-<h3>28. 什么是多智能体系统？价值是什么？</h3>
+<p><strong>追问</strong>：<code>store=True</code> 有什么合规风险？（数据存在服务端，多租户/金融医疗场景要评估，可用 <code>store=False</code> + 自己管 messages）</p>
+<h3>94. 什么是 Google ADK？ <strong>｜中频 ｜基础</strong></h3>
 <p><strong>答案：</strong>
-多智能体系统由多个 AI Agent 组成，每个 Agent 有独立的角色和职责，通过协作完成复杂任务：</p>
+Google 于 <strong>2025-04</strong> 发布的开源 Agent 框架，专为构建<strong>可互操作</strong>的 Agent 设计：</p>
 <ul>
-<li><strong>分工</strong>：每个 Agent 专注于特定任务（规划、编码、测试、审查）</li>
-<li><strong>并行</strong>：多个 Agent 同时处理不同子任务，提升效率</li>
-<li><strong>检验</strong>：一个 Agent 验证另一个 Agent 的输出，减少错误</li>
+<li><strong>多 Agent 编排</strong>：原生支持层级化多 Agent 系统（agent tree）；</li>
+<li><strong>A2A 原生集成</strong>：内置 Agent2Agent 协议支持（见第 67 题）；</li>
+<li><strong>MCP 集成</strong>：与 Model Context Protocol 无缝对接；</li>
+<li><strong>事件驱动</strong>：基于事件流的执行模型，天然支持流式；</li>
+<li>另有组件化工具（函数/检索/代码执行）、内置评估与开发 UI；<strong>ADK 2.0</strong> 进一步强调 harness 能力（见第 14 题）。</li>
 </ul>
-<p>多 Agent 的核心价值是<strong>专职分工和上下文隔离</strong>；但要记住&quot;单 Agent + 多工具够用，就不要上多 Agent&quot;。</p>
-<h3>29. 多智能体有哪些架构模式？通信如何实现？</h3>
-<p><strong>答案：</strong></p>
-<p>常见架构模式：</p>
-<ul>
-<li><strong>Supervisor（监督者模式）</strong>：一个主 Agent 负责协调分配任务给子 Agent</li>
-<li><strong>Peer-to-Peer / Network（点对点）</strong>：Agent 之间直接通信，无中心节点</li>
-<li><strong>Pipeline（流水线）</strong>：Agent 串行执行，上一个的输出是下一个的输入</li>
-<li><strong>Hierarchical（层级）</strong>：树形结构，高层 Agent 管理低层 Agent</li>
-</ul>
-<p>通信方式：</p>
-<ul>
-<li><strong>消息传递</strong>：Agent 发送/接收结构化消息（如 JSON）</li>
-<li><strong>共享状态</strong>：通过共享数据库或内存（如 LangGraph State）交换信息</li>
-<li><strong>工具调用</strong>：一个 Agent 以&quot;工具&quot;形式调用另一个 Agent</li>
-<li><strong>事件驱动</strong>：通过消息队列（如 Kafka、RabbitMQ）异步通信</li>
-</ul>
-<h3>30. 多 Agent 的 Supervisor 模式如何实现？为什么默认不推荐 Network 模式？</h3>
-<p><strong>答案：</strong></p>
-<pre><code class="language-python">from langgraph_supervisor import create_supervisor
-
-sup = create_supervisor(
-    agents=[researcher_agent, writer_agent],
-    model=ChatOpenAI(model=&quot;gpt-4o&quot;),
-    prompt=&quot;你是主管，把任务分给调研员/写作者，全部完成后回复 FINISH。&quot;,
-).compile(checkpointer=InMemorySaver())
-</code></pre>
-<p>主管 Agent 每轮决定&quot;派给谁或结束&quot;，子 Agent 作为被调度的节点，上下文由主管统一管理。</p>
-<p>不默认用去中心化 Network 的原因：Agent 互相喊话会形成不可控的调用图，容易<strong>互相等待/死循环</strong>、token 与延迟随对话轮次膨胀、出错时难以定位是哪个 Agent 的决策、状态一致性难保证。只有确实需要对等协商且能接受这些代价时才用。</p>
-<h3>31. 什么是 OpenAI Agents SDK？</h3>
+<p>部署选项：Google Agent Engine、Cloud Run、GKE（也可本地跑）。与 LangGraph 对比：ADK 更紧密集成 Google 生态（Gemini、Vertex AI），LangGraph 更通用、更成熟。</p>
+<h3>95. Claude Agent SDK 和&quot;harness&quot;是什么关系？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
 <p><strong>答案：</strong>
-<strong>OpenAI Agents SDK</strong>（2025 年发布）是 OpenAI 官方推出的轻量级 Agent 开发框架，前身为 Swarm。</p>
-<p><strong>核心概念</strong>：</p>
+Claude Agent SDK（2025-09-29 随 Sonnet 4.5 发布）与 Claude Code <strong>同一套栈</strong>，可以把它理解成&quot;把 Claude Code 的 harness 开放给你编程使用&quot;：</p>
 <ul>
-<li><strong>Agent</strong>：有 instructions（角色描述）和 tools（工具列表）的 LLM 执行单元</li>
-<li><strong>Handoff（移交）</strong>：一个 Agent 将任务移交给另一个更专业的 Agent</li>
-<li><strong>Guardrails（护栏）</strong>：对 Agent 输入/输出进行验证的过滤器</li>
-<li><strong>Runner</strong>：协调 Agent 执行循环的调度器</li>
+<li><strong>agent loop</strong>：内置的&quot;收集上下文 → 行动 → 验证&quot;循环，不用自己写 while；</li>
+<li><strong>工具与权限系统</strong>：工具级 allow/deny/ask 规则、hook（PreToolUse / PostToolUse 等）可在工具执行前后做硬拦截——这是把第 106、107 题的安全要求落到代码层的地方；</li>
+<li><strong>子代理（subagents）</strong>：独立上下文，只回传摘要（见第 97 题）；</li>
+<li><strong>Skills / AGENTS.md / MCP</strong>：渐进式能力加载（见第 69 题）；</li>
+<li><strong>上下文管理与 compaction</strong>：接近窗口限制时自动压缩；</li>
+<li><strong>文件系统与 bash 作为通用工具</strong>：不靠几十个专用工具，而靠&quot;读文件 + 写文件 + 执行命令&quot;三个通用能力覆盖大多数任务。</li>
 </ul>
-<p><strong>代码示例</strong>：</p>
-<pre><code class="language-python">from openai import OpenAI
-from agents import Agent, Runner, tool
-
-@tool
-def get_weather(city: str) -&gt; str:
-    return f&quot;{city} 今天晴天，25°C&quot;
-
-weather_agent = Agent(
-    name=&quot;天气助手&quot;,
-    instructions=&quot;你是一个天气查询助手，帮用户查询城市天气。&quot;,
-    tools=[get_weather]
-)
-
-result = Runner.run_sync(weather_agent, &quot;北京今天天气怎么样？&quot;)
-print(result.final_output)
-</code></pre>
-<p><strong>与 LangChain 的区别</strong>：OpenAI Agents SDK 更轻量、官方支持，原生支持 Handoff 多 Agent 协作，不依赖 LangChain 的复杂抽象，学习曲线更低；LangChain/LangGraph 则生态更广、跨厂商、持久化与人机协同更成熟。</p>
-<h3>32. 什么是 Google ADK（Agent Development Kit）？</h3>
+<p>面试里能讲出的关键点：<strong>它的默认设计哲学就是&quot;harness-first&quot;</strong>——把模型能力包在一个可控、可审计、可否决的执行壳里。这也解释了为什么 2026 年大家开始用&quot;Model + Harness&quot;而不是&quot;Model + Prompt&quot;来描述 Agent。</p>
+<p><strong>追问</strong>：和 LangGraph 怎么选？（Claude Agent SDK 开箱即用但绑 Anthropic 生态、图控制粒度不如 LangGraph；LangGraph 跳厂商、流程更显式但要自己搭护栏）</p>
+<h3>96. Deep Agents 内置了什么？现场写一个研究型深度智能体。 <strong>｜必刷 ｜中等</strong></h3>
 <p><strong>答案：</strong>
-<strong>Google ADK</strong> 是 Google 于 2025 年发布的开源 Agent 框架，专为构建可互操作的 AI Agent 设计。</p>
-<p><strong>核心特点</strong>：</p>
-<ul>
-<li><strong>多 Agent 编排</strong>：原生支持层级化多 Agent 系统</li>
-<li><strong>A2A 原生集成</strong>：内置 Agent2Agent 协议支持</li>
-<li><strong>MCP 集成</strong>：与 Model Context Protocol 无缝对接</li>
-<li><strong>流式事件</strong>：基于事件驱动的 Agent 执行模型</li>
-</ul>
-<p><strong>部署选项</strong>：Google Agent Engine、Cloud Run、GKE。</p>
-<p><strong>与 LangGraph 对比</strong>：ADK 更紧密集成 Google 生态（Gemini、Vertex AI），LangGraph 更通用、更成熟。</p>
-<h3>33. 什么是 A2A 协议（Agent2Agent Protocol）？</h3>
-<p><strong>答案：</strong>
-<strong>A2A（Agent2Agent）协议</strong>是 Google 于 2025 年 4 月发布的开放标准，解决不同框架、不同厂商的 AI Agent 之间的互操作问题。</p>
-<p><strong>核心理念</strong>：</p>
-<ul>
-<li><strong>MCP</strong>：解决 Agent ↔ 工具 的通信（Agent 如何调用工具）</li>
-<li><strong>A2A</strong>：解决 Agent ↔ Agent 的通信（Agent 如何委托另一个 Agent）</li>
-</ul>
-<p><strong>MCP vs A2A 对比</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>MCP</th>
-<th>A2A</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>通信对象</td>
-<td>Agent ↔ Tool（工具）</td>
-<td>Agent ↔ Agent（智能体）</td>
-</tr>
-<tr>
-<td>发起方</td>
-<td>Agent 主动调用工具</td>
-<td>Agent 委托另一个 Agent</td>
-</tr>
-<tr>
-<td>标准化内容</td>
-<td>工具 schema、资源接口</td>
-<td>Agent 发现、任务委托、结果返回</td>
-</tr>
-<tr>
-<td>发起方</td>
-<td>Anthropic</td>
-<td>Google（50+ 合作伙伴）</td>
-</tr>
-</tbody></table>
-<p><strong>A2A 工作流程</strong>：</p>
-<pre><code>用户请求
-    ↓
-Orchestrator Agent（协调者）
-    ↓ A2A 委托
-Research Agent（研究者）  ←→  Writing Agent（写作者）
-    ↓ 通过 MCP 调用工具
-搜索工具、数据库、文件系统
-</code></pre>
-<p><strong>支持伙伴</strong>：LangChain、Salesforce、SAP、ServiceNow 等 50+ 企业。</p>
-<p><strong>意义</strong>：A2A + MCP 构成了 AI Agent 的完整协议栈，类比于 HTTP（应用层）+ TCP（传输层）。</p>
-<blockquote>
-<p>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>：
-① <strong>治理进展</strong>：A2A 发布后于 <strong>2025-06-23 捐赠给 Linux Foundation</strong>；v1.0 稳定规范于 2026 年春发布。据 LF 2026-04-09 一周年文章：已有 150+ 组织参与、22k+ stars，提供 Python/JS/Java/Go/.NET SDK 与 Signed Agent Cards，并已集成 Azure AI Foundry / Copilot Studio、AWS Bedrock AgentCore 等平台。
-② <strong>MCP 治理</strong>：MCP 也已于 <strong>2025-12-09 捐赠给 Linux Foundation 旗下新成立的 Agentic AI Foundation（AAIF）</strong>——由 Anthropic、Block、OpenAI 联合发起，创始项目包括 MCP、goose、AGENTS.md。
-③ <strong>表格勘误</strong>：上表&quot;发起方&quot;出现了两次：第一行内容实际是&quot;<strong>通信方向</strong>&quot;（主动调用 vs 委托），第二行才是协议发起方（MCP=Anthropic，A2A=Google）。</p>
-</blockquote>
-<h3>34. 🆕 深入讲讲 MCP：传输方式、原语演进与安全风险。</h3>
-<p><strong>答案：</strong></p>
-<p>MCP（Model Context Protocol）由 Anthropic 于 <strong>2024-11-25</strong> 发布，定位为&quot;工具侧的 USB-C&quot;。规范按日期版本演进：2024-11-05、2025-03-26、2025-06-18、2025-11-25，最新为 <strong>2026-07-28</strong> 版。</p>
-<p><strong>两种传输</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>传输</th>
-<th>形态</th>
-<th>要点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>stdio</td>
-<td>客户端拉起本地子进程，换行分隔 JSON-RPC</td>
-<td>无网络攻击面、无需鉴权，适合本地工具</td>
-</tr>
-<tr>
-<td>Streamable HTTP</td>
-<td>单端点：POST 请求 + 可选 GET/SSE 流</td>
-<td>取代旧的 HTTP+SSE；本地部署必须绑 127.0.0.1 并校验 Origin 防 DNS rebinding；远端走 OAuth 2.1（服务器即 OAuth 资源服务器，RFC9728 元数据、RFC8707 resource indicator、PKCE）</td>
-</tr>
-</tbody></table>
-<p><strong>原语体系</strong>：服务端暴露 <strong>Tools / Resources / Prompts</strong>；客户端可发起 <strong>Sampling / Roots</strong>；2025-06-18 新增 <strong>Elicitation</strong>（方法 <code>elicitation/create</code>，服务器向用户弹出结构化表单收集输入；2025-11-25 版增加 URL 模式），同版引入 <code>structuredContent</code>、<code>resource_link</code>，并取消了 JSON-RPC 批处理。</p>
-<p>与 OpenAPI / function calling 的区别：function calling 只是单次请求里的工具 schema；OpenAPI 描述 HTTP 接口但无状态/资源/提示协商；MCP 是<strong>有生命周期、可发现、双向通信</strong>的长连接协议。</p>
-<p><strong>2025 年密集出现的安全事件</strong>：</p>
-<table>
-<thead>
-<tr>
-<th>时间</th>
-<th>事件</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>2025-04</td>
-<td>Invariant Labs 披露 <strong>tool poisoning</strong>（恶意工具描述注入）与 <strong>rug pull</strong>（描述事后篡改）</td>
-</tr>
-<tr>
-<td>2025-05</td>
-<td>GitHub 官方 MCP Server 被指出 issue/PR 内容可注入指令</td>
-</tr>
-<tr>
-<td>2025</td>
-<td><strong>slopsquatting</strong>（幻觉包名抢注，Seth Larson 命名）：USENIX Security 2025 论文显示 19.7% 样本引用幻觉包、43% 可在每次环境中复现，抢注的 <code>huggingface-cli</code> 曾获约 3 万下载</td>
-</tr>
-<tr>
-<td>2025</td>
-<td>OX Security 报告 MCP SDK 缺陷波及约 1.5 亿次下载的包；11 个知名注册表里 9 个接受恶意条目</td>
-</tr>
-<tr>
-<td>2025</td>
-<td>Trend Micro 发现 492 个无鉴权暴露在公网的 MCP 服务器；2025-07 出现恶意 MCP 代理包 RCE；Kaspersky 2025-09 报告相关攻击活动</td>
-</tr>
-<tr>
-<td>2026-03</td>
-<td>LiteLLM 生态发生投毒事件（示例，截至 2026-09）</td>
-</tr>
-</tbody></table>
-<p>防御：工具/服务器 allowlist、锁版本与哈希校验、沙箱执行、最小权限、写操作人审、<strong>所有工具返回内容一律当作不可信数据</strong>处理（安全体系见第 46 题）。</p>
-<hr>
-<h2>八、Deep Agents 专题</h2>
-<h3>35. Deep Agents 内置了什么？手写一个研究型深度智能体。</h3>
-<p><strong>答案：</strong></p>
-<p>内置四件套，免去自己在 LangGraph 里手搓：</p>
+内置四件套，免去自己在 LangGraph 里手搓：</p>
 <ol>
 <li><strong>规划</strong>：todo 清单工具，自主拆解并维护任务状态；</li>
 <li><strong>子代理（Subagents）</strong>：在隔离上下文中执行子任务，只回传摘要；</li>
-<li><strong>虚拟文件系统</strong>：跨步骤沉淀中间产物（草稿、数据、代码）；</li>
+<li><strong>虚拟文件系统</strong>：跳步骤沉淀中间产物（草稿、数据、代码）；</li>
 <li><strong>分层记忆</strong>：thread 内短期记忆 + 跨 thread 的长期 Store。</li>
 </ol>
-<pre><code class="language-python">from langchain.chat_models import init_chat_model
-from langgraph.deepagents import create_deep_agent
-from langgraph.checkpoint.memory import InMemorySaver
-
-agent = create_deep_agent(
-    model=init_chat_model(&quot;openai:gpt-4o&quot;),
-    tools=[web_search, write_file],
-    instructions=&quot;先制定研究计划，派子代理分头检索，原始资料写入文件，最后产出带引用的中文报告。&quot;,
-    checkpointer=InMemorySaver(),
-)
-agent.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;调研 2026 年主流 Agent 框架演进并写对比报告&quot;)]})
-</code></pre>
-<blockquote>
-<p>❌ <strong>更正（2026-09 核实）</strong>：上文 <code>from langgraph.deepagents import create_deep_agent</code> 是<strong>错误导入</strong>。Deep Agents 是独立 PyPI 包 <strong><code>deepagents</code></strong>（构建于 LangGraph 之上，仓库 github.com/langchain-ai/deepagents），并非 <code>langgraph</code> 的子模块。正确安装与写法如下；新版签名使用 <code>model=</code> / <code>tools=</code> / <code>system_prompt=</code>（旧示例中的 <code>instructions=</code> 已更名为 <code>system_prompt</code>），示例模型也不应再用已退役的 gpt-4o：</p>
 <pre><code class="language-python"># pip install deepagents
 from deepagents import create_deep_agent
 from langchain.chat_models import init_chat_model
@@ -889,75 +2485,112 @@ agent = create_deep_agent(
 )
 agent.invoke({&quot;messages&quot;: [(&quot;user&quot;, &quot;调研 2026 年主流 Agent 框架演进并写对比报告&quot;)]})
 </code></pre>
+<blockquote>
+<p>❌ <strong>更正（两处）</strong>：
+① 旧版示例里的 <code>from langgraph.deepagents import create_deep_agent</code> 是<strong>错误导入</strong>。Deep Agents 是独立 PyPI 包 <strong><code>deepagents</code></strong>（构建于 LangGraph 之上，仓库 github.com/langchain-ai/deepagents），并非 <code>langgraph</code> 的子模块；
+② 新版签名使用 <code>model=</code> / <code>tools=</code> / <strong><code>system_prompt=</code></strong>，旧示例中的 <code>instructions=</code> 已更名。</p>
 </blockquote>
-<h3>36. 子代理为什么能&quot;节省主上下文&quot;？什么时候该用？</h3>
-<p><strong>答案：</strong></p>
-<p>上下文窗口是稀缺资源，且长上下文会稀释注意力、增加成本。子代理在<strong>独立上下文</strong>里完成高噪音工作（浏览几十个网页、跑若干 SQL、读多个文件），只把最终结论/摘要交回主 Agent，主上下文不被海量原始 observation 撑爆。</p>
-<p>适用：子任务会产生大量中间内容、与主线决策弱相关；不适用：子任务结果就是最终答案主体、或需要与主流程反复细粒度交互——隔离反而丢信息。</p>
-<h3>37. Deep Agents 和裸 LangGraph 的代价分别是什么？如何决策？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li>裸 StateGraph：开发量大，每个节点/分支都要自己设计，但<strong>可控性、可审计性、SLA 最强</strong>，适合企业交易流程。</li>
-<li>Deep Agents：上手快、能自主探路，但 token 消耗高、执行路径不确定、难以给出强时效保证，且复杂工具环境下可能规划失焦。</li>
-</ul>
-<p>决策口诀：<strong>&quot;人能画出确定流程图&quot;用 LangGraph；&quot;只能描述清楚目标&quot;用 Deep Agents。</strong> 涉及钱、合规、不可逆操作的核心链路不应交给纯自主探索，应在 LangGraph 中显式约束并加 <code>interrupt</code>。</p>
-<hr>
-<h2>九、工程化与排错</h2>
-<h3>38. Agent 跑到一半报 429 / 超时，如何保证不丢上下文？</h3>
-<p><strong>答案：</strong></p>
-<p>关键认知：<strong>重试的单位是&quot;一次 LLM 调用&quot;，而状态都在 messages/state 里</strong>。做法：</p>
-<ul>
-<li>对模型调用加指数退避 + 抖动的重试（<code>with_retry</code>），读 <code>retry-after</code>，超阈值（如 5 分钟，配额耗尽）快速失败而非死等；</li>
-<li>重试时<strong>携带完整 messages</strong>，模型能基于已执行的工具结果从断点继续；</li>
-<li>在 LangGraph 中还有双保险：checkpointer 已把每步落盘，即使进程崩溃，用同 <code>thread_id</code> 重新 <code>invoke(None, cfg)</code> 即可从最后一个完成的超步恢复。</li>
-</ul>
-<h3>39. 如何保证模型输出一定是可解析的结构化数据？</h3>
-<p><strong>答案：</strong></p>
-<p>用<strong>结构化输出</strong>而不是在 prompt 里&quot;请返回 JSON&quot;：</p>
-<pre><code class="language-python">class Ticket(BaseModel):
-    category: Literal[&quot;billing&quot;, &quot;tech&quot;, &quot;other&quot;]
-    priority: int = Field(ge=1, le=5)
-    summary: str
-
-structured = llm.with_structured_output(Ticket)
-ticket = structured.invoke(&quot;我付了钱但没开通，很急&quot;)   # -&gt; Ticket 实例
-</code></pre>
-<p>底层走模型厂商的 function calling / JSON Schema 强约束，框架负责 schema 校验与必要的自动修复重试。</p>
+<p>2026 年的演进（能说出一两条就是跟进过）：<strong>v0.4（2026-02-10）集成沙箱执行包</strong>（不在宿主直接跑代码）、<strong>2026-03 自主上下文压缩</strong>（agent 自己决定何时写文件/压缩）；中间件体系包 <strong>MemoryMiddleware / SkillsMiddleware / SubAgent</strong>，权限模型 <strong>FilesystemPermission</strong>。</p>
+<p><strong>追问</strong>：四件套分别对应哪个工程问题？（规划→目标不漂移；子代理→上下文隔离；文件→中间产物不进窗口；记忆→长任务续做与个性化）</p>
+<h3>97. 子代理为什么能&quot;节省主上下文&quot;？什么时候该用？Deep Agents 与裸 LangGraph 的代价分别是什么？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+<strong>为什么省上下文</strong>：上下文窗口是稀缺资源，长上下文会稀释注意力、增加成本（见第 13、30 题）。子代理在<strong>独立上下文</strong>里完成高噪音工作（浏览几十个网页、跑若干 SQL、读多个文件），只把最终结论/摘要交回主 Agent，主上下文不被海量原始 observation 撑爆。这就是上下文工程里的 <strong>isolate</strong>。</p>
+<p><strong>什么时候用</strong>：子任务会产生大量中间内容、且与主线决策弱相关。<strong>不适用</strong>：子任务结果就是最终答案主体、或需要与主流程反复细粒度交互——隔离反而丢信息。</p>
+<p><strong>两条路线的代价对比</strong>：</p>
 <table>
 <thead>
 <tr>
-<th>特性</th>
-<th>JSON Mode</th>
-<th>Structured Output</th>
+<th></th>
+<th>裸 StateGraph</th>
+<th>Deep Agents</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>保证有效 JSON</td>
-<td>✅</td>
-<td>✅</td>
+<td>开发量</td>
+<td>大，每个节点/分支都要自己设计</td>
+<td>小，开箱即用</td>
 </tr>
 <tr>
-<td>保证符合 Schema</td>
-<td>❌ 偶尔偏差</td>
-<td>✅</td>
+<td>可控性</td>
+<td><strong>最强</strong>，可审计、可给 SLA</td>
+<td>路径不确定，难给强时效保证</td>
 </tr>
 <tr>
-<td>支持必填/嵌套字段</td>
-<td>❌</td>
-<td>✅</td>
+<td>token 成本</td>
+<td>可控</td>
+<td>高（规划 + 多子代理 + 文件操作）</td>
+</tr>
+<tr>
+<td>适合</td>
+<td>企业交易流程、合规链路</td>
+<td>研究型、开放式长任务</td>
 </tr>
 </tbody></table>
-<p>需要枚举时用 <code>Literal</code>，需要范围用 <code>Field(ge=, le=)</code>。适用于工单抽取、工具参数、函数返回值、评测打标；主流厂商 OpenAI（gpt-4o 起，现应迁移 gpt-5 系）、Anthropic（Claude 3 起）、Gemini 2.5 均支持。</p>
-<h3>40. 如何防止 Agent 失控（死循环 / 烧钱 / 误操作）？还有哪些高频故障？</h3>
-<p><strong>答案：</strong> 一组组合拳：</p>
+<p>决策口诀：<strong>&quot;人能画出确定流程图&quot;用 LangGraph；&quot;只能描述清楚目标&quot;用 Deep Agents。</strong> 涉及钱、合规、不可逆操作的核心链路不应交给纯自主探索，应在 LangGraph 中显式约束并加 <code>interrupt</code>（见第 83 题）。</p>
+<hr>
+<h2>八、平台与系统集成</h2>
+<h3>98. Coze / Dify 这类平台和 LangChain / LangGraph 的关系怎么理解？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+Coze / Dify 更偏<strong>应用层、低代码和可视化交付</strong>，LangChain / LangGraph 更偏<strong>代码级开发框架</strong>。它们不是谁替代谁，而是同一条 AI 应用链路上的不同层级：</p>
 <ul>
-<li><code>recursion_limit</code> 限制图最大超步数（默认 25，按业务收紧）；</li>
-<li>外层工具调用总预算、相同参数重复调用检测、整体超时；</li>
-<li>工具结果截断、工具数量精简，控制每轮 token；</li>
-<li><strong>所有副作用写操作走 <code>interrupt</code> 人工确认</strong>；</li>
-<li>模型分级路由 + 子代理用小模型 + 固定前缀 prompt caching；</li>
-<li>LangSmith/Langfuse 全链路 tracing，按 run 统计 token 与耗时定位热点。</li>
+<li>Dify / Coze：快速把 Agent、RAG、Workflow 搭起来，方便业务侧验证、协作和交付；</li>
+<li>LangChain：把 Prompt、Model I/O、Parser、Retriever、Tools 按代码方式组合；</li>
+<li>LangGraph：状态显式、循环、条件路由、人机协同、多智能体等复杂编排。</li>
 </ul>
+<p>真实项目里很常见的路径：<strong>先用平台验证业务价值，再把核心链路迁到代码框架</strong>；或者平台负责上层业务编排，底层复杂能力由自建服务承接。</p>
+<p><strong>追问</strong>：什么时候必须从平台出来？（需要自定义状态机/审批链、权限与企业系统深度耦合、评测与回滚需可控、流量上来后平台成本或延迟不可接受）</p>
+<h3>99. 用 Python 调用 Dify / Coze 工作流时，最值得关注哪些工程细节？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+五类问题：<strong>鉴权、参数对齐、流式模式、超时限制、日志追踪</strong>。</p>
+<p><strong>Dify</strong> 工作流 API 重点字段：</p>
+<ul>
+<li><code>Authorization: Bearer {api_key}</code>；请求体的 <code>inputs</code>、<code>response_mode</code>、<code>user</code>。</li>
+</ul>
+<p>两个极易踩坑的点：一是 <strong>API Key 和工作流是绑定关系</strong>，不是拿一个全局 key 到处用；二是长流程尽量用 <code>streaming</code>，因为 <code>blocking</code> 很容易被网关超时打断。做流式时，要能识别 SSE 流里的 <strong><code>workflow_finished</code></strong> 事件，并正确拿到最终 <code>outputs</code>。</p>
+<p><strong>Coze</strong> 要盯紧：<code>workflow_id</code>、<code>app_id</code>、<code>parameters</code>。其中 <strong><code>parameters</code> 必须和工作流里定义的输入变量严格对齐</strong>——变量名一旦对不上，代码看起来能跑、请求也可能成功，但业务结果就是不对。流式处理时要能区分 <strong><code>PING</code> / <code>MESSAGE</code> / <code>DONE</code></strong>（或 SDK 里的 <code>MESSAGE / ERROR / INTERRUPT</code> 事件）。</p>
+<p>工程总结清单：</p>
+<ul>
+<li>密钥、工作流、应用的绑定关系是否搞清楚；</li>
+<li>请求参数名是否和平台工作流输入严格一致；</li>
+<li>是不是默认用流式，而不是把长任务都压成阻塞式；</li>
+<li>平台日志、<code>workflow_run_id</code>、业务 <code>request_id</code> 是否串起来了；</li>
+<li>流程里有外部副作用时，是否做了幂等、重试和失败补偿（见第 104 题）。</li>
+</ul>
+<p>这道题真正考察的不是&quot;会不会发 POST 请求&quot;，而是是否真正理解过平台 API 的真实调用链。</p>
+<h3>100. 团队已有 Java/Node 技术栈，引入 Python 写 Agent 如何与主系统集成？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+不要为了用框架把业务搬进 Python，采用<strong>边界化集成</strong>：</p>
+<ul>
+<li>把 Agent 做成<strong>独立服务</strong>（FastAPI / LangGraph Platform），主系统通过 HTTP/SSE 或消息队列调用，按会话传 <code>thread_id</code>；</li>
+<li>Agent 需要的业务能力（查单、退款）由主系统以<strong>工具 API / MCP Server</strong> 暴露，Agent 侧只做编排，不直连核心数据库；</li>
+<li>鉴权、限流、审计放在 API 网关层统一处理；</li>
+<li>JS/TS 团队也可评估 <strong>LangChain.js / LangGraph.js</strong>，核心概念（Runnable、StateGraph、checkpointer）一一对应，减少语言切换成本；</li>
+<li>工具协议尽量走 <strong>MCP</strong> 标准化，使同一套工具能被不同语言、不同 Agent 复用（呼应第 149 题的&quot;自研 MCP 与成熟框架相比的扩展性优势&quot;）。</li>
+</ul>
+<p><strong>追问</strong>：跨语言调用的超时与重试怎么设计？（主系统只管入队 + 幂等键，Agent 侧自己控制循环预算，结果异步回调；避免上游超时重试导致下游重复执行副作用）</p>
+<hr>
+<h2>九、可靠性、安全与治理</h2>
+<h3>101. Agent 跑到一半报 429 / 超时，如何保证不丢上下文？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+关键认知：<strong>重试的单位是&quot;一次 LLM 调用&quot;，而状态都在 messages/state 里</strong>。</p>
+<ul>
+<li>对模型调用加<strong>指数退避 + 抖动</strong>的重试（<code>with_retry</code>），读 <code>retry-after</code>；超阈值（如 5 分钟，配额耗尽）快速失败而非死等；</li>
+<li>重试时<strong>携带完整 messages</strong>，模型能基于已执行的工具结果从断点继续；</li>
+<li>LangGraph 里还有双保险：checkpointer 已把每步落盘，即使进程崩溃，用同 <code>thread_id</code> 重新 <code>invoke(None, cfg)</code> 即可从最后一个完成的超步恢复（见第 82 题）。</li>
+</ul>
+<p>两个补充：工具调用的重试要区分&quot;幂等读&quot;与&quot;非幂等写&quot;（见第 104 题）；如果失败源于上下文过长（而非限流），重试再多次也没用，要先压缩。</p>
+<p><strong>追问</strong>：429 和 5xx 的处理差异？（429 看 <code>retry-after</code> 并降并发；5xx 短退避重试后降级） ｜ 配额耗尽怎么办？（降级到备用模型/缓存/规则链路，并把任务入队延后执行）</p>
+<h3>102. 如何防止 Agent 失控（死循环 / 烧钱 / 误操作）？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+一组组合拳：</p>
+<ol>
+<li><code>recursion_limit</code> 限制图最大超步数（默认 25，按业务收紧）；</li>
+<li>外层<strong>工具调用总预算</strong>、相同参数重复调用检测、整体超时；</li>
+<li>工具结果截断、工具数量精简，控制每轮 token；</li>
+<li><strong>所有副作用写操作走 <code>interrupt</code> 人工确认</strong>（见第 83 题）；</li>
+<li>模型分级路由 + 子 Agent 用小模型 + 固定前缀 prompt caching；</li>
+<li>LangSmith/Langfuse 全链路 tracing，按 run 统计 token 与耗时定位热点。</li>
+</ol>
 <p>其他高频故障及对策：</p>
 <table>
 <thead>
@@ -968,48 +2601,422 @@ ticket = structured.invoke(&quot;我付了钱但没开通，很急&quot;)   # -&
 </thead>
 <tbody><tr>
 <td>幻觉（编造信息）</td>
-<td>引入 RAG、增加验证步骤、要求引用出处</td>
+<td>引入 RAG、增加验证步骤、要求引用出处（见第 110 题）</td>
 </tr>
 <tr>
-<td>上下文丢失（多步后忘记早期信息）</td>
+<td>上下文丢失（多步后忘早期信息）</td>
 <td>checkpointer 持久化、压缩/摘要历史</td>
 </tr>
 <tr>
 <td>工具滥用（调不必要的工具）</td>
-<td>优化工具描述、精简工具集</td>
+<td>优化工具描述、精简工具集（见第 54 题）</td>
 </tr>
 <tr>
 <td>成本失控</td>
 <td>控制 context window、小模型路由、预算告警</td>
 </tr>
+<tr>
+<td>目标漂移</td>
+<td>目标写进结构化 state 并每步对齐；定期回到 todo 清单</td>
+</tr>
+<tr>
+<td>重复执行副作用</td>
+<td>幂等键 + 去重表（见第 104 题）</td>
+</tr>
 </tbody></table>
-<h3>41. 怎么做 Agent 的测试、评估与回归？</h3>
-<p><strong>答案：</strong></p>
-<p><strong>测试方法</strong>（和普通单元测试的不同在于 LLM 输出不确定）：</p>
+<h3>103. 如何设计 Agent 的完成判断与终止条件，避免过早结束？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+Agent 的&quot;结束&quot;不能只靠感觉，也不能只看日志或一个宽泛的完成率分数。更稳的做法是设计<strong>显式完成条件</strong>，拆四层：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>判断内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>任务层</strong></td>
+<td>是否达成用户目标，是否拿到了必须的产物或字段</td>
+</tr>
+<tr>
+<td><strong>工具层</strong></td>
+<td>关键工具调用是否成功，返回结果是否满足预期约束</td>
+</tr>
+<tr>
+<td><strong>状态层</strong></td>
+<td>当前 state 是否进入 <code>done</code> / <code>failed</code> / <code>need_human</code> 这样的终态</td>
+</tr>
+<tr>
+<td><strong>保护层</strong></td>
+<td>最大步数、超时、重复无进展次数、异常退出条件</td>
+</tr>
+</tbody></table>
+<p>如果链路里有 Supervisor 或监督节点，更适合把它当&quot;辅助审查&quot;和&quot;异常兜底&quot;，而不是<strong>唯一的结束依据</strong>。真正稳的方案是：只有当关键任务结果、工具返回和状态机条件都满足时，才允许进入最终答复节点；否则宁可继续执行、澄清或转人工，也不要过早把未完成结果返回给用户。</p>
+<p>只靠监督节点统计完成率和查日志为什么不行？（慢、主观、易误判，且难以自动化回归）</p>
+<p>工程做法：给每类任务定义<strong>必须产物清单</strong>（字段级，可用 Pydantic 校验）＋<strong>验收规则</strong>（测试通过、引用存在、金额一致），把它当成图的出口条件而不是&quot;模型说自己完成了&quot;。</p>
+<h3>104. 长时间运行的 Agent 任务如何保证可靠性？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+长任务（数分钟到数小时）的核心敌人：<strong>进程崩溃、网络抖动、副作用重复执行、预算失控</strong>。</p>
+<ol>
+<li><strong>Durable Execution（持久化执行）</strong>：工作流状态事件溯源、可回放恢复——<strong>Temporal / Restate / DBOS</strong> 是这一派代表；Vercel AI SDK 7 的 WorkflowAgent 提供同范式；LangGraph 用 Postgres checkpointer，崩溃后 <code>invoke(None, cfg)</code> 从最后超步恢复；</li>
+<li><strong>任务队列 + 异步化</strong>：请求只负责入队，结果通过 SSE / WebSocket / webhook 回推；</li>
+<li><strong>重试语义</strong>：指数退避 + 抖动重试瞬时错误；<strong>至少一次投递</strong>下用<strong>幂等键（idempotency key）/ 去重表</strong>保证副作用只生效一次；跨多步的写操作用**补偿事务（saga）**回滚；</li>
+<li><strong>预算护栏</strong>：<code>recursion_limit</code>、每工具调用次数与 token 预算、整体超时与熔断；</li>
+<li><strong>降级路径</strong>：超预算或连续失败后保存现场、转人工或发通知，而不是无限重试。</li>
+</ol>
+<p>一句话：<strong>把&quot;内存里跑的 agent 循环&quot;当成&quot;随时会崩溃的分布式系统&quot;来设计。</strong></p>
+<p><strong>追问</strong>：幂等键怎么生成？（业务主键 + 操作类型 + 参数哈希，存库唯一约束；重复提交返回首次结果） ｜ Agent 场景的 saga 长什么样？（记录已完成步骤的逆操作，失败时按逆序补偿；补偿也失败就告警开人工工单）</p>
+<h3>105. Agent Infra 要准备哪些东西？Runtime、Sandbox、Kubernetes 调度怎么设计？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+2026 面试里&quot;Agent Infra&quot;已经是一个单独考点——它不是&quot;部署一个 Web 服务&quot;，而是<strong>为一个会自己发请求、会执行代码、会长时间占住资源的循环体准备基础设施</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>要解决的问题</th>
+<th>典型做法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Runtime</strong></td>
+<td>执行循环放在哪里</td>
+<td>常驻 worker（长循环、内存态） vs 每次 invocation（隔离好、冷启代价）；LangGraph Platform / Temporal / 自建 FastAPI + 队列</td>
+</tr>
+<tr>
+<td><strong>状态与持久化</strong></td>
+<td>会话状态、断点恢复</td>
+<td>Postgres checkpointer + 对象存储存产物；Redis 做热会话与频控</td>
+</tr>
+<tr>
+<td><strong>Sandbox</strong></td>
+<td>代码/命令/浏览器的隔离执行</td>
+<td>容器或 microVM（gVisor / Firecracker）+ 只读根 + 网络策略；会话级复用 vs 任务级创建（成本与安全的权衡）</td>
+</tr>
+<tr>
+<td><strong>调度</strong></td>
+<td>长任务不堵占 worker</td>
+<td>异步任务队列 + 优先级；CPU/GPU 与模型推理资源独立调度；背压与超时传播</td>
+</tr>
+<tr>
+<td><strong>可观测</strong></td>
+<td>过程不可见</td>
+<td>OTel GenAI + trace_id 贯穿模型/工具/检索（见第 116、117 题）</td>
+</tr>
+<tr>
+<td><strong>成本与配额</strong></td>
+<td>烧钱不可控</td>
+<td>按用户/租户记账、预算熔断、语义缓存与 Prompt 缓存</td>
+</tr>
+<tr>
+<td><strong>模型接入</strong></td>
+<td>厂商锁定与故障</td>
+<td>OpenAI-compatible 网关 + 多活降级 + 超时重试（见第 123 题）</td>
+</tr>
+</tbody></table>
+<p>K8s 上的三个实操点：Agent 是 <strong>I/O 密集 + 长连接</strong>，CPU limit 意义不大、要调并发与连接数；SSE 长连接要关闭入口代理缓冲并调大超时；Sandbox 用 Job / Pod-per-session 并配自动回收与网络策略（NetworkPolicy 默认 deny）。</p>
+<p><strong>追问</strong>：为什么要区分 Runtime 和 Sandbox？（Runtime 跑&quot;决策与编排&quot;，Sandbox 跑&quot;不可信代码/命令&quot;；合在一起时一旦模型被注入就是宿主机沦陷）</p>
+<h3>106. 多用户场景下，如何为 Agent 做安全沙箱隔离？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+如果 Agent 只是单机 Demo，很多风险不会暴露；一旦进入多用户场景，安全隔离就必须从&quot;工具权限&quot;上升到&quot;执行环境隔离&quot;。三层方案：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>措施</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>环境层</strong></td>
+<td>Docker 或其他容器把每个任务或租户隔离，限制 CPU、内存、网络和文件系统访问范围</td>
+</tr>
+<tr>
+<td><strong>系统层</strong></td>
+<td>seccomp、AppArmor、只读根目录、临时工作目录、<strong>非 root 用户</strong>运行，避免直接碰宿主机</td>
+</tr>
+<tr>
+<td><strong>应用层</strong></td>
+<td>对工具、文件访问、系统命令、外部连接做白名单和审计，不让模型拿到裸权限</td>
+</tr>
+</tbody></table>
+<p>如果要执行代码、命令或读文件，通常不会只靠 Prompt 或业务代码做限制，而是把工作目录挂成<strong>最小权限空间</strong>，敏感目录不挂载，数据库密钥和主机凭据也不进容器。</p>
+<p>职责分工要讲清：<strong>MCP 或 Tool 负责&quot;能不能调&quot;，沙箱负责&quot;即使调了也跑不出边界&quot;</strong>，两者职责不同，最好一起上（对应第 63 题的追问）。另外要按会话隔离临时目录与缓存，避免跨会话数据泄漏。</p>
+<p><strong>追问</strong>：能执行命令的 Agent 怎么防它 <code>rm -rf</code> 或删数据库？（不靠提示词：非 root + 只读挂载 + 命令白名单 + seccomp 屏蔽系统调用 + 数据库账号只给 SELECT）</p>
+<h3>107. Agent 安全怎么做？OWASP 现在有哪些清单？ <strong>｜必刷 ｜较难 ｜2026 更新</strong></h3>
+<p><strong>答案：</strong>
+现在不是一个清单，而是<strong>两套并行清单</strong>（能说清这一点就是真跟进）：</p>
+<p><strong>一）OWASP Top 10 for LLM Applications 2026 版</strong>（<strong>2026-08-04 发布</strong>，8/10 条目相比 2025 版换位；首次用真实事件数据校准——社区投票 75% + 6,639 起真实安全事件 25%）：</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>风险</th>
+<th>与 2025 版的变化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LLM01</td>
+<td>Prompt Injection（提示注入）</td>
+<td>不变，仍居首位</td>
+</tr>
+<tr>
+<td>LLM02</td>
+<td>Sensitive Information Disclosure（敏感信息泄露）</td>
+<td>不变</td>
+</tr>
+<tr>
+<td><strong>LLM03</strong></td>
+<td><strong>Excessive Agency（过度代理/过度自主权）</strong></td>
+<td><strong>从第 6 升至第 3</strong>（Agent 落地带来的最大变化）</td>
+</tr>
+<tr>
+<td>LLM04</td>
+<td>Supply Chain（供应链）</td>
+<td>03→04</td>
+</tr>
+<tr>
+<td>LLM05</td>
+<td>Data and Model Poisoning（数据与模型投毒）</td>
+<td>04→05</td>
+</tr>
+<tr>
+<td>LLM06</td>
+<td>Unbounded Consumption（无界消耗）</td>
+<td>10→06（成本与熔断类攻击变多）</td>
+</tr>
+<tr>
+<td>LLM07</td>
+<td>Error Handling &amp; Misinformation（错误信息与误导）</td>
+<td>09→07</td>
+</tr>
+<tr>
+<td><strong>LLM08</strong></td>
+<td><strong>Hidden Context Exposure（隐藏上下文暴露）</strong></td>
+<td><strong>由旧版&quot;System Prompt Leakage&quot;重命名并扩宽</strong></td>
+</tr>
+<tr>
+<td>LLM09</td>
+<td>Vector and Embedding Weaknesses（向量与嵌入弱点）</td>
+<td>08→09</td>
+</tr>
+<tr>
+<td>LLM10</td>
+<td>Improper Output Handling（不当输出处理）</td>
+<td>05→10</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>❌ <strong>更正</strong>：旧题答案给的是 <strong>2025 版</strong>清单（LLM06=Excessive Agency、LLM07=System Prompt Leakage…），并标注&quot;截至 2026-09 仍为当前版本&quot;——<strong>这一点已过时</strong>：2026-08-04 已发布 2026 版并大幅换位。旧清单仍广泛流传，面试时要主动说出版本与日期，并点出&quot;过度代理升至第 3&quot;和&quot;系统提示泄露改为隐藏上下文暴露&quot;两个信号。</p>
+</blockquote>
+<p><strong>二）OWASP Top 10 for Agentic Applications 2026</strong>（<strong>ASI01-ASI10</strong>，2025-12 发布）——针对多步、多工具、多代理场景的专项清单。已核实的条目：</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>风险</th>
+<th>区别要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ASI01</strong></td>
+<td>Agent Goal Hijack（目标劫持）</td>
+<td>居首位：<strong>当场</strong>把目标改掉（恶意文档/工具返回改写目标）</td>
+</tr>
+<tr>
+<td>ASI02</td>
+<td>Tool Misuse &amp; Exploitation（工具滥用与误用）</td>
+<td>两个典型案例：间接参数注入导致命令注入（<code>check_ping(&quot;127.0.0.1; cat /etc/passwd&quot;)</code> 被 <code>os.system</code> 拼接执行）；借 Agent 越权调用（<code>update_user_address(user_id=&quot;VIP_USER_001&quot;)</code>）</td>
+</tr>
+<tr>
+<td>ASI03</td>
+<td>Identity &amp; Privilege Abuse（身份与权限滥用）</td>
+<td>机器身份、权限继承、代理权限大于发起者</td>
+</tr>
+<tr>
+<td><strong>ASI06</strong></td>
+<td>Memory Poisoning（记忆投毒）</td>
+<td><strong>慢性</strong>污染：写进长期记忆/知识库，后续所有会话持续误导</td>
+</tr>
+<tr>
+<td><strong>ASI10</strong></td>
+<td>Rogue Agents（失控/离位 Agent）</td>
+<td><strong>无人操控也自己跑偏</strong>：目标漂移、自主规避限制</td>
+</tr>
+</tbody></table>
+<p>（其余 ASI 条目涉及供应链、跨 Agent 操纵、数据外泄等，<strong>具体编号未逐项核实，回答时不臆造编号</strong>。）</p>
+<p>三者区分很好记：<strong>ASI01 是当场改写目标，ASI06 是慢性记忆污染，ASI10 是没人操控自己跑偏。</strong></p>
+<p><strong>三）其他必知标准/指南</strong>：OWASP <strong>Agentic Skills Top 10（AST 2026）</strong> 与 <strong>MCP Top 10（2025）</strong>（分别针对 Skill 包与 MCP 生态，见第 65、69 题）；OWASP <strong>AI Testing Guide（AITG）</strong> 提供 44 个测试用例；<strong>MITRE ATLAS</strong>（攻击手法知识库）、<strong>NIST AI RMF / GenAI Profile（AI 600-1）</strong>、CISA + 五眼联盟的 Agentic 部署基线（<strong>韧性、可逆性、风险遏制</strong>）、<strong>ISO/IEC 42001:2023</strong>（AI 管理体系认证）；Gartner 2026 安全趋势把 <strong>Agentic AI 攻击面与机器身份治理</strong>列为重点。</p>
+<p><strong>追问</strong>：为什么过度代理（Excessive Agency）会升到前三？（因为 2025-2026 大量 Agent 上了写操作与真实权限，风险不再来自&quot;说错话&quot;而是&quot;做错事&quot;；治理手段就是最小权限 + 工具粒度 + 人审，见第 102、106 题）</p>
+<h3>108. Prompt Injection 是什么？为什么 RAG / Agent 场景更要小心？ <strong>｜必刷 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+本质上是：<strong>不可信输入试图改写系统指令、诱导模型越权，或者让 Agent 执行原本不该执行的动作。</strong></p>
+<p>它不只来自用户直接输入，也可能藏在网页、PDF、知识库文档、邮件、工具返回甚至图片里。只要这些内容会被模型读到，就可能形成<strong>间接注入</strong>——所以在 RAG、浏览器 Agent、代码解释器这类会读外部内容的系统里，风险明显更高。</p>
+<p>五层防护：</p>
+<ol>
+<li><strong>指令分层</strong>：System 放稳定规则，User 和外部文档都视作不可信输入，不能和系统约束同权；</li>
+<li><strong>内容隔离</strong>：检索片段、网页内容、用户上传文档只当&quot;待分析材料&quot;，不要默认它们能发新指令（可用分隔符/标签包裹并声明&quot;以下为数据&quot;）；</li>
+<li><strong>工具权限</strong>：所有写操作、危险操作都走白名单、schema 校验和最小权限，不让模型拿裸能力；</li>
+<li><strong>动作校验</strong>：关键输出做规则校验，关键动作做确认、审批或 HITL，不让一句恶意文本直接触发副作用；</li>
+<li><strong>观测与兜底</strong>：记录注入样例、失败轨迹和异常调用，及时加入评测集和拦截规则。</li>
+</ol>
+<p>这里有一句特别关键：<strong>RAG 不是安全层，知识库文档本身也可能带恶意指令。</strong> 只要把&quot;检索到的内容&quot;直接当成&quot;可信提示词&quot;，系统就很危险。</p>
+<p><strong>追问</strong>：文档里写着&quot;忽略之前所有指令&quot;怎么处理？（它只是文本内容，不执行；内容级过滤器 + 工具白名单 + 写操作人审；把它加入注入样本集） ｜ 浏览器 Agent 怎么防页面里的隐藏提示词？（白色字/元数据/alt 里的指令：只取可访问性树的可见文本与必要属性，长度截断与模式过滤，并默认不可信） ｜ 为什么微调和对齐不能从根上解决 Prompt Injection？（对齐降低概率但不提供硬保证；只要模型能读入自由文本，就无法把&quot;内容&quot;与&quot;指令&quot;完全分开；真正的隔离靠权限与执行边界）</p>
+<h3>109. 如何确保 Agent 的行为安全、可控且符合人类意图？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+不能只寄希望于模型本身&quot;够聪明&quot;或&quot;已经对齐过&quot;。模型层的 SFT、RLHF / RLAIF 只能提供<strong>基础安全边界</strong>，真正落地到应用时必须补<strong>应用层治理</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>措施</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模型与提示层</td>
+<td>System 明确角色、边界、安全规则和拒答策略</td>
+</tr>
+<tr>
+<td>工具与权限层</td>
+<td>不给模型裸权限；Tool 做 schema 约束、鉴权、参数校验、最小权限暴露</td>
+</tr>
+<tr>
+<td>执行与流程层</td>
+<td>最大步数、超时、人工审批、转人工、失败兜底</td>
+</tr>
+<tr>
+<td>观测与审计层</td>
+<td>调用日志、trace、输入输出、关键决策点、人工复盘链路</td>
+</tr>
+</tbody></table>
+<p>再补一层生产视角的<strong>预算与熔断</strong>：最大工具调用次数、时间预算、token 预算、费用预算；连续失败停止、异常率告警、重复无进展退出。它们的价值不只是省钱，更重要的是把&quot;模型可能一直试下去&quot;的风险收住。</p>
+<p>一句话总结：<strong>模型对齐解决&quot;基础行为别太离谱&quot;，应用治理解决&quot;在你的业务系统里别出事&quot;。</strong> 真正稳的 Agent 一定是&quot;模型能力 + 权限边界 + 流程控制 + 人机协同&quot;一起做，而不是只靠某一层。</p>
+<h3>110. 什么是幻觉？应用层应该怎么缓解？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+幻觉不只是&quot;完全胡说八道&quot;，更常见的是&quot;看起来很像真的，但细节、引用、时间点、权限范围或工具结果已经偏了&quot;。</p>
+<p>因此不应把幻觉当成单纯模型问题，而应视为<strong>一条链路上的系统问题</strong>。四层缓解：</p>
+<ol>
+<li><strong>知识层</strong>：用 RAG、外部检索、引用和无依据拒答，尽量让模型基于证据回答；</li>
+<li><strong>执行层</strong>：把计算、查库、发消息、查订单交给 Tool，不让模型纯文本瞎编结果；</li>
+<li><strong>约束层</strong>：结构化输出、schema 校验、关键字段规则校验、低温度策略，减少&quot;格式对了但内容错了&quot;；</li>
+<li><strong>治理层</strong>：badcase 回灌、人工抽检、线上监控和降级，别把&quot;模型大概率没问题&quot;当上线条件。</li>
+</ol>
+<p>总结：<strong>幻觉很难被彻底消灭，工程目标不是&quot;保证永不出错&quot;，而是让它可发现、可限制、可回滚、可复盘。</strong></p>
+<p><strong>追问</strong>：RAG 为什么不能消灭幻觉？（检索不准/不全时模型仍会补全；即使有参考也会改写错数值与时间） ｜ 什么叫&quot;有引用但依然不忠实&quot;？（引了真存在的段落，但结论并不由它支持——所以不能只校&quot;引用存在&quot;，要校&quot;结论与证据一致性&quot;，见第 113 题） ｜ 幻觉和 Prompt Injection 是一回事吗？（不是：前者是无恶意的生成偏差，后者是恶意指令诱导；但都靠&quot;证据 + 校验 + 审计&quot;兜）</p>
+<h3>111. 排查&quot;模型该调工具却直接瞎答&quot;，你的排查顺序是什么？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+七步，从描述到 trace：</p>
+<ol>
+<li>看<strong>工具描述</strong>：是否说清了触发时机，名字是否直观；</li>
+<li>看<strong>参数 schema</strong>：描述、示例、必填项是否完整，模型是否因不知怎么填参数而放弃；</li>
+<li>看<strong>工具数量与冲突</strong>：是否太多、有无功能重叠导致选择困难；</li>
+<li>看 <strong>system prompt</strong>：是否明确授权/鼓励使用工具，有无冲突指令（如&quot;直接回答不要反问&quot;会被理解为不要调工具）；</li>
+<li>看<strong>模型能力</strong>：小模型 function calling 能力弱，换更强模型验证；</li>
+<li>看<strong>上下文</strong>：决策所需信息是否已在历史里（已在上下文就不必调工具，这有时候是<strong>正确行为</strong>）；</li>
+<li>用 <strong>LangSmith trace</strong> 确认模型实际收到的 <code>tools</code> 定义和返回的 <code>tool_calls</code>，定位是&quot;没选工具&quot;还是&quot;选了但参数错/被代码拦截&quot;。</li>
+</ol>
+<p>排查心法：<strong>先确认 tools 真的发出去了</strong>（bind_tools 忘了调、或被另一个分支绕过），再看描述与 schema，最后才看模型本身（见第 150 题的分层排障展示）。</p>
+<h3>112. 意图识别 / 任务路由应该怎么做？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+先强调：这题和&quot;模型路由&quot;不是一回事——<strong>模型路由</strong>回答&quot;这次用大模型还是小模型&quot;（见第 77、121 题），<strong>意图识别/任务路由</strong>回答&quot;这次请求到底该走 FAQ、RAG、Tool、Agent、Workflow，还是直接转人工&quot;。</p>
+<p>三层设计：</p>
+<ol>
+<li><strong>目标分类</strong>：先定义清楚系统有哪些路由终点（闲聊、FAQ、知识问答、查状态、执行动作、复杂任务、人工兜底）；</li>
+<li><strong>路由机制</strong>：高确定性场景先用规则和关键词兜底，模糊场景再用分类模型或 LLM 做语义判断（小模型 + <code>with_structured_output</code>）；</li>
+<li><strong>置信度治理</strong>：低置信度不强判，允许澄清、降级或转人工，别让系统带着误判继续往下跑。</li>
+</ol>
+<p>工程上不会做&quot;单层万能路由器&quot;，而是<strong>多级路由</strong>：先业务意图路由（FAQ / RAG / Tool / Agent）→ 再子域路由（客服里再分订单、退款、工单、投诉）→ 最后模型路由（强模型还是轻模型）。好处是更容易治理、也更容易评测。</p>
+<p>评估重点：<strong>路由准确率、低置信度占比、误路由成本、澄清命中率，以及每条路由分支的最终任务完成率</strong>。</p>
+<p><strong>追问</strong>：什么时候规则路由就够了？（意图集合小、表达模式固定、误路由代价低时；新业务上线先规则兜底再逐类换成语义路由） ｜ 一个问题同时像 FAQ 又像 Tool 调用怎么办？（优先可执行路径，因为 Tool 返回的是事实态；或先澄清一句；关键是两边都能兜住不要硬判） ｜ 如何避免错误路由把后续链路全部带偏？（低置信度多路并发取交集、出口处做一致性回归判断、允许中途重路由）</p>
+<h2>十、评测与可观测性</h2>
+<h3>113. 你会如何评估一个 RAG 或 Agent 系统的效果？ <strong>｜必刷 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+先拆成<strong>离线评测</strong>和<strong>在线评测</strong>，再把问题拆到具体层级，而不是只盯一个总分。</p>
+<p><strong>RAG 两层看</strong>：</p>
 <ul>
-<li><strong>节点纯函数化</strong>：节点 <code>(state) → state_update</code>，对其用构造的 state 做确定性单测；</li>
+<li>检索层：相关内容有没有被召回、引用片段对不对、badcase 卡在切块、召回、重排还是过滤（指标：Recall@k、nDCG、命中率）；</li>
+<li>生成层：答案是否忠实于证据、引用是否正确、无依据时能不能拒答、最终回答对业务有没有帮助（指标：faithfulness、answer relevance、引用正确率）。</li>
+</ul>
+<p><strong>Agent 两类评测</strong>：</p>
+<ul>
+<li><strong>轨迹级（trajectory）</strong>：有没有选对工具、参数对不对、有没有无效循环、是不是过早结束；</li>
+<li><strong>结果级（outcome）</strong>：最终任务有没有完成，输出质量和用户体验是否达标。</li>
+</ul>
+<p>（更完整的三层划分 outcome / trajectory / process 见第 115 题。）</p>
+<p><strong>在线评测</strong>看用户满意度、转人工率、任务中断率、耗时、badcase 类型分布；对 Agent 还要看工具调用成功率、重试率、循环次数和人工兜底比例。</p>
+<p><strong>自动评测不要只押一种</strong>：把<strong>规则评测、LLM-as-a-judge 和人工抽检</strong>结合起来——规则和 LLM 评测适合放大规模、做回归，人工抽检负责兜住高风险误判和评价漂移。常用框架：LangSmith、Langfuse、Ragas、TruLens、Braintrust、Arize Phoenix、DeepEval。</p>
+<p>最重要的是评测不能只告诉你&quot;分数变低了&quot;，而要能<strong>定位到底是哪一层出问题</strong>：召回差、上下文组装差、生成幻觉、工具失败、终止条件不合理，这些问题的修法完全不同。</p>
+<p>推荐的闭环：<strong>先分层建指标 → 再沉淀 badcase → 最后让 badcase 反过来驱动 Prompt、检索、工具和流程迭代。</strong></p>
+<p><strong>追问</strong>：RAGAS 适合做什么？（无参考的 RAG 三层指标：faithfulness / answer relevance / context relevance，适合快速回归） ｜ badcase 数据集怎么建？（按失败类型分层采样、标注定位到层、只进不出、每次改 prompt/换模型必跑） ｜ LLM-as-Judge 怎么防止它自己不准？（用固定 rubric + 少量人工金标集校准 + 双模型交叉 + 警惕长度/位置/自家模型偏置）</p>
+<h3>114. Agent 怎么测试、回归？和传统单元测试有什么不同？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+不同在<strong>LLM 输出不确定</strong>，所以不能直接用相等断言。四类做法：</p>
+<ol>
+<li><strong>节点纯函数化</strong>：LangGraph 节点是 <code>(state) → state_update</code>，对其用构造的 state 做确定性单测（这一层应占大部分测试量）；</li>
 <li><strong>工具层</strong>：mock 外部 API，单独测参数解析与返回处理；</li>
 <li><strong>LLM 层不确定性</strong>：用两类手段——录制真实交互的**轨迹（trajectories）**做端到端回归，断言&quot;调用了哪些工具、顺序、最终结果&quot;；对语义判断用 <strong>LLM-as-Judge</strong> 打分而非精确匹配；</li>
-<li>结构化输出用 Pydantic 校验作为断言；用少量金标集在每次改 prompt/换模型后回归，防止&quot;改好一个 case 改坏三个&quot;。</li>
-</ul>
-<p><strong>评估指标</strong>：</p>
+<li><strong>结构化输出用 Pydantic 校验作为断言</strong>；用少量金标集在每次改 prompt/换模型后回归，防止&quot;改好一个 case 改坏三个&quot;。</li>
+</ol>
+<p>补充实践：确定性参数（temperature=0、固定 seed、mock 时钟）、固定夹具（预置订单/用户）、失败样本回灌为回归用例、按&quot;必须产物清单&quot;写断言而不是比对整段文本（见第 103 题）。覆盖率方面，2026 年也开始出现&quot;插桩式 Agent 测试&quot;——用真实埋点看 Agent 到底走了哪条分支。</p>
+<p><strong>追问</strong>：模型输出文本变了会不会弄坏回归？（会，所以不断言整段文本，只断言关键字段与结构） ｜ 要不要用真模型跑 CI？（分层：PR 跑 mock，每夜跑真模型小样本，发布前跑全量金标集）</p>
+<h3>115. 衡量 Agent 能力有哪些主流基准？为什么单看任务完成率不够？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+主流基准（下列数字均为公开报告值，会随模型迭代快速变化，仅作量级参考）：</p>
+<table>
+<thead>
+<tr>
+<th>基准</th>
+<th>机构 / 时间</th>
+<th>考察点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>τ-bench</strong></td>
+<td>Sierra，2024-06（arXiv:2406.12045）</td>
+<td>零售/航空客服双控对话；按策略遵循 + 数据库终态打分；用 <strong>pass^k</strong> 衡量 k 次独立运行全部成功的可靠性</td>
+</tr>
+<tr>
+<td><strong>τ²-bench</strong></td>
+<td>2025-06（arXiv:2506.07982）</td>
+<td>Dec-POMDP 双控，新增电信域；考察&quot;引导用户&quot;能力——代表模型单控约 74%、双控降到约 34%（发布时示例值）</td>
+</tr>
+<tr>
+<td><strong>τ³-bench</strong></td>
+<td>2026-03</td>
+<td>银行知识型 RAG 任务 + τ-Voice 全双工语音评测</td>
+</tr>
+<tr>
+<td><strong>SWE-bench</strong></td>
+<td>Princeton</td>
+<td>Verified 集 500 题；Pro 集更难，推出时头名仅约 23%，而同期 Verified 已达 70%+</td>
+</tr>
+<tr>
+<td><strong>Terminal-Bench 2.0 / OSWorld / WebArena</strong></td>
+<td>社区</td>
+<td>终端任务 / 真实 OS 桌面（OSWorld 人类约 72%）/ 真实网站任务</td>
+</tr>
+<tr>
+<td><strong>BrowseComp / GAIA</strong></td>
+<td>OpenAI / 社区</td>
+<td>联网深度检索与通用助手任务（偏信息查找与多跳）</td>
+</tr>
+</tbody></table>
+<p>评估分三层：<strong>outcome</strong>（终态对不对）、<strong>trajectory</strong>（工具调用序列是否合理）、<strong>process</strong>（每步推理是否可解释）。要点：</p>
 <ul>
-<li><strong>任务完成率</strong>：Agent 成功完成任务的比例</li>
-<li><strong>步骤效率</strong>：完成任务所需的工具调用次数（越少越好）</li>
-<li><strong>幻觉率</strong>：Agent 输出的错误信息比例</li>
-<li><strong>工具调用准确率</strong>：选择正确工具的比例</li>
-<li><strong>延迟与成本</strong>：Token 消耗、API 调用次数、P50/P95 响应时间</li>
+<li><strong>pass¹ 高但 pass⁴ 低 = 不稳定，生产不可用</strong>（这就是为什么单看任务完成率不够）；</li>
+<li><strong>harness 对分数影响巨大</strong>，跨论文比较先对齐评测协议（脚手架/提示/重试策略不是一套，数字不可直接比）；</li>
+<li>浏览器/桌面任务注意视觉派与 DOM 派的成本差异（见第 138 题）；</li>
+<li>基准会注入（benchmark contamination），自家业务集才是长期可信信号。</li>
 </ul>
-<p>常用评估框架：LangSmith、Langfuse、Ragas、TruLens、Braintrust、Arize Phoenix。标准化基准见第 47 题。</p>
-<h3>42. Agent 可观测性（Observability）如何实现？</h3>
-<p><strong>答案：</strong></p>
-<p><strong>三大核心维度</strong>：</p>
+<h3>116. 大模型应用的可观测性怎么做？ <strong>｜中频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+至少做到三件事：<strong>有日志、有指标、有 Trace</strong>——能看见请求怎么流过系统、每一步花了多久、失败在哪里、用了多少 token、最后输出了什么。</p>
+<p>三个核心维度：</p>
 <ul>
-<li><strong>追踪（Tracing）</strong>：记录 Agent 的每一步执行（工具调用、LLM 请求、决策链路）</li>
-<li><strong>评估（Evaluation）</strong>：自动或人工评估 Agent 输出质量</li>
-<li><strong>监控（Monitoring）</strong>：实时监控延迟、错误率、Token 消耗、成本</li>
+<li><strong>追踪 Tracing</strong>：记录每一步执行（工具调用、LLM 请求、决策链路）；</li>
+<li><strong>评估 Evaluation</strong>：自动或人工评估输出质量；</li>
+<li><strong>监控 Monitoring</strong>：实时监控延迟、错误率、Token 消耗、成本。</li>
 </ul>
-<p><strong>主流工具对比</strong>：</p>
+<p>具体上应打通 <code>trace_id / request_id</code>，把入口请求、Prompt 版本、模型版本、索引版本、检索结果、工具调用、异常信息、耗时和 token 用量串起来。用了 LangChain / LangGraph，还要重点关注<strong>节点流转、状态更新、人工中断点、重试次数和最终退出原因</strong>。</p>
+<p>主流工具对比：</p>
 <table>
 <thead>
 <tr>
@@ -1026,7 +3033,7 @@ ticket = structured.invoke(&quot;我付了钱但没开通，很急&quot;)   # -&
 <tr>
 <td><strong>Langfuse</strong></td>
 <td>开源</td>
-<td>开源可自部署，支持多框架，成本低</td>
+<td>可自部署，支持多框架，成本低</td>
 </tr>
 <tr>
 <td><strong>Arize Phoenix</strong></td>
@@ -1044,203 +3051,18 @@ ticket = structured.invoke(&quot;我付了钱但没开通，很急&quot;)   # -&
 <td>轻量级 API 代理，快速接入</td>
 </tr>
 </tbody></table>
-<p><strong>LangSmith 接入示例</strong>：</p>
+<p><strong>LangSmith 接入</strong>：</p>
 <pre><code class="language-python">import os
 os.environ[&quot;LANGSMITH_TRACING&quot;] = &quot;true&quot;   # v1 后统一变量名（旧版 LANGCHAIN_TRACING_V2）
 os.environ[&quot;LANGSMITH_API_KEY&quot;] = &quot;your-key&quot;
 os.environ[&quot;LANGSMITH_PROJECT&quot;] = &quot;my-agent&quot;
-
-# 之后所有 LangChain/LangGraph 调用自动追踪
 </code></pre>
-<p>厂商中立的 OpenTelemetry GenAI 标准见第 48 题。</p>
-<h3>43. 什么是 Prompt Caching（提示词缓存）？</h3>
+<p>对 Agent 系统，可观测性尤其重要，因为很多问题发生在中间步骤而不是最终输出那一刻。真正有用的可观测性不只是&quot;最后报错了&quot;，而是能告诉你：<strong>它在哪个节点卡住、为什么重试、为什么结束、当时看到了什么状态。</strong></p>
+<h3>117. OpenTelemetry GenAI 语义约定是什么？现在成熟到什么程度？ <strong>｜中频 ｜较难</strong></h3>
 <p><strong>答案：</strong>
-<strong>Prompt Caching</strong> 是大模型 API 的一项重要优化特性，将重复使用的上下文缓存在服务器端，显著降低成本和延迟。</p>
-<p><strong>工作原理</strong>：</p>
-<ol>
-<li>首次请求：完整处理系统提示和文档上下文（正常计费）</li>
-<li>后续请求：相同前缀部分从缓存读取（仅收取少量缓存读取费用）</li>
-<li>缓存 TTL：通常 5 分钟（Anthropic），部分厂商支持更长 TTL</li>
-</ol>
-<p><strong>成本对比</strong>（Anthropic 示例）：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>价格</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>普通输入 Token</td>
-<td>$3 / 1M tokens</td>
-</tr>
-<tr>
-<td>缓存写入</td>
-<td>$3.75 / 1M tokens（首次）</td>
-</tr>
-<tr>
-<td>缓存读取</td>
-<td>$0.30 / 1M tokens（后续），<strong>节省 90%</strong></td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>❌ <strong>更正（2026-09 核实）</strong>：下文代码使用的 <code>claude-opus-4-5</code> 型号<strong>真实存在</strong>（2025-11-24 发布），但上表 $3 / $3.75 / $0.30 实际是 <strong>Sonnet 4.x 档</strong>价格（输入 $3 的 1.25 倍写入、0.1 倍命中），<strong>并非 Opus 价格</strong>。Opus 4.5 / 4.6 / 4.7 / 4.8 / 5 定价均为 <strong>$5 输入 / $25 输出；5 分钟缓存写入 $6.25、1 小时缓存写入 $10、缓存命中 $0.50（每 1M tokens）</strong>。当前旗舰为 Opus 5（2026-07-24 发布；另有 Opus 4.8 2026-05-28、Opus 4.6 2026-02-05；Sonnet 5 为 $2 / $10）。缓存现有 <strong>5 分钟与 1 小时两档 TTL</strong>。以上价格仅为示例、截至 2026-09，以 platform.claude.com 官网为准。</p>
-</blockquote>
-<p><strong>使用场景</strong>：</p>
-<ul>
-<li>系统提示较长（1000+ tokens）的 Agent</li>
-<li>RAG 检索结果作为固定上下文</li>
-<li>代码库分析（将代码文件缓存，多次查询）</li>
-</ul>
-<p><strong>代码示例（Anthropic）</strong>：</p>
-<pre><code class="language-python">client.messages.create(
-    model=&quot;claude-opus-4-5&quot;,
-    system=[{
-        &quot;type&quot;: &quot;text&quot;,
-        &quot;text&quot;: &quot;你是代码审查专家...&quot;,
-        &quot;cache_control&quot;: {&quot;type&quot;: &quot;ephemeral&quot;}  # 标记缓存
-    }],
-    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;审查这段代码&quot;}]
-)
-</code></pre>
-<p><strong>OpenAI 缓存</strong>：GPT-4o 自动缓存超过 1024 tokens 的前缀，无需手动标记。注意缓存要求<strong>前缀完全一致</strong>，所以要把固定内容（角色提示、工具定义、资料）放在前面，易变内容放后面。</p>
-<blockquote>
-<p>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>：&quot;GPT-4o 自动缓存超过 1024 tokens 前缀&quot;的说法已过时——<strong>gpt-4o 系列自 2026-02-13 起退役</strong>；自动前缀缓存是 OpenAI 平台级特性，迁移 gpt-5 系列后仍适用，但免费缓存的 token 阈值与覆盖模型会调整，以官方文档为准。</p>
-</blockquote>
-<h3>44. 生产部署 Agent，你会给出怎样的架构清单？</h3>
-<p><strong>答案：</strong></p>
-<ul>
-<li><strong>运行时</strong>：LangGraph Platform 或自建 FastAPI 服务；长任务异步执行，结果走 SSE/WebSocket 流式回推；</li>
-<li><strong>持久化</strong>：Postgres 做 checkpointer 与 store，thread_id 绑定会话；密钥走环境变量/Secret Manager；</li>
-<li><strong>可靠性</strong>：节点级重试与超时、失败分支降级到&quot;道歉/转人工&quot;、限流与配额熔断；长任务的持久化执行专题见第 51 题；</li>
-<li><strong>安全</strong>：工具最小权限、写操作审批、用户输入与工具返回的注入风险审查（防&quot;把全部订单删掉&quot;类提示注入）；安全体系见第 46 题；</li>
-<li><strong>可观测/成本</strong>：LangSmith tracing，监控任务完成率、工具成功率、P95 延迟、token/成本告警；</li>
-<li><strong>质量</strong>：轨迹回放评测集、灰度发布与 prompt 版本管理、模型可热切换（<code>init_chat_model</code> 配置化）。</li>
-</ul>
-<h3>45. 排查&quot;模型该调工具却直接瞎答&quot;，你的排查顺序是什么？</h3>
-<p><strong>答案：</strong></p>
-<ol>
-<li>看 <strong>工具描述</strong>：是否说清了触发时机，名字是否直观；</li>
-<li>看 <strong>参数 schema</strong>：描述、示例、必填项是否完整，模型是否因不知怎么填参数而放弃；</li>
-<li>看 <strong>工具数量与冲突</strong>：是否太多、有无功能重叠导致选择困难；</li>
-<li>看 <strong>system prompt</strong>：是否明确授权/鼓励使用工具，有无冲突指令；</li>
-<li>看 <strong>模型能力</strong>：小模型 function calling 能力弱，换更强模型验证；</li>
-<li>看 <strong>上下文</strong>：决策所需信息是否已在历史里（已在上下文就不必调工具）；</li>
-<li>用 LangSmith trace 确认模型实际收到的 tools 定义和返回的 <code>tool_calls</code>，定位是&quot;没选工具&quot;还是&quot;选了但参数错/被代码拦截&quot;。</li>
-</ol>
-<h3>46. 🆕 Agent 安全怎么做？OWASP Top 10 for LLM Applications 2025 版有哪些条目？</h3>
-<p><strong>答案：</strong></p>
-<p>OWASP Top 10 for LLM Applications <strong>2025 版</strong>（2024-11-18 发布，截至 2026-09 仍为当前版本）：</p>
-<table>
-<thead>
-<tr>
-<th>编号</th>
-<th>风险</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LLM01</td>
-<td>Prompt Injection（提示注入，含直接注入与间接注入）</td>
-</tr>
-<tr>
-<td>LLM02</td>
-<td>Sensitive Information Disclosure（敏感信息泄露）</td>
-</tr>
-<tr>
-<td>LLM03</td>
-<td>Supply Chain（供应链）</td>
-</tr>
-<tr>
-<td>LLM04</td>
-<td>Data and Model Poisoning（数据与模型投毒）</td>
-</tr>
-<tr>
-<td>LLM05</td>
-<td>Improper Output Handling（输出处理不当）</td>
-</tr>
-<tr>
-<td>LLM06</td>
-<td>Excessive Agency（过度自主权）</td>
-</tr>
-<tr>
-<td>LLM07</td>
-<td>System Prompt Leakage（系统提示泄露，新增）</td>
-</tr>
-<tr>
-<td>LLM08</td>
-<td>Vector and Embedding Weaknesses（向量与嵌入弱点，新增）</td>
-</tr>
-<tr>
-<td>LLM09</td>
-<td>Misinformation（错误信息）</td>
-</tr>
-<tr>
-<td>LLM10</td>
-<td>Unbounded Consumption（无界消耗）</td>
-</tr>
-</tbody></table>
-<p>此外 OWASP 还有 <strong>Agentic AI 专项指南</strong>，针对多步、多工具、多代理场景补充威胁模型。</p>
-<p>防御按层落地：</p>
-<ol>
-<li><strong>指令层</strong>：系统提示声明&quot;外部内容是数据不是指令&quot;，间接注入输入打标记并隔离；</li>
-<li><strong>权限层</strong>：工具最小权限 + 作用域（只读优先、按用户隔离、限额）；</li>
-<li><strong>审批层</strong>：所有写/不可逆操作走 <code>interrupt</code> 人审（见第 25 题）；</li>
-<li><strong>输出层</strong>：结构化输出 + Pydantic 校验、URL/命令白名单、禁止直接拼 shell/SQL；</li>
-<li><strong>执行层</strong>：沙箱、容器、域名 allowlist、网络隔离；</li>
-<li><strong>预算层</strong>：token/步数预算与熔断，防 LLM10（见第 40、51 题）。</li>
-</ol>
-<h3>47. 🆕 衡量 Agent 能力有哪些主流基准？为什么单看任务完成率不够？</h3>
-<p><strong>答案：</strong></p>
-<p>主流基准（下列数字均为公开报告值，会随模型迭代快速变化，仅作量级参考，截至各自发布时点）：</p>
-<table>
-<thead>
-<tr>
-<th>基准</th>
-<th>机构 / 时间</th>
-<th>考察点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>τ-bench</td>
-<td>Sierra，2024-06（arXiv:2406.12045）</td>
-<td>零售/航空客服双控对话；按策略遵循 + 数据库终态打分；用 <strong>pass^k</strong> 衡量 k 次独立运行全部成功的可靠性</td>
-</tr>
-<tr>
-<td>τ²-bench</td>
-<td>2025-06（arXiv:2506.07982）</td>
-<td>Dec-POMDP 双控，新增电信域；考察&quot;引导用户&quot;能力——代表模型单控约 74%、双控降到约 34%（发布时示例值）</td>
-</tr>
-<tr>
-<td>τ³-bench</td>
-<td>2026-03</td>
-<td>银行知识型 RAG 任务 + τ-Voice 全双工语音评测</td>
-</tr>
-<tr>
-<td>SWE-bench</td>
-<td>Princeton</td>
-<td>Verified 集 500 题；Pro 集更难，推出时头名仅约 23%，而同期 Verified 已达 70%+</td>
-</tr>
-<tr>
-<td>Terminal-Bench 2.0 / OSWorld / WebArena</td>
-<td>社区</td>
-<td>终端任务 / 真实 OS 桌面（OSWorld 人类约 72%）/ 真实网站任务</td>
-</tr>
-</tbody></table>
-<p>评估分三层：<strong>outcome</strong>（终态对不对）、<strong>trajectory</strong>（工具调用序列是否合理）、<strong>process</strong>（每步推理是否可解释）。要点：</p>
-<ul>
-<li>pass¹ 高但 pass⁴ 低 = 不稳定，生产不可用；</li>
-<li>harness（脚手架/提示/重试策略）对分数影响巨大，跨论文比较先对齐评测协议；</li>
-<li>浏览器/桌面任务注意视觉派与 DOM 派的成本差异（见第 50 题）。</li>
-</ul>
-<h3>48. 🆕 OpenTelemetry GenAI 语义约定是什么？现在成熟到什么程度？</h3>
-<p><strong>答案：</strong></p>
-<p>OpenTelemetry 为 GenAI 调用定义了 <code>gen_ai.*</code> 命名空间的标准 span / 事件 / 指标，目标是<strong>厂商中立</strong>的可观测性（截至 2026-09 仍在演进）。</p>
-<p>核心属性：<code>gen_ai.operation.name</code>、<code>gen_ai.provider.name</code>、<code>gen_ai.request.model</code>、<code>gen_ai.usage.input_tokens</code>、<code>gen_ai.usage.output_tokens</code>、<code>gen_ai.response.finish_reasons</code>。</p>
-<p>核心指标：</p>
-<ul>
-<li><code>gen_ai.client.token.usage</code>（直方图，按 token 类型分维）；</li>
-<li><code>gen_ai.client.operation.duration</code>（调用耗时）。</li>
-</ul>
+OpenTelemetry 为 GenAI 调用定义了 <code>gen_ai.*</code> 命名空间的标准 span / 事件 / 指标，目标是<strong>厂商中立</strong>的可观测性（截至 2026-10 仍在演进）。</p>
+<p>核心属性：<code>gen_ai.operation.name</code>、<code>gen_ai.provider.name</code>、<code>gen_ai.request.model</code>、<code>gen_ai.usage.input_tokens</code>、<code>gen_ai.usage.output_tokens</code>、<code>gen_ai.response.finish_reasons</code>。
+核心指标：<code>gen_ai.client.token.usage</code>（直方图，按 token 类型分维）、<code>gen_ai.client.operation.duration</code>（调用耗时）。</p>
 <p>成熟度分层（面试高频）：</p>
 <table>
 <thead>
@@ -1259,239 +3081,386 @@ os.environ[&quot;LANGSMITH_PROJECT&quot;] = &quot;my-agent&quot;
 </tr>
 <tr>
 <td>消息 / 对话内容捕获</td>
-<td>默认关闭（PII 风险），需显式开启</td>
+<td><strong>默认关闭</strong>（PII 风险），需显式开启</td>
 </tr>
 </tbody></table>
-<p>v1.37 起消息体改为结构化表示；尝鲜最新约定需设环境变量 <code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code>。GitHub Copilot、Codex、Claude Code 等工具已可导出 OTel 数据，直接进 Jaeger / Tempo / Datadog 等后端。</p>
-<h3>49. 🆕 语音 Realtime Agent 的架构要点是什么？</h3>
+<p>v1.37 起消息体改为结构化表示；尝鲜最新约定需设 <code>OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental</code>。GitHub Copilot、Codex、Claude Code 等工具已可导出 OTel 数据，直接进 Jaeger / Tempo / Datadog 等后端。</p>
+<p>面试里的推荐说法：<strong>自建平台用 OTel 做厂商中立底座，业务语义（任务完成率、人工兜底率）另建指标；不要为了上 OTel 而去掉内容捕获的隐私控制。</strong></p>
+<hr>
+<h2>十一、部署、推理性能与成本</h2>
+<h3>118. 生产部署 Agent，你会给出怎样的架构清单？ <strong>｜必刷 ｜中等</strong></h3>
 <p><strong>答案：</strong></p>
-<p>OpenAI Realtime API 时间线：<code>gpt-4o-realtime-preview</code>（2024-12-17）→ <code>gpt-realtime</code> GA（2025-08-28）→ <code>gpt-realtime-mini</code>（2025-10-06，示例口径，以官网为准）。</p>
-<p>三种接入方式：</p>
+<ul>
+<li><strong>运行时</strong>：LangGraph Platform 或自建 FastAPI 服务；长任务异步执行，结果走 SSE/WebSocket 流式回推；</li>
+<li><strong>持久化</strong>：Postgres 做 checkpointer 与 store，<code>thread_id</code> 绑定会话；密钥走环境变量/Secret Manager；</li>
+<li><strong>可靠性</strong>：节点级重试与超时、失败分支降级到&quot;道歉/转人工&quot;、限流与配额熔断（长任务专题见第 104 题）；</li>
+<li><strong>安全</strong>：工具最小权限、写操作审批、用户输入与工具返回的注入风险审查（见第 106-108 题）；</li>
+<li><strong>可观测/成本</strong>：LangSmith tracing，监控任务完成率、工具成功率、P95 延迟、token/成本告警；</li>
+<li><strong>质量</strong>：轨迹回放评测集、灰度发布与 prompt 版本管理、模型可热切换（<code>init_chat_model</code> 配置化）。</li>
+</ul>
+<p>一句话：从 Demo 到生产，差的不是代码量，而是<strong>状态、权限、降级、观测、回滚</strong>这五件事。</p>
+<h3>119. Agent 部署和运维有哪些指标？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+至少看五类：</p>
 <table>
 <thead>
 <tr>
-<th>方式</th>
-<th>延迟量级（示例）</th>
-<th>场景</th>
+<th>类别</th>
+<th>指标</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>WebRTC</td>
-<td>客户端约 100ms</td>
-<td>浏览器 / App 直连媒体面</td>
+<td>效果</td>
+<td>任务完成率、用户满意度、引用正确率</td>
 </tr>
 <tr>
-<td>WebSocket</td>
-<td>服务端约 200ms</td>
-<td>后端编排、对接业务系统</td>
+<td>性能</td>
+<td>首 token、端到端延迟、P95/P99</td>
 </tr>
 <tr>
-<td>SIP</td>
-<td>电话网络</td>
-<td>接入传统电话 / 呼叫中心</td>
+<td>稳定性</td>
+<td>调用成功率、超时率、重试率、失败率</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>token 消耗、工具调用成本、单任务平均成本</td>
+</tr>
+<tr>
+<td>治理</td>
+<td>人工接管率、审计日志完整性、异常任务复盘效率</td>
 </tr>
 </tbody></table>
-<p>安全要点：<strong>前端绝不嵌入 <code>sk-</code> 密钥</strong>，由后端签发短时有效的 ephemeral key。</p>
-<p>架构四要点：</p>
-<ol>
-<li><strong>VAD 与 turn_detection</strong>：<code>none</code>（自行管理）/ <code>server_vad</code>（按静音切分）/ <code>semantic_vad</code>（按语义判断话说完没有）；</li>
-<li><strong>打断（barge-in）</strong>：客户端监听 <code>input_audio_buffer.speech_started</code>，立即取消当前 response 并清空播放队列——这是自然对话体验的核心；</li>
-<li><strong>流式</strong>：音频边采边发、输出边收边播，避免攒整句；</li>
-<li><strong>音频工程</strong>：回声消除、降噪、抖动缓冲。</li>
-</ol>
-<p>路线对比：端到端 S2S 模型延迟低、语气自然，但可控性弱；传统 <strong>STT → LLM → TTS 级联</strong>链路慢但每环可替换、可插工具与护栏。生产常见混合：S2S 为主，关键交易节点降级为级联以便加校验。</p>
-<h3>50. 🆕 浏览器 Agent 的两大技术路线是什么？生产上怎么选？</h3>
-<p><strong>答案：</strong></p>
+<p>如果是多工具、多步骤 Agent，还要看<strong>每一步的成功率和卡点分布</strong>，否则只能知道&quot;最终失败了&quot;，却不知道失败发生在哪一层（对应第 120 题）。</p>
+<h3>120. Agent 链路耗时很长时，如何定位性能瓶颈？ <strong>｜高频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+一条链路跑到几分钟，不能只说&quot;模型太慢&quot;，要先把耗时拆开：</p>
 <table>
 <thead>
 <tr>
-<th>路线</th>
-<th>代表</th>
-<th>原理</th>
-<th>优劣</th>
+<th>层</th>
+<th>看什么</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>视觉/截图派</td>
-<td>Claude Computer Use（2024-10）、OpenAI CUA/Operator（2025-01）、Gemini 2.5 Computer Use（2025-10）</td>
-<td>截图 → 视觉模型定位 → 鼠标键盘操作</td>
-<td>通用性强，任何页面可试；慢、贵，每步 100KB+ 图像</td>
+<td><strong>模型层</strong></td>
+<td>单次推理时长、首 token 延迟（TTFT）、输出 token 长度（TPOT）</td>
 </tr>
 <tr>
-<td>DOM/可访问性树派</td>
-<td>Playwright MCP（微软）、browser-use（Python）、Stagehand（Browserbase，v4 提供 act/extract/observe/agent，选择器可自愈）、Skyvern、chrome-mcp（CDP）</td>
-<td>抽取可访问性快照，元素带稳定引用</td>
-<td>快照约 2-5KB、确定性的 <code>[ref=e14]</code> 定位、不依赖视觉模型，快且便宜；遇 canvas / 纯视觉绘制元素会失效</td>
+<td><strong>检索层</strong></td>
+<td>召回、重排、外部搜索、知识库请求耗时</td>
+</tr>
+<tr>
+<td><strong>工具层</strong></td>
+<td>API 延迟、浏览器动作、代码执行、等待外部系统返回</td>
+</tr>
+<tr>
+<td><strong>编排层</strong></td>
+<td>路由判断、Supervisor 判断、重复重试、串行等待</td>
+</tr>
+<tr>
+<td><strong>结果层</strong></td>
+<td>后处理、校验、存储、日志落盘</td>
 </tr>
 </tbody></table>
-<p>生产建议：<strong>DOM 优先、视觉兜底的混合方案</strong>——常规表单/列表走可访问性树，复杂画布、异形控件再降级截图。</p>
-<p>高频坑：页面返回内容里的提示注入（DOM 注入，呼应第 34、46 题）、CAPTCHA、会话/状态漂移、反爬与封号、多步成本累积、隐私合规（截图含用户数据）。与传统 Playwright 脚本不是替代而是互补：固定流程仍用脚本，开放探索才用 agent。产品视角见第 58 题。</p>
-<h3>51. 🆕 长时间运行的 Agent 任务如何保证可靠性？</h3>
-<p><strong>答案：</strong></p>
-<p>长任务（数分钟到数小时）的核心敌人：进程崩溃、网络抖动、副作用重复执行、预算失控。</p>
+<p>做法是给每一步打 trace 和 span，先看 wall time 花在哪，再决定是换模型、改链路、减少步骤，还是把串行改成并行。用了 LangGraph 还要看<strong>节点级耗时、是不是反复进入同一节点、有没有因为缺少明确完成信号而来回判断</strong>。</p>
+<p>关键结论：很多五分钟任务最后不是卡在单次模型调用，而是卡在<strong>多步链路过长、工具等待、监督节点重复判断、中间没有明确成功信号导致反复检查</strong>。也就是说，<strong>性能问题很多时候不是&quot;模型太慢&quot;，而是状态流转和执行闭环没有设计好。</strong></p>
+<h3>121. 控制大模型应用成本，你会优先从哪些层面下手？ <strong>｜高频 ｜中等</strong></h3>
+<p><strong>答案：</strong>
+从模型、上下文、检索、流程四层入手：</p>
+<ul>
+<li><strong>模型层</strong>：高低配模型分层，大任务用强模型，小任务用轻模型（见第 77、121 题的路由）；</li>
+<li><strong>上下文层</strong>：压缩 Prompt，减少无效历史，控制返回长度；</li>
+<li><strong>检索层</strong>：优化召回和重排，减少无意义进窗内容；</li>
+<li><strong>流程层</strong>：减少不必要的 LLM 调用次数，能规则化就不要全靠模型。</li>
+</ul>
+<p>很多系统成本高，不是因为模型太贵，而是<strong>链路设计太浪费</strong>：无差别全量检索、过长历史拼接、多次重复调用大模型、工具失败后盲目重试。</p>
+<p>可加的手段：</p>
 <ol>
-<li><strong>Durable Execution（持久化执行）</strong>：工作流状态事件溯源、可回放恢复——Temporal / Restate / DBOS 是这一派代表；Vercel AI SDK 7 的 WorkflowAgent 提供同范式；LangGraph 用 Postgres checkpointer，崩溃后 <code>invoke(None, cfg)</code> 从最后超步恢复（见第 24、38 题）；</li>
-<li><strong>任务队列 + 异步化</strong>：请求只负责入队，结果通过 SSE / WebSocket / webhook 回推；</li>
-<li><strong>重试语义</strong>：指数退避 + 抖动重试瞬时错误；<strong>至少一次投递</strong>下用幂等键（idempotency key）/ 去重表保证副作用只生效一次；跨多步的写操作用补偿事务（saga）回滚；</li>
-<li><strong>预算护栏</strong>：<code>recursion_limit</code>、每工具调用次数与 token 预算、整体超时与熔断；</li>
-<li><strong>降级路径</strong>：超预算或连续失败后保存现场、转人工或发通知，而不是无限重试。</li>
+<li><strong>语义缓存</strong>：相似问题直接命中已有答案（用 embedding 相似度 + 阈值；注意失效策略与个性化场景不能串用户）；</li>
+<li><strong>Prompt Caching</strong>（见第 122 题）；</li>
+<li><strong>预算记账</strong>：按任务/用户统计 token 与费用，对异常会话熍断；</li>
+<li><strong>工具结果截断 + 子代理用小模型</strong>（长 observation 是隐性大头，见第 55 题）；</li>
+<li>自托管小模型承接简单流量（见第 123、124 题）。</li>
 </ol>
-<p>一句话：<strong>把&quot;内存里跑的 agent 循环&quot;当成&quot;随时会崩溃的分布式系统&quot;来设计。</strong></p>
-<hr>
-<h2>十、综合设计题</h2>
-<h3>52. 设计一个电商客服 Agent：查单、退款、转人工。请给出技术选型与关键流程。</h3>
-<p><strong>答案：</strong></p>
-<p><strong>选型</strong>：核心链路路径确定且含风险操作 → <strong>LangGraph</strong>，不用纯 Deep Agents。</p>
-<p><strong>节点设计</strong>：</p>
-<pre><code>START → 意图识别(structured_output)
-          ├─ 查单 → order_query(tool) → 生成回复 → END
-          ├─ 退款 → 信息补全 → refund_review(interrupt 人工审批)
-          │             ├─ approve → apply_refund(tool) → END
-          │             └─ reject  → 取消回复 → END
-          └─ 其他/超步数/超预算/连续失败 → human_handoff → END
-</code></pre>
-<p><strong>工程要点</strong>：</p>
-<ul>
-<li>意图识别与工单字段用 <code>gpt-4o-mini + with_structured_output</code>（示例，2026 年应换现役小型号），复杂沟通才升级旗舰模型；</li>
-<li>Postgres checkpointer，thread_id 即会话 ID，支持跨轮/跨重启续跑；</li>
-<li>退款金额、原因必须 <code>interrupt</code> 确认；节点重试 + 失败统一兜底转人工；</li>
-<li><code>recursion_limit</code> 与 token 预算触发自动转人工；</li>
-<li>LangSmith tracing + 金标轨迹集做回归；工具最小权限（退款接口限单用户、限金额）。</li>
-</ul>
-<h3>53. 设计一个&quot;自动生成竞品分析报告&quot;的系统，该用 Deep Agents 吗？如何控成本与质量？</h3>
-<p><strong>答案：</strong></p>
-<p>适合用 <strong>Deep Agents</strong>：目标明确但路径开放（搜什么、读几篇、如何组织无法预先画死）。</p>
-<ul>
-<li><strong>规划</strong>：让 Agent 先生成 todo（竞品维度、信息源清单）并展示，便于纠偏；</li>
-<li><strong>子代理隔离</strong>：每个竞品/每个维度派独立子代理检索，只回传结构化摘要，保护主上下文；</li>
-<li><strong>文件系统</strong>：原始资料与各章节草稿落虚拟文件，最终汇总，支持长任务和续写；</li>
-<li><strong>质量</strong>：末尾加一个 reviewer 角色（结构化打分 + 引用核查，事实必须能在文件资料中找到出处），不达标带着意见回到 writer 修订（有限次数的反思循环）；</li>
-<li><strong>成本</strong>：检索/摘要子代理用小模型，仅主编排与终审用旗舰模型；设总 token 预算与最大轮次；固定的角色提示与资料前缀开 prompt caching；</li>
-<li><strong>交付</strong>：流式产出过程步骤（<code>updates</code>）让用户看到进度，报告以 Markdown/文件形式交付并附引用列表。</li>
-</ul>
-<h3>54. 如果团队已有 Java/Node 技术栈，引入 Python 写 Agent 框架如何与主系统集成？</h3>
-<p><strong>答案：</strong></p>
-<p>不要为了用框架把业务搬进 Python，采用<strong>边界化集成</strong>：</p>
-<ul>
-<li>把 Agent 做成<strong>独立服务</strong>（FastAPI / LangGraph Platform），主系统通过 HTTP/SSE 或消息队列调用，按会话传 thread_id；</li>
-<li>Agent 需要的业务能力（查单、退款）由主系统以<strong>工具 API / MCP Server</strong> 暴露，Agent 侧只做编排，不直连核心数据库；</li>
-<li>鉴权、限流、审计放在 API 网关层统一处理；</li>
-<li>JS/TS 团队也可评估 <strong>LangChain.js / LangGraph.js</strong>，核心概念（Runnable、StateGraph、checkpointer）一一对应，减少语言切换成本；</li>
-<li>工具协议尽量走 <strong>MCP</strong> 标准化，使同一套工具能被不同语言、不同 Agent 复用。</li>
-</ul>
-<hr>
-<h2>十一、职业发展与前沿</h2>
-<h3>55. AI Agent 工程师需要掌握哪些核心技能？</h3>
+<p><strong>追问</strong>：token 成本和工具成本哪个先优化？（先看&quot;哪个占比大&quot;：RAG 长文档场景先优上下文与缓存；工具重场景先并发化 + 超时 + 降级） ｜ 如何平衡成本与效果？（按路由分支分别看&quot;每成功任务成本&quot;，而不是平均成本）</p>
+<h3>122. 什么是 Prompt Caching？工程上怎么用好？ <strong>｜高频 ｜中等</strong></h3>
 <p><strong>答案：</strong>
-<strong>编程能力：</strong></p>
-<ul>
-<li>Python（主力语言）</li>
-<li>异步编程（asyncio）</li>
-<li>REST API 设计与开发</li>
-<li>Docker / 容器化部署</li>
-</ul>
-<p><strong>AI/LLM 知识：</strong></p>
-<ul>
-<li>Prompt Engineering（提示词工程）与 Context Engineering（上下文工程，见第 6 题）</li>
-<li>RAG 设计与优化</li>
-<li>LLM API 使用（OpenAI、Anthropic、Gemini）</li>
-<li>Fine-tuning 基础</li>
-</ul>
-<p><strong>Agent 框架：</strong></p>
-<ul>
-<li>LangChain / LangGraph / Deep Agents</li>
-<li>AutoGen / CrewAI（注意 MAF 合并，见第 17 题）</li>
-<li>OpenAI Agents SDK / Google ADK / Claude Agent SDK</li>
-<li>LlamaIndex（RAG 专项）</li>
-</ul>
-<p><strong>数据与存储：</strong></p>
-<ul>
-<li>向量数据库（Chroma、Pinecone、Milvus）</li>
-<li>关系数据库（PostgreSQL）</li>
-<li>缓存（Redis）</li>
-</ul>
-<p><strong>工程化：</strong></p>
-<ul>
-<li>日志监控（LangSmith、Langfuse、OpenTelemetry GenAI，见第 48 题）</li>
-<li>评估与测试（基准见第 47 题）</li>
-<li>安全（OWASP LLM Top 10，见第 46 题）</li>
-<li>CI/CD 部署</li>
-</ul>
-<h3>56. 如何设计一个高质量的 Prompt？</h3>
-<p><strong>答案：</strong>
-好的 Prompt 应包含以下要素：</p>
-<pre><code>1. 角色定义（Role）：You are an expert ...
-2. 任务描述（Task）：Your goal is to ...
-3. 上下文（Context）：Given the following information ...
-4. 约束条件（Constraints）：You must only ..., avoid ...
-5. 输出格式（Output Format）：Respond in JSON with fields ...
-6. 示例（Few-shot）：Example input/output
+Prompt Caching 把重复使用的上下文缓存在服务端，显著降低成本和延迟：</p>
+<ol>
+<li>首次请求：完整处理系统提示和文档上下文（正常计费，并有写入溢价）；</li>
+<li>后续请求：相同<strong>前缀</strong>部分从缓存读取（命中价通常只有输入的 1/10）；</li>
+<li>缓存 TTL：Anthropic 现有 <strong>5 分钟与 1 小时两档</strong>（1 小时档写入更贵）。</li>
+</ol>
+<p><strong>使用场景</strong>：系统提示较长（1000+ tokens）的 Agent、RAG 检索结果作为固定上下文、代码库分析（将代码文件缓存后多次查询）。</p>
+<pre><code class="language-python">client.messages.create(
+    model=&quot;claude-sonnet-4-5&quot;,   # 型号仅为示例，以官方当前型号为准
+    system=[{
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;text&quot;: &quot;你是代码审查专家...&quot;,
+        &quot;cache_control&quot;: {&quot;type&quot;: &quot;ephemeral&quot;}  # 标记缓存
+    }],
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;审查这段代码&quot;}]
+)
 </code></pre>
-<p><strong>常用技巧：</strong></p>
-<ul>
-<li>Chain-of-Thought：要求模型&quot;step by step&quot;思考</li>
-<li>Self-consistency：多次采样取最优</li>
-<li>Structured Output：用 JSON Schema 强约束输出而非文字要求（第 39 题）</li>
-</ul>
-<h3>57. 目前主流的 AI Agent 产品有哪些？</h3>
-<p><strong>答案：</strong></p>
+<p><strong>OpenAI 侧</strong>：主流型号对足够长（经验阈值 ≥ 1024 token）的<strong>公共前缀自动缓存</strong>，无需手动标记。</p>
+<p>缓存要求<strong>前缀完全一致</strong>，所以要把固定内容（角色提示、工具定义、资料）放前面，易变内容（用户问题、时间戳、会话参数）放后面。反面例子：在 System 里插一个&quot;当前时间&quot;会让整个前缀缓存失效。</p>
 <blockquote>
-<p>❌ <strong>更正（2026-09 核实）</strong>：下文清单中的 <strong>OpenAI Operator 已不是独立产品</strong>——2025-01 以研究预览发布，2025-07-17/18 并入 <strong>ChatGPT Agent</strong>（与 Deep Research 合体），独立入口 operator.chatgpt.com 于 <strong>2025-08-31 关闭</strong>。截至 2026-09，主流清单还应包括：ChatGPT Agent、Claude Code、OpenAI Codex CLI、Gemini CLI、GitHub Copilot Agent、Cursor、Devin、Manus、<strong>Claude for Chrome</strong>（2025-09-29 随 Claude Sonnet 4.5 发布）。</p>
+<p>❌ <strong>更正</strong>：旧版答案把 <code>$3 / $3.75 / $0.30</code> 这张价目表标为 Opus 价格——<strong>它实际是 Sonnet 档</strong>（输入 $3，缓存写入为输入的 1.25 倍、命中为 0.1 倍）；Opus 档的输入/输出价明显更高（近年多为 $5 / $25，缓存写入与命中也相应上浮）。<strong>具体型号与价格一律以官方定价页为准，面试里背价格不如说清&quot;倍数关系&quot;</strong>：写入略贵于普通输入、命中约为一折、长 TTL 更贵。</p>
 </blockquote>
-<ul>
-<li><strong>Devin</strong>（Cognition）：AI 软件工程师，自主完成编程任务</li>
-<li><strong>Manus</strong>（Monica）：通用 AI Agent，可自主完成复杂任务</li>
-<li><strong>OpenAI Operator</strong>：可操作浏览器完成网页任务（已并入 ChatGPT Agent，见上方更正）</li>
-<li><strong>Claude Computer Use</strong>：Anthropic 出品，控制电脑桌面</li>
-<li><strong>GitHub Copilot Agent</strong>：代码库级别的自动化任务</li>
-<li><strong>AutoGPT</strong>：早期开源 Agent，生态丰富</li>
-</ul>
-<h3>58. 什么是 Computer Use（计算机使用）Agent？</h3>
-<p><strong>答案：</strong>
-<strong>Computer Use</strong> 是 Anthropic 于 2024 年底推出的能力，允许 AI Agent <strong>直接控制计算机桌面</strong>（鼠标、键盘、屏幕截图）来完成任务。</p>
-<p><strong>工作原理</strong>：</p>
-<pre><code>截图 → 视觉理解 → 决策（点击/输入/滚动）→ 执行 → 截图（下一步）
-</code></pre>
-<p><strong>当前主要产品</strong>：</p>
-<ul>
-<li><strong>Claude Computer Use</strong>：Anthropic API，开发者可集成</li>
-<li><strong>OpenAI Operator</strong>：面向消费者，操作网页完成任务（预约、购物等）</li>
-<li><strong>Google Project Mariner</strong>：Chrome 插件形态的浏览器 Agent</li>
-</ul>
 <blockquote>
-<p>⚠️ <strong>过时/存疑标注（2026-09 核实）</strong>：产品清单需更新——OpenAI Operator 已并入 ChatGPT Agent、独立入口 2025-08-31 关闭（见第 57 题）；Google Project Mariner 已演化为 <strong>Gemini 2.5 Computer Use（2025-10）</strong>。此外，视觉/截图派之外，<strong>DOM/可访问性树路线</strong>（Playwright MCP、browser-use、Stagehand 等）在工程界已成为主流补充，两条路线的工程对比详见第 50 题。</p>
+<p>⚠️ <strong>两个提醒</strong>：① 旧版&quot;GPT-4o 自动缓存 1024 token&quot;的说法已过时——gpt-4o 系列自 <strong>2026-02-13 起陆续退役</strong>，自动前缀缓存是平台级特性，迁移新一代型号后仍适用，但免费缓存阈值与覆盖型号会变；② <strong>换代分词器会改变同文本的 token 数</strong>（历史上有三成量级的变化），所以缓存命中率与成本估算系数不能沿用旧值。</p>
 </blockquote>
-<p><strong>与 Playwright/Selenium 的区别</strong>：</p>
+<h3>123. 内网环境下怎么设计 Agent / RAG 系统？ <strong>｜中频 ｜较难</strong></h3>
+<p><strong>答案：</strong>
+核心不是&quot;把公网方案照搬一遍&quot;，而是先把 <strong>数据不出域、模型可控、依赖可替换、链路可观测</strong> 这几件事立住。按企业级部署思路拆三层：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>应用层</strong></td>
+<td>Dify、Coze 类平台的私有化版本，或自研后端；负责工作流、Agent 编排、权限和业务接口</td>
+</tr>
+<tr>
+<td><strong>推理层</strong></td>
+<td>用 Xinference / vLLM / Ollama 这类托管平台统一管理 LLM、Embedding、Rerank，对外暴露 <strong>OpenAI-compatible API</strong></td>
+</tr>
+<tr>
+<td><strong>数据层</strong></td>
+<td>内网向量库、关系库、对象存储、知识库索引、日志与审计系统都在可控域内</td>
+</tr>
+</tbody></table>
+<p>关键点：</p>
+<ul>
+<li><strong>模型接入统一</strong>：上层尽量都走兼容 API，方便替换在线模型、本地模型和不同推理引擎；</li>
+<li><strong>网络和权限隔离</strong>：Agent 能访问哪些内网系统必须按最小权限开放，不让模型拿到一把通吃的内网钥匙；</li>
+<li><strong>知识治理</strong>：文档解析、索引重建、版本回滚、租户隔离、引用追踪都要内建；</li>
+<li><strong>可观测与审计</strong>：请求链路、工具调用、检索结果、模型版本、token 用量、异常告警能在内网闭环查看；</li>
+<li><strong>降级能力</strong>：内网模型抖动时是否有缓存、规则链路、人工兜底或备用模型。</li>
+</ul>
+<p><strong>追问</strong>：为什么要把应用层与推理层解耦？（模型升级/换型不动业务代码；可并行跑多个引擎做 A/B；运维与扩缩容独立） ｜ 为什么 LLM、Embedding、Rerank 最好分开管理？（三者硬件画像完全不同：生成吃显存与 KV 缓存，Embedding/Rerank 吃吞吐与批处理；分开才能各自调优与降级） ｜ 不能访问公网搜索时动态信息怎么补？（内网新闻/工单/数据仓接入为检索源；定时同步外部摘要入库；或经审计的代理出口）</p>
+<h3>124. vLLM 为什么快？PagedAttention、Continuous Batching、Prefix Caching 分别解决什么？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+vLLM 是当前开源推理引擎的事实标准（同类：SGLang、TensorRT-LLM、TGI），核心是把&quot;一次性大请求&quot;当成<strong>分页、连续、可复用</strong>的资源来管理。</p>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>解决的问题</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PagedAttention</strong></td>
+<td>KV Cache 内存碎片（传统预分配按最大长度，实际生成长度不可知）</td>
+<td>把 KV 分块管理（约 16 token/块），按需分配，类似操作系统分页；消除 <strong>60-80%</strong> 碎片，显存利用率从约 60% 拉到 <strong>95%+</strong>，因此同卡能撑更高并发与更长上下文</td>
+</tr>
+<tr>
+<td><strong>Continuous Batching</strong></td>
+<td>Static Batching 下&quot;一条长回答堵住整批&quot;（短请求要等长请求跑完才能入场）</td>
+<td>以<strong>迭代为单位</strong>调度：某序列一结束就立即把槽位让给新请求，批内成员动态进出；吐量常见 <strong>2-5 倍</strong> 提升</td>
+</tr>
+<tr>
+<td><strong>Prefix Caching</strong></td>
+<td>多请求共享长前缀时重复计算 KV</td>
+<td>命中相同前缀（System + 工具定义 + 资料）则直接复用 KV，与厂商 Prompt Caching 同效应但自控</td>
+</tr>
+<tr>
+<td><strong>RadixAttention</strong>（SGLang）</td>
+<td>前缀复用的自动化</td>
+<td>用基数树组织多轮/多分支共享前缀，对 Agent、少样本、多轮工具调用尤其友好</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>单步更快</td>
+<td>量化（GPTQ/AWQ/FP8）、张量并行、投机解码、Chunked Prefill、<strong>PD 分离</strong></td>
+</tr>
+</tbody></table>
+<p>面试里能拿分的一句话：<strong>推理优化的主战场是显存与调度，不是算子——大模型推理是内存带宽墙，而不是算力墙。</strong></p>
+<p><strong>追问</strong>：Agent 场景为什么特别需要 Prefix Caching？（每轮重传整个历史与工具定义，前缀重复度极高） ｜ 自托管还是调 API？（看流量规模、数据合规、定制需求；中等流量下自托管需叠加运维与 GPU 成本，不一定便宜）</p>
+<h3>125. 推理优化还有哪些常用手段？TTFT 和 TPOT 分别代什么？ <strong>｜高频 ｜中等 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+两个指标先定义清楚：<strong>TTFT</strong>（Time To First Token，首 token 延迟，主要受排队 + 预填充影响，决定&quot;看起来响应快不快&quot;）；<strong>TPOT</strong>（Time Per Output Token，逐 token 间隔，决定&quot;打字机流不流畅&quot;）。</p>
+<p>常用手段按作用于哪一阶段分类：</p>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>主要影响</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>量化（INT8/INT4、GPTQ/AWQ/FP8）</td>
+<td>降显存、提吐量，轻微质量损失</td>
+<td>单卡放不下、成本敏感</td>
+</tr>
+<tr>
+<td>KV Cache 量化 / 驱逐</td>
+<td>长上下文与高并发下的显存</td>
+<td>长窗口、多会话</td>
+</tr>
+<tr>
+<td>投机解码（speculative decoding）</td>
+<td>降 TPOT（小模型草拟 + 大模型验证）</td>
+<td>输出长、延迟敏感</td>
+</tr>
+<tr>
+<td>Chunked Prefill</td>
+<td>长 prompt 不堵死解码请求</td>
+<td>混合长输入短输出场景</td>
+</tr>
+<tr>
+<td><strong>PD 分离</strong>（Prefill/Decode 分开集群）</td>
+<td>两类工作负载硬件画像不同，分开各自优化</td>
+<td>大规模生产集群</td>
+</tr>
+<tr>
+<td>FlashAttention</td>
+<td>提升注意力计算效率与显存行为</td>
+<td>基本已是默认</td>
+</tr>
+<tr>
+<td>并行策略（TP/PP/EP）</td>
+<td>多卡/多机扩展</td>
+<td>超大模型</td>
+</tr>
+<tr>
+<td>路由与缓存（语义/Prefix）</td>
+<td>直接减少计算</td>
+<td>高重复度流量（Agent/RAG）</td>
+</tr>
+</tbody></table>
+<p>补一句业务视角：用户感受到的&quot;慢&quot;很多时候不是 TPOT，而是<strong>排队</strong>与<strong>多步循环次数</strong>；所以先确认是推理层慢还是编排层慢（见第 120 题）。</p>
+<h3>126. Dense 和 MoE 模型有什么区别？工程上怎么选？ <strong>｜中频 ｜中等 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>Dense（稠密）</strong>：每次前向都激活全部参数；质量可预测，但推理成本与参数量成正比；</li>
+<li><strong>MoE（稀疏专家）</strong>：用路由器把 token 送给 Top-K（常为 2）个专家 FFN，总参数量很大但<strong>激活参数</strong>小，所以此单位成本能支撑更多知识；代表：Mixtral、DeepSeek、Qwen 部分型号。</li>
+</ul>
+<p>工程影响：</p>
 <table>
 <thead>
 <tr>
 <th>维度</th>
-<th>传统 Web 自动化</th>
-<th>Computer Use</th>
+<th>Dense</th>
+<th>MoE</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>依赖</td>
-<td>DOM 结构、CSS 选择器</td>
-<td>屏幕截图（像素级）</td>
+<td>显存占用</td>
+<td>按激活参数</td>
+<td><strong>要装下全部专家参数</strong>（显存不省）</td>
 </tr>
 <tr>
-<td>适用范围</td>
-<td>仅 Web 应用</td>
-<td>任何桌面/Web 应用</td>
+<td>吐量/延迟</td>
+<td>稳定</td>
+<td>路由与专家并行带来调优复杂度，批小时长尾延迟明显</td>
 </tr>
 <tr>
-<td>维护成本</td>
-<td>UI 变化后需更新脚本</td>
-<td>自适应，无需维护</td>
+<td>部署</td>
+<td>简单</td>
+<td>需要专家并行（EP）、all-to-all 通信与负载均衡策略</td>
 </tr>
 <tr>
-<td>稳定性</td>
-<td>高</td>
-<td>仍在改善中</td>
+<td>微调</td>
+<td>直接</td>
+<td>易出现路由坍塌/专家利度不均，常先冻路由或上 LoRA</td>
+</tr>
+<tr>
+<td>能力</td>
+<td>同等激活参数下知识量小于 MoE</td>
+<td>知识/推理任务性价比高</td>
 </tr>
 </tbody></table>
-<p><strong>当前局限</strong>：速度较慢（每步需截图+推理）、成本较高、复杂界面下错误率仍偏高。</p>
-</div>
+<p>选型一句话：<strong>自托管看显存与并发画像，调 API 基本无感。</strong> 面试里把&quot;MoE 省的是计算不是显存&quot;说清楚就能赢一半。</p>
+<h3>127. LoRA / QLoRA 和全参微调怎么选？ <strong>｜高频 ｜中等 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+先分清层次：<strong>LoRA / QLoRA 是&quot;参数高效方法&quot;（改哪些参数），DPO / GRPO 是&quot;优化目标&quot;（用什么损失）</strong>——两者不在同一层，可以组合（QLoRA+SFT、QLoRA+DPO、QLoRA+GRPO）。</p>
+<p><strong>LoRA 原理</strong>：冻结原权重 W，只训练低秩增量 ΔW = B·A，其中 A 为 d×r、B 为 r×d，<strong>r 常取 8~64</strong>。参数量降几个量级，显存与存储友好；<strong>训练后可合并进原权重，推理时零额外延迟</strong>（ adapter 不合并则多一层计算）。常见变体：QLoRA（4-bit 量化基座 + LoRA，单卡可训 7B~70B）、Adapter（串/并联小瓶颈层，推理有额外开销）、P-Tuning / Prefix Tuning（只训提示向量，可学习参数更少、效果波动更大）。</p>
+<p><strong>什么时候用 LoRA，什么时候全参</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>领域术语/格式/风格适配、数据量千到万条、卡有限</td>
+<td><strong>LoRA / QLoRA</strong></td>
+</tr>
+<tr>
+<td>要改变模型能力本身、大量高质量数据、有算力</td>
+<td>全参</td>
+</tr>
+<tr>
+<td>多业务共享一个基座、按租户挂不同 adapter</td>
+<td>LoRA（一个基座 N 个 adapter 最好管理）</td>
+</tr>
+<tr>
+<td>只是行为不稳、格式不对</td>
+<td><strong>先想结构化输出/提示，不一定要微调</strong>（见第 10 题）</td>
+</tr>
+</tbody></table>
+<p>坑：<strong>灾难性遗忘</strong>（混入一定比例通用数据）、训推不一致（模板/特殊 token/截断长度没对齐）、数据量少且单样时反而把噪声学得更狠。</p>
+<p>框架：LLaMA-Factory（零代码/低代码常见首选）、trl（SFT/DPO/GRPO 全家桶）、verl（大规模 RL）；并行与显存：DeepSpeed ZeRO-1/2/3、FSDP、DDP、Megatron（TP/PP/EP）。ZeRO 的直觉：1 切优化器状态、2 再加梯度、3 连参数也切（通信递增，单卡显存递减）。</p>
+<p><strong>追问</strong>：蒸馏算不算微调？（算广义，用小模型学大模型输出/分布，属于&quot;能力下沉降本&quot;路线，不是给新知识） ｜ 微调后怎么评测？（固定业务金标集 + 通用能力回归，防止&quot;专业变强、通用变傻&quot;）</p>
+<h3>128. RLHF、PPO、DPO、GRPO 都是什么？怎么选？ <strong>｜高频 ｜较难 ｜2026 新增</strong></h3>
+<p><strong>答案：</strong>
+四个词分属两层：<strong>RLHF 是流程范式，PPO/DPO/GRPO 是具体优化算法</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>机制</th>
+<th>需要什么</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RLHF（流程）</strong></td>
+<td>SFT → 训<strong>奖励模型 RM</strong> → 用 RL（常用 PPO）优化策略，KL 约束防偏离</td>
+<td>偏好对 + 奖励模型 + 4 个模型常驻（policy/ref/critic/RM）</td>
+<td>效果好但工程最重、不稳定、显存成本高</td>
+</tr>
+<tr>
+<td><strong>PPO</strong></td>
+<td>裁剪目标的 on-policy RL，需 value 网络估计 advantage</td>
+<td>同上</td>
+<td>调参门槛高，易 reward hacking</td>
+</tr>
+<tr>
+<td><strong>DPO</strong></td>
+<td>直接把偏好对写进损失，跳过显式 RM 与采样</td>
+<td><strong>仅需偏好对</strong>，离线</td>
+<td>简单便宜、好复现；与采样分布有 gap，强推理任务收益不如 RL 类</td>
+</tr>
+<tr>
+<td><strong>GRPO</strong></td>
+<td>同一 prompt 采一组样本，用<strong>组内相对得分</strong>归一化当 advantage，去掉 value 网络</td>
+<td>可验证的奖励信号（规则/测试通过）</td>
+<td>显存与算力省一大截，DeepSeek-RL 系代表；RL 基础方法</td>
+</tr>
+<tr>
+<td>DAPO / GSPO / SPO</td>
+<td>对 GRPO/PPO 的工程修补（ clipping、长尾稳定、off-policy 修正等）</td>
+<td>—</td>
+<td>前沿调优话题，能说名字即可</td>
+</tr>
+</tbody></table>
+<p>选型建议：</p>
+<ul>
+<li><strong>行为/格式/风格对齐</strong> → <strong>DPO</strong>（最便宜、最易上线）；</li>
+<li><strong>有客观对错的任务（数学、代码、工具调用成功率）想拉能力</strong> → <strong>GRPO</strong>（奖励可验证，无需 RM）；</li>
+<li>有专业 RL 团队与算力、要精细控制人类偏好 → <strong>PPO/RLHF</strong>；</li>
+<li><strong>应用工程师优先顺序</strong>：提示/结构化输出 → RAG → few-shot → SFT/LoRA → DPO → GRPO（成本与风险递增，能停在前面就停在前面）。</li>
+</ul>
+<p>面试常见追问：&quot;为什么 R1 类方法能不用 RM？&quot;——因为奖励来自<strong>可验证信号</strong>（答案格式/单元测试/数学校验），GRPO 用组内相对比较代替 critic，所以不需要学一个人类偏好模型。</p>
+<hr>
+<!-- @@NEXT@@ --></div>
 </body>
 </html>

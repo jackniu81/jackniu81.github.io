@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">102</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,105 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/04/18/Algorithm-Sliding-Window-Maximum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/04/18/Algorithm-Sliding-Window-Maximum/" class="post-title-link" itemprop="url">算法 - 滑动窗口最大值</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-18 16:20:37" itemprop="dateCreated datePublished" datetime="2026-04-18T16:20:37+08:00">2026-04-18</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个整数数组 <code>nums</code>，有一个大小为 <code>k</code> 的滑动窗口从数组的最左侧移动到最右侧。你只可以看到在滑动窗口内的 k 个数字，滑动窗口每次只向右移动一位。</p>
+<p>返回滑动窗口中的最大值组成的数组。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [1,3,-1,-3,5,3,6,7], k = 3</span><br><span class="line">输出: [3,3,5,5,6,7]</span><br><span class="line"></span><br><span class="line">窗口位置                    最大值</span><br><span class="line">---------------           -----</span><br><span class="line">[1  3  -1] -3  5  3  6  7    3</span><br><span class="line"> 1 [3  -1  -3] 5  3  6  7    3</span><br><span class="line"> 1  3 [-1  -3  5] 3  6  7    5</span><br><span class="line"> 1  3  -1 [-3  5  3] 6  7    5</span><br><span class="line"> 1  3  -1  -3 [5  3  6] 7    6</span><br><span class="line"> 1  3  -1  -3  5 [3  6  7]   7</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-暴力法"><a href="#2-1-暴力法" class="headerlink" title="2.1 暴力法"></a>2.1 暴力法</h2><p>每个窗口遍历求最大，O(n·k)，k 大时超时，仅作对比。</p>
+<h2 id="2-2-单调递减双端队列（最优）"><a href="#2-2-单调递减双端队列（最优）" class="headerlink" title="2.2 单调递减双端队列（最优）"></a>2.2 单调递减双端队列（最优）</h2><p>维护一个存<strong>下标</strong>的双端队列，保证队列对应元素值<strong>从队头到队尾单调递减</strong>，队头始终是当前窗口最大值的下标。</p>
+<p>对每个新元素 <code>i</code>：</p>
+<ol>
+<li><strong>淘汰过期</strong>：若队头下标已滑出窗口（<code>queue[0] &lt;= i - k</code>），从队头弹出。</li>
+<li><strong>维护单调性</strong>：从队尾开始，凡是值 <code>&lt;= nums[i]</code> 的下标全部弹出——它们被 <code>nums[i]</code>「又新又大」地压制，永远不可能再成为答案。</li>
+<li>把 <code>i</code> 入队尾。</li>
+<li>当 <code>i &gt;= k - 1</code> 开始收集答案，队头即当前窗口最大值。</li>
+</ol>
+<ul>
+<li>时间复杂度：O(n)，每个元素最多入队出队各一次；空间复杂度：O(k)。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">maxSlidingWindow</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[], <span class="attr">k</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">deque</span>: <span class="built_in">number</span>[] = []; <span class="comment">// 存下标，对应值单调递减</span></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="comment">// 1. 队头过期（滑出窗口）</span></span><br><span class="line">        <span class="keyword">if</span> (deque.<span class="property">length</span> &amp;&amp; deque[<span class="number">0</span>] &lt;= i - k) deque.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 队尾所有 &lt;= 当前值的元素失去意义，弹出</span></span><br><span class="line">        <span class="keyword">while</span> (deque.<span class="property">length</span> &amp;&amp; nums[deque[deque.<span class="property">length</span> - <span class="number">1</span>]] &lt;= nums[i]) &#123;</span><br><span class="line">            deque.<span class="title function_">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 当前下标入队</span></span><br><span class="line">        deque.<span class="title function_">push</span>(i);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 窗口形成后收集队头最大值</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) res.<span class="title function_">push</span>(nums[deque[<span class="number">0</span>]]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">maxSlidingWindow</span>([<span class="number">1</span>, <span class="number">3</span>, -<span class="number">1</span>, -<span class="number">3</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>], <span class="number">3</span>));</span><br><span class="line"><span class="comment">// [3,3,5,5,6,7]</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>说明：JS 数组的 <code>shift()</code> 是 O(n)，严格最坏复杂度会退化；面试可指出用「头指针 index」模拟队列头、或双向链表实现真正 O(1) 出队。此处为清晰用 <code>shift</code>。</p>
+</blockquote>
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>单调栈 vs 单调队列</strong>：单调栈解决「下一个更大元素」等；单调队列额外处理「窗口左边界过期」，本题是其模板题。</li>
+<li>变形：窗口最小值（改成单调递增队列）、绝对值不超过 limit 的最长子数组等，都基于单调队列。</li>
+<li>追问：为什么队列存下标而不是值？因为需要靠下标判断队头是否滑出窗口。</li>
+<li>另一路线：<strong>分块 &#x2F; 稀疏表(ST)</strong> 预处理区间最大值，也能做到接近 O(n)，可作为思路拓展。</li>
+</ul>
+<blockquote>
+<p>难度：困难 | LeetCode 239 | 单调队列模板</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1027,112 +1126,6 @@
 </ul>
 <blockquote>
 <p>难度：中等 | 函数式入门必考 | 闭包与参数复用</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/06/13/Algorithm-Instanceof/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/13/Algorithm-Instanceof/" class="post-title-link" itemprop="url">算法 - 手写 instanceof</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-06-13 11:47:29" itemprop="dateCreated datePublished" datetime="2025-06-13T11:47:29+08:00">2025-06-13</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个函数 <code>myInstanceof(left, right)</code>，等价于原生 <code>instanceof</code> 运算符：</p>
-<ul>
-<li>判断 <code>left</code> 是否是 <code>right</code> 的实例，即 <code>right.prototype</code> 是否出现在 <code>left</code> 的<strong>原型链</strong>上。</li>
-<li>是返回 <code>true</code>，否则返回 <code>false</code>。</li>
-</ul>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">myInstanceof([], Array)      // true</span><br><span class="line">myInstanceof([], Object)     // true（Array.prototype 的原型是 Object.prototype）</span><br><span class="line">myInstanceof(1, Number)      // false（原始值不在原型链上；new Number(1) 则 true）</span><br><span class="line">myInstanceof(null, Object)   // false</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p><code>instanceof</code> 的本质：<strong>沿 <code>left</code> 的原型链逐级向上查找，看能否碰到 <code>right.prototype</code></strong>。</p>
-<p>关键概念澄清：</p>
-<ul>
-<li><code>instanceof</code> 判断的不是「谁 new 出来的」，而是「<code>left.__proto__</code> 链上有没有 <code>right.prototype</code> 这个对象引用」。</li>
-<li>原型链靠 <code>__proto__</code>（即 <code>Object.getPrototypeOf</code>）向上走；构造函数的 <code>prototype</code> 挂在实例的 <code>__proto__</code> 上。</li>
-</ul>
-<p>算法步骤：</p>
-<ol>
-<li>若 <code>left</code> 是原始值或 <code>null</code>，直接 <code>false</code>（原始值没有原型链，原生也会返回 false）。</li>
-<li>取 <code>right.prototype</code> 作为目标。</li>
-<li>从 <code>Object.getPrototypeOf(left)</code> 开始，沿 <code>__proto__</code> 上溯：命中目标即 <code>true</code>；到 <code>null</code>（原型链顶）仍未命中则 <code>false</code>。</li>
-</ol>
-<blockquote>
-<p>进阶：原生 <code>instanceof</code> 会先调用 <code>right</code> 上的静态方法 <code>Symbol.hasInstance</code>（若定义），能提到这点是满分细节。</p>
-</blockquote>
-<ul>
-<li>时间复杂度：<code>O(原型链长度)</code>。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">myInstanceof</span>(<span class="params"><span class="attr">left</span>: <span class="built_in">any</span>, <span class="attr">right</span>: <span class="built_in">any</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="comment">// 原始值 / null / undefined 直接 false</span></span><br><span class="line">    <span class="keyword">if</span> (left === <span class="literal">null</span> || (<span class="keyword">typeof</span> left !== <span class="string">&quot;object&quot;</span> &amp;&amp; <span class="keyword">typeof</span> left !== <span class="string">&quot;function&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持 Symbol.hasInstance（对齐原生优先级）</span></span><br><span class="line">    <span class="keyword">const</span> hasInstance = right[<span class="title class_">Symbol</span>.<span class="property">hasInstance</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> hasInstance === <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> !!hasInstance.<span class="title function_">call</span>(right, left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> right !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&quot;Right-hand side of &#x27;instanceof&#x27; is not callable&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> proto = right.<span class="property"><span class="keyword">prototype</span></span>; <span class="comment">// 要找的目标</span></span><br><span class="line">    <span class="keyword">let</span> cursor = <span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(left);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cursor !== <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cursor === proto) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        cursor = <span class="title class_">Object</span>.<span class="title function_">getPrototypeOf</span>(cursor); <span class="comment">// 沿原型链上溯</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span> &#123;&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Animal</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Dog</span>));     <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Animal</span>));  <span class="comment">// true（继承链）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">Dog</span>(), <span class="title class_">Object</span>));  <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="string">&quot;str&quot;</span>, <span class="title class_">String</span>));      <span class="comment">// false（原始值）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">myInstanceof</span>(<span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;s&quot;</span>), <span class="title class_">String</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>原型链三条铁律</strong>要能脱口而出：<code>实例.__proto__ === 构造函数.prototype</code>；<code>构造函数.__proto__ === Function.prototype</code>；<code>Object.prototype.__proto__ === null</code>（链顶）。</li>
-<li><strong><code>instanceof</code> vs <code>typeof</code> vs <code>Object.prototype.toString</code></strong>：<code>typeof</code> 只分原始类型、<code>instanceof</code> 查原型链判引用类型、<code>toString.call(x)</code> 最精确（能区分 Array&#x2F;Date&#x2F;RegExp）。三者的适用边界是高频追问。</li>
-<li><strong>跨 realm 失效</strong>：<code>iframe</code> 里的数组用 <code>instanceof Array</code> 会 false（不同全局的 <code>Array.prototype</code> 不同），此时应改用 <code>Array.isArray</code>。能点出这个坑非常加分。</li>
-<li><strong><code>class</code> 语法糖</strong>：<code>extends</code> 建立的正是一条 <code>Dog.prototype.__proto__ === Animal.prototype</code> 的链，<code>instanceof</code> 才因而能向上命中父类。</li>
-<li><code>Function instanceof Function === true</code>、<code>Object instanceof Function === true</code> 这些「鸡生蛋」常用来考你原型图是否清晰。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | 手写题 | 原型链理解试金石</p>
 </blockquote>
 
       

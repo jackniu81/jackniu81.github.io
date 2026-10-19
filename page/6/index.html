@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">102</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,103 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/12/09/Algorithm-Reverse-Linked-List/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/12/09/Algorithm-Reverse-Linked-List/" class="post-title-link" itemprop="url">算法 - 反转链表 (Reverse Linked List)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-12-09 11:03:55" itemprop="dateCreated datePublished" datetime="2021-12-09T11:03:55+08:00">2021-12-09</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你单链表的头节点 <code>head</code>，请你反转链表，并返回反转后的链表头。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5</span><br><span class="line">输出: 5 -&gt; 4 -&gt; 3 -&gt; 2 -&gt; 1</span><br><span class="line"></span><br><span class="line">输入: head = []</span><br><span class="line">输出: []</span><br></pre></td></tr></table></figure>
+
+<p>链表节点定义：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="attr">val</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">next</span>: <span class="title class_">ListNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">val</span>?: <span class="built_in">number</span>, <span class="attr">next</span>?: <span class="title class_">ListNode</span> | <span class="literal">null</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">val</span> = val === <span class="literal">undefined</span> ? <span class="number">0</span> : val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">next</span> = next === <span class="literal">undefined</span> ? <span class="literal">null</span> : next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-迭代（首选）"><a href="#2-1-迭代（首选）" class="headerlink" title="2.1 迭代（首选）"></a>2.1 迭代（首选）</h2><p>反转的本质是把每个节点的 <code>next</code> 指针掉头，指向它原来的前驱。用三个指针：</p>
+<ul>
+<li><code>prev</code>：已反转部分的头，初始 <code>null</code>。</li>
+<li><code>curr</code>：当前正在处理节点，初始 <code>head</code>。</li>
+<li><code>nextTemp</code>：在处理前先保存 <code>curr.next</code>，否则断链后找不到后继。</li>
+</ul>
+<p>每一步：暂存后继 → <code>curr.next = prev</code> → <code>prev</code> 前移到 <code>curr</code> → <code>curr</code> 前移到暂存的后继。循环结束时 <code>prev</code> 就是新头。</p>
+<ul>
+<li>时间复杂度：<code>O(n)</code>。</li>
+<li>空间复杂度：<code>O(1)</code>。</li>
+</ul>
+<h2 id="2-2-递归"><a href="#2-2-递归" class="headerlink" title="2.2 递归"></a>2.2 递归</h2><p>递归到链表末尾，回溯时把后一个节点的 <code>next</code> 指回自己：<code>head.next.next = head</code>，再断开 <code>head.next = null</code> 防止成环。简洁但栈空间 <code>O(n)</code>。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 迭代</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reverseList</span>(<span class="params"><span class="attr">head</span>: <span class="title class_">ListNode</span> | <span class="literal">null</span></span>): <span class="title class_">ListNode</span> | <span class="literal">null</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">prev</span>: <span class="title class_">ListNode</span> | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">let</span> curr = head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (curr !== <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> nextTemp = curr.<span class="property">next</span>; <span class="comment">// 1. 暂存后继</span></span><br><span class="line">        curr.<span class="property">next</span> = prev;           <span class="comment">// 2. 反转指针</span></span><br><span class="line">        prev = curr;                <span class="comment">// 3. prev 前进</span></span><br><span class="line">        curr = nextTemp;            <span class="comment">// 4. curr 前进</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reverseListRecursive</span>(<span class="params"><span class="attr">head</span>: <span class="title class_">ListNode</span> | <span class="literal">null</span></span>): <span class="title class_">ListNode</span> | <span class="literal">null</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (head === <span class="literal">null</span> || head.<span class="property">next</span> === <span class="literal">null</span>) <span class="keyword">return</span> head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> newHead = <span class="title function_">reverseListRecursive</span>(head.<span class="property">next</span>);</span><br><span class="line">    head.<span class="property">next</span>.<span class="property">next</span> = head; <span class="comment">// 让后继指回自己</span></span><br><span class="line">    head.<span class="property">next</span> = <span class="literal">null</span>;      <span class="comment">// 断开原指针，避免环</span></span><br><span class="line">    <span class="keyword">return</span> newHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>反转区间（LeetCode 92 反转链表 II）</strong> 或 <strong>每 k 个一组翻转（25 题）</strong> 是高频进阶，核心仍是本节的指针操作，外加「哑节点 dummy」简化边界。</li>
+<li><strong>判断回文链表（234）</strong>：快慢指针找中点 + 反转后半段 + 逐一比较，空间 <code>O(1)</code>。</li>
+<li>递归版本要能徒手画图讲清 <code>head.next.next = head</code> 的含义，这是面试官最爱追问的点。</li>
+</ul>
+<blockquote>
+<p>难度：简单 | LeetCode 206 题 | 链表题地基</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1005,91 +1102,6 @@
 <li>EF Core: Microsoft.EntityFrameworkCore.SqlServer</li>
 </ol>
 
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/05/24/asp-net-core-1-basic/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/05/24/asp-net-core-1-basic/" class="post-title-link" itemprop="url">ASP.NET Core MVC 入门到精通 - 2. 路由</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-05-24 08:43:23" itemprop="dateCreated datePublished" datetime="2021-05-24T08:43:23+08:00">2021-05-24</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-ASP-NET-Core-MVC-概述"><a href="#1-ASP-NET-Core-MVC-概述" class="headerlink" title="1. ASP.NET Core MVC 概述"></a>1. ASP.NET Core MVC 概述</h1><p>ASP.NET Core MVC 框架是轻量级、开源、高度可测试的演示框架，并针对 ASP.NET Core 进行了优化。</p>
-<h1 id="2-ASP-NET-Core-MVC路由"><a href="#2-ASP-NET-Core-MVC路由" class="headerlink" title="2. ASP.NET Core MVC路由"></a>2. ASP.NET Core MVC路由</h1><p>ASP.NET Core MVC 建立在 ASP.NET Core 的路由之上，是一个功能强大的 URL 映射组件，可用于生成具有易于理解和可搜索 URL 的应用程序。 </p>
-<p>MVC 中的路由包含下面2中方式</p>
-<ol>
-<li>基于约定的路由</li>
-<li>属性路由</li>
-</ol>
-<h2 id="2-1-注册"><a href="#2-1-注册" class="headerlink" title="2.1. 注册"></a>2.1. 注册</h2><p>所有 ASP.NET Core 模板都包括生成的代码中的路由。 路由在 Startup.Configure 中的中间件管道中进行注册。</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    app.UseRouting();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-2-基于约定的路由"><a href="#2-2-基于约定的路由" class="headerlink" title="2.2. 基于约定的路由"></a>2.2. 基于约定的路由</h2><p>基于约定的路由，可以全局定义应用程序接受的 URL 格式，并说明每种格式如何映射到给定控制器上的特定操作方法。 接收传入请求时，路由引擎分析 URL 并将其匹配到定义的 URL 格式之一，然后调用关联的控制器操作方法。</p>
-<p>Configre 方法中，定义约定路由：</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.UseEndpoints(endpoints =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    endpoints.MapControllerRoute(</span><br><span class="line">        name: <span class="string">&quot;default&quot;</span>,</span><br><span class="line">        pattern: <span class="string">&quot;&#123;controller=Home&#125;/&#123;action=Index&#125;/&#123;id?&#125;&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>{controller&#x3D;Home}&#x2F;{action&#x3D;Index}&#x2F;{id?}, 含义是默认Controller是<code>Home</code>，默认action为Controller中的<code>Index</code>方法（Action）。</p>
-</blockquote>
-<h2 id="2-3-属性路由"><a href="#2-3-属性路由" class="headerlink" title="2.3. 属性路由"></a>2.3. 属性路由</h2><p>属性路由，可以通过用定义应用程序路由的属性修饰控制器和操作来指定路由信息。 这意味着路由定义位于与之相关联的控制器和操作旁。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Route(<span class="string">&quot;api/[controller]&quot;</span>)]</span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ProductsController</span> :</span> Controller</span><br><span class="line">&#123;</span><br><span class="line">    [HttpGet(<span class="string">&quot;&#123;id&#125;&quot;</span>)]</span><br><span class="line">    public IActionResult <span class="title function_">GetProduct</span><span class="params">(<span class="type">int</span> id)</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// url等同于 api/Products/&#123;id&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
