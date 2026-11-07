@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本系列共 5 篇，系统拆解 Model Context Protocol（MCP）：从协议基础、三大原语、传输层、进阶能力到生产工程与选型。本篇是第一篇，讲清楚 MCP 是什么、为什么诞生、底层消息模型和会话全生命周期。  一、为什么诞生 MCP：N × M 的集成困境在 MCP 出现之前，Agent 和外部系统集成是典型的 N × M 复杂度问题。 假设市面上有一批 AI Host（运行 Ag">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出 MCP 系列教程（一）：协议基础与架构设计">
+<meta property="og:url" content="https://jackniu81.github.io/2026/11/01/MCP-Protocol-Foundations/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="本系列共 5 篇，系统拆解 Model Context Protocol（MCP）：从协议基础、三大原语、传输层、进阶能力到生产工程与选型。本篇是第一篇，讲清楚 MCP 是什么、为什么诞生、底层消息模型和会话全生命周期。  一、为什么诞生 MCP：N × M 的集成困境在 MCP 出现之前，Agent 和外部系统集成是典型的 N × M 复杂度问题。 假设市面上有一批 AI Host（运行 Ag">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-11-01T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-07T03:03:21.038Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/11/01/MCP-Protocol-Foundations/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/11/01/MCP-Protocol-Foundations/","path":"2026/11/01/MCP-Protocol-Foundations/","title":"深入浅出 MCP 系列教程（一）：协议基础与架构设计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入浅出 MCP 系列教程（一）：协议基础与架构设计 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%9E%E7%94%9F-MCP%EF%BC%9AN-%C3%97-M-%E7%9A%84%E9%9B%86%E6%88%90%E5%9B%B0%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">一、为什么诞生 MCP：N × M 的集成困境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Function-Calling-%E7%9A%84%E5%A4%A9%E7%84%B6%E5%B1%80%E9%99%90"><span class="nav-number">1.1.</span> <span class="nav-text">Function Calling 的天然局限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSP-%E7%9A%84%E5%90%AF%E5%8F%91%EF%BC%9A%E4%BB%8E-N-%C3%97-M-%E5%88%B0-N-M"><span class="nav-number">1.2.</span> <span class="nav-text">LSP 的启发：从 N × M 到 N + M</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%AE%A4%E7%9F%A5%EF%BC%9AMCP-%E6%98%AF%E2%80%9D%E6%9C%89%E7%BA%BF%E5%8D%8F%E8%AE%AE%E2%80%9D"><span class="nav-number">1.3.</span> <span class="nav-text">关键认知：MCP 是”有线协议”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B6%E5%B1%82%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">1.4.</span> <span class="nav-text">顶层设计原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E8%A7%92%E8%89%B2%EF%BC%9AHost%E3%80%81MCP-Client%E3%80%81MCP-Server"><span class="nav-number">2.</span> <span class="nav-text">二、三大核心角色：Host、MCP Client、MCP Server</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Host%EF%BC%88%E4%B8%BB%E6%9C%BA%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">Host（主机）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MCP-Client%EF%BC%88%E5%8D%8F%E8%AE%AE%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">MCP Client（协议客户端）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MCP-Server%EF%BC%88%E8%83%BD%E5%8A%9B%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">MCP Server（能力服务端）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%92%E8%89%B2%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">2.4.</span> <span class="nav-text">角色关系图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%BA%95%E5%B1%82%E5%9F%BA%E7%A1%80%EF%BC%9AJSON-RPC-2-0-%E6%B6%88%E6%81%AF%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">三、底层基础：JSON-RPC 2.0 消息模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Request-%E6%8A%A5%E6%96%87"><span class="nav-number">3.1.</span> <span class="nav-text">Request 报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Response-%E6%8A%A5%E6%96%87"><span class="nav-number">3.2.</span> <span class="nav-text">Response 报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Notification-%E6%8A%A5%E6%96%87"><span class="nav-number">3.3.</span> <span class="nav-text">Notification 报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MCP-%E5%9C%A8-JSON-RPC-%E4%B9%8B%E4%B8%8A%E8%BF%BD%E5%8A%A0%E7%9A%84%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.4.</span> <span class="nav-text">MCP 在 JSON-RPC 之上追加的约束</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%BC%9A%E8%AF%9D%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E6%A0%B8%E5%BF%83%E6%B5%81%E7%A8%8B%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">四、会话完整生命周期（核心流程）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%A1%E6%89%8B%E6%8A%A5%E6%96%87%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.1.</span> <span class="nav-text">握手报文示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-number">4.2.</span> <span class="nav-text">关键点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Capability%EF%BC%88%E8%83%BD%E5%8A%9B%E9%9B%86%EF%BC%89%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="nav-number">5.</span> <span class="nav-text">五、Capability（能力集）的设计思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E7%AC%AC%E4%B8%80%E7%AF%87%E5%B0%8F%E7%BB%93%E4%B8%8E%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">6.</span> <span class="nav-text">六、第一篇小结与高频误区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">核心要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA%EF%BC%88%E9%9D%A2%E8%AF%95%E5%B8%B8%E8%80%83%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">高频误区（面试常考）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/01/MCP-Protocol-Foundations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入浅出 MCP 系列教程（一）：协议基础与架构设计 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入浅出 MCP 系列教程（一）：协议基础与架构设计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-01 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-01T09:00:00+08:00">2026-11-01</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本系列共 5 篇，系统拆解 Model Context Protocol（MCP）：从协议基础、三大原语、传输层、进阶能力到生产工程与选型。本篇是第一篇，讲清楚 MCP 是什么、为什么诞生、底层消息模型和会话全生命周期。</p>
+</blockquote>
+<h2 id="一、为什么诞生-MCP：N-×-M-的集成困境"><a href="#一、为什么诞生-MCP：N-×-M-的集成困境" class="headerlink" title="一、为什么诞生 MCP：N × M 的集成困境"></a>一、为什么诞生 MCP：N × M 的集成困境</h2><p>在 MCP 出现之前，Agent 和外部系统集成是典型的 N × M 复杂度问题。</p>
+<p>假设市面上有一批 AI Host（运行 Agent 的上层应用）：Claude Desktop、Claude Code、Cursor、各类自研企业 Agent 平台。同时有一批外部系统：Git、本地文件系统、PostgreSQL、Slack、Jira、Notion、内部 OA、监控平台。</p>
+<p>如果没有统一标准，每一个 Host 对接一个外部系统都要单独写一套连接器。Host 数量 &#x3D; N，外部系统数量 &#x3D; M，总集成工作量 ≈ N × M。举个数字例子：5 个 Agent 客户端、8 个外部系统，需要 40 套独立对接代码。</p>
+<p>并且每套连接器各自定义规范：工具描述有的放 YAML、有的硬编码；没有统一的资源读取方式、变更推送、用户授权确认机制、错误码、会话握手和权限边界。</p>
+<h3 id="Function-Calling-的天然局限"><a href="#Function-Calling-的天然局限" class="headerlink" title="Function Calling 的天然局限"></a>Function Calling 的天然局限</h3><p>很多集成只是简单封装了 LLM 的 Function Calling，但 Function Calling 本身只解决一件事：让模型输出结构化 JSON 参数调用函数。它不规定：</p>
+<ol>
+<li>工具如何被发现、列表如何同步；</li>
+<li>外部只读数据如何作为上下文送入模型；</li>
+<li>数据变更如何主动推送；</li>
+<li>用户如何统一授权、审批高危操作；</li>
+<li>服务端反过来请求模型做推理；</li>
+<li>不同 Agent 客户端复用同一套外部能力。</li>
+</ol>
+<h3 id="LSP-的启发：从-N-×-M-到-N-M"><a href="#LSP-的启发：从-N-×-M-到-N-M" class="headerlink" title="LSP 的启发：从 N × M 到 N + M"></a>LSP 的启发：从 N × M 到 N + M</h3><p>MCP 的思路借鉴了 LSP（Language Server Protocol）。LSP 解决了不同编辑器（VS Code、Neovim、JetBrains）对接不同语言服务的问题。MCP 把这个范式搬到 AI Agent 领域：外部能力提供者只实现一次 MCP Server；所有 AI Host 只要内置 MCP Client 就可以直接接入。复杂度从 N × M → N + M。</p>
+<h3 id="关键认知：MCP-是”有线协议”"><a href="#关键认知：MCP-是”有线协议”" class="headerlink" title="关键认知：MCP 是”有线协议”"></a>关键认知：MCP 是”有线协议”</h3><p>MCP 不是框架，不是 SDK，不是编程语言库，它是<strong>有线协议</strong>。”有线协议”的含义：规定两个进程之间通过通道传递什么格式的消息、消息字段含义、交互顺序、握手规则。任何语言，只要按报文规范实现，就可以互通。SDK 只是降低实现成本的封装。</p>
+<p>MCP 由 Anthropic 在 2024 年 11 月发布，目标是标准化 AI Agent 和外部系统之间的上下文交换、工具调用、资源读取、提示模板加载。</p>
+<h3 id="顶层设计原则"><a href="#顶层设计原则" class="headerlink" title="顶层设计原则"></a>顶层设计原则</h3><ol>
+<li><strong>模型中立</strong>：不绑定任何大模型，Host 可以接入任意后端 LLM；</li>
+<li><strong>传输中立</strong>：可以跑在子进程 stdio，也可以跑在 HTTP &#x2F; SSE；</li>
+<li><strong>默认安全，显式授权</strong>：每个 Server 连接 Host 都需要用户主动确认授权，权限遵循最小可用；</li>
+<li><strong>可组合</strong>：同一个 Host 可以同时挂载多个互相独立的 MCP Server；</li>
+<li><strong>向后兼容、版本化演进</strong>：通过能力协商而不是强制版本号锁死；</li>
+<li><strong>区分读、写、模板三类能力</strong>：原生区分只读资源、带副作用工具、提示模板。</li>
+</ol>
+<h2 id="二、三大核心角色：Host、MCP-Client、MCP-Server"><a href="#二、三大核心角色：Host、MCP-Client、MCP-Server" class="headerlink" title="二、三大核心角色：Host、MCP Client、MCP Server"></a>二、三大核心角色：Host、MCP Client、MCP Server</h2><p>这是整个 MCP 模型的骨架，也是所有报文、会话逻辑的依托。很多初学者容易混淆 Client 和 Host，这里严格区分。</p>
+<h3 id="Host（主机）"><a href="#Host（主机）" class="headerlink" title="Host（主机）"></a>Host（主机）</h3><p>Host 是面向用户的顶层 AI 应用，是整个会话的拥有者和决策者。典型例子：Claude Desktop、Claude Code、自研企业 Agent 平台、集成 MCP 的 IDE。</p>
+<p>Host 的职责清单：</p>
+<ol>
+<li><strong>持有用户会话、身份、信任边界</strong>：所有授权弹窗、高危操作确认都由 Host 展示给用户。Server 无权直接弹出确认窗口；</li>
+<li><strong>管理多个 MCP Client 实例</strong>：连接 3 个 MCP Server 就启动 3 个独立 Client，一一对应；</li>
+<li><strong>持有 LLM 推理入口</strong>：采样（sampling）请求由 Server 发起，Host 调用大模型完成推理再回传，Host 掌握模型密钥与配额；</li>
+<li><strong>安全策略总控</strong>：黑名单、白名单、资源读取大小限制、超长返回截断；</li>
+<li><strong>聚合上下文</strong>：把各 Server 的 Resources、工具返回结果整理成上下文送入 LLM。</li>
+</ol>
+<p>一句话概括：Host &#x3D; 用户侧的 AI 应用，拥有最终决策权。</p>
+<h3 id="MCP-Client（协议客户端）"><a href="#MCP-Client（协议客户端）" class="headerlink" title="MCP Client（协议客户端）"></a>MCP Client（协议客户端）</h3><p>Client 不是独立软件，它是 Host 内部的一个协议实例，<strong>一对一绑定一个 MCP Server</strong>。这个 1:1 隔离是强制设计。</p>
+<p>Client 职责：建立底层传输通道；发起 <code>initialize</code> 握手完成能力协商；转发双向消息；维护订阅关系和会话状态；隔离会话——A Server 的消息、凭据、状态完全不会混入 B Server。</p>
+<blockquote>
+<p>❌ 错误理解：一个 Client 可以同时连接多个 Server。<br>✅ 正确理解：一个 Client ↔ 一个 Server；多服务接入需要多个 Client。这个隔离设计是为了防止权限逃逸、消息串扰。</p>
+</blockquote>
+<h3 id="MCP-Server（能力服务端）"><a href="#MCP-Server（能力服务端）" class="headerlink" title="MCP Server（能力服务端）"></a>MCP Server（能力服务端）</h3><p>Server 是独立的能力提供者，可以是本地子进程，也可以是云端远程服务。它向外暴露 Tools、Resources、Prompts，负责声明自身能力、执行业务逻辑、推送变更通知、发起反向采样请求，并严格遵守 Host 下发的权限边界（roots）。</p>
+<p>典型 Server：filesystem（文件读写）、postgres（数据库查询）、git（提交&#x2F;diff）、jira（工单管理）。</p>
+<h3 id="角色关系图"><a href="#角色关系图" class="headerlink" title="角色关系图"></a>角色关系图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ Host（AI应用） ]</span><br><span class="line">    ├─ Client 1 ↔ Server A（文件）</span><br><span class="line">    ├─ Client 2 ↔ Server B（数据库）</span><br><span class="line">    └─ Client 3 ↔ Server C（工单）</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、底层基础：JSON-RPC-2-0-消息模型"><a href="#三、底层基础：JSON-RPC-2-0-消息模型" class="headerlink" title="三、底层基础：JSON-RPC 2.0 消息模型"></a>三、底层基础：JSON-RPC 2.0 消息模型</h2><p>MCP 所有通信报文都基于 JSON-RPC 2.0，完全沿用其三类消息分类：</p>
+<ol>
+<li><strong>Request（请求）</strong>：需要对方返回响应；</li>
+<li><strong>Response（响应）</strong>：对应一个请求，成功或失败；</li>
+<li><strong>Notification（通知）</strong>：单向消息，不需要应答，没有 id。</li>
+</ol>
+<h3 id="Request-报文"><a href="#Request-报文" class="headerlink" title="Request 报文"></a>Request 报文</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;req-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/list&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>id</code>：唯一标识，后续 Response 必须带上完全一样的 id 用来配对；</li>
+<li><code>method</code>：MCP 预定义标准方法，如 <code>initialize</code>、<code>tools/list</code>、<code>tools/call</code>。</li>
+</ul>
+<h3 id="Response-报文"><a href="#Response-报文" class="headerlink" title="Response 报文"></a>Response 报文</h3><p>成功用 <code>result</code>，失败用 <code>error</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;req-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">-32601</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Method not found&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Notification-报文"><a href="#Notification-报文" class="headerlink" title="Notification 报文"></a>Notification 报文</h3><p>通知没有 <code>id</code>，接收方不需要回复。典型例子：握手完成的 <code>initialized</code> 通知、资源变更通知、日志推送。</p>
+<h3 id="MCP-在-JSON-RPC-之上追加的约束"><a href="#MCP-在-JSON-RPC-之上追加的约束" class="headerlink" title="MCP 在 JSON-RPC 之上追加的约束"></a>MCP 在 JSON-RPC 之上追加的约束</h3><ol>
+<li>所有消息是独立 JSON 对象；stdio 传输时每条消息单独一行（JSONL）；</li>
+<li>method 有命名空间：工具 <code>tools/*</code>，资源 <code>resources/*</code>，提示 <code>prompts/*</code>；</li>
+<li>不允许批量消息（JSON-RPC 原生支持 batch，但 MCP 规范不鼓励）；</li>
+<li>同一通道消息按发送顺序处理，但响应返回顺序不一定严格匹配。</li>
+</ol>
+<blockquote>
+<p>新手坑：凡是需要等待返回结果的，一定带 id；事件推送、状态告知，不带 id。</p>
+</blockquote>
+<h2 id="四、会话完整生命周期（核心流程）"><a href="#四、会话完整生命周期（核心流程）" class="headerlink" title="四、会话完整生命周期（核心流程）"></a>四、会话完整生命周期（核心流程）</h2><p>MCP 是<strong>有状态会话</strong>，不是无状态的单次 HTTP 请求。流程是协议强制顺序，不能颠倒：</p>
+<ol>
+<li>建立传输通道（stdio spawn 子进程 &#x2F; HTTP 连接）；</li>
+<li>Client → Server：<code>initialize</code> 请求（交换协议版本、能力、客户端信息）；</li>
+<li>Server 返回 <code>initialize</code> 响应，公布自身能力；</li>
+<li>Client 发送 <code>initialized</code> 通知，握手完成；</li>
+<li>正常交互阶段（工具调用、资源读取、订阅、采样）；</li>
+<li>会话关闭（优雅 shutdown 或异常断开）。</li>
+</ol>
+<h3 id="握手报文示例"><a href="#握手报文示例" class="headerlink" title="握手报文示例"></a>握手报文示例</h3><p>Client 请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;init-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;initialize&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;sampling&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;roots&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;clientInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;my-agent-host&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Server 响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;init-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;resources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;subscribe&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;prompts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serverInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;demo-file-server&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h3><ul>
+<li><strong>协商之后，交集才是可用能力</strong>：Client 支持 sampling、Server 不支持 → 整个会话不能使用 sampling；</li>
+<li><strong><code>initialized</code> 通知不能忘</strong>：Server 收到之前不能主动推送通知、不能处理业务调用。很多 Demo 握手后忘记发送 <code>initialized</code>，导致 Server 不响应后续调用；</li>
+<li><strong>会话断开，协商结果全部作废</strong>：重新通信必须完整重新握手，不能复用上次协商结果；</li>
+<li><strong>权限边界一直生效</strong>：例如 roots 约束 Server 任何资源读取不能越界。</li>
+</ul>
+<h2 id="五、Capability（能力集）的设计思想"><a href="#五、Capability（能力集）的设计思想" class="headerlink" title="五、Capability（能力集）的设计思想"></a>五、Capability（能力集）的设计思想</h2><p>协议把能力分成两大类：</p>
+<ol>
+<li><strong>强制基础能力</strong>：JSON-RPC 消息、initialize 握手；</li>
+<li><strong>可选扩展能力</strong>：tools、resources、prompts、sampling、roots、订阅、日志等，靠握手协商开启。</li>
+</ol>
+<p>为什么这样设计？</p>
+<ul>
+<li><strong>轻量化</strong>：极简 Server 可以只暴露资源，完全不实现工具；</li>
+<li><strong>向前向后兼容</strong>：协议新增能力时，老客户端不会崩掉；对方没声明支持，直接不调用；</li>
+<li><strong>职责分离</strong>：纯只读知识库 Server 不需要实现 tools。</li>
+</ul>
+<p>常见 capability 含义：</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tools</code></td>
+<td>支持工具调用</td>
+</tr>
+<tr>
+<td><code>resources</code></td>
+<td>支持资源读取，<code>subscribe: true</code> 表示支持变更订阅</td>
+</tr>
+<tr>
+<td><code>prompts</code></td>
+<td>支持提示模板</td>
+</tr>
+<tr>
+<td><code>sampling</code></td>
+<td>Server 可以请求 Host 的模型</td>
+</tr>
+<tr>
+<td><code>roots</code></td>
+<td>Host 可以下发访问根路径限制</td>
+</tr>
+<tr>
+<td><code>logging</code></td>
+<td>接收日志推送通知</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>重要：capabilities 只是”声明我具备这个能力”，不是权限开关。就算 Server 声明支持 tools，Host 依然可以在应用层策略上拒绝调用其中某些工具。协商只是协议层面的互通可能性，最终放行权在 Host。</p>
+</blockquote>
+<h2 id="六、第一篇小结与高频误区"><a href="#六、第一篇小结与高频误区" class="headerlink" title="六、第一篇小结与高频误区"></a>六、第一篇小结与高频误区</h2><h3 id="核心要点"><a href="#核心要点" class="headerlink" title="核心要点"></a>核心要点</h3><ol>
+<li>MCP 是有线通信协议，在 Function Calling 之上标准化 Agent 和外部系统对接；</li>
+<li>三层角色：Host（决策者）、Client（一对一协议通道）、Server（能力提供者）；</li>
+<li>底层报文基于 JSON-RPC 2.0，分为 Request &#x2F; Response &#x2F; Notification；</li>
+<li>会话固定顺序：建通道 → initialize 交换能力 → initialized 通知 → 业务交互 → 关闭；</li>
+<li>能力协商是版本兼容与轻量化扩展的核心，只有双方都声明支持的能力才能使用；</li>
+<li>隔离约束：一个 Client 只绑定一个 Server。</li>
+</ol>
+<h3 id="高频误区（面试常考）"><a href="#高频误区（面试常考）" class="headerlink" title="高频误区（面试常考）"></a>高频误区（面试常考）</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MCP &#x3D; Function Calling</td>
+<td>Function Calling 只是模型输出结构化参数；MCP 是完整的服务发现、上下文、权限、双向通信标准</td>
+</tr>
+<tr>
+<td>一个 Client 连多个 Server</td>
+<td>强制一对一</td>
+</tr>
+<tr>
+<td>建立连接后直接调用工具</td>
+<td>必须走完 initialize + initialized 握手</td>
+</tr>
+<tr>
+<td>stdout 可以随便打印日志</td>
+<td>stdio 模式下 stdout 只能输出 JSON-RPC，日志走 stderr</td>
+</tr>
+<tr>
+<td>capability 协商 &#x3D; 授权</td>
+<td>协商只代表协议上可互通，用户授权、工具审批是 Host 上层安全策略</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇：《深入浅出 MCP 系列教程（二）：三大核心原语实战》，将详解 Resources &#x2F; Tools &#x2F; Prompts 的完整规范、调用链路与踩坑点。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/20/Preload-Prefetch-Defer-Async/" rel="prev" title="一张图搞懂 preload、prefetch、defer、async 的区别">
+                  <i class="fa fa-angle-left"></i> 一张图搞懂 preload、prefetch、defer、async 的区别
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">102</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,422 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/01/MCP-Protocol-Foundations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/01/MCP-Protocol-Foundations/" class="post-title-link" itemprop="url">深入浅出 MCP 系列教程（一）：协议基础与架构设计</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-01 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-01T09:00:00+08:00">2026-11-01</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本系列共 5 篇，系统拆解 Model Context Protocol（MCP）：从协议基础、三大原语、传输层、进阶能力到生产工程与选型。本篇是第一篇，讲清楚 MCP 是什么、为什么诞生、底层消息模型和会话全生命周期。</p>
+</blockquote>
+<h2 id="一、为什么诞生-MCP：N-×-M-的集成困境"><a href="#一、为什么诞生-MCP：N-×-M-的集成困境" class="headerlink" title="一、为什么诞生 MCP：N × M 的集成困境"></a>一、为什么诞生 MCP：N × M 的集成困境</h2><p>在 MCP 出现之前，Agent 和外部系统集成是典型的 N × M 复杂度问题。</p>
+<p>假设市面上有一批 AI Host（运行 Agent 的上层应用）：Claude Desktop、Claude Code、Cursor、各类自研企业 Agent 平台。同时有一批外部系统：Git、本地文件系统、PostgreSQL、Slack、Jira、Notion、内部 OA、监控平台。</p>
+<p>如果没有统一标准，每一个 Host 对接一个外部系统都要单独写一套连接器。Host 数量 &#x3D; N，外部系统数量 &#x3D; M，总集成工作量 ≈ N × M。举个数字例子：5 个 Agent 客户端、8 个外部系统，需要 40 套独立对接代码。</p>
+<p>并且每套连接器各自定义规范：工具描述有的放 YAML、有的硬编码；没有统一的资源读取方式、变更推送、用户授权确认机制、错误码、会话握手和权限边界。</p>
+<h3 id="Function-Calling-的天然局限"><a href="#Function-Calling-的天然局限" class="headerlink" title="Function Calling 的天然局限"></a>Function Calling 的天然局限</h3><p>很多集成只是简单封装了 LLM 的 Function Calling，但 Function Calling 本身只解决一件事：让模型输出结构化 JSON 参数调用函数。它不规定：</p>
+<ol>
+<li>工具如何被发现、列表如何同步；</li>
+<li>外部只读数据如何作为上下文送入模型；</li>
+<li>数据变更如何主动推送；</li>
+<li>用户如何统一授权、审批高危操作；</li>
+<li>服务端反过来请求模型做推理；</li>
+<li>不同 Agent 客户端复用同一套外部能力。</li>
+</ol>
+<h3 id="LSP-的启发：从-N-×-M-到-N-M"><a href="#LSP-的启发：从-N-×-M-到-N-M" class="headerlink" title="LSP 的启发：从 N × M 到 N + M"></a>LSP 的启发：从 N × M 到 N + M</h3><p>MCP 的思路借鉴了 LSP（Language Server Protocol）。LSP 解决了不同编辑器（VS Code、Neovim、JetBrains）对接不同语言服务的问题。MCP 把这个范式搬到 AI Agent 领域：外部能力提供者只实现一次 MCP Server；所有 AI Host 只要内置 MCP Client 就可以直接接入。复杂度从 N × M → N + M。</p>
+<h3 id="关键认知：MCP-是”有线协议”"><a href="#关键认知：MCP-是”有线协议”" class="headerlink" title="关键认知：MCP 是”有线协议”"></a>关键认知：MCP 是”有线协议”</h3><p>MCP 不是框架，不是 SDK，不是编程语言库，它是<strong>有线协议</strong>。”有线协议”的含义：规定两个进程之间通过通道传递什么格式的消息、消息字段含义、交互顺序、握手规则。任何语言，只要按报文规范实现，就可以互通。SDK 只是降低实现成本的封装。</p>
+<p>MCP 由 Anthropic 在 2024 年 11 月发布，目标是标准化 AI Agent 和外部系统之间的上下文交换、工具调用、资源读取、提示模板加载。</p>
+<h3 id="顶层设计原则"><a href="#顶层设计原则" class="headerlink" title="顶层设计原则"></a>顶层设计原则</h3><ol>
+<li><strong>模型中立</strong>：不绑定任何大模型，Host 可以接入任意后端 LLM；</li>
+<li><strong>传输中立</strong>：可以跑在子进程 stdio，也可以跑在 HTTP &#x2F; SSE；</li>
+<li><strong>默认安全，显式授权</strong>：每个 Server 连接 Host 都需要用户主动确认授权，权限遵循最小可用；</li>
+<li><strong>可组合</strong>：同一个 Host 可以同时挂载多个互相独立的 MCP Server；</li>
+<li><strong>向后兼容、版本化演进</strong>：通过能力协商而不是强制版本号锁死；</li>
+<li><strong>区分读、写、模板三类能力</strong>：原生区分只读资源、带副作用工具、提示模板。</li>
+</ol>
+<h2 id="二、三大核心角色：Host、MCP-Client、MCP-Server"><a href="#二、三大核心角色：Host、MCP-Client、MCP-Server" class="headerlink" title="二、三大核心角色：Host、MCP Client、MCP Server"></a>二、三大核心角色：Host、MCP Client、MCP Server</h2><p>这是整个 MCP 模型的骨架，也是所有报文、会话逻辑的依托。很多初学者容易混淆 Client 和 Host，这里严格区分。</p>
+<h3 id="Host（主机）"><a href="#Host（主机）" class="headerlink" title="Host（主机）"></a>Host（主机）</h3><p>Host 是面向用户的顶层 AI 应用，是整个会话的拥有者和决策者。典型例子：Claude Desktop、Claude Code、自研企业 Agent 平台、集成 MCP 的 IDE。</p>
+<p>Host 的职责清单：</p>
+<ol>
+<li><strong>持有用户会话、身份、信任边界</strong>：所有授权弹窗、高危操作确认都由 Host 展示给用户。Server 无权直接弹出确认窗口；</li>
+<li><strong>管理多个 MCP Client 实例</strong>：连接 3 个 MCP Server 就启动 3 个独立 Client，一一对应；</li>
+<li><strong>持有 LLM 推理入口</strong>：采样（sampling）请求由 Server 发起，Host 调用大模型完成推理再回传，Host 掌握模型密钥与配额；</li>
+<li><strong>安全策略总控</strong>：黑名单、白名单、资源读取大小限制、超长返回截断；</li>
+<li><strong>聚合上下文</strong>：把各 Server 的 Resources、工具返回结果整理成上下文送入 LLM。</li>
+</ol>
+<p>一句话概括：Host &#x3D; 用户侧的 AI 应用，拥有最终决策权。</p>
+<h3 id="MCP-Client（协议客户端）"><a href="#MCP-Client（协议客户端）" class="headerlink" title="MCP Client（协议客户端）"></a>MCP Client（协议客户端）</h3><p>Client 不是独立软件，它是 Host 内部的一个协议实例，<strong>一对一绑定一个 MCP Server</strong>。这个 1:1 隔离是强制设计。</p>
+<p>Client 职责：建立底层传输通道；发起 <code>initialize</code> 握手完成能力协商；转发双向消息；维护订阅关系和会话状态；隔离会话——A Server 的消息、凭据、状态完全不会混入 B Server。</p>
+<blockquote>
+<p>❌ 错误理解：一个 Client 可以同时连接多个 Server。<br>✅ 正确理解：一个 Client ↔ 一个 Server；多服务接入需要多个 Client。这个隔离设计是为了防止权限逃逸、消息串扰。</p>
+</blockquote>
+<h3 id="MCP-Server（能力服务端）"><a href="#MCP-Server（能力服务端）" class="headerlink" title="MCP Server（能力服务端）"></a>MCP Server（能力服务端）</h3><p>Server 是独立的能力提供者，可以是本地子进程，也可以是云端远程服务。它向外暴露 Tools、Resources、Prompts，负责声明自身能力、执行业务逻辑、推送变更通知、发起反向采样请求，并严格遵守 Host 下发的权限边界（roots）。</p>
+<p>典型 Server：filesystem（文件读写）、postgres（数据库查询）、git（提交&#x2F;diff）、jira（工单管理）。</p>
+<h3 id="角色关系图"><a href="#角色关系图" class="headerlink" title="角色关系图"></a>角色关系图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ Host（AI应用） ]</span><br><span class="line">    ├─ Client 1 ↔ Server A（文件）</span><br><span class="line">    ├─ Client 2 ↔ Server B（数据库）</span><br><span class="line">    └─ Client 3 ↔ Server C（工单）</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、底层基础：JSON-RPC-2-0-消息模型"><a href="#三、底层基础：JSON-RPC-2-0-消息模型" class="headerlink" title="三、底层基础：JSON-RPC 2.0 消息模型"></a>三、底层基础：JSON-RPC 2.0 消息模型</h2><p>MCP 所有通信报文都基于 JSON-RPC 2.0，完全沿用其三类消息分类：</p>
+<ol>
+<li><strong>Request（请求）</strong>：需要对方返回响应；</li>
+<li><strong>Response（响应）</strong>：对应一个请求，成功或失败；</li>
+<li><strong>Notification（通知）</strong>：单向消息，不需要应答，没有 id。</li>
+</ol>
+<h3 id="Request-报文"><a href="#Request-报文" class="headerlink" title="Request 报文"></a>Request 报文</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;req-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/list&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>id</code>：唯一标识，后续 Response 必须带上完全一样的 id 用来配对；</li>
+<li><code>method</code>：MCP 预定义标准方法，如 <code>initialize</code>、<code>tools/list</code>、<code>tools/call</code>。</li>
+</ul>
+<h3 id="Response-报文"><a href="#Response-报文" class="headerlink" title="Response 报文"></a>Response 报文</h3><p>成功用 <code>result</code>，失败用 <code>error</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;req-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">-32601</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Method not found&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Notification-报文"><a href="#Notification-报文" class="headerlink" title="Notification 报文"></a>Notification 报文</h3><p>通知没有 <code>id</code>，接收方不需要回复。典型例子：握手完成的 <code>initialized</code> 通知、资源变更通知、日志推送。</p>
+<h3 id="MCP-在-JSON-RPC-之上追加的约束"><a href="#MCP-在-JSON-RPC-之上追加的约束" class="headerlink" title="MCP 在 JSON-RPC 之上追加的约束"></a>MCP 在 JSON-RPC 之上追加的约束</h3><ol>
+<li>所有消息是独立 JSON 对象；stdio 传输时每条消息单独一行（JSONL）；</li>
+<li>method 有命名空间：工具 <code>tools/*</code>，资源 <code>resources/*</code>，提示 <code>prompts/*</code>；</li>
+<li>不允许批量消息（JSON-RPC 原生支持 batch，但 MCP 规范不鼓励）；</li>
+<li>同一通道消息按发送顺序处理，但响应返回顺序不一定严格匹配。</li>
+</ol>
+<blockquote>
+<p>新手坑：凡是需要等待返回结果的，一定带 id；事件推送、状态告知，不带 id。</p>
+</blockquote>
+<h2 id="四、会话完整生命周期（核心流程）"><a href="#四、会话完整生命周期（核心流程）" class="headerlink" title="四、会话完整生命周期（核心流程）"></a>四、会话完整生命周期（核心流程）</h2><p>MCP 是<strong>有状态会话</strong>，不是无状态的单次 HTTP 请求。流程是协议强制顺序，不能颠倒：</p>
+<ol>
+<li>建立传输通道（stdio spawn 子进程 &#x2F; HTTP 连接）；</li>
+<li>Client → Server：<code>initialize</code> 请求（交换协议版本、能力、客户端信息）；</li>
+<li>Server 返回 <code>initialize</code> 响应，公布自身能力；</li>
+<li>Client 发送 <code>initialized</code> 通知，握手完成；</li>
+<li>正常交互阶段（工具调用、资源读取、订阅、采样）；</li>
+<li>会话关闭（优雅 shutdown 或异常断开）。</li>
+</ol>
+<h3 id="握手报文示例"><a href="#握手报文示例" class="headerlink" title="握手报文示例"></a>握手报文示例</h3><p>Client 请求：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;init-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;initialize&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;sampling&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;roots&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;clientInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;my-agent-host&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Server 响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;init-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;resources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;subscribe&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;prompts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serverInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;demo-file-server&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h3><ul>
+<li><strong>协商之后，交集才是可用能力</strong>：Client 支持 sampling、Server 不支持 → 整个会话不能使用 sampling；</li>
+<li><strong><code>initialized</code> 通知不能忘</strong>：Server 收到之前不能主动推送通知、不能处理业务调用。很多 Demo 握手后忘记发送 <code>initialized</code>，导致 Server 不响应后续调用；</li>
+<li><strong>会话断开，协商结果全部作废</strong>：重新通信必须完整重新握手，不能复用上次协商结果；</li>
+<li><strong>权限边界一直生效</strong>：例如 roots 约束 Server 任何资源读取不能越界。</li>
+</ul>
+<h2 id="五、Capability（能力集）的设计思想"><a href="#五、Capability（能力集）的设计思想" class="headerlink" title="五、Capability（能力集）的设计思想"></a>五、Capability（能力集）的设计思想</h2><p>协议把能力分成两大类：</p>
+<ol>
+<li><strong>强制基础能力</strong>：JSON-RPC 消息、initialize 握手；</li>
+<li><strong>可选扩展能力</strong>：tools、resources、prompts、sampling、roots、订阅、日志等，靠握手协商开启。</li>
+</ol>
+<p>为什么这样设计？</p>
+<ul>
+<li><strong>轻量化</strong>：极简 Server 可以只暴露资源，完全不实现工具；</li>
+<li><strong>向前向后兼容</strong>：协议新增能力时，老客户端不会崩掉；对方没声明支持，直接不调用；</li>
+<li><strong>职责分离</strong>：纯只读知识库 Server 不需要实现 tools。</li>
+</ul>
+<p>常见 capability 含义：</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tools</code></td>
+<td>支持工具调用</td>
+</tr>
+<tr>
+<td><code>resources</code></td>
+<td>支持资源读取，<code>subscribe: true</code> 表示支持变更订阅</td>
+</tr>
+<tr>
+<td><code>prompts</code></td>
+<td>支持提示模板</td>
+</tr>
+<tr>
+<td><code>sampling</code></td>
+<td>Server 可以请求 Host 的模型</td>
+</tr>
+<tr>
+<td><code>roots</code></td>
+<td>Host 可以下发访问根路径限制</td>
+</tr>
+<tr>
+<td><code>logging</code></td>
+<td>接收日志推送通知</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>重要：capabilities 只是”声明我具备这个能力”，不是权限开关。就算 Server 声明支持 tools，Host 依然可以在应用层策略上拒绝调用其中某些工具。协商只是协议层面的互通可能性，最终放行权在 Host。</p>
+</blockquote>
+<h2 id="六、第一篇小结与高频误区"><a href="#六、第一篇小结与高频误区" class="headerlink" title="六、第一篇小结与高频误区"></a>六、第一篇小结与高频误区</h2><h3 id="核心要点"><a href="#核心要点" class="headerlink" title="核心要点"></a>核心要点</h3><ol>
+<li>MCP 是有线通信协议，在 Function Calling 之上标准化 Agent 和外部系统对接；</li>
+<li>三层角色：Host（决策者）、Client（一对一协议通道）、Server（能力提供者）；</li>
+<li>底层报文基于 JSON-RPC 2.0，分为 Request &#x2F; Response &#x2F; Notification；</li>
+<li>会话固定顺序：建通道 → initialize 交换能力 → initialized 通知 → 业务交互 → 关闭；</li>
+<li>能力协商是版本兼容与轻量化扩展的核心，只有双方都声明支持的能力才能使用；</li>
+<li>隔离约束：一个 Client 只绑定一个 Server。</li>
+</ol>
+<h3 id="高频误区（面试常考）"><a href="#高频误区（面试常考）" class="headerlink" title="高频误区（面试常考）"></a>高频误区（面试常考）</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MCP &#x3D; Function Calling</td>
+<td>Function Calling 只是模型输出结构化参数；MCP 是完整的服务发现、上下文、权限、双向通信标准</td>
+</tr>
+<tr>
+<td>一个 Client 连多个 Server</td>
+<td>强制一对一</td>
+</tr>
+<tr>
+<td>建立连接后直接调用工具</td>
+<td>必须走完 initialize + initialized 握手</td>
+</tr>
+<tr>
+<td>stdout 可以随便打印日志</td>
+<td>stdio 模式下 stdout 只能输出 JSON-RPC，日志走 stderr</td>
+</tr>
+<tr>
+<td>capability 协商 &#x3D; 授权</td>
+<td>协商只代表协议上可互通，用户授权、工具审批是 Host 上层安全策略</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇：《深入浅出 MCP 系列教程（二）：三大核心原语实战》，将详解 Resources &#x2F; Tools &#x2F; Prompts 的完整规范、调用链路与踩坑点。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/10/20/Preload-Prefetch-Defer-Async/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/10/20/Preload-Prefetch-Defer-Async/" class="post-title-link" itemprop="url">一张图搞懂 preload、prefetch、defer、async 的区别</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-10-20 10:00:00" itemprop="dateCreated datePublished" datetime="2026-10-20T10:00:00+08:00">2026-10-20</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>浏览器里经常遇到这四个关键词，但它们的区别很容易混淆。一句话版先记住：</p>
+<ul>
+<li><strong>preload</strong>：当前页<strong>马上要用</strong>，高优先级先下载。</li>
+<li><strong>prefetch</strong>：下一页<strong>可能要用</strong>，低优先级闲时下载。</li>
+<li><strong>defer</strong>：JS 下载不阻塞解析，<strong>DOM 完成后按顺序执行</strong>。</li>
+<li><strong>async</strong>：JS 下载不阻塞解析，<strong>下载完立刻执行，顺序不可控</strong>。</li>
+</ul>
+<p>下面分别展开。</p>
+<hr>
+<h2 id="资源提示类：preload-prefetch"><a href="#资源提示类：preload-prefetch" class="headerlink" title="资源提示类：preload &#x2F; prefetch"></a>资源提示类：preload &#x2F; prefetch</h2><p>这俩都是 <code>&lt;link&gt;</code> 标签上的 <code>rel</code> 属性，告诉浏览器「提前搞个资源」。</p>
+<h3 id="preload"><a href="#preload" class="headerlink" title="preload"></a>preload</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;preload&quot;</span> <span class="attr">href</span>=<span class="string">&quot;font.woff2&quot;</span> <span class="attr">as</span>=<span class="string">&quot;font&quot;</span> <span class="attr">crossorigin</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;preload&quot;</span> <span class="attr">href</span>=<span class="string">&quot;hero.jpg&quot;</span> <span class="attr">as</span>=<span class="string">&quot;image&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;preload&quot;</span> <span class="attr">href</span>=<span class="string">&quot;critical.js&quot;</span> <span class="attr">as</span>=<span class="string">&quot;script&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>高优先级</strong>：浏览器会把它当成「当前页面马上要用」的关键资源，<strong>在渲染早期就下载</strong>。</li>
+<li>下载完<strong>不执行</strong>，只是放进缓存。真正用到的时候（比如 <code>&lt;img src=&quot;hero.jpg&quot;&gt;</code>）直接从缓存取。</li>
+<li>适合：关键字体、首屏大图、核心 JS&#x2F;CSS。</li>
+</ul>
+<p>⚠️ 用错会浪费带宽——不要 preload 那些当前页根本用不上的东西。</p>
+<h3 id="prefetch"><a href="#prefetch" class="headerlink" title="prefetch"></a>prefetch</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;prefetch&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/next-page.html&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;prefetch&quot;</span> <span class="attr">href</span>=<span class="string">&quot;next-page.css&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>低优先级</strong>：浏览器在<strong>网络空闲时</strong>才下载。</li>
+<li>同样下载完不执行，只是预热缓存，给<strong>下一个页面</strong>准备的。</li>
+<li>适合：用户大概率会点的下一跳页面资源。</li>
+</ul>
+<h3 id="一图对比"><a href="#一图对比" class="headerlink" title="一图对比"></a>一图对比</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">           优先级    时机            用途           执行时机</span><br><span class="line">preload     高       当前页渲染早期   当前页关键资源   不执行，仅缓存</span><br><span class="line">prefetch    低       网络空闲时       下一页候选资源   不执行，仅缓存</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Script-类：defer-async"><a href="#Script-类：defer-async" class="headerlink" title="Script 类：defer &#x2F; async"></a>Script 类：defer &#x2F; async</h2><p>这俩是 <code>&lt;script&gt;</code> 标签的属性，解决的是「JS 会阻塞 HTML 解析」的问题。</p>
+<h3 id="没有属性时"><a href="#没有属性时" class="headerlink" title="没有属性时"></a>没有属性时</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;blocking.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>浏览器解析到这行 → <strong>暂停 DOM 解析</strong> → 下载 JS → 执行 JS → 继续解析。页面明显会卡。</p>
+<h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;a.js&quot;</span> <span class="attr">async</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;b.js&quot;</span> <span class="attr">async</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载阶段<strong>不阻塞 DOM 解析</strong>。</li>
+<li>下载<strong>完成那一刻</strong>，不管 DOM 解析到哪了，立刻暂停解析，执行脚本。</li>
+<li>多个 async 脚本<strong>谁先下载完谁先执行</strong>，顺序完全不可控。</li>
+<li>适合：独立的、不依赖其他脚本的第三方脚本（统计、广告等）。</li>
+</ul>
+<h3 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;a.js&quot;</span> <span class="attr">defer</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;b.js&quot;</span> <span class="attr">defer</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载阶段<strong>不阻塞 DOM 解析</strong>。</li>
+<li>下载完<strong>不立即执行</strong>，等到 HTML 解析完成、<code>DOMContentLoaded</code> 之前，<strong>按书写顺序</strong>依次执行。</li>
+<li>适合：有依赖关系的脚本、需要操作 DOM 的脚本。</li>
+</ul>
+<h3 id="时序对比"><a href="#时序对比" class="headerlink" title="时序对比"></a>时序对比</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTML 解析:  ──|──────────────────────|── DOMContentLoaded</span><br><span class="line">              │                      │</span><br><span class="line">无属性:       │ 下载 → 执行 (阻塞)    │</span><br><span class="line">async:        │ 下载... (并行) → 下载完立刻执行</span><br><span class="line">defer:        │ 下载... (并行)        │ ← 此时按顺序执行</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="一张表收齐"><a href="#一张表收齐" class="headerlink" title="一张表收齐"></a>一张表收齐</h2><table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>载体</th>
+<th>谁用？</th>
+<th>阻塞？</th>
+<th>执行&#x2F;优先级</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>preload</strong></td>
+<td><code>&lt;link rel&gt;</code></td>
+<td>当前页</td>
+<td>—</td>
+<td>高优先级下载，只缓存不执行</td>
+<td>关键字体、首屏图</td>
+</tr>
+<tr>
+<td><strong>prefetch</strong></td>
+<td><code>&lt;link rel&gt;</code></td>
+<td>下一页候选</td>
+<td>—</td>
+<td>低优先级闲时下载，只缓存不执行</td>
+<td>用户大概率跳转的页面</td>
+</tr>
+<tr>
+<td><strong>defer</strong></td>
+<td><code>&lt;script&gt;</code></td>
+<td>当前页 JS</td>
+<td>下载不阻塞</td>
+<td>DOM 完成后<strong>按顺序</strong>执行</td>
+<td>有依赖链的业务脚本</td>
+</tr>
+<tr>
+<td><strong>async</strong></td>
+<td><code>&lt;script&gt;</code></td>
+<td>当前页 JS</td>
+<td>下载不阻塞</td>
+<td>下载完<strong>立刻</strong>执行，顺序随机</td>
+<td>独立第三方脚本（GA等）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="选型口诀"><a href="#选型口诀" class="headerlink" title="选型口诀"></a>选型口诀</h2><ol>
+<li><strong>当前页马上要用 → preload</strong>，下一页才要用 → prefetch。</li>
+<li><strong>JS 有顺序依赖 → defer</strong>，独立无依赖 → async。</li>
+<li>字体记得加 <code>crossorigin</code>，否则 preload 了也白预载。</li>
+<li>不要滥用 preload——它抢带宽，多了反而拖慢真正的关键资源。</li>
+</ol>
+<p>记住这四句话，下次面试或做性能优化就不会再混了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1167,213 +1583,6 @@
 </ul>
 <blockquote>
 <p>难度：中等 | LeetCode 394 | 栈 &#x2F; 递归</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/06/08/Algorithm-Trapping-Rain-Water/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/08/Algorithm-Trapping-Rain-Water/" class="post-title-link" itemprop="url">算法 - 接雨水</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-06-08 14:12:30" itemprop="dateCreated datePublished" datetime="2026-06-08T14:12:30+08:00">2026-06-08</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: height = [0,1,0,2,1,0,1,3,2,1,2,1]</span><br><span class="line">输出: 6</span><br><span class="line"></span><br><span class="line">输入: height = [4,2,0,3,2,5]</span><br><span class="line">输出: 9</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>核心视角：<strong>按列计算</strong>。对每一列 i，它能接的水 &#x3D; <code>min(左侧最高, 右侧最高) - height[i]</code>（若为负则 0）。「木桶效应」取决于两边较矮的那个挡板。</p>
-<h2 id="2-1-动态规划预处理左右最大值"><a href="#2-1-动态规划预处理左右最大值" class="headerlink" title="2.1 动态规划预处理左右最大值"></a>2.1 动态规划预处理左右最大值</h2><p>开两个数组 <code>leftMax[i]</code>、<code>rightMax[i]</code> 分别预处理「从两端到 i 的最大高度」，再逐列累加。O(n) 时间、O(n) 空间。</p>
-<h2 id="2-2-双指针（最优）"><a href="#2-2-双指针（最优）" class="headerlink" title="2.2 双指针（最优）"></a>2.2 双指针（最优）</h2><p>左右指针 <code>l</code>、<code>r</code> 向中间逼近，维护 <code>leftMax</code>、<code>rightMax</code> 两个标量：</p>
-<ul>
-<li><p>比较 <code>height[l]</code> 与 <code>height[r]</code>，<strong>较矮的一侧</strong>决定该侧列的接水量：</p>
-<ul>
-<li>若 <code>height[l] &lt; height[r]</code>：左列的左挡板是 <code>leftMax</code>，右挡板至少是 <code>height[r]</code>（≥ height[l]），所以左侧当前列水位由 <code>leftMax</code> 决定 → 累加 <code>leftMax - height[l]</code>，<code>l++</code>。</li>
-<li>右侧对称处理。</li>
-</ul>
-</li>
-<li><p>边走边更新各自的 max。</p>
-</li>
-<li><p>时间复杂度：O(n)，空间复杂度：O(1)。</p>
-</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双指针（推荐）"><a href="#3-1-双指针（推荐）" class="headerlink" title="3.1 双指针（推荐）"></a>3.1 双指针（推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">trap</span>(<span class="params"><span class="attr">height</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> l = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> r = height.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> leftMax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> rightMax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> water = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="keyword">if</span> (height[l] &lt; height[r]) &#123;</span><br><span class="line">            <span class="keyword">if</span> (height[l] &gt;= leftMax) &#123;</span><br><span class="line">                leftMax = height[l];       <span class="comment">// 新的左挡板</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                water += leftMax - height[l]; <span class="comment">// 填补凹处</span></span><br><span class="line">            &#125;</span><br><span class="line">            l++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (height[r] &gt;= rightMax) &#123;</span><br><span class="line">                rightMax = height[r];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                water += rightMax - height[r];</span><br><span class="line">            &#125;</span><br><span class="line">            r--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> water;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">trap</span>([<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>])); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-DP-预处理左右最大值"><a href="#3-2-DP-预处理左右最大值" class="headerlink" title="3.2 DP 预处理左右最大值"></a>3.2 DP 预处理左右最大值</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">trapDP</span>(<span class="params"><span class="attr">height</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = height.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (n === <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> leftMax = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">const</span> rightMax = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    leftMax[<span class="number">0</span>] = height[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) leftMax[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(leftMax[i - <span class="number">1</span>], height[i]);</span><br><span class="line"></span><br><span class="line">    rightMax[n - <span class="number">1</span>] = height[n - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) rightMax[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(rightMax[i + <span class="number">1</span>], height[i]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> water = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) water += <span class="title class_">Math</span>.<span class="title function_">min</span>(leftMax[i], rightMax[i]) - height[i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> water;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>栈解法</strong>：用单调递减栈按「行」积水（遇到更高柱子就弹出凹槽结算宽度），思路另类，可作加分。</li>
-<li>与<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">盛最多水的容器</a>对照：那道是「两条板一次盛水」，本题是「每列独立按左右挡板蓄水」，都是双指针经典，但计算方式不同。</li>
-<li>追问：为什么 <code>height[l] &lt; height[r]</code> 时能直接对左列结算？因为右挡板已被 <code>height[r]</code> 保证不矮于当前左侧，水位由 <code>leftMax</code> 唯一确定，无需求真实的右侧最大值。</li>
-</ul>
-<blockquote>
-<p>难度：困难 | LeetCode 42 | 双指针 &#x2F; 单调栈</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/05/10/Algorithm-Min-Stack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/05/10/Algorithm-Min-Stack/" class="post-title-link" itemprop="url">算法 - 最小栈（Min Stack）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-05-10 11:08:44" itemprop="dateCreated datePublished" datetime="2026-05-10T11:08:44+08:00">2026-05-10</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>设计一个支持 <code>push</code>、<code>pop</code>、<code>top</code> 操作，并能在 <strong>O(1) 时间</strong>内检索到最小元素的栈。</p>
-<p>实现 <code>MinStack</code> 类：</p>
-<ul>
-<li><code>push(val)</code> 将元素压入栈</li>
-<li><code>pop()</code> 移除栈顶元素</li>
-<li><code>top()</code> 返回栈顶元素</li>
-<li><code>getMin()</code> 返回栈中的最小元素</li>
-</ul>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">MinStack s = new MinStack();</span><br><span class="line">s.push(-2);</span><br><span class="line">s.push(0);</span><br><span class="line">s.push(-3);</span><br><span class="line">s.getMin();   → -3</span><br><span class="line">s.pop();</span><br><span class="line">s.top();      → 0</span><br><span class="line">s.getMin();   → -2</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>普通栈取最小值需要 O(n) 遍历。要 O(1)，需<strong>额外空间换时间</strong>。</p>
-<h2 id="2-1-辅助栈（同步记录最小值）"><a href="#2-1-辅助栈（同步记录最小值）" class="headerlink" title="2.1 辅助栈（同步记录最小值）"></a>2.1 辅助栈（同步记录最小值）</h2><p>维护两个栈：<code>data</code> 存所有元素，<code>minStack</code> 存「<strong>对应 data 各状态下的最小值</strong>」。</p>
-<ul>
-<li>push 时：<code>data</code> 正常入栈；<code>minStack</code> 入栈 <code>min(val, 当前 minStack 栈顶)</code>。</li>
-<li>pop 时：两栈同时弹出。</li>
-<li>getMin：直接看 <code>minStack</code> 栈顶。</li>
-</ul>
-<p>这样 <code>minStack</code> 栈顶始终是 <code>data</code> 当前全部元素的最小值。</p>
-<ul>
-<li>时间复杂度：所有操作 O(1)；空间复杂度：O(n)。</li>
-</ul>
-<h2 id="2-2-优化：最小栈只在「新最小或并列最小」时压入"><a href="#2-2-优化：最小栈只在「新最小或并列最小」时压入" class="headerlink" title="2.2 优化：最小栈只在「新最小或并列最小」时压入"></a>2.2 优化：最小栈只在「新最小或并列最小」时压入</h2><p><code>minStack</code> 只在 <code>val &lt;= 当前最小</code> 时压入，pop 时若 <code>data</code> 弹出值等于栈顶再同步弹出 <code>minStack</code>，可省部分空间（注意 <code>&lt;=</code> 以处理重复最小值）。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双辅助栈（经典）"><a href="#3-1-双辅助栈（经典）" class="headerlink" title="3.1 双辅助栈（经典）"></a>3.1 双辅助栈（经典）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinStack</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">data</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">minStack</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="title function_">push</span>(<span class="attr">val</span>: <span class="built_in">number</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="title function_">push</span>(val);</span><br><span class="line">        <span class="keyword">const</span> curMin = <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span></span><br><span class="line">            ? <span class="variable language_">this</span>.<span class="property">minStack</span>[<span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span> - <span class="number">1</span>]</span><br><span class="line">            : val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="title function_">push</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(val, curMin));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">pop</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="title function_">pop</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="title function_">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">top</span>(): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">data</span>[<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">getMin</span>(): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">minStack</span>[<span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-单栈存差值（进阶，省一个栈）"><a href="#3-2-单栈存差值（进阶，省一个栈）" class="headerlink" title="3.2 单栈存差值（进阶，省一个栈）"></a>3.2 单栈存差值（进阶，省一个栈）</h2><p>栈中每个元素存「压入时的值 − 当时的最小值」。用 <code>min</code> 记录当前最小：</p>
-<ul>
-<li>压入 <code>val</code>：若 <code>val - min &gt;= 0</code> 直接入栈；否则说明出现更小值，入 <code>val - min</code>（负数）并更新 <code>min = val</code>。</li>
-<li>pop 时：弹出 <code>d</code>，若 <code>d &gt;= 0</code> 原值为 <code>min + d</code>；若 <code>d &lt; 0</code> 说明弹出的是「旧的最小值」，需还原 <code>min = min - d</code>。</li>
-</ul>
-<p>思路巧妙但边界易错，面试能讲清 3.1 已足够，3.2 作为加分。</p>
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>核心思想</strong>：用空间换 O(1) 查询，「辅助栈记录历史状态」是通用技巧。</li>
-<li>追问：如果 getMin 之后还要能恢复？——正因为 pop 同步回退 minStack，历史最小值可正确还原，这是辅助栈方法的正确性来源。</li>
-<li>类似设计题：LRU 缓存、带最大值的队列（双栈模拟队列 + 单调队列）等，考察数据结构组合能力，可对照本博客 <a href="https://jackniu81.github.io/2022/04/28/Algorithm-LRU-Cache/">LRU Cache</a>。</li>
-<li>语言细节：TS 里 <code>private</code> 字段、返回栈顶用 <code>arr[arr.length-1]</code>，注意空栈的防御（LeetCode 保证合法调用）。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 155 | 设计 &#x2F; 栈</p>
 </blockquote>
 
       

@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">102</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,213 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/06/08/Algorithm-Trapping-Rain-Water/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/06/08/Algorithm-Trapping-Rain-Water/" class="post-title-link" itemprop="url">算法 - 接雨水</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-06-08 14:12:30" itemprop="dateCreated datePublished" datetime="2026-06-08T14:12:30+08:00">2026-06-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: height = [0,1,0,2,1,0,1,3,2,1,2,1]</span><br><span class="line">输出: 6</span><br><span class="line"></span><br><span class="line">输入: height = [4,2,0,3,2,5]</span><br><span class="line">输出: 9</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>核心视角：<strong>按列计算</strong>。对每一列 i，它能接的水 &#x3D; <code>min(左侧最高, 右侧最高) - height[i]</code>（若为负则 0）。「木桶效应」取决于两边较矮的那个挡板。</p>
+<h2 id="2-1-动态规划预处理左右最大值"><a href="#2-1-动态规划预处理左右最大值" class="headerlink" title="2.1 动态规划预处理左右最大值"></a>2.1 动态规划预处理左右最大值</h2><p>开两个数组 <code>leftMax[i]</code>、<code>rightMax[i]</code> 分别预处理「从两端到 i 的最大高度」，再逐列累加。O(n) 时间、O(n) 空间。</p>
+<h2 id="2-2-双指针（最优）"><a href="#2-2-双指针（最优）" class="headerlink" title="2.2 双指针（最优）"></a>2.2 双指针（最优）</h2><p>左右指针 <code>l</code>、<code>r</code> 向中间逼近，维护 <code>leftMax</code>、<code>rightMax</code> 两个标量：</p>
+<ul>
+<li><p>比较 <code>height[l]</code> 与 <code>height[r]</code>，<strong>较矮的一侧</strong>决定该侧列的接水量：</p>
+<ul>
+<li>若 <code>height[l] &lt; height[r]</code>：左列的左挡板是 <code>leftMax</code>，右挡板至少是 <code>height[r]</code>（≥ height[l]），所以左侧当前列水位由 <code>leftMax</code> 决定 → 累加 <code>leftMax - height[l]</code>，<code>l++</code>。</li>
+<li>右侧对称处理。</li>
+</ul>
+</li>
+<li><p>边走边更新各自的 max。</p>
+</li>
+<li><p>时间复杂度：O(n)，空间复杂度：O(1)。</p>
+</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双指针（推荐）"><a href="#3-1-双指针（推荐）" class="headerlink" title="3.1 双指针（推荐）"></a>3.1 双指针（推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">trap</span>(<span class="params"><span class="attr">height</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> l = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> r = height.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> leftMax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> rightMax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> water = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="keyword">if</span> (height[l] &lt; height[r]) &#123;</span><br><span class="line">            <span class="keyword">if</span> (height[l] &gt;= leftMax) &#123;</span><br><span class="line">                leftMax = height[l];       <span class="comment">// 新的左挡板</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                water += leftMax - height[l]; <span class="comment">// 填补凹处</span></span><br><span class="line">            &#125;</span><br><span class="line">            l++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (height[r] &gt;= rightMax) &#123;</span><br><span class="line">                rightMax = height[r];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                water += rightMax - height[r];</span><br><span class="line">            &#125;</span><br><span class="line">            r--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> water;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">trap</span>([<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>])); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-DP-预处理左右最大值"><a href="#3-2-DP-预处理左右最大值" class="headerlink" title="3.2 DP 预处理左右最大值"></a>3.2 DP 预处理左右最大值</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">trapDP</span>(<span class="params"><span class="attr">height</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = height.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (n === <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> leftMax = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">const</span> rightMax = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    leftMax[<span class="number">0</span>] = height[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) leftMax[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(leftMax[i - <span class="number">1</span>], height[i]);</span><br><span class="line"></span><br><span class="line">    rightMax[n - <span class="number">1</span>] = height[n - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = n - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) rightMax[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(rightMax[i + <span class="number">1</span>], height[i]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> water = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) water += <span class="title class_">Math</span>.<span class="title function_">min</span>(leftMax[i], rightMax[i]) - height[i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> water;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>栈解法</strong>：用单调递减栈按「行」积水（遇到更高柱子就弹出凹槽结算宽度），思路另类，可作加分。</li>
+<li>与<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">盛最多水的容器</a>对照：那道是「两条板一次盛水」，本题是「每列独立按左右挡板蓄水」，都是双指针经典，但计算方式不同。</li>
+<li>追问：为什么 <code>height[l] &lt; height[r]</code> 时能直接对左列结算？因为右挡板已被 <code>height[r]</code> 保证不矮于当前左侧，水位由 <code>leftMax</code> 唯一确定，无需求真实的右侧最大值。</li>
+</ul>
+<blockquote>
+<p>难度：困难 | LeetCode 42 | 双指针 &#x2F; 单调栈</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/05/10/Algorithm-Min-Stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/05/10/Algorithm-Min-Stack/" class="post-title-link" itemprop="url">算法 - 最小栈（Min Stack）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-05-10 11:08:44" itemprop="dateCreated datePublished" datetime="2026-05-10T11:08:44+08:00">2026-05-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>设计一个支持 <code>push</code>、<code>pop</code>、<code>top</code> 操作，并能在 <strong>O(1) 时间</strong>内检索到最小元素的栈。</p>
+<p>实现 <code>MinStack</code> 类：</p>
+<ul>
+<li><code>push(val)</code> 将元素压入栈</li>
+<li><code>pop()</code> 移除栈顶元素</li>
+<li><code>top()</code> 返回栈顶元素</li>
+<li><code>getMin()</code> 返回栈中的最小元素</li>
+</ul>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">MinStack s = new MinStack();</span><br><span class="line">s.push(-2);</span><br><span class="line">s.push(0);</span><br><span class="line">s.push(-3);</span><br><span class="line">s.getMin();   → -3</span><br><span class="line">s.pop();</span><br><span class="line">s.top();      → 0</span><br><span class="line">s.getMin();   → -2</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>普通栈取最小值需要 O(n) 遍历。要 O(1)，需<strong>额外空间换时间</strong>。</p>
+<h2 id="2-1-辅助栈（同步记录最小值）"><a href="#2-1-辅助栈（同步记录最小值）" class="headerlink" title="2.1 辅助栈（同步记录最小值）"></a>2.1 辅助栈（同步记录最小值）</h2><p>维护两个栈：<code>data</code> 存所有元素，<code>minStack</code> 存「<strong>对应 data 各状态下的最小值</strong>」。</p>
+<ul>
+<li>push 时：<code>data</code> 正常入栈；<code>minStack</code> 入栈 <code>min(val, 当前 minStack 栈顶)</code>。</li>
+<li>pop 时：两栈同时弹出。</li>
+<li>getMin：直接看 <code>minStack</code> 栈顶。</li>
+</ul>
+<p>这样 <code>minStack</code> 栈顶始终是 <code>data</code> 当前全部元素的最小值。</p>
+<ul>
+<li>时间复杂度：所有操作 O(1)；空间复杂度：O(n)。</li>
+</ul>
+<h2 id="2-2-优化：最小栈只在「新最小或并列最小」时压入"><a href="#2-2-优化：最小栈只在「新最小或并列最小」时压入" class="headerlink" title="2.2 优化：最小栈只在「新最小或并列最小」时压入"></a>2.2 优化：最小栈只在「新最小或并列最小」时压入</h2><p><code>minStack</code> 只在 <code>val &lt;= 当前最小</code> 时压入，pop 时若 <code>data</code> 弹出值等于栈顶再同步弹出 <code>minStack</code>，可省部分空间（注意 <code>&lt;=</code> 以处理重复最小值）。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双辅助栈（经典）"><a href="#3-1-双辅助栈（经典）" class="headerlink" title="3.1 双辅助栈（经典）"></a>3.1 双辅助栈（经典）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinStack</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">data</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">minStack</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="title function_">push</span>(<span class="attr">val</span>: <span class="built_in">number</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="title function_">push</span>(val);</span><br><span class="line">        <span class="keyword">const</span> curMin = <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span></span><br><span class="line">            ? <span class="variable language_">this</span>.<span class="property">minStack</span>[<span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span> - <span class="number">1</span>]</span><br><span class="line">            : val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="title function_">push</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(val, curMin));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">pop</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">data</span>.<span class="title function_">pop</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="title function_">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">top</span>(): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">data</span>[<span class="variable language_">this</span>.<span class="property">data</span>.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">getMin</span>(): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">minStack</span>[<span class="variable language_">this</span>.<span class="property">minStack</span>.<span class="property">length</span> - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-单栈存差值（进阶，省一个栈）"><a href="#3-2-单栈存差值（进阶，省一个栈）" class="headerlink" title="3.2 单栈存差值（进阶，省一个栈）"></a>3.2 单栈存差值（进阶，省一个栈）</h2><p>栈中每个元素存「压入时的值 − 当时的最小值」。用 <code>min</code> 记录当前最小：</p>
+<ul>
+<li>压入 <code>val</code>：若 <code>val - min &gt;= 0</code> 直接入栈；否则说明出现更小值，入 <code>val - min</code>（负数）并更新 <code>min = val</code>。</li>
+<li>pop 时：弹出 <code>d</code>，若 <code>d &gt;= 0</code> 原值为 <code>min + d</code>；若 <code>d &lt; 0</code> 说明弹出的是「旧的最小值」，需还原 <code>min = min - d</code>。</li>
+</ul>
+<p>思路巧妙但边界易错，面试能讲清 3.1 已足够，3.2 作为加分。</p>
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>核心思想</strong>：用空间换 O(1) 查询，「辅助栈记录历史状态」是通用技巧。</li>
+<li>追问：如果 getMin 之后还要能恢复？——正因为 pop 同步回退 minStack，历史最小值可正确还原，这是辅助栈方法的正确性来源。</li>
+<li>类似设计题：LRU 缓存、带最大值的队列（双栈模拟队列 + 单调队列）等，考察数据结构组合能力，可对照本博客 <a href="https://jackniu81.github.io/2022/04/28/Algorithm-LRU-Cache/">LRU Cache</a>。</li>
+<li>语言细节：TS 里 <code>private</code> 字段、返回栈顶用 <code>arr[arr.length-1]</code>，注意空栈的防御（LeetCode 保证合法调用）。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 155 | 设计 &#x2F; 栈</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -926,206 +1133,6 @@
 </ul>
 <blockquote>
 <p>难度：简单 | LeetCode 78 | 回溯入门必考</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/08/03/Algorithm-Container-With-Most-Water/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/08/03/Algorithm-Container-With-Most-Water/" class="post-title-link" itemprop="url">算法 - 盛最多水的容器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-08-03 14:01:20" itemprop="dateCreated datePublished" datetime="2025-08-03T14:01:20+08:00">2025-08-03</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个长度为 n 的整数数组 <code>height</code>，第 i 条线的两个端点是 <code>(i, 0)</code> 和 <code>(i, height[i])</code>。</p>
-<p>找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水，返回容器可以储存的最大水量。</p>
-<p>说明：你不能倾斜容器。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,8,6,2,5,4,8,3,7]</span><br><span class="line">输出: 49</span><br><span class="line">解释: 选择第 2 条线(height=8)和第 9 条线(height=7)，</span><br><span class="line">     宽度 = 9 - 2 = 7，高度取较短板 min(8,7) = 7，面积 = 7 * 7 = 49。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-暴力法（不可取）"><a href="#2-1-暴力法（不可取）" class="headerlink" title="2.1 暴力法（不可取）"></a>2.1 暴力法（不可取）</h2><p>枚举所有左右边界对 <code>(i, j)</code>，计算 <code>(j - i) * min(height[i], height[j])</code>，时间复杂度 O(n²)，面试中只作为铺垫。</p>
-<h2 id="2-2-对撞双指针（最优）"><a href="#2-2-对撞双指针（最优）" class="headerlink" title="2.2 对撞双指针（最优）"></a>2.2 对撞双指针（最优）</h2><p>从最宽区间开始，左右指针 <code>l = 0</code>、<code>r = n - 1</code>，每步计算当前面积并更新最大值，然后<strong>移动较短的那一边</strong>：</p>
-<ul>
-<li>容器高度由短板决定。若 <code>height[l] &lt; height[r]</code>，则所有以 l 为左边、右边界在 <code>(l, r)</code> 之间的方案，宽度更小且高度不会超过 <code>height[l]</code>，必然不如当前解——所以可以直接排除 l，令 <code>l++</code>。</li>
-<li>反过来移动长板则可能错过更优解，这是正确性的关键。</li>
-<li>相等时移动任意一边均可。</li>
-</ul>
-<p>每一步排除一个不可能的边界，n-1 步内完成。</p>
-<ul>
-<li>时间复杂度：O(n)</li>
-<li>空间复杂度：O(1)</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">maxArea</span>(<span class="params"><span class="attr">height</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> l = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> r = height.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> best = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="keyword">const</span> h = <span class="title class_">Math</span>.<span class="title function_">min</span>(height[l], height[r]);</span><br><span class="line">        best = <span class="title class_">Math</span>.<span class="title function_">max</span>(best, h * (r - l));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 移动较短的一边，才可能找到更大的面积</span></span><br><span class="line">        <span class="keyword">if</span> (height[l] &lt; height[r]) &#123;</span><br><span class="line">            l++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            r--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> best;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">maxArea</span>([<span class="number">1</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">7</span>])); <span class="comment">// 49</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>为什么移动短板？</strong> 反证法：移动长板后宽度必减小，而高度受短板限制不会增大，面积只可能变小；移动短板则高度有可能提升，值得一试。</li>
-<li>双指针家族对照：<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">两数之和 II</a>、三数之和、接雨水都用到了对撞指针思想。</li>
-<li>常见追问：如果要求输出是哪两条线，只需在更新 <code>best</code> 时记录 <code>l</code>、<code>r</code> 即可。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 11 | 对撞双指针经典题</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/07/24/Algorithm-Curry/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/24/Algorithm-Curry/" class="post-title-link" itemprop="url">算法 - 函数柯里化 (Currying)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-07-24 16:05:33" itemprop="dateCreated datePublished" datetime="2025-07-24T16:05:33+08:00">2025-07-24</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个通用柯里化函数 <code>curry(fn)</code>，把一个「需要 n 个参数」的函数，转换成可以<strong>一次传一部分参数、持续返回自身</strong>、直到收集够 n 个参数后才真正调用原函数的函数。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const add = (a, b, c) =&gt; a + b + c;</span><br><span class="line">const curried = curry(add);</span><br><span class="line"></span><br><span class="line">curried(1)(2)(3);      // 6</span><br><span class="line">curried(1, 2)(3);      // 6</span><br><span class="line">curried(1)(2, 3);      // 6</span><br></pre></td></tr></table></figure>
-
-<p>进阶要求：支持<strong>占位符</strong> <code>curry._</code>，允许跳过某参数稍后再填：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const _ = curry._;</span><br><span class="line">curried(_, 2)(1)(3);   // 6</span><br><span class="line">curried(1, _, 3)(2);   // 6</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>柯里化的本质是<strong>闭包累积参数</strong>。</p>
-<h2 id="2-1-基础版（按-arity-触发）"><a href="#2-1-基础版（按-arity-触发）" class="headerlink" title="2.1 基础版（按 arity 触发）"></a>2.1 基础版（按 arity 触发）</h2><ol>
-<li>用 <code>fn.length</code> 得到原函数所需参数个数 <code>n</code>。</li>
-<li>返回一个 <code>acc</code> 函数，每次调用把新参数并入已累积的 <code>args</code>（闭包持有）。</li>
-<li>若 <code>args.length &gt;= n</code>，用 <code>fn.apply(this, args)</code> 真正执行；否则返回一个把新参数继续累积的函数（保持链式）。</li>
-</ol>
-<p>判断「够了就执行、没够就返回函数」是核心。为了让 <code>curried(1)</code> 后还能 <code>curried(1)(2)</code>，返回的必须是函数——用 <code>function () { return acc(...args.concat(...arguments)); }</code> 包一层。</p>
-<h2 id="2-2-占位符版"><a href="#2-2-占位符版" class="headerlink" title="2.2 占位符版"></a>2.2 占位符版</h2><p>在累积参数后，做两步清洗：</p>
-<ul>
-<li>记录本次调用是否以「尾部实参」结束，用于决定何时可执行。</li>
-<li>只有当「非占位符参数数量 &gt;&#x3D; n」时才执行；执行前把参数按先前逻辑<strong>压缩</strong>（去掉多余的前导 <code>_</code>），保证位置对应。</li>
-</ul>
-<p>这部分逻辑较绕，面试能写基础版 + 口头讲清占位符思路已足够。</p>
-<ul>
-<li>时间复杂度：每次调用 O(已收集参数)。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-基础版"><a href="#3-1-基础版" class="headerlink" title="3.1 基础版"></a>3.1 基础版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">curry</span>(<span class="params"><span class="attr">fn</span>: <span class="title class_">Function</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> <span class="title function_">curried</span>(<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (args.<span class="property">length</span> &gt;= fn.<span class="property">length</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">...<span class="attr">rest</span>: <span class="built_in">any</span>[]</span>) =&gt;</span> curried.<span class="title function_">apply</span>(<span class="variable language_">this</span>, [...args, ...rest]);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>) =&gt; a + b + c;</span><br><span class="line"><span class="keyword">const</span> curriedAdd = <span class="title function_">curry</span>(add);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">curriedAdd</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">curriedAdd</span>(<span class="number">1</span>, <span class="number">2</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-支持占位符版"><a href="#3-2-支持占位符版" class="headerlink" title="3.2 支持占位符版"></a>3.2 支持占位符版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _ = <span class="title class_">Symbol</span>(<span class="string">&quot;placeholder&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">curryWithPlaceholder</span>(<span class="params"><span class="attr">fn</span>: <span class="title class_">Function</span></span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> judge = (...<span class="attr">args</span>: <span class="built_in">any</span>[]): <span class="function"><span class="params">any</span> =&gt;</span></span><br><span class="line">        <span class="comment">// 非占位符参数足够时执行</span></span><br><span class="line">        args.<span class="property">length</span> &gt;= fn.<span class="property">length</span> &amp;&amp;</span><br><span class="line">        args.<span class="title function_">slice</span>(<span class="number">0</span>, fn.<span class="property">length</span>).<span class="title function_">every</span>(<span class="function">(<span class="params">a</span>) =&gt;</span> a !== _)</span><br><span class="line">            ? <span class="title function_">fn</span>(...args.<span class="title function_">filter</span>(<span class="function">(<span class="params">a</span>) =&gt;</span> a !== _))</span><br><span class="line">            : <span class="function">(<span class="params"><span class="attr">arg</span>: <span class="built_in">any</span>, ...<span class="attr">rest</span>: <span class="built_in">any</span>[]</span>) =&gt;</span> <span class="title function_">judge</span>(...<span class="title function_">replace</span>(args, arg), ...rest);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用新传入的 arg 填补 args 中第一个占位符；没有则追加</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">replace</span>(<span class="params"><span class="attr">args</span>: <span class="built_in">any</span>[], <span class="attr">arg</span>: <span class="built_in">any</span></span>): <span class="built_in">any</span>[] &#123;</span><br><span class="line">        <span class="keyword">const</span> idx = args.<span class="title function_">indexOf</span>(_);</span><br><span class="line">        <span class="keyword">if</span> (idx !== -<span class="number">1</span> &amp;&amp; arg !== _) &#123;</span><br><span class="line">            <span class="keyword">const</span> copy = [...args];</span><br><span class="line">            copy[idx] = arg;</span><br><span class="line">            <span class="keyword">return</span> copy;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> [...args, arg];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> judge;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sum3</span> = (<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>) =&gt; a + b + c;</span><br><span class="line"><span class="keyword">const</span> c3 = <span class="title function_">curryWithPlaceholder</span>(sum3);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(_, <span class="number">2</span>)(<span class="number">1</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(<span class="number">1</span>, _, <span class="number">3</span>)(<span class="number">2</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));      <span class="comment">// 6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露占位符</span></span><br><span class="line">curryWithPlaceholder.<span class="property">_</span> = _;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>柯里化 vs 部分应用（partial）</strong>：柯里化把「多元函数」拆成「一连串一元函数」；部分应用是一次固定若干参数。JS 里 <code>bind</code> 天然就是部分应用：<code>fn.bind(null, 1)</code>。</li>
-<li><strong>实战价值</strong>：参数复用、延迟执行、函数组合（<code>compose/pipe</code> 需要一元函数）、创建更专用的小函数（如把通用的 <code>log(date, level, msg)</code> 柯里化成 <code>errorLog = log(now, &#39;error&#39;)</code>）。</li>
-<li><strong>TS 类型级柯里化</strong>是炫技加分项：用递归条件类型 <code>Curry&lt;F&gt;</code> 依据 <code>Parameters&lt;F&gt;</code> 推导出重载签名，展示你对类型体操的掌握。</li>
-<li>常见追问：为什么判断用 <code>&gt;=</code> 而非 <code>===</code>？（箭头函数&#x2F;默认参数会让 <code>fn.length</code> 变小，容错用 <code>&gt;=</code> 更稳）；<code>fn.length</code> 与 <code>arguments.length</code> 的区别是什么。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | 函数式入门必考 | 闭包与参数复用</p>
 </blockquote>
 
       

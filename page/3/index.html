@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">102</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,206 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/08/03/Algorithm-Container-With-Most-Water/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/08/03/Algorithm-Container-With-Most-Water/" class="post-title-link" itemprop="url">算法 - 盛最多水的容器</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-08-03 14:01:20" itemprop="dateCreated datePublished" datetime="2025-08-03T14:01:20+08:00">2025-08-03</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个长度为 n 的整数数组 <code>height</code>，第 i 条线的两个端点是 <code>(i, 0)</code> 和 <code>(i, height[i])</code>。</p>
+<p>找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水，返回容器可以储存的最大水量。</p>
+<p>说明：你不能倾斜容器。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,8,6,2,5,4,8,3,7]</span><br><span class="line">输出: 49</span><br><span class="line">解释: 选择第 2 条线(height=8)和第 9 条线(height=7)，</span><br><span class="line">     宽度 = 9 - 2 = 7，高度取较短板 min(8,7) = 7，面积 = 7 * 7 = 49。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-暴力法（不可取）"><a href="#2-1-暴力法（不可取）" class="headerlink" title="2.1 暴力法（不可取）"></a>2.1 暴力法（不可取）</h2><p>枚举所有左右边界对 <code>(i, j)</code>，计算 <code>(j - i) * min(height[i], height[j])</code>，时间复杂度 O(n²)，面试中只作为铺垫。</p>
+<h2 id="2-2-对撞双指针（最优）"><a href="#2-2-对撞双指针（最优）" class="headerlink" title="2.2 对撞双指针（最优）"></a>2.2 对撞双指针（最优）</h2><p>从最宽区间开始，左右指针 <code>l = 0</code>、<code>r = n - 1</code>，每步计算当前面积并更新最大值，然后<strong>移动较短的那一边</strong>：</p>
+<ul>
+<li>容器高度由短板决定。若 <code>height[l] &lt; height[r]</code>，则所有以 l 为左边、右边界在 <code>(l, r)</code> 之间的方案，宽度更小且高度不会超过 <code>height[l]</code>，必然不如当前解——所以可以直接排除 l，令 <code>l++</code>。</li>
+<li>反过来移动长板则可能错过更优解，这是正确性的关键。</li>
+<li>相等时移动任意一边均可。</li>
+</ul>
+<p>每一步排除一个不可能的边界，n-1 步内完成。</p>
+<ul>
+<li>时间复杂度：O(n)</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">maxArea</span>(<span class="params"><span class="attr">height</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> l = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> r = height.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> best = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="keyword">const</span> h = <span class="title class_">Math</span>.<span class="title function_">min</span>(height[l], height[r]);</span><br><span class="line">        best = <span class="title class_">Math</span>.<span class="title function_">max</span>(best, h * (r - l));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 移动较短的一边，才可能找到更大的面积</span></span><br><span class="line">        <span class="keyword">if</span> (height[l] &lt; height[r]) &#123;</span><br><span class="line">            l++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            r--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> best;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">maxArea</span>([<span class="number">1</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">7</span>])); <span class="comment">// 49</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>为什么移动短板？</strong> 反证法：移动长板后宽度必减小，而高度受短板限制不会增大，面积只可能变小；移动短板则高度有可能提升，值得一试。</li>
+<li>双指针家族对照：<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">两数之和 II</a>、三数之和、接雨水都用到了对撞指针思想。</li>
+<li>常见追问：如果要求输出是哪两条线，只需在更新 <code>best</code> 时记录 <code>l</code>、<code>r</code> 即可。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 11 | 对撞双指针经典题</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/07/24/Algorithm-Curry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/24/Algorithm-Curry/" class="post-title-link" itemprop="url">算法 - 函数柯里化 (Currying)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-07-24 16:05:33" itemprop="dateCreated datePublished" datetime="2025-07-24T16:05:33+08:00">2025-07-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个通用柯里化函数 <code>curry(fn)</code>，把一个「需要 n 个参数」的函数，转换成可以<strong>一次传一部分参数、持续返回自身</strong>、直到收集够 n 个参数后才真正调用原函数的函数。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const add = (a, b, c) =&gt; a + b + c;</span><br><span class="line">const curried = curry(add);</span><br><span class="line"></span><br><span class="line">curried(1)(2)(3);      // 6</span><br><span class="line">curried(1, 2)(3);      // 6</span><br><span class="line">curried(1)(2, 3);      // 6</span><br></pre></td></tr></table></figure>
+
+<p>进阶要求：支持<strong>占位符</strong> <code>curry._</code>，允许跳过某参数稍后再填：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const _ = curry._;</span><br><span class="line">curried(_, 2)(1)(3);   // 6</span><br><span class="line">curried(1, _, 3)(2);   // 6</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>柯里化的本质是<strong>闭包累积参数</strong>。</p>
+<h2 id="2-1-基础版（按-arity-触发）"><a href="#2-1-基础版（按-arity-触发）" class="headerlink" title="2.1 基础版（按 arity 触发）"></a>2.1 基础版（按 arity 触发）</h2><ol>
+<li>用 <code>fn.length</code> 得到原函数所需参数个数 <code>n</code>。</li>
+<li>返回一个 <code>acc</code> 函数，每次调用把新参数并入已累积的 <code>args</code>（闭包持有）。</li>
+<li>若 <code>args.length &gt;= n</code>，用 <code>fn.apply(this, args)</code> 真正执行；否则返回一个把新参数继续累积的函数（保持链式）。</li>
+</ol>
+<p>判断「够了就执行、没够就返回函数」是核心。为了让 <code>curried(1)</code> 后还能 <code>curried(1)(2)</code>，返回的必须是函数——用 <code>function () { return acc(...args.concat(...arguments)); }</code> 包一层。</p>
+<h2 id="2-2-占位符版"><a href="#2-2-占位符版" class="headerlink" title="2.2 占位符版"></a>2.2 占位符版</h2><p>在累积参数后，做两步清洗：</p>
+<ul>
+<li>记录本次调用是否以「尾部实参」结束，用于决定何时可执行。</li>
+<li>只有当「非占位符参数数量 &gt;&#x3D; n」时才执行；执行前把参数按先前逻辑<strong>压缩</strong>（去掉多余的前导 <code>_</code>），保证位置对应。</li>
+</ul>
+<p>这部分逻辑较绕，面试能写基础版 + 口头讲清占位符思路已足够。</p>
+<ul>
+<li>时间复杂度：每次调用 O(已收集参数)。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-基础版"><a href="#3-1-基础版" class="headerlink" title="3.1 基础版"></a>3.1 基础版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">curry</span>(<span class="params"><span class="attr">fn</span>: <span class="title class_">Function</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> <span class="title function_">curried</span>(<span class="params"><span class="attr">this</span>: <span class="built_in">any</span>, ...<span class="attr">args</span>: <span class="built_in">any</span>[]</span>): <span class="built_in">any</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (args.<span class="property">length</span> &gt;= fn.<span class="property">length</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">...<span class="attr">rest</span>: <span class="built_in">any</span>[]</span>) =&gt;</span> curried.<span class="title function_">apply</span>(<span class="variable language_">this</span>, [...args, ...rest]);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>) =&gt; a + b + c;</span><br><span class="line"><span class="keyword">const</span> curriedAdd = <span class="title function_">curry</span>(add);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">curriedAdd</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">curriedAdd</span>(<span class="number">1</span>, <span class="number">2</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-支持占位符版"><a href="#3-2-支持占位符版" class="headerlink" title="3.2 支持占位符版"></a>3.2 支持占位符版</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _ = <span class="title class_">Symbol</span>(<span class="string">&quot;placeholder&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">curryWithPlaceholder</span>(<span class="params"><span class="attr">fn</span>: <span class="title class_">Function</span></span>): <span class="built_in">any</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> judge = (...<span class="attr">args</span>: <span class="built_in">any</span>[]): <span class="function"><span class="params">any</span> =&gt;</span></span><br><span class="line">        <span class="comment">// 非占位符参数足够时执行</span></span><br><span class="line">        args.<span class="property">length</span> &gt;= fn.<span class="property">length</span> &amp;&amp;</span><br><span class="line">        args.<span class="title function_">slice</span>(<span class="number">0</span>, fn.<span class="property">length</span>).<span class="title function_">every</span>(<span class="function">(<span class="params">a</span>) =&gt;</span> a !== _)</span><br><span class="line">            ? <span class="title function_">fn</span>(...args.<span class="title function_">filter</span>(<span class="function">(<span class="params">a</span>) =&gt;</span> a !== _))</span><br><span class="line">            : <span class="function">(<span class="params"><span class="attr">arg</span>: <span class="built_in">any</span>, ...<span class="attr">rest</span>: <span class="built_in">any</span>[]</span>) =&gt;</span> <span class="title function_">judge</span>(...<span class="title function_">replace</span>(args, arg), ...rest);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用新传入的 arg 填补 args 中第一个占位符；没有则追加</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">replace</span>(<span class="params"><span class="attr">args</span>: <span class="built_in">any</span>[], <span class="attr">arg</span>: <span class="built_in">any</span></span>): <span class="built_in">any</span>[] &#123;</span><br><span class="line">        <span class="keyword">const</span> idx = args.<span class="title function_">indexOf</span>(_);</span><br><span class="line">        <span class="keyword">if</span> (idx !== -<span class="number">1</span> &amp;&amp; arg !== _) &#123;</span><br><span class="line">            <span class="keyword">const</span> copy = [...args];</span><br><span class="line">            copy[idx] = arg;</span><br><span class="line">            <span class="keyword">return</span> copy;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> [...args, arg];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> judge;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">sum3</span> = (<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">c</span>: <span class="built_in">number</span></span>) =&gt; a + b + c;</span><br><span class="line"><span class="keyword">const</span> c3 = <span class="title function_">curryWithPlaceholder</span>(sum3);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(_, <span class="number">2</span>)(<span class="number">1</span>)(<span class="number">3</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(<span class="number">1</span>, _, <span class="number">3</span>)(<span class="number">2</span>));   <span class="comment">// 6</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">c3</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));      <span class="comment">// 6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 暴露占位符</span></span><br><span class="line">curryWithPlaceholder.<span class="property">_</span> = _;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>柯里化 vs 部分应用（partial）</strong>：柯里化把「多元函数」拆成「一连串一元函数」；部分应用是一次固定若干参数。JS 里 <code>bind</code> 天然就是部分应用：<code>fn.bind(null, 1)</code>。</li>
+<li><strong>实战价值</strong>：参数复用、延迟执行、函数组合（<code>compose/pipe</code> 需要一元函数）、创建更专用的小函数（如把通用的 <code>log(date, level, msg)</code> 柯里化成 <code>errorLog = log(now, &#39;error&#39;)</code>）。</li>
+<li><strong>TS 类型级柯里化</strong>是炫技加分项：用递归条件类型 <code>Curry&lt;F&gt;</code> 依据 <code>Parameters&lt;F&gt;</code> 推导出重载签名，展示你对类型体操的掌握。</li>
+<li>常见追问：为什么判断用 <code>&gt;=</code> 而非 <code>===</code>？（箭头函数&#x2F;默认参数会让 <code>fn.length</code> 变小，容错用 <code>&gt;=</code> 更稳）；<code>fn.length</code> 与 <code>arguments.length</code> 的区别是什么。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | 函数式入门必考 | 闭包与参数复用</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -957,202 +1157,6 @@
 </ul>
 <blockquote>
 <p>难度：中等 | LeetCode 200 题 | DFS&#x2F;BFS 网格模板</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/10/29/Algorithm-Longest-Palindromic-Substring/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/29/Algorithm-Longest-Palindromic-Substring/" class="post-title-link" itemprop="url">算法 - 最长回文子串（中心扩散法）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-10-29 10:47:33" itemprop="dateCreated datePublished" datetime="2024-10-29T10:47:33+08:00">2024-10-29</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个字符串 <code>s</code>，找到其中最长的<strong>回文子串</strong>。回文指正读反读都一样。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;babad&quot;</span><br><span class="line">输出: &quot;bab&quot;（&quot;aba&quot; 同样是合法答案）</span><br><span class="line"></span><br><span class="line">输入: s = &quot;cbbd&quot;</span><br><span class="line">输出: &quot;bb&quot;</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-中心扩散（推荐，直观且高效）"><a href="#2-1-中心扩散（推荐，直观且高效）" class="headerlink" title="2.1 中心扩散（推荐，直观且高效）"></a>2.1 中心扩散（推荐，直观且高效）</h2><p>回文串一定围绕某个「中心」对称展开。长度为 n 的字符串共有 <code>2n - 1</code> 个中心：</p>
-<ul>
-<li><code>n</code> 个单字符中心（产生奇数长度回文，如 “aba”）。</li>
-<li><code>n - 1</code> 个双字符间隙中心（产生偶数长度回文，如 “abba”）。</li>
-</ul>
-<p>枚举每个中心，向两边同时扩展直到不再相等，记录最长的一段。每个中心调用一次扩散函数，分别以 <code>i</code>（奇）和 <code>i, i+1</code>（偶）为初始左右指针。</p>
-<ul>
-<li>时间复杂度：<code>O(n²)</code>；空间复杂度：<code>O(1)</code>。</li>
-</ul>
-<h2 id="2-2-动态规划-O-n²-空间"><a href="#2-2-动态规划-O-n²-空间" class="headerlink" title="2.2 动态规划 O(n²) 空间"></a>2.2 动态规划 O(n²) 空间</h2><p><code>dp[i][j]</code> 表示 <code>s[i..j]</code> 是否回文：<code>dp[i][j] = (s[i]===s[j]) &amp;&amp; dp[i+1][j-1]</code>。按长度从小到大填表。空间更大，思路清晰可作为对照。</p>
-<blockquote>
-<p>存在 <code>O(n)</code> 的 Manacher 算法，面试一般不要求手写，能提名字并说明它是「利用已知回文的对称性避免重复扩展」即为加分。</p>
-</blockquote>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">longestPalindrome</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (s.<span class="property">length</span> &lt; <span class="number">2</span>) <span class="keyword">return</span> s;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> start = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> maxLen = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 (left, right) 向两边扩散，返回回文长度</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">expand</span>(<span class="params"><span class="attr">left</span>: <span class="built_in">number</span>, <span class="attr">right</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; right &lt; s.<span class="property">length</span> &amp;&amp; s[left] === s[right]) &#123;</span><br><span class="line">            left--;</span><br><span class="line">            right++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> right - left - <span class="number">1</span>; <span class="comment">// 注意循环退出时各多走了一步</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; s.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">const</span> oddLen = <span class="title function_">expand</span>(i, i);     <span class="comment">// 奇数中心</span></span><br><span class="line">        <span class="keyword">const</span> evenLen = <span class="title function_">expand</span>(i, i + <span class="number">1</span>); <span class="comment">// 偶数中心</span></span><br><span class="line">        <span class="keyword">const</span> len = <span class="title class_">Math</span>.<span class="title function_">max</span>(oddLen, evenLen);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (len &gt; maxLen) &#123;</span><br><span class="line">            maxLen = len;</span><br><span class="line">            <span class="comment">// 由中心反推起点：奇偶统一用这个式子</span></span><br><span class="line">            start = i - <span class="title class_">Math</span>.<span class="title function_">floor</span>((len - <span class="number">1</span>) / <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> s.<span class="title function_">slice</span>(start, start + maxLen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;babad&quot;</span>)); <span class="comment">// &quot;bab&quot; 或 &quot;aba&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;cbbd&quot;</span>));  <span class="comment">// &quot;bb&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;a&quot;</span>));     <span class="comment">// &quot;a&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>起点公式 <code>i - (len-1)/2</code> 是易错点</strong>：奇偶都适用，因为 <code>(len-1)/2</code> 向下取整正好覆盖两种中心的偏移差异。</li>
-<li><strong>最长回文子序列（516）</strong>：子序列可不连续，转成「s 与 reverse(s) 的 LCS」或区间 DP <code>dp[i][j]</code>，别和本题混淆。</li>
-<li><strong>Manacher</strong>：把 O(n²) 优化到 O(n)，核心是维护「右边界最大的回文」及其对称中心，复用已知信息。</li>
-<li>字符串匹配类（回文、子串、子序列）先问自己：中心？双指针？区间 DP？——建立这三选一的直觉。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 5 题 | 中心扩散模板</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/09/11/Algorithm-Reverse-Words-in-a-String/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/09/11/Algorithm-Reverse-Words-in-a-String/" class="post-title-link" itemprop="url">算法 - 反转字符串中的单词</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-09-11 21:14:03" itemprop="dateCreated datePublished" datetime="2024-09-11T21:14:03+08:00">2024-09-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个字符串 <code>s</code>，反转其中<strong>单词</strong>的顺序并返回。单词是由非空格字符组成的最大子串，单词间由一个或多个空格分隔。返回的字符串中单词之间<strong>只用单个空格</strong>分隔，且<strong>不含</strong>前导或尾随空格。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;the sky is blue&quot;</span><br><span class="line">输出: &quot;blue is sky the&quot;</span><br><span class="line"></span><br><span class="line">输入: &quot;  hello   world  &quot;</span><br><span class="line">输出: &quot;world hello&quot;</span><br><span class="line"></span><br><span class="line">输入: &quot;a good   example&quot;</span><br><span class="line">输出: &quot;example good a&quot;</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>要求处理多余空格，思路分两种：</p>
-<h2 id="2-1-内建-API-版（快速）"><a href="#2-1-内建-API-版（快速）" class="headerlink" title="2.1 内建 API 版（快速）"></a>2.1 内建 API 版（快速）</h2><ol>
-<li><code>trim()</code> 去首尾空格。</li>
-<li><code>split(/\s+/)</code> 按「一个或多个空白」切成单词数组（首尾已 trim，不会有空串）。</li>
-<li><code>reverse()</code> 反转数组。</li>
-<li><code>join(&quot; &quot;)</code> 用单空格连接。</li>
-</ol>
-<p>优点：一行思路、代码短、面试先写它保底。缺点：依赖高级 API，没有体现手写能力。</p>
-<h2 id="2-2-双指针手写版（加分）"><a href="#2-2-双指针手写版（加分）" class="headerlink" title="2.2 双指针手写版（加分）"></a>2.2 双指针手写版（加分）</h2><p>从<strong>右向左</strong>扫描：跳过空格 → 定位一个单词的右端与左端 → 截取单词追加到结果，单词间补一个空格。天然实现「逆序 + 单空格」。</p>
-<ul>
-<li>时间复杂度：<code>O(n)</code>。</li>
-<li>空间复杂度：<code>O(n)</code>（存放结果；若原地翻转则为 <code>O(1)</code>）。</li>
-</ul>
-<blockquote>
-<p>若题目要求<strong>原地</strong>（C 风格字符数组），经典三步：整体反转 → 逐个单词再反转 → 压缩多余空格，做到 <code>O(1)</code> 额外空间。</p>
-</blockquote>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2.1 API 版</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reverseWords</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> s.<span class="title function_">trim</span>().<span class="title function_">split</span>(<span class="regexp">/\s+/</span>).<span class="title function_">reverse</span>().<span class="title function_">join</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.2 双指针手写版（从右往左）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reverseWordsTwoPointer</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line">    <span class="keyword">let</span> i = s.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 跳过空格</span></span><br><span class="line">        <span class="keyword">if</span> (s[i] === <span class="string">&quot; &quot;</span>) &#123;</span><br><span class="line">            i--;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 定位单词左端</span></span><br><span class="line">        <span class="keyword">let</span> j = i;</span><br><span class="line">        <span class="keyword">while</span> (j &gt;= <span class="number">0</span> &amp;&amp; s[j] !== <span class="string">&quot; &quot;</span>) j--;</span><br><span class="line">        <span class="comment">// j+1 .. i 是一个单词</span></span><br><span class="line">        res.<span class="title function_">push</span>(s.<span class="title function_">slice</span>(j + <span class="number">1</span>, i + <span class="number">1</span>));</span><br><span class="line">        i = j; <span class="comment">// 继续向左</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">join</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">reverseWords</span>(<span class="string">&quot;  hello   world  &quot;</span>)); <span class="comment">// &quot;world hello&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">reverseWordsTwoPointer</span>(<span class="string">&quot;a good   example&quot;</span>)); <span class="comment">// &quot;example good a&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>正则 <code>/\s+/</code> 的坑</strong>：若不用 <code>trim</code> 直接 split，首尾会产生空字符串元素，需 <code>.filter(Boolean)</code>。</li>
-<li><strong>原地版（186 题，字符数组）</strong>：整串 reverse + 每词 reverse + 移除多余空格，<code>O(1)</code> 空间，最能区分候选人。</li>
-<li>关联：<strong>左旋转字符串（剑指 Offer 58-II）</strong> &#x3D; 反转整体 + 反转各段，考察同一套「翻转」思想。</li>
-<li>JS 里 <code>String.prototype.reverse</code> 不存在，别忘了 <code>split(&quot;&quot;)</code> 或数组中转，容易口误。</li>
-<li>能顺手讨论「多个空格 &#x2F; 首尾空格 &#x2F; 空串」这些边界，是字符串题的基本素养。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 151 题 | 字符串与双指针</p>
 </blockquote>
 
       

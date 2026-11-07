@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">102</span>
+          <span class="site-state-item-count">104</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,202 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/10/29/Algorithm-Longest-Palindromic-Substring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/10/29/Algorithm-Longest-Palindromic-Substring/" class="post-title-link" itemprop="url">算法 - 最长回文子串（中心扩散法）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-29 10:47:33" itemprop="dateCreated datePublished" datetime="2024-10-29T10:47:33+08:00">2024-10-29</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个字符串 <code>s</code>，找到其中最长的<strong>回文子串</strong>。回文指正读反读都一样。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;babad&quot;</span><br><span class="line">输出: &quot;bab&quot;（&quot;aba&quot; 同样是合法答案）</span><br><span class="line"></span><br><span class="line">输入: s = &quot;cbbd&quot;</span><br><span class="line">输出: &quot;bb&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-中心扩散（推荐，直观且高效）"><a href="#2-1-中心扩散（推荐，直观且高效）" class="headerlink" title="2.1 中心扩散（推荐，直观且高效）"></a>2.1 中心扩散（推荐，直观且高效）</h2><p>回文串一定围绕某个「中心」对称展开。长度为 n 的字符串共有 <code>2n - 1</code> 个中心：</p>
+<ul>
+<li><code>n</code> 个单字符中心（产生奇数长度回文，如 “aba”）。</li>
+<li><code>n - 1</code> 个双字符间隙中心（产生偶数长度回文，如 “abba”）。</li>
+</ul>
+<p>枚举每个中心，向两边同时扩展直到不再相等，记录最长的一段。每个中心调用一次扩散函数，分别以 <code>i</code>（奇）和 <code>i, i+1</code>（偶）为初始左右指针。</p>
+<ul>
+<li>时间复杂度：<code>O(n²)</code>；空间复杂度：<code>O(1)</code>。</li>
+</ul>
+<h2 id="2-2-动态规划-O-n²-空间"><a href="#2-2-动态规划-O-n²-空间" class="headerlink" title="2.2 动态规划 O(n²) 空间"></a>2.2 动态规划 O(n²) 空间</h2><p><code>dp[i][j]</code> 表示 <code>s[i..j]</code> 是否回文：<code>dp[i][j] = (s[i]===s[j]) &amp;&amp; dp[i+1][j-1]</code>。按长度从小到大填表。空间更大，思路清晰可作为对照。</p>
+<blockquote>
+<p>存在 <code>O(n)</code> 的 Manacher 算法，面试一般不要求手写，能提名字并说明它是「利用已知回文的对称性避免重复扩展」即为加分。</p>
+</blockquote>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">longestPalindrome</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (s.<span class="property">length</span> &lt; <span class="number">2</span>) <span class="keyword">return</span> s;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> start = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> maxLen = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从 (left, right) 向两边扩散，返回回文长度</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">expand</span>(<span class="params"><span class="attr">left</span>: <span class="built_in">number</span>, <span class="attr">right</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; right &lt; s.<span class="property">length</span> &amp;&amp; s[left] === s[right]) &#123;</span><br><span class="line">            left--;</span><br><span class="line">            right++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> right - left - <span class="number">1</span>; <span class="comment">// 注意循环退出时各多走了一步</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; s.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">const</span> oddLen = <span class="title function_">expand</span>(i, i);     <span class="comment">// 奇数中心</span></span><br><span class="line">        <span class="keyword">const</span> evenLen = <span class="title function_">expand</span>(i, i + <span class="number">1</span>); <span class="comment">// 偶数中心</span></span><br><span class="line">        <span class="keyword">const</span> len = <span class="title class_">Math</span>.<span class="title function_">max</span>(oddLen, evenLen);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (len &gt; maxLen) &#123;</span><br><span class="line">            maxLen = len;</span><br><span class="line">            <span class="comment">// 由中心反推起点：奇偶统一用这个式子</span></span><br><span class="line">            start = i - <span class="title class_">Math</span>.<span class="title function_">floor</span>((len - <span class="number">1</span>) / <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> s.<span class="title function_">slice</span>(start, start + maxLen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;babad&quot;</span>)); <span class="comment">// &quot;bab&quot; 或 &quot;aba&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;cbbd&quot;</span>));  <span class="comment">// &quot;bb&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">longestPalindrome</span>(<span class="string">&quot;a&quot;</span>));     <span class="comment">// &quot;a&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>起点公式 <code>i - (len-1)/2</code> 是易错点</strong>：奇偶都适用，因为 <code>(len-1)/2</code> 向下取整正好覆盖两种中心的偏移差异。</li>
+<li><strong>最长回文子序列（516）</strong>：子序列可不连续，转成「s 与 reverse(s) 的 LCS」或区间 DP <code>dp[i][j]</code>，别和本题混淆。</li>
+<li><strong>Manacher</strong>：把 O(n²) 优化到 O(n)，核心是维护「右边界最大的回文」及其对称中心，复用已知信息。</li>
+<li>字符串匹配类（回文、子串、子序列）先问自己：中心？双指针？区间 DP？——建立这三选一的直觉。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 5 题 | 中心扩散模板</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2024/09/11/Algorithm-Reverse-Words-in-a-String/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/11/Algorithm-Reverse-Words-in-a-String/" class="post-title-link" itemprop="url">算法 - 反转字符串中的单词</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-11 21:14:03" itemprop="dateCreated datePublished" datetime="2024-09-11T21:14:03+08:00">2024-09-11</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个字符串 <code>s</code>，反转其中<strong>单词</strong>的顺序并返回。单词是由非空格字符组成的最大子串，单词间由一个或多个空格分隔。返回的字符串中单词之间<strong>只用单个空格</strong>分隔，且<strong>不含</strong>前导或尾随空格。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;the sky is blue&quot;</span><br><span class="line">输出: &quot;blue is sky the&quot;</span><br><span class="line"></span><br><span class="line">输入: &quot;  hello   world  &quot;</span><br><span class="line">输出: &quot;world hello&quot;</span><br><span class="line"></span><br><span class="line">输入: &quot;a good   example&quot;</span><br><span class="line">输出: &quot;example good a&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>要求处理多余空格，思路分两种：</p>
+<h2 id="2-1-内建-API-版（快速）"><a href="#2-1-内建-API-版（快速）" class="headerlink" title="2.1 内建 API 版（快速）"></a>2.1 内建 API 版（快速）</h2><ol>
+<li><code>trim()</code> 去首尾空格。</li>
+<li><code>split(/\s+/)</code> 按「一个或多个空白」切成单词数组（首尾已 trim，不会有空串）。</li>
+<li><code>reverse()</code> 反转数组。</li>
+<li><code>join(&quot; &quot;)</code> 用单空格连接。</li>
+</ol>
+<p>优点：一行思路、代码短、面试先写它保底。缺点：依赖高级 API，没有体现手写能力。</p>
+<h2 id="2-2-双指针手写版（加分）"><a href="#2-2-双指针手写版（加分）" class="headerlink" title="2.2 双指针手写版（加分）"></a>2.2 双指针手写版（加分）</h2><p>从<strong>右向左</strong>扫描：跳过空格 → 定位一个单词的右端与左端 → 截取单词追加到结果，单词间补一个空格。天然实现「逆序 + 单空格」。</p>
+<ul>
+<li>时间复杂度：<code>O(n)</code>。</li>
+<li>空间复杂度：<code>O(n)</code>（存放结果；若原地翻转则为 <code>O(1)</code>）。</li>
+</ul>
+<blockquote>
+<p>若题目要求<strong>原地</strong>（C 风格字符数组），经典三步：整体反转 → 逐个单词再反转 → 压缩多余空格，做到 <code>O(1)</code> 额外空间。</p>
+</blockquote>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2.1 API 版</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reverseWords</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> s.<span class="title function_">trim</span>().<span class="title function_">split</span>(<span class="regexp">/\s+/</span>).<span class="title function_">reverse</span>().<span class="title function_">join</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2.2 双指针手写版（从右往左）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reverseWordsTwoPointer</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line">    <span class="keyword">let</span> i = s.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 跳过空格</span></span><br><span class="line">        <span class="keyword">if</span> (s[i] === <span class="string">&quot; &quot;</span>) &#123;</span><br><span class="line">            i--;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 定位单词左端</span></span><br><span class="line">        <span class="keyword">let</span> j = i;</span><br><span class="line">        <span class="keyword">while</span> (j &gt;= <span class="number">0</span> &amp;&amp; s[j] !== <span class="string">&quot; &quot;</span>) j--;</span><br><span class="line">        <span class="comment">// j+1 .. i 是一个单词</span></span><br><span class="line">        res.<span class="title function_">push</span>(s.<span class="title function_">slice</span>(j + <span class="number">1</span>, i + <span class="number">1</span>));</span><br><span class="line">        i = j; <span class="comment">// 继续向左</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">join</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">reverseWords</span>(<span class="string">&quot;  hello   world  &quot;</span>)); <span class="comment">// &quot;world hello&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">reverseWordsTwoPointer</span>(<span class="string">&quot;a good   example&quot;</span>)); <span class="comment">// &quot;example good a&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>正则 <code>/\s+/</code> 的坑</strong>：若不用 <code>trim</code> 直接 split，首尾会产生空字符串元素，需 <code>.filter(Boolean)</code>。</li>
+<li><strong>原地版（186 题，字符数组）</strong>：整串 reverse + 每词 reverse + 移除多余空格，<code>O(1)</code> 空间，最能区分候选人。</li>
+<li>关联：<strong>左旋转字符串（剑指 Offer 58-II）</strong> &#x3D; 反转整体 + 反转各段，考察同一套「翻转」思想。</li>
+<li>JS 里 <code>String.prototype.reverse</code> 不存在，别忘了 <code>split(&quot;&quot;)</code> 或数组中转，容易口误。</li>
+<li>能顺手讨论「多个空格 &#x2F; 首尾空格 &#x2F; 空串」这些边界，是字符串题的基本素养。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 151 题 | 字符串与双指针</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -950,214 +1146,6 @@
 </ul>
 <blockquote>
 <p>难度：中等 | LeetCode 142 题 | Floyd 判圈算法</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2023/12/15/Algorithm-Linked-List-Cycle-Detection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/12/15/Algorithm-Linked-List-Cycle-Detection/" class="post-title-link" itemprop="url">算法 - 判断链表是否有环 (Linked List Cycle)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-12-15 09:18:42" itemprop="dateCreated datePublished" datetime="2023-12-15T09:18:42+08:00">2023-12-15</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个链表头节点 <code>head</code>，判断链表中是否存在环。若存在环返回 <code>true</code>，否则返回 <code>false</code>。</p>
-<blockquote>
-<p>进阶：你能用 <code>O(1)</code>（即常量）内存解决此问题吗？</p>
-</blockquote>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: head = [3, 2, 0, -4]，且尾节点连回索引 1 的节点</span><br><span class="line">输出: true（存在环）</span><br><span class="line"></span><br><span class="line">输入: head = [1, 2]，2 -&gt; 1 成环</span><br><span class="line">输出: true</span><br><span class="line"></span><br><span class="line">输入: head = [1]，无环</span><br><span class="line">输出: false</span><br></pre></td></tr></table></figure>
-
-<p>节点定义：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="attr">val</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">next</span>: <span class="title class_">ListNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">val</span>?: <span class="built_in">number</span>, <span class="attr">next</span>?: <span class="title class_">ListNode</span> | <span class="literal">null</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">val</span> = val ?? <span class="number">0</span>;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">next</span> = next ?? <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-哈希集合（直观）"><a href="#2-1-哈希集合（直观）" class="headerlink" title="2.1 哈希集合（直观）"></a>2.1 哈希集合（直观）</h2><p>遍历链表，把访问过的节点存进 <code>Set</code>。若再次遇到已在集合里的节点，说明成环。</p>
-<ul>
-<li>时间 <code>O(n)</code>，空间 <code>O(n)</code>。缺点：不满足「常量内存」。</li>
-</ul>
-<h2 id="2-2-快慢指针（Floyd-判圈，最优）"><a href="#2-2-快慢指针（Floyd-判圈，最优）" class="headerlink" title="2.2 快慢指针（Floyd 判圈，最优）"></a>2.2 快慢指针（Floyd 判圈，最优）</h2><p>想象跑道：快的和慢的在一个环形跑道上一定会<strong>相遇</strong>。</p>
-<ul>
-<li><p><code>slow</code> 每次走 1 步，<code>fast</code> 每次走 2 步，都从 <code>head</code> 出发。</p>
-</li>
-<li><p>若有环，<code>fast</code> 最终会从后面追上 <code>slow</code>，两者相遇 → 返回 <code>true</code>。</p>
-</li>
-<li><p>若无环，<code>fast</code>（或 <code>fast.next</code>）会先到 <code>null</code> → 返回 <code>false</code>。</p>
-</li>
-<li><p>时间复杂度：<code>O(n)</code>。</p>
-</li>
-<li><p>空间复杂度：<code>O(1)</code>，只用两个指针。</p>
-</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">hasCycle</span>(<span class="params"><span class="attr">head</span>: <span class="title class_">ListNode</span> | <span class="literal">null</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> slow = head;</span><br><span class="line">    <span class="keyword">let</span> fast = head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (fast !== <span class="literal">null</span> &amp;&amp; fast.<span class="property">next</span> !== <span class="literal">null</span>) &#123;</span><br><span class="line">        slow = slow!.<span class="property">next</span>;           <span class="comment">// 走一步</span></span><br><span class="line">        fast = fast.<span class="property">next</span>.<span class="property">next</span>;       <span class="comment">// 走两步</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (slow === fast) <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 相遇即有环</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// fast 到头，无环</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试：构造 3 -&gt; 2 -&gt; 0 -&gt; -4 -&gt; (回到 2)</span></span><br><span class="line"><span class="keyword">const</span> n = <span class="keyword">new</span> <span class="title class_">ListNode</span>(<span class="number">3</span>, <span class="keyword">new</span> <span class="title class_">ListNode</span>(<span class="number">2</span>, <span class="keyword">new</span> <span class="title class_">ListNode</span>(<span class="number">0</span>, <span class="keyword">new</span> <span class="title class_">ListNode</span>(-<span class="number">4</span>))));</span><br><span class="line">n.<span class="property">next</span>.<span class="property">next</span>.<span class="property">next</span>.<span class="property">next</span> = n.<span class="property">next</span>; <span class="comment">// 造环</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">hasCycle</span>(n)); <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">hasCycle</span>(<span class="keyword">new</span> <span class="title class_">ListNode</span>(<span class="number">1</span>))); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>为什么快指针不能走 3 步？</strong> 走 2 步能保证追上；步长差为 1 时相遇最有保证，是经典设定。</li>
-<li><strong>求环入口节点</strong> 是本题的孪生题（LeetCode 142），见下一篇 [寻找环形链表入口节点]。</li>
-<li>快慢指针的通用套路还能解：<strong>链表中点、判断回文链表、数组找重复数（287）</strong> 等「成环」问题。</li>
-<li>边界：<code>fast &amp;&amp; fast.next</code> 的判空顺序不能反，否则访问 <code>fast.next.next</code> 会空指针。</li>
-</ul>
-<blockquote>
-<p>难度：简单 | LeetCode 141 题 | 快慢指针代表作</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2023/10/30/Algorithm-Promise-All/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/10/30/Algorithm-Promise-All/" class="post-title-link" itemprop="url">算法 - 手写 Promise.all</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-10-30 15:53:38" itemprop="dateCreated datePublished" datetime="2023-10-30T15:53:38+08:00">2023-10-30</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>实现一个函数 <code>promiseAll(iterables)</code>，行为对齐原生 <code>Promise.all</code>：</p>
-<ul>
-<li>接收一个（Promise 或普通值可迭代）数组，返回一个新 Promise。</li>
-<li><strong>全部成功</strong>时，新 Promise 以「与输入顺序一致」的结果数组 resolve。</li>
-<li><strong>任意一个失败</strong>时，立即 reject 第一个失败的原因（快速失败）。</li>
-<li>要能处理非 Promise 元素（普通值直接当作已成功）。</li>
-<li>空数组应立即 resolve 为 <code>[]</code>。</li>
-</ul>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">promiseAll([1, Promise.resolve(2), fetchUrl])</span><br><span class="line">  -&gt; resolve 为 [1, 2, &lt;fetch结果&gt;]（顺序保持）</span><br><span class="line"></span><br><span class="line">promiseAll([ok1, fail, ok2])</span><br><span class="line">  -&gt; reject(fail 的原因)</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>三个关键点：</p>
-<ol>
-<li><strong>顺序保持</strong>：结果数组按输入下标写入，不能用 <code>push</code>（谁先完成谁 push 会乱序）。给每个任务捕获其 <code>index</code>，完成时 <code>results[index] = value</code>。</li>
-<li><strong>完成计数</strong>：用一个计数器 <code>completed</code>，每当一个任务成功就 <code>+1</code>；当 <code>completed === 总长度</code> 时 <code>resolve(results)</code>。因为异步完成顺序不定，只能靠计数判断「全好了」。</li>
-<li><strong>快速失败</strong>：在任一任务 <code>catch</code> 到错误时，直接 <code>reject(reason)</code>。Promise 一旦 settle 就冻结，后续再 reject 无效，所以无需额外加锁，天然只 reject 第一次。</li>
-</ol>
-<p>用 <code>Promise.resolve(x).then(...)</code> 包裹每个元素，可同时兼容「普通值」和「Promise」——普通值会被包装成已完成的 Promise。</p>
-<ul>
-<li>时间复杂度：<code>O(n)</code>。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> promiseAll&lt;T&gt;(</span><br><span class="line">    <span class="attr">iterables</span>: <span class="title class_">Iterable</span>&lt;T | <span class="title class_">PromiseLike</span>&lt;T&gt;&gt;</span><br><span class="line">): <span class="title class_">Promise</span>&lt;<span class="title class_">Awaited</span>&lt;T&gt;[]&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> promises = <span class="title class_">Array</span>.<span class="title function_">from</span>(iterables);</span><br><span class="line">        <span class="keyword">const</span> n = promises.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">const</span> results = <span class="keyword">new</span> <span class="title class_">Array</span>(n);</span><br><span class="line">        <span class="keyword">let</span> completed = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (n === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="title function_">resolve</span>(results <span class="keyword">as</span> <span class="title class_">Awaited</span>&lt;T&gt;[]);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="comment">// 用 Promise.resolve 兼容非 Promise 值</span></span><br><span class="line">            <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(promises[i]).<span class="title function_">then</span>(</span><br><span class="line">                <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">                    results[i] = value; <span class="comment">// 按下标写入，保证顺序</span></span><br><span class="line">                    completed++;</span><br><span class="line">                    <span class="keyword">if</span> (completed === n) &#123;</span><br><span class="line">                        <span class="title function_">resolve</span>(results <span class="keyword">as</span> <span class="title class_">Awaited</span>&lt;T&gt;[]);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="function">(<span class="params">reason</span>) =&gt;</span> &#123;</span><br><span class="line">                    <span class="title function_">reject</span>(reason); <span class="comment">// 快速失败</span></span><br><span class="line">                &#125;</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="title function_">promiseAll</span>([<span class="number">1</span>, <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="number">2</span>), <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">r</span>) =&gt;</span> <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">r</span>(<span class="number">3</span>), <span class="number">100</span>))])</span><br><span class="line">    .<span class="title function_">then</span>(<span class="variable language_">console</span>.<span class="property">log</span>); <span class="comment">// [1, 2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">promiseAll</span>([<span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&quot;a&quot;</span>), <span class="title class_">Promise</span>.<span class="title function_">reject</span>(<span class="string">&quot;boom&quot;</span>), <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&quot;c&quot;</span>)])</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="variable language_">console</span>.<span class="property">log</span>); <span class="comment">// &quot;boom&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><p>手写 Promise 家族常一起问，趁热记住区别：</p>
-<ul>
-<li><strong><code>Promise.allSettled</code></strong>：等全部 settle（不管成败），返回 <code>{status, value/reason}</code> 数组，永不 reject。</li>
-<li><strong><code>Promise.race</code></strong>：第一个 settle（含 reject）的结果定胜负。</li>
-<li><strong><code>Promise.any</code></strong>：第一个<strong>成功</strong>的结果；全部失败才 reject 一个 <code>AggregateError</code>。</li>
-<li><strong>并发控制（重点）</strong>：真实场景不能无脑并发几千个请求。进阶手写 <code>promiseAllLimit(tasks, limit)</code>，用「任务池 &#x2F; 索引指针」维持最多 <code>limit</code> 个在跑，是字节&#x2F;腾讯高频加试题。</li>
-<li>别忘了答「为什么按 index 写而不是 push」——这几乎是本题的核心得分点。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | 前端手写 Promise 必考 | 异步并发基石</p>
 </blockquote>
 
       
