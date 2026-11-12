@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本系列共 5 篇。前三篇覆盖了协议基础、三大原语和传输层，已构成一个最简可用的 MCP 服务。本篇讲解协议里用于双向协作、安全约束、异步反馈、扩展的高阶能力：Sampling、Roots、通知体系、精细化错误模型与扩展机制。这些能力全部是可选 capability，在 initialize 阶段协商开启，不是必选。  一、Sampling —— Server 反向调用大模型Sampling 是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出 MCP 系列教程（四）：进阶能力">
+<meta property="og:url" content="https://jackniu81.github.io/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="本系列共 5 篇。前三篇覆盖了协议基础、三大原语和传输层，已构成一个最简可用的 MCP 服务。本篇讲解协议里用于双向协作、安全约束、异步反馈、扩展的高阶能力：Sampling、Roots、通知体系、精细化错误模型与扩展机制。这些能力全部是可选 capability，在 initialize 阶段协商开启，不是必选。  一、Sampling —— Server 反向调用大模型Sampling 是">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-11-08T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T02:40:44.377Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/","path":"2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/","title":"深入浅出 MCP 系列教程（四）：进阶能力"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入浅出 MCP 系列教程（四）：进阶能力 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Sampling-%E2%80%94%E2%80%94-Server-%E5%8F%8D%E5%90%91%E8%B0%83%E7%94%A8%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">一、Sampling —— Server 反向调用大模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%BC%80%E5%90%AF%E5%89%8D%E6%8F%90"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 开启前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%EF%BC%88Server-%E2%86%92-Host%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 请求报文（Server → Host）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-Host-%E8%BF%94%E5%9B%9E%E6%8A%A5%E6%96%87"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 Host 返回报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E5%AE%89%E5%85%A8%E4%B8%8E%E5%AE%A1%E6%89%B9%E6%B5%81%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%E7%9A%84%E5%B7%A5%E7%A8%8B%E7%82%B9%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 安全与审批流（非常重要的工程点）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-%E5%85%B8%E5%9E%8B%E8%AF%AF%E5%8C%BA"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 典型误区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Roots-%E2%80%94%E2%80%94-%E8%B5%84%E6%BA%90%E8%AE%BF%E9%97%AE%E8%BE%B9%E7%95%8C%E6%8E%A7%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">二、Roots —— 资源访问边界控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%BC%80%E5%90%AF%E5%89%8D%E6%8F%90"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 开启前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%B8%8B%E5%8F%91%E9%80%9A%E7%9F%A5"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 下发通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%A0%A1%E9%AA%8C%E8%A7%84%E5%88%99"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 校验规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%8A%A8%E6%80%81%E5%8F%98%E6%9B%B4"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 动态变更</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E9%80%82%E7%94%A8%E8%8C%83%E5%9B%B4%E4%B8%8E%E5%B1%80%E9%99%90"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 适用范围与局限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%8C%E6%95%B4%E9%80%9A%E7%9F%A5%E4%BD%93%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">三、完整通知体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BC%9A%E8%AF%9D%E5%9F%BA%E7%A1%80%E9%80%9A%E7%9F%A5"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 会话基础通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Resources-%E7%9B%B8%E5%85%B3%E9%80%9A%E7%9F%A5"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Resources 相关通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Tools-Prompts-%E5%88%97%E8%A1%A8%E5%8F%98%E6%9B%B4%E9%80%9A%E7%9F%A5"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Tools &#x2F; Prompts 列表变更通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%8F%8D%E9%A6%88%E9%80%9A%E7%9F%A5%EF%BC%88%E6%97%A5%E5%BF%97-%E8%BF%9B%E5%BA%A6%EF%BC%89"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 运行时反馈通知（日志 + 进度）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E9%80%9A%E7%9F%A5%E7%9A%84%E9%80%9A%E7%94%A8%E7%BA%A6%E6%9D%9F"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 通知的通用约束</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%B2%BE%E7%BB%86%E5%8C%96%E9%94%99%E8%AF%AF%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">四、精细化错误模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E4%B8%89%E5%B1%82%E9%94%99%E8%AF%AF"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 三层错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E9%94%99%E8%AF%AF%E6%90%BA%E5%B8%A6%E9%99%84%E5%8A%A0%E6%95%B0%E6%8D%AE"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 错误携带附加数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E7%AD%96%E7%95%A5%EF%BC%88%E5%B7%A5%E7%A8%8B%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 错误处理策略（工程最佳实践）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%8D%8F%E8%AE%AE%E7%89%88%E6%9C%AC%E4%B8%8E%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">五、协议版本与扩展机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-protocolVersion"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 protocolVersion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%89%A9%E5%B1%95%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83%EF%BC%88%E5%BC%BA%E5%88%B6%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 扩展命名规范（强制）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%B9%E6%B3%95%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 自定义方法的限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%80%82%E5%90%88%E6%89%A9%E5%B1%95"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 什么时候适合扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%BF%9B%E9%98%B6%E8%83%BD%E5%8A%9B%E7%BB%84%E5%90%88%E5%AE%9E%E6%88%98"><span class="nav-number">6.</span> <span class="nav-text">六、进阶能力组合实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%AC%AC%E5%9B%9B%E7%AF%87%E5%B0%8F%E7%BB%93%E4%B8%8E%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">7.</span> <span class="nav-text">七、第四篇小结与高频误区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%A4%8D%E7%9B%98"><span class="nav-number">7.1.</span> <span class="nav-text">核心复盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">7.2.</span> <span class="nav-text">高频误区</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入浅出 MCP 系列教程（四）：进阶能力 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入浅出 MCP 系列教程（四）：进阶能力
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-08 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-08T09:00:00+08:00">2026-11-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本系列共 5 篇。前三篇覆盖了协议基础、三大原语和传输层，已构成一个最简可用的 MCP 服务。本篇讲解协议里用于双向协作、安全约束、异步反馈、扩展的高阶能力：Sampling、Roots、通知体系、精细化错误模型与扩展机制。这些能力全部是<strong>可选 capability</strong>，在 <code>initialize</code> 阶段协商开启，不是必选。</p>
+</blockquote>
+<h2 id="一、Sampling-——-Server-反向调用大模型"><a href="#一、Sampling-——-Server-反向调用大模型" class="headerlink" title="一、Sampling —— Server 反向调用大模型"></a>一、Sampling —— Server 反向调用大模型</h2><p>Sampling 是 MCP 最有特色、也最容易被低估的能力。常规流程是 Host 调用 Server；Sampling 反过来，<strong>由 MCP Server 发起请求，请 Host 调用它持有的大模型，再把模型返回结果交还给 Server</strong>。</p>
+<h3 id="1-1-适用场景"><a href="#1-1-适用场景" class="headerlink" title="1.1 适用场景"></a>1.1 适用场景</h3><p>普通 function calling 是：LLM → 调用工具。Sampling 是：工具服务 → 请求 LLM 帮忙做推理。典型场景：</p>
+<ul>
+<li>代码解析 Server：拿到一段代码，请求模型做摘要、风险识别；</li>
+<li>文档 Server：读取文档后，让模型抽取要点；</li>
+<li>工单 Server：拿到工单上下文，调用模型生成初步回复；</li>
+<li>多 Agent 编排：一个 MCP Server 本身作为子 Agent，需要上层 Host 的模型能力完成子任务。</li>
+</ul>
+<blockquote>
+<p>关键约束：Sampling 不是”Server 自己持有模型 Key”。模型密钥、模型选择、上下文配额、用户权限全部在 Host 一侧。Server 只负责描述：我想要什么样的模型输出。</p>
+</blockquote>
+<h3 id="1-2-开启前提"><a href="#1-2-开启前提" class="headerlink" title="1.2 开启前提"></a>1.2 开启前提</h3><p>必须同时满足两个条件：</p>
+<ol>
+<li>Client（Host）在 <code>initialize</code> 的 <code>capabilities</code> 里声明 <code>sampling: {}</code>；</li>
+<li>Server 在响应的 <code>capabilities</code> 里声明支持接收采样请求。</li>
+</ol>
+<p>只有两边都声明，会话内才允许使用 <code>sampling/createMessage</code>。如果 Host 不支持 sampling，Server 绝对不能发起这个调用，否则收到 <code>-32601</code> 方法不存在错误。</p>
+<h3 id="1-3-请求报文（Server-→-Host）"><a href="#1-3-请求报文（Server-→-Host）" class="headerlink" title="1.3 请求报文（Server → Host）"></a>1.3 请求报文（Server → Host）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sample-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sampling/createMessage&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;请总结下面这段日志，只列出错误：\nConnection refused at port 8080&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;modelPreferences&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;hints&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-4o-mini&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;intelligencePriority&quot;</span><span class="punctuation">:</span> <span class="number">0.7</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;speedPriority&quot;</span><span class="punctuation">:</span> <span class="number">0.2</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;costPriority&quot;</span><span class="punctuation">:</span> <span class="number">0.1</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;systemPrompt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你是日志分析助手，输出简洁。&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;maxTokens&quot;</span><span class="punctuation">:</span> <span class="number">512</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;temperature&quot;</span><span class="punctuation">:</span> <span class="number">0.3</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;stopSequences&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;---&quot;</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>字段说明：</p>
+<ul>
+<li><code>messages</code>：消息数组，支持 text &#x2F; image &#x2F; resource 内容；</li>
+<li><code>modelPreferences</code>：偏好提示，<strong>不是强制</strong>。Host 可以忽略，按照用户配置、配额、可用模型自行选择；</li>
+<li><code>maxTokens</code>、<code>temperature</code>、<code>stopSequences</code>：推理参数，Host 有权限做上限拦截；</li>
+<li>没有 <code>stream</code> 参数：标准 sampling 接口默认返回完整消息，不强制流式。</li>
+</ul>
+<h3 id="1-4-Host-返回报文"><a href="#1-4-Host-返回报文" class="headerlink" title="1.4 Host 返回报文"></a>1.4 Host 返回报文</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sample-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;assistant&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;错误：8080 端口连接被拒绝&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-4o-mini&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;stopReason&quot;</span><span class="punctuation">:</span> <span class="string">&quot;endTurn&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>stopReason</code> 可选枚举：<code>endTurn</code>、<code>maxTokens</code>、<code>stopSequence</code>。</p>
+<h3 id="1-5-安全与审批流（非常重要的工程点）"><a href="#1-5-安全与审批流（非常重要的工程点）" class="headerlink" title="1.5 安全与审批流（非常重要的工程点）"></a>1.5 安全与审批流（非常重要的工程点）</h3><ol>
+<li><strong>Host 拥有最终否决权</strong>：收到 <code>sampling/createMessage</code>，Host 可以直接调用模型返回结果、弹出审批让用户确认、或直接拒绝返回错误；</li>
+<li>计费、token 消耗归属 Host；多租户 Host 必须按用户隔离统计；</li>
+<li>提示注入风险：Server 传入的 messages 属于外部不可信输入，Host 需要做边界隔离；</li>
+<li>禁止 Server 通过 sampling 绕过 Host 的安全策略，例如内容审核必须统一经过。</li>
+</ol>
+<h3 id="1-6-典型误区"><a href="#1-6-典型误区" class="headerlink" title="1.6 典型误区"></a>1.6 典型误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sampling 代表 Server 可以绕过 Host 随便调用模型</td>
+<td>Host 可以拦截、拒绝、替换模型、覆盖参数</td>
+</tr>
+<tr>
+<td>modelPreferences 是硬性要求</td>
+<td>只是建议，Host 可以无视</td>
+</tr>
+<tr>
+<td>Sampling 等同于把模型 Key 交给 Server</td>
+<td>Server 永远拿不到密钥</td>
+</tr>
+</tbody></table>
+<h2 id="二、Roots-——-资源访问边界控制"><a href="#二、Roots-——-资源访问边界控制" class="headerlink" title="二、Roots —— 资源访问边界控制"></a>二、Roots —— 资源访问边界控制</h2><p>Roots 是 MCP 内置的沙箱机制，专门约束 Resources 的读取范围，解决一个核心风险：如果 filesystem MCP Server 可以读取本机任意文件，一旦被 LLM 诱导，很容易泄露密钥、配置文件。</p>
+<p>Roots 是 <strong>Host 下发给 Server 的一组允许访问的根 URI 列表</strong>。</p>
+<h3 id="2-1-开启前提"><a href="#2-1-开启前提" class="headerlink" title="2.1 开启前提"></a>2.1 开启前提</h3><p>握手时 Client（Host）声明 <code>roots: {}</code> 能力，Server 识别之后就必须遵守 Host 下发的根列表。Roots 属于 Host → Server 的单向配置，由 Host 主动推送通知，不是一次性握手参数。</p>
+<h3 id="2-2-下发通知"><a href="#2-2-下发通知" class="headerlink" title="2.2 下发通知"></a>2.2 下发通知</h3><p>这是一条通知（无 id），Host 在握手完成之后随时可以推送，包括后续动态更新权限：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/roots/list_changed&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;roots&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///home/user/work&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;工作目录&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>uri</code>：根地址；<code>name</code>：人类可读备注；</li>
+<li>可以下发多个 roots；空数组代表：不允许访问任何资源。</li>
+</ul>
+<p>Server 收到通知后，更新自己的访问白名单。</p>
+<h3 id="2-3-校验规则"><a href="#2-3-校验规则" class="headerlink" title="2.3 校验规则"></a>2.3 校验规则</h3><p>Server 需要判断：目标 URI 是否以其中一个 root URI 为前缀（按 URI 语义，不是简单字符串 startsWith）。</p>
+<p>允许 root：<code>file:///home/user/work</code></p>
+<ul>
+<li>✅ <code>file:///home/user/work/readme.md</code></li>
+<li>✅ <code>file:///home/user/work/src/index.js</code></li>
+<li>❌ <code>file:///home/user/.ssh/id_rsa</code>（不在根下）</li>
+<li>❌ <code>file:///etc/passwd</code></li>
+</ul>
+<blockquote>
+<p>校验是 Server 的责任，协议约定 Server 主动拒绝越界访问；Host 也可以叠加一层校验作为第二层防线。</p>
+</blockquote>
+<h3 id="2-4-动态变更"><a href="#2-4-动态变更" class="headerlink" title="2.4 动态变更"></a>2.4 动态变更</h3><p>Host 在会话存活期间可以多次推送 <code>roots/list_changed</code>：增加目录、删除目录、替换成全新列表、设置为空冻结所有资源读取。</p>
+<p>典型场景：用户在客户端 UI 里勾选&#x2F;取消允许访问的文件夹，Host 立刻推送更新给 filesystem server。</p>
+<h3 id="2-5-适用范围与局限"><a href="#2-5-适用范围与局限" class="headerlink" title="2.5 适用范围与局限"></a>2.5 适用范围与局限</h3><ul>
+<li>Roots 主要面向 <code>file://</code>，但语义上是通用 URI，<code>postgres://</code>、<code>git://</code> 等 scheme 也可以实现自己的 root 校验；</li>
+<li>Roots <strong>只约束 Resources</strong>，协议层面不强制约束 Tools；工具的权限校验需要 Server &#x2F; Host 单独实现；</li>
+<li>Roots 是语义约定，不是操作系统级沙箱；恶意实现的 Server 可以无视，所以 Host 仍需要不信任不受控的第三方 MCP Server。</li>
+</ul>
+<h2 id="三、完整通知体系"><a href="#三、完整通知体系" class="headerlink" title="三、完整通知体系"></a>三、完整通知体系</h2><p>MCP 大量异步事件依靠 Notification（不带 id，不需要回复）。通知分为两类：</p>
+<ul>
+<li><strong>标准通知</strong>：协议规范内定义，所有兼容实现语义统一；</li>
+<li><strong>自定义通知</strong>：以 <code>x-</code> 前缀，用于业务扩展。</li>
+</ul>
+<h3 id="3-1-会话基础通知"><a href="#3-1-会话基础通知" class="headerlink" title="3.1 会话基础通知"></a>3.1 会话基础通知</h3><ol>
+<li><code>initialized</code>：Client → Server，握手完成；</li>
+<li><code>notifications/roots/list_changed</code>：Host → Server，根目录权限更新。</li>
+</ol>
+<h3 id="3-2-Resources-相关通知"><a href="#3-2-Resources-相关通知" class="headerlink" title="3.2 Resources 相关通知"></a>3.2 Resources 相关通知</h3><p><code>notifications/resources/updated</code>：Server → Host，某个已订阅的资源发生变更。</p>
+<blockquote>
+<p>再次强调：通知只代表”变了”，不会携带新内容；Host 需要最新内容时主动调用 <code>resources/read</code>。</p>
+</blockquote>
+<h3 id="3-3-Tools-Prompts-列表变更通知"><a href="#3-3-Tools-Prompts-列表变更通知" class="headerlink" title="3.3 Tools &#x2F; Prompts 列表变更通知"></a>3.3 Tools &#x2F; Prompts 列表变更通知</h3><p><code>notifications/tools/list_changed</code>：Server → Host，可用工具列表动态变化。适用场景：Server 的工具根据登录用户、配置、插件加载动态增减。Host 收到通知后主动调用 <code>tools/list</code> 刷新缓存。同理有 <code>notifications/prompts/list_changed</code>。</p>
+<h3 id="3-4-运行时反馈通知（日志-进度）"><a href="#3-4-运行时反馈通知（日志-进度）" class="headerlink" title="3.4 运行时反馈通知（日志 + 进度）"></a>3.4 运行时反馈通知（日志 + 进度）</h3><p><strong>日志通知</strong> <code>notifications/logging/message</code>：Server 把结构化日志推送给 Host，在 UI 展示日志面板：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/logging/message&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;level&quot;</span><span class="punctuation">:</span> <span class="string">&quot;info&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;logger&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git-server&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="string">&quot;开始拉取远程分支&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-11-22T10:00:00Z&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>level 取值：<code>debug</code> &#x2F; <code>info</code> &#x2F; <code>warning</code> &#x2F; <code>error</code>。stdio 模式下 stderr 日志和协议内 logging 通知可以共存。</p>
+<p><strong>进度通知</strong> <code>notifications/progress</code>：用于长时间任务（大文件扫描、批量导入、数据库备份），给前端进度条：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/progress&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;progressToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;job-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;progress&quot;</span><span class="punctuation">:</span> <span class="number">0.4</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="number">100</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;已扫描 40/100 文件&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>progressToken</code>：任务令牌，由发起请求的一方生成，绑定这个任务；</li>
+<li><code>progress</code>：0~1 比例；<code>total</code>：可选总量。</li>
+</ul>
+<p>进度通知是非常重要的用户体验能力：没有它，Host 只能傻傻等待，不知道工具是不是卡死。</p>
+<h3 id="3-5-通知的通用约束"><a href="#3-5-通知的通用约束" class="headerlink" title="3.5 通知的通用约束"></a>3.5 通知的通用约束</h3><ol>
+<li>通知不保证送达、不保证顺序（网络代理、重连会丢）；</li>
+<li>通知不要求应答，接收方可以选择忽略；</li>
+<li>通知不能用来传递核心返回结果，结果必须放在 Response；</li>
+<li>会话断开之后，所有未送达通知全部丢弃，重连不会补发历史通知。</li>
+</ol>
+<h2 id="四、精细化错误模型"><a href="#四、精细化错误模型" class="headerlink" title="四、精细化错误模型"></a>四、精细化错误模型</h2><h3 id="4-1-三层错误"><a href="#4-1-三层错误" class="headerlink" title="4.1 三层错误"></a>4.1 三层错误</h3><ol>
+<li><strong>传输层错误</strong>：连接断开、解析失败、缓冲区溢出、HTTP 401&#x2F;404，由传输层向上抛出；</li>
+<li><strong>JSON-RPC 标准错误</strong>：协议方法层面错误；</li>
+<li><strong>业务语义错误</strong>：方法存在、参数合法，但业务执行失败（数据库查询失败、文件不存在、权限不足）。</li>
+</ol>
+<p>标准 JSON-RPC 错误码：</p>
+<table>
+<thead>
+<tr>
+<th>code</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-32600</td>
+<td>Invalid Request：消息格式非法</td>
+</tr>
+<tr>
+<td>-32601</td>
+<td>Method not found：方法不存在，或能力没有协商开启</td>
+</tr>
+<tr>
+<td>-32602</td>
+<td>Invalid params：参数不符合 schema &#x2F; 必填缺失</td>
+</tr>
+<tr>
+<td>-32603</td>
+<td>Internal error：服务内部异常</td>
+</tr>
+<tr>
+<td>-32700</td>
+<td>Parse error：JSON 解析失败</td>
+</tr>
+</tbody></table>
+<p>业务自定义错误：官方建议从 <code>-32000</code> 开始分配，不要占用预留段。</p>
+<h3 id="4-2-错误携带附加数据"><a href="#4-2-错误携带附加数据" class="headerlink" title="4.2 错误携带附加数据"></a>4.2 错误携带附加数据</h3><p>error 对象可以增加 <code>data</code> 字段，携带结构化附加信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;res-read-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">-32001</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;访问超出根目录范围&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;requestedUri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///etc/passwd&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowedRoots&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;file:///home/user/work&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Host 可以读取 <code>data</code>，给用户展示更友好的报错、告警。</p>
+<h3 id="4-3-错误处理策略（工程最佳实践）"><a href="#4-3-错误处理策略（工程最佳实践）" class="headerlink" title="4.3 错误处理策略（工程最佳实践）"></a>4.3 错误处理策略（工程最佳实践）</h3><ul>
+<li>Parse error：直接丢弃这条消息，打日志，会话继续；</li>
+<li>Method not found：代表能力协商不一致，Host 应当停止调用该系列接口；</li>
+<li>业务执行失败：把错误文本原样送入 LLM，让模型感知失败，进行重试或调整策略；</li>
+<li>致命内部错误：Server 可以主动关闭会话；stdio 模式一般直接退出进程。</li>
+</ul>
+<blockquote>
+<p>一个坑：不要把业务异常做成通知；调用失败必须返回 error response，不能只发一条日志通知了事。发起方需要知道调用结果。</p>
+</blockquote>
+<h2 id="五、协议版本与扩展机制"><a href="#五、协议版本与扩展机制" class="headerlink" title="五、协议版本与扩展机制"></a>五、协议版本与扩展机制</h2><p>MCP 的扩展哲学：<strong>优先能力协商，而不是版本号强绑定；标准之外允许自定义扩展，但有严格命名规范</strong>。</p>
+<h3 id="5-1-protocolVersion"><a href="#5-1-protocolVersion" class="headerlink" title="5.1 protocolVersion"></a>5.1 protocolVersion</h3><p><code>initialize</code> 里的 <code>protocolVersion</code>，当前稳定版本 <code>0.1.0</code>。版本兼容规则：</p>
+<ul>
+<li>主版本变更代表不兼容；次版本、补丁版本向后兼容；</li>
+<li>Server 收到不支持的主版本，可以拒绝握手；</li>
+<li>新增能力走 capabilities，而不是靠升级版本号强制开启。</li>
+</ul>
+<p>同一个版本号内，可以出现”有的 Server 支持 sampling，有的不支持”，靠能力交集区分，而不是版本。</p>
+<h3 id="5-2-扩展命名规范（强制）"><a href="#5-2-扩展命名规范（强制）" class="headerlink" title="5.2 扩展命名规范（强制）"></a>5.2 扩展命名规范（强制）</h3><p>所有不属于官方标准的 method、通知，必须加前缀 <code>x-</code>：</p>
+<ul>
+<li>✅ <code>x-query-metrics</code>（自定义请求）</li>
+<li>✅ <code>notifications/x-job-finished</code>（自定义通知）</li>
+<li>❌ <code>query-metrics</code>（无前缀，未来官方如果新增同名方法，直接冲突）</li>
+</ul>
+<h3 id="5-3-自定义方法的限制"><a href="#5-3-自定义方法的限制" class="headerlink" title="5.3 自定义方法的限制"></a>5.3 自定义方法的限制</h3><ul>
+<li>自定义方法同样走 JSON-RPC request &#x2F; response；</li>
+<li>自定义能力<strong>不能</strong>在顶层 capabilities 里随便新增；如果需要协商是否支持某个扩展，两种方案：在标准 tools 里封装成工具；或用一个自定义 <code>x-capabilities</code> 通知交换扩展支持列表；</li>
+<li>自定义扩展只在自己的 Host &#x2F; Server 生态互通；通用客户端（Claude Desktop）会忽略不认识的 x-* 接口。</li>
+</ul>
+<h3 id="5-4-什么时候适合扩展"><a href="#5-4-什么时候适合扩展" class="headerlink" title="5.4 什么时候适合扩展"></a>5.4 什么时候适合扩展</h3><p>适合：企业内部专属运维指令、任务状态查询；专属流式传输、大文件分片；内部审计、特权接口。</p>
+<p>不适合：需求具备通用性时应优先提官方规范提案，而不是自己造私有 method；也不要用自定义 method 重新实现已经存在的原语。</p>
+<h2 id="六、进阶能力组合实战"><a href="#六、进阶能力组合实战" class="headerlink" title="六、进阶能力组合实战"></a>六、进阶能力组合实战</h2><p>场景：一个带采样、roots、进度、动态工具列表的文件分析 MCP Server。</p>
+<ol>
+<li>Host 和 Server 握手，双方同时开启 <code>tools</code>、<code>resources(subscribe)</code>、<code>sampling</code>、<code>roots</code>；</li>
+<li>Host 下发 roots：只允许访问 <code>file:///work</code>；</li>
+<li>Host 调用 <code>tools/list</code>，拿到扫描工具；Server 插件加载完成后推送 <code>notifications/tools/list_changed</code>；</li>
+<li>Host 调用 <code>tools/call</code> 启动批量日志扫描；</li>
+<li>Server 持续推送 <code>notifications/progress</code> 进度；</li>
+<li>Server 在扫描中发现一段日志，发起 <code>sampling/createMessage</code>，请求 Host 的模型做风险识别；</li>
+<li>Host 返回模型结果，Server 继续处理；</li>
+<li>某个日志文件变更，Server 推送 <code>notifications/resources/updated</code>；</li>
+<li>用户取消文件夹权限，Host 推送 <code>roots/list_changed</code>，Server 立刻拒绝后续越界读取。</li>
+</ol>
+<p>这一套组合，就是企业落地里真正有生产力的 MCP 形态，而不只是简单调用工具。</p>
+<h2 id="七、第四篇小结与高频误区"><a href="#七、第四篇小结与高频误区" class="headerlink" title="七、第四篇小结与高频误区"></a>七、第四篇小结与高频误区</h2><h3 id="核心复盘"><a href="#核心复盘" class="headerlink" title="核心复盘"></a>核心复盘</h3><ol>
+<li>Sampling：反向推理，Server 请求 Host 的 LLM；Host 掌握审批、模型选择、配额；</li>
+<li>Roots：Host 下发资源白名单，由 Server 执行 URI 前缀校验，作为资源沙箱；</li>
+<li>通知体系：资源更新、工具列表变更、结构化日志、进度条，全部是异步无应答事件；通知只做提醒，不携带返回数据；</li>
+<li>错误分层：传输错误、标准 JSON-RPC 错误、业务错误；业务错误可以附带结构化 data；</li>
+<li>扩展原则：依靠 capabilities 做兼容；私有接口必须 <code>x-</code> 前缀。</li>
+</ol>
+<h3 id="高频误区"><a href="#高频误区" class="headerlink" title="高频误区"></a>高频误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Roots 可以限制工具的文件写入</td>
+<td>Roots 只约定 Resources；工具权限需要单独管控</td>
+</tr>
+<tr>
+<td>sampling 请求过来，Host 必须调用模型</td>
+<td>Host 有权拒绝、审批、替换参数</td>
+</tr>
+<tr>
+<td>收到 resources&#x2F;updated 就自动拿到新内容</td>
+<td>通知只是提醒，必须主动 resources&#x2F;read</td>
+</tr>
+<tr>
+<td>自定义方法可以不加前缀</td>
+<td>非标准 method &#x2F; notification 必须使用 <code>x-</code> 前缀</td>
+</tr>
+<tr>
+<td>进度通知可以作为任务完成标记</td>
+<td>进度只是反馈；任务成功&#x2F;失败仍依靠 tools&#x2F;call 的 response 或 error</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇（系列完结篇）：《深入浅出 MCP 系列教程（五）：工程落地与选型》，将讲解 SDK 上手、安全模型、网关架构、可观测性，以及 MCP 与 Function Calling &#x2F; Agent 框架 &#x2F; A2A 的对比与选型决策。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/" rel="prev" title="深入浅出 MCP 系列教程（三）：传输层实战">
+                  <i class="fa fa-angle-left"></i> 深入浅出 MCP 系列教程（三）：传输层实战
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/08/Algorithm-Merge-Sorted-Array/" rel="next" title="算法 - 合并两个有序数组">
+                  算法 - 合并两个有序数组 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

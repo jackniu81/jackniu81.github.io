@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本系列共 5 篇。上一篇讲解了协议基础与架构设计，本篇深入 MCP 的三大核心原语：Resources（资源）、Tools（工具）、Prompts（提示模板），覆盖完整规范、字段、调用链路、校验规则与典型踩坑点。  一、为什么拆成三类，而不是全部打包成”函数”MCP 刻意把 Agent 和外部交互拆成三类，这是区别于普通 function calling 的核心：  Resources：只读上下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出 MCP 系列教程（二）：三大核心原语实战">
+<meta property="og:url" content="https://jackniu81.github.io/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="本系列共 5 篇。上一篇讲解了协议基础与架构设计，本篇深入 MCP 的三大核心原语：Resources（资源）、Tools（工具）、Prompts（提示模板），覆盖完整规范、字段、调用链路、校验规则与典型踩坑点。  一、为什么拆成三类，而不是全部打包成”函数”MCP 刻意把 Agent 和外部交互拆成三类，这是区别于普通 function calling 的核心：  Resources：只读上下">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-11-04T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T02:41:37.794Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/","path":"2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/","title":"深入浅出 MCP 系列教程（二）：三大核心原语实战"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入浅出 MCP 系列教程（二）：三大核心原语实战 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8B%86%E6%88%90%E4%B8%89%E7%B1%BB%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E5%85%A8%E9%83%A8%E6%89%93%E5%8C%85%E6%88%90%E2%80%9D%E5%87%BD%E6%95%B0%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、为什么拆成三类，而不是全部打包成”函数”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Resources%EF%BC%88%E8%B5%84%E6%BA%90%EF%BC%89%E2%80%94%E2%80%94-%E5%8F%AA%E8%AF%BB%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">二、Resources（资源）—— 只读上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AResource-URI"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 核心概念：Resource URI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Resource-%E5%AF%B9%E8%B1%A1%E5%AE%8C%E6%95%B4%E5%AD%97%E6%AE%B5"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Resource 对象完整字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 完整调用链路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E7%BA%A6%E6%9D%9F%E4%B8%8E%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 约束与安全边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E5%85%B8%E5%9E%8B%E8%B8%A9%E5%9D%91"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 典型踩坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Tools%EF%BC%88%E5%B7%A5%E5%85%B7%EF%BC%89%E2%80%94%E2%80%94-%E5%B8%A6%E5%89%AF%E4%BD%9C%E7%94%A8%E7%9A%84%E5%8A%A8%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">三、Tools（工具）—— 带副作用的动作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Tool-%E5%AF%B9%E8%B1%A1%E5%AE%8C%E6%95%B4%E5%AD%97%E6%AE%B5"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Tool 对象完整字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 调用链路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%B7%A5%E5%85%B7%E5%AE%A1%E6%89%B9%E6%B5%81%EF%BC%88%E9%9D%9E%E5%B8%B8%E5%85%B3%E9%94%AE%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 工具审批流（非常关键）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 设计规范与最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Tools-vs-Resources-%E5%88%A4%E5%AE%9A%E5%8F%A3%E8%AF%80"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 Tools vs Resources 判定口诀</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Prompts%EF%BC%88%E6%8F%90%E7%A4%BA%E6%A8%A1%E6%9D%BF%EF%BC%89%E2%80%94%E2%80%94-%E9%A2%84%E7%BC%96%E6%8E%92%E4%BB%BB%E5%8A%A1%E5%85%A5%E5%8F%A3"><span class="nav-number">4.</span> <span class="nav-text">四、Prompts（提示模板）—— 预编排任务入口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Prompt-%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Prompt 对象字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%B0%83%E7%94%A8%E9%93%BE%E8%B7%AF"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 调用链路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E7%89%B9%E7%82%B9%E5%92%8C%E8%BE%B9%E7%95%8C"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 特点和边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E8%A6%81%E7%94%A8-Prompt-%E5%8E%9F%E8%AF%AD"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 什么时候不要用 Prompt 原语</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%8E%9F%E8%AF%AD%E7%BB%84%E5%90%88%E5%AE%9E%E6%88%98%EF%BC%9A%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E4%B8%9A%E5%8A%A1%E6%B5%81%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">五、原语组合实战：一个完整业务流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%A0%A1%E9%AA%8C%E8%A7%84%E5%88%99%E4%B8%8E%E9%94%99%E8%AF%AF%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">六、校验规则与错误模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%AC%AC%E4%BA%8C%E7%AF%87%E5%B0%8F%E7%BB%93%E4%B8%8E%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">7.</span> <span class="nav-text">七、第二篇小结与高频误区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%A4%8D%E7%9B%98"><span class="nav-number">7.1.</span> <span class="nav-text">核心复盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">7.2.</span> <span class="nav-text">高频误区</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入浅出 MCP 系列教程（二）：三大核心原语实战 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入浅出 MCP 系列教程（二）：三大核心原语实战
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-04 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-04T09:00:00+08:00">2026-11-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本系列共 5 篇。上一篇讲解了协议基础与架构设计，本篇深入 MCP 的三大核心原语：Resources（资源）、Tools（工具）、Prompts（提示模板），覆盖完整规范、字段、调用链路、校验规则与典型踩坑点。</p>
+</blockquote>
+<h2 id="一、为什么拆成三类，而不是全部打包成”函数”"><a href="#一、为什么拆成三类，而不是全部打包成”函数”" class="headerlink" title="一、为什么拆成三类，而不是全部打包成”函数”"></a>一、为什么拆成三类，而不是全部打包成”函数”</h2><p>MCP 刻意把 Agent 和外部交互拆成三类，这是区别于普通 function calling 的核心：</p>
+<ul>
+<li><strong>Resources：只读上下文源</strong>——把外部世界的信息送入模型，不产生副作用；支持 URI 寻址、变更订阅；</li>
+<li><strong>Tools：可执行动作</strong>——调用后可能修改外部状态；带输入 JSON Schema，高危动作需要 Host 侧人工审批；</li>
+<li><strong>Prompts：预编排任务模板</strong>——封装 system prompt、参数占位、子任务编排，提供可复用的任务入口。</li>
+</ul>
+<p>一个 MCP Server 可以只实现其中任意一个或多个，在 <code>initialize</code> 阶段通过 capabilities 声明：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;resources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;subscribe&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;prompts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>只要能力没有在双方协商交集里存在，Host 就绝对不能发起对应系列的请求。</p>
+<h2 id="二、Resources（资源）——-只读上下文"><a href="#二、Resources（资源）——-只读上下文" class="headerlink" title="二、Resources（资源）—— 只读上下文"></a>二、Resources（资源）—— 只读上下文</h2><h3 id="2-1-核心概念：Resource-URI"><a href="#2-1-核心概念：Resource-URI" class="headerlink" title="2.1 核心概念：Resource URI"></a>2.1 核心概念：Resource URI</h3><p>Resources 的设计思想：任何一条可被模型消费的信息，都拥有一个全局可定位的 URI，类似浏览器的 URL，但不局限于 HTTP。</p>
+<p>官方推荐的常见 scheme：</p>
+<ul>
+<li><code>file://</code>：本地文件</li>
+<li><code>postgres://</code>：数据库表&#x2F;记录</li>
+<li><code>git://</code>：仓库提交、分支、diff</li>
+<li><code>notion://</code>：Notion 页面</li>
+<li><code>slack://</code>：会话消息</li>
+</ul>
+<p><strong>URI 的所有权属于 Server</strong>：只有暴露这个资源的 Server 知道如何解析它。Host 只把 URI 当成不透明字符串，不会自己去解析、访问。Host 拿着 URI 调用 <code>resources/read</code>，由 Server 去读取对应内容。</p>
+<h3 id="2-2-Resource-对象完整字段"><a href="#2-2-Resource-对象完整字段" class="headerlink" title="2.2 Resource 对象完整字段"></a>2.2 Resource 对象完整字段</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>是否必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>uri</code></td>
+<td>string</td>
+<td>✅</td>
+<td>资源唯一标识 URI</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>人类可读名称，给用户&#x2F;模型识别</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>资源描述，推荐填写，辅助 LLM 判断要不要读取</td>
+</tr>
+<tr>
+<td><code>mimeType</code></td>
+<td>string</td>
+<td>❌</td>
+<td>MIME 类型，如 <code>text/markdown</code>，方便 Host 做渲染、截断</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-完整调用链路"><a href="#2-3-完整调用链路" class="headerlink" title="2.3 完整调用链路"></a>2.3 完整调用链路</h3><p>资源相关标准 method：</p>
+<ol>
+<li><code>resources/list</code>：列出所有可访问资源</li>
+<li><code>resources/read</code>：根据 URI 读取资源内容</li>
+<li><code>resources/subscribe</code>：订阅某个 URI 的变更（需要 <code>resources.subscribe: true</code>）</li>
+<li><code>resources/unsubscribe</code>：取消订阅</li>
+<li><code>notifications/resources/updated</code>：服务端推送变更通知（无 id）</li>
+</ol>
+<p>读取示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;res-read-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;resources/read&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///project/README.md&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回的核心是 <code>contents</code> 数组，一条资源可以返回多个内容块：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;res-read-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;contents&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///project/README.md&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;mimeType&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text/markdown&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;# Demo Project\nThis is a test project.&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>内容类型分两种：<code>text</code>（文本）、<code>blob</code>（base64 二进制，图片、PDF）。同一个内容块不能同时存在 text 和 blob。</p>
+</blockquote>
+<p>订阅成功之后，文件发生修改时 Server 主动推送一条通知，不需要 Client 轮询：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/resources/updated&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///project/README.md&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Host 收到通知后，按需再次调用 <code>resources/read</code> 拉取最新版本。</p>
+<h3 id="2-4-约束与安全边界"><a href="#2-4-约束与安全边界" class="headerlink" title="2.4 约束与安全边界"></a>2.4 约束与安全边界</h3><ol>
+<li><strong>只读语义约定</strong>：协议层面约定 Resources 不应产生副作用；这是语义约束，不是强制技术锁，靠实现遵守；</li>
+<li><strong>Roots 边界</strong>：如果协商开启 <code>roots</code>，Server 必须拒绝根以外的 URI 读取；</li>
+<li><strong>超大内容处理</strong>：几十 MB 的文件直接返回会瞬间耗尽上下文窗口；通常策略是截断 + 摘要 + 分页；</li>
+<li><strong>不可信数据</strong>：资源返回的文本属于外部不可信输入，存在提示注入风险，Host 需要做隔离、标记边界；</li>
+<li><strong>订阅是会话级</strong>：会话断开订阅自动失效，重连后需要重新订阅。</li>
+</ol>
+<h3 id="2-5-典型踩坑"><a href="#2-5-典型踩坑" class="headerlink" title="2.5 典型踩坑"></a>2.5 典型踩坑</h3><ul>
+<li>不要把动态查询塞进工具里，能用资源读就优先资源；但高频变更资源（实时日志）持续推送会压垮通道，适合分页拉取而不是订阅；</li>
+<li>URI 不要硬编码、不要让 LLM 自由构造不受控的 URI。</li>
+</ul>
+<h2 id="三、Tools（工具）——-带副作用的动作"><a href="#三、Tools（工具）——-带副作用的动作" class="headerlink" title="三、Tools（工具）—— 带副作用的动作"></a>三、Tools（工具）—— 带副作用的动作</h2><p>Tools 是大家最熟悉、面试最高频的原语。工具代表”执行动作”：增删改、发送消息、创建工单、执行 SQL、部署服务。</p>
+<h3 id="3-1-Tool-对象完整字段"><a href="#3-1-Tool-对象完整字段" class="headerlink" title="3.1 Tool 对象完整字段"></a>3.1 Tool 对象完整字段</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>唯一名称，LLM 依靠这个名字调用</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>✅</td>
+<td>给 LLM 看的自然语言描述，写得差模型就不会正确调用</td>
+</tr>
+<tr>
+<td><code>inputSchema</code></td>
+<td>object</td>
+<td>✅</td>
+<td>JSON Schema，严格定义入参结构、类型、必填项</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注意：没有 outputSchema。协议不强制约束返回结构，返回内容由业务决定。</p>
+</blockquote>
+<p>示例 Tool 定义：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;create_ticket&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;创建 IT 工单，用于提交故障申请，需要标题和描述，可选优先级&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;inputSchema&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;工单标题&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;故障详细描述&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;priority&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;enum&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;low&quot;</span><span class="punctuation">,</span> <span class="string">&quot;medium&quot;</span><span class="punctuation">,</span> <span class="string">&quot;high&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;default&quot;</span><span class="punctuation">:</span> <span class="string">&quot;medium&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;title&quot;</span><span class="punctuation">,</span> <span class="string">&quot;content&quot;</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-调用链路"><a href="#3-2-调用链路" class="headerlink" title="3.2 调用链路"></a>3.2 调用链路</h3><p>标准 method：<code>tools/list</code>（列出工具）、<code>tools/call</code>（执行工具）、<code>notifications/tools/list_changed</code>（工具列表动态变更推送）。</p>
+<p>调用示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool-call-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/call&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;create_ticket&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;服务无法启动&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;后端服务启动时报端口占用&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;priority&quot;</span><span class="punctuation">:</span> <span class="string">&quot;high&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回的 <code>content</code> 数组支持多种类型：<code>text</code>、<code>image</code>、<code>resource</code>（内嵌一条资源）。失败返回走标准 JSON-RPC error。</p>
+<h3 id="3-3-工具审批流（非常关键）"><a href="#3-3-工具审批流（非常关键）" class="headerlink" title="3.3 工具审批流（非常关键）"></a>3.3 工具审批流（非常关键）</h3><p>MCP <strong>没有内置”审批弹窗”报文</strong>，但规范定义了协作模式：</p>
+<ol>
+<li>Server 收到 <code>tools/call</code>，识别这是高危操作（删除、写库、发邮件）；</li>
+<li>Server <strong>不能直接弹出窗口</strong>，它只能正常返回结果或通过语义提示；</li>
+<li>真正的审批权在 Host：Host 在发起 <code>tools/call</code> 之前，根据工具白名单、工具名称、参数内容决定是否展示确认窗口；</li>
+<li>用户拒绝 → Host 直接不发起调用；用户同意 → 才发送 <code>tools/call</code>。</li>
+</ol>
+<blockquote>
+<p>很多新手误区：以为 Server 可以通知 Host”请你弹确认框”。协议没有这个指令；审批策略是 Host 的业务安全层。</p>
+</blockquote>
+<h3 id="3-4-设计规范与最佳实践"><a href="#3-4-设计规范与最佳实践" class="headerlink" title="3.4 设计规范与最佳实践"></a>3.4 设计规范与最佳实践</h3><ol>
+<li><strong>工具粒度不要过大</strong>：拆成原子操作（创建工单、关闭工单、添加备注），方便审批、审计、权限控制；</li>
+<li><strong>description 面向 LLM 写</strong>：写清楚什么时候适合调用、参数含义、限制条件；它不是给人类看的文档；</li>
+<li><strong>入参用 JSON Schema 严格约束</strong>：枚举、长度、正则，减少模型传错参数；</li>
+<li><strong>幂等优先</strong>：写类工具尽量设计成幂等，避免网络重试造成重复创建、重复发送；</li>
+<li><strong>审计埋点</strong>：所有 tools&#x2F;call 都应记录调用时间、工具名、入参、返回、用户身份、是否人工确认。</li>
+</ol>
+<h3 id="3-5-Tools-vs-Resources-判定口诀"><a href="#3-5-Tools-vs-Resources-判定口诀" class="headerlink" title="3.5 Tools vs Resources 判定口诀"></a>3.5 Tools vs Resources 判定口诀</h3><ul>
+<li>只拿信息、查询、读取，不改变外部状态 → Resources（优先）</li>
+<li>新增、修改、删除、发送、触发任务 → Tools</li>
+<li>查询有复杂过滤、聚合、计算，参数动态、不方便映射成静态 URI → 放到 Tool</li>
+</ul>
+<p>举例：读取单条工单详情用 <code>resources/read</code>；按关键词、时间、状态批量搜索工单用 <code>search_ticket</code> tool；创建工单用 tool；读取固定配置文件用 resource。</p>
+<h2 id="四、Prompts（提示模板）——-预编排任务入口"><a href="#四、Prompts（提示模板）——-预编排任务入口" class="headerlink" title="四、Prompts（提示模板）—— 预编排任务入口"></a>四、Prompts（提示模板）—— 预编排任务入口</h2><p>Prompts 是最容易被忽略，但在企业落地里价值很高的原语。它不是发给 LLM 的一次性 prompt，而是<strong>可被 Host 拉取的任务模板</strong>，带参数占位。</p>
+<p>它解决的问题：很多固定工作流（代码评审、周报生成、故障复盘、安全扫描）的 system prompt 很长、编排复杂，不适合每次让 LLM 自己从头生成。把模板托管在 MCP Server，所有接入的 Agent 都可以复用。</p>
+<h3 id="4-1-Prompt-对象字段"><a href="#4-1-Prompt-对象字段" class="headerlink" title="4.1 Prompt 对象字段"></a>4.1 Prompt 对象字段</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>模板唯一名称</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>模板用途描述</td>
+</tr>
+<tr>
+<td><code>arguments</code></td>
+<td>array</td>
+<td>❌</td>
+<td>参数定义数组（name &#x2F; description &#x2F; required）</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-调用链路"><a href="#4-2-调用链路" class="headerlink" title="4.2 调用链路"></a>4.2 调用链路</h3><p>标准 method：<code>prompts/list</code>、<code>prompts/get</code>。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompt-get-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompts/get&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;code_review&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="string">&quot;const x = eval(userInput);&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;language&quot;</span><span class="punctuation">:</span> <span class="string">&quot;javascript&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回结果里的 <code>messages</code> 是一组标准化对话消息（system &#x2F; user &#x2F; assistant），Host 可以直接送入 LLM：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompt-get-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;代码评审模板&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;system&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你是安全代码评审专家，重点检查注入、权限、资源泄露。&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;评审下面 JS 代码：const x = eval(userInput);&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-特点和边界"><a href="#4-3-特点和边界" class="headerlink" title="4.3 特点和边界"></a>4.3 特点和边界</h3><ol>
+<li><strong>模板托管在 Server</strong>：更新评审模板只改 MCP Server，所有接入的 Host 自动拿到新版本；</li>
+<li>返回的是消息序列，不是单纯字符串：支持多轮预设对话；</li>
+<li><strong>Prompt 本身不执行推理</strong>：<code>prompts/get</code> 只是把模板渲染出来；真正调用 LLM 是 Host 的工作；</li>
+<li>可以嵌入资源引用：模板内部可引用 Server 的 Resources，拉取参考文档作为上下文；</li>
+<li>适合标准化团队规范：企业把审批、巡检、复盘模板收敛在内部 MCP Server。</li>
+</ol>
+<h3 id="4-4-什么时候不要用-Prompt-原语"><a href="#4-4-什么时候不要用-Prompt-原语" class="headerlink" title="4.4 什么时候不要用 Prompt 原语"></a>4.4 什么时候不要用 Prompt 原语</h3><ul>
+<li>一次性、临时、用户随口输入的指令；</li>
+<li>动态性极强、每次结构完全不一样的任务；</li>
+<li>模板只是一行简短指令，收益很低。</li>
+</ul>
+<h2 id="五、原语组合实战：一个完整业务流程"><a href="#五、原语组合实战：一个完整业务流程" class="headerlink" title="五、原语组合实战：一个完整业务流程"></a>五、原语组合实战：一个完整业务流程</h2><p>场景：Agent 做工单复盘。</p>
+<ol>
+<li>Host 和工单 MCP Server 完成握手，协商：tools、resources、prompts、subscribe；</li>
+<li>Host 调用 <code>prompts/list</code>，找到 <code>incident_summary</code> 复盘模板；</li>
+<li>Host 调用 <code>prompts/get</code>，传入工单 id，拿到预定义 system prompt；</li>
+<li>Host 调用 <code>tools/call</code>，执行 <code>search_ticket</code>，拿到工单列表；</li>
+<li>Host 通过 <code>resources/read</code>，读取指定工单详情资源；</li>
+<li>如果开启订阅，后续工单更新会收到 <code>resources/updated</code> 通知；</li>
+<li>Host 把模板 + 工单上下文一起送入 LLM，生成复盘报告；</li>
+<li>需要保存复盘结果时，调用 <code>create_note</code> tool 写回工单。</li>
+</ol>
+<p>这就是 MCP 区别于普通 function calling 的核心：读上下文、执行动作、任务模板三者有独立标准，可以自由编排组合。</p>
+<h2 id="六、校验规则与错误模型"><a href="#六、校验规则与错误模型" class="headerlink" title="六、校验规则与错误模型"></a>六、校验规则与错误模型</h2><p>除了标准 JSON-RPC 错误码，三大原语有固定的业务错误场景：</p>
+<ul>
+<li>调用 <code>tools/call</code>，但 Server capabilities 没有 tools → 非法请求；</li>
+<li><code>inputSchema</code> 校验失败（参数缺失、类型不对、枚举值非法）→ 参数错误；</li>
+<li><code>resources/read</code> 访问不在 roots 范围内的 URI → 拒绝；</li>
+<li><code>prompts/get</code> 缺失必填 argument → 返回错误；</li>
+<li>订阅一个不支持 subscribe 的资源 → 返回错误。</li>
+</ul>
+<p>常见 JSON-RPC 标准错误码：</p>
+<table>
+<thead>
+<tr>
+<th>code</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-32601</code></td>
+<td>Method not found：调用了不存在的方法</td>
+</tr>
+<tr>
+<td><code>-32602</code></td>
+<td>Invalid params：参数不符合 schema</td>
+</tr>
+<tr>
+<td><code>-32600</code></td>
+<td>Invalid Request：消息格式非法</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>业务自定义错误码建议从 <code>-32000</code> 开始分配，避免和 JSON-RPC 预留冲突。</p>
+</blockquote>
+<h2 id="七、第二篇小结与高频误区"><a href="#七、第二篇小结与高频误区" class="headerlink" title="七、第二篇小结与高频误区"></a>七、第二篇小结与高频误区</h2><h3 id="核心复盘"><a href="#核心复盘" class="headerlink" title="核心复盘"></a>核心复盘</h3><ol>
+<li>Resources：URI 寻址的只读上下文，支持订阅推送；Host 不解析 URI；</li>
+<li>Tools：带副作用动作，附带 JSON Schema；审批策略由 Host 控制；</li>
+<li>Prompts：可拉取、带参数的任务模板；模板渲染和模型推理分离；</li>
+<li>三者是独立可插拔能力，靠握手协商开启。</li>
+</ol>
+<h3 id="高频误区"><a href="#高频误区" class="headerlink" title="高频误区"></a>高频误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>所有查询都做成 Tool</td>
+<td>优先用 Resources 承载静态、可寻址的只读数据</td>
+</tr>
+<tr>
+<td>Server 主动弹出确认窗口</td>
+<td>高危操作确认权在 Host</td>
+</tr>
+<tr>
+<td>Prompt 原语会直接调用模型</td>
+<td>它只返回渲染后的消息，Host 负责送模型</td>
+</tr>
+<tr>
+<td>订阅之后自动拿到新内容</td>
+<td>订阅只发变更通知，读内容仍需手动 <code>resources/read</code></td>
+</tr>
+<tr>
+<td>inputSchema 只是文档</td>
+<td>Server 有义务按 schema 校验入参，不能直接透传给业务</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇：《深入浅出 MCP 系列教程（三）：传输层实战》，将详解 stdio 与 Streamable HTTP 两种传输的完整握手流程、鉴权与会话管理。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/01/MCP-Protocol-Foundations/" rel="prev" title="深入浅出 MCP 系列教程（一）：协议基础与架构设计">
+                  <i class="fa fa-angle-left"></i> 深入浅出 MCP 系列教程（一）：协议基础与架构设计
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/" rel="next" title="深入浅出 MCP 系列教程（三）：传输层实战">
+                  深入浅出 MCP 系列教程（三）：传输层实战 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

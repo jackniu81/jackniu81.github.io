@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,624 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/29/Algorithm-moore-vote/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/29/Algorithm-moore-vote/" class="post-title-link" itemprop="url">一道数组面试题，搞懂摩尔投票法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-29 09:11:47" itemprop="dateCreated datePublished" datetime="2026-09-29T09:11:47+08:00">2026-09-29</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在前端&#x2F;全栈算法面试中，「多数元素」是一道非常经典的简单题。最容易想到的解法是用哈希表统计每个数字出现次数，遍历后找到大于 n&#x2F;2 的元素。哈希表思路直观，但需要 O(n) 的额空间。</p>
+<p>面试官经常会追加一个进阶问题：<strong>能不能在 O(n) 时间复杂度，O(1) 空间复杂度完成？</strong></p>
+<p>这时候，摩尔投票法（Boyer-Moore Majority Vote Algorithm）就是最优解。</p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定一个大小为 <code>n</code> 的数组 <code>nums</code>，返回其中的多数元素。多数元素是指在数组中出现次数 <strong>大于 ⌊ n&#x2F;2 ⌋</strong> 的元素。<br>题目保证数组非空，且一定存在多数元素。</p>
+<p>示例：<br>输入：<code>[2,2,1,1,1,2,2]</code><br>输出：<code>2</code></p>
+<blockquote>
+<p>解释：数组长度为7，多数元素出现次数需要大于3.5，也就是至少4次。数字2一共出现4次，满足条件。</p>
+</blockquote>
+<h2 id="摩尔投票法核心思想：相互抵消"><a href="#摩尔投票法核心思想：相互抵消" class="headerlink" title="摩尔投票法核心思想：相互抵消"></a>摩尔投票法核心思想：相互抵消</h2><p>摩尔投票的核心逻辑可以用一句话概括：<strong>不同元素相互抵消，相同元素累加。</strong></p>
+<p>我们可以把数组里每一个数字想象成不同阵营的士兵：</p>
+<ol>
+<li>遇到和当前候选相同的士兵，己方兵力+1；</li>
+<li>遇到敌方士兵，双方同归于尽，己方兵力-1；</li>
+<li>如果己方兵力归零，代表当前阵营全部阵亡，更换新的候选士兵。</li>
+</ol>
+<p>本题有一个关键前提：<strong>多数元素出现次数 &gt; 数组长度的一半</strong>。<br>也就是说，多数元素的总数量，大于剩下所有其他元素数量之和。<br>无论怎么两两抵消，最后剩下存活的候选，一定是这个多数元素。</p>
+<blockquote>
+<p>⚠️ 重要提醒：如果题目不保证一定存在大于 n&#x2F;2 的众数，摩尔投票得到的候选不能直接作为答案，必须再遍历一次数组，校验该候选的实际出现次数。</p>
+</blockquote>
+<h2 id="算法执行流程演示"><a href="#算法执行流程演示" class="headerlink" title="算法执行流程演示"></a>算法执行流程演示</h2><p>以数组 <code>[2,2,1,1,1,2,2]</code> 举例：</p>
+<ul>
+<li>初始候选：2，计数 count &#x3D; 1</li>
+<li>i&#x3D;1，元素2：相同，count&#x3D;2</li>
+<li>i&#x3D;2，元素1：不同，count&#x3D;1</li>
+<li>i&#x3D;3，元素1：不同，count&#x3D;0，兵力耗尽</li>
+<li>i&#x3D;4，元素1：count&#x3D;0，更换候选为1，count&#x3D;1</li>
+<li>i&#x3D;5，元素2：不同，count&#x3D;0，兵力耗尽</li>
+<li>i&#x3D;6，元素2：count&#x3D;0，更换候选为2，count&#x3D;1</li>
+</ul>
+<p>遍历结束，候选值为2，就是数组的多数元素。</p>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><ul>
+<li>时间复杂度：O(n)，仅遍历数组一次</li>
+<li>空间复杂度：O(1)，只使用两个变量，不需要额外开辟存储空间</li>
+</ul>
+<blockquote>
+<p>对比哈希表解法：哈希表同样O(n)时间，但需要O(n)空间存储每个数字的计数。大数据场景下摩尔投票优势明显。</p>
+</blockquote>
+<h2 id="TypeScript-代码实现"><a href="#TypeScript-代码实现" class="headerlink" title="TypeScript 代码实现"></a>TypeScript 代码实现</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 摩尔投票法求解多数元素</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> nums 数字数组，题目保证存在出现次数大于 n/2 的元素</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> 多数元素</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">majorityElement</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="comment">// 当前候选元素</span></span><br><span class="line">    <span class="keyword">let</span> candidate = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">// 候选计数</span></span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从第二个元素开始遍历</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (count === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 兵力归零，更换候选</span></span><br><span class="line">            candidate = nums[i];</span><br><span class="line">            count = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[i] === candidate) &#123;</span><br><span class="line">            <span class="comment">// 相同元素，计数累加</span></span><br><span class="line">            count++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 不同元素，相互抵消</span></span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> candidate;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试用例</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">majorityElement</span>([<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>])); <span class="comment">// 2</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">majorityElement</span>([<span class="number">3</span>,<span class="number">2</span>,<span class="number">3</span>])); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="拓展版本（无“一定存在多数元素”的前提，增加校验）"><a href="#拓展版本（无“一定存在多数元素”的前提，增加校验）" class="headerlink" title="拓展版本（无“一定存在多数元素”的前提，增加校验）"></a>拓展版本（无“一定存在多数元素”的前提，增加校验）</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">majorityElementCheck</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> | <span class="literal">null</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> candidate = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (count === <span class="number">0</span>) &#123;</span><br><span class="line">            candidate = nums[i];</span><br><span class="line">            count = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[i] === candidate) &#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 二次遍历校验候选是否满足条件</span></span><br><span class="line">    <span class="keyword">let</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> num <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">if</span> (num === candidate) total++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total &gt; nums.<span class="property">length</span> / <span class="number">2</span> ? candidate : <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="面试小结"><a href="#面试小结" class="headerlink" title="面试小结"></a>面试小结</h2><ol>
+<li>摩尔投票适合：寻找出现次数大于数组一半的元素；</li>
+<li>核心是抵消思想，O(1)空间是面试加分项；</li>
+<li>一定要记住边界：题目如果不保证存在众数，必须额外校验。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/25/Reuse-skill-qoder-trae-codebuddy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/25/Reuse-skill-qoder-trae-codebuddy/" class="post-title-link" itemprop="url">别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-25 09:52:11" itemprop="dateCreated datePublished" datetime="2026-09-25T09:52:11+08:00">2026-09-25</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="在-Qoder、TRAE、CodeBuddy-之间共享全局-Skill：多个-IDE，一套能力"><a href="#在-Qoder、TRAE、CodeBuddy-之间共享全局-Skill：多个-IDE，一套能力" class="headerlink" title="在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力"></a>在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力</h1><p>现在做 AI 编程，很多人已经不是只用一个 IDE 了。 写代码时可能打开 Qoder，做一些 Agent 相关的工作；遇到自己更顺手的场景，又切到 TRAE；国内网络环境或者团队协作场景下，CodeBuddy 也可能成为主力。</p>
+<p>多个 IDE 并不是什么问题，真正麻烦的是：<strong>每个 IDE 都有自己的一套 Skill 配置。</strong></p>
+<p>你花时间写了一套代码规范、Git 提交规范、Code Review 规则，或者整理了一套“如何分析项目、如何写测试、如何生成 API 文档”的 Skill，结果换一个 IDE 就得重新配置一遍。</p>
+<p>更麻烦的是，Skill 一旦修改，就要同步到多个地方。</p>
+<p>有没有办法做到：</p>
+<blockquote>
+<p><strong>Skill 只维护一份，Qoder、TRAE、CodeBuddy 都能使用？</strong></p>
+</blockquote>
+<p>答案是可以。</p>
+<p>核心思路其实很简单：<strong>把 Skill 从 IDE 的配置目录中抽离出来，放到一个独立的全局目录，然后让不同 IDE 的 Skill 目录指向同一个位置。</strong></p>
+<p>这样，我们就可以实现“一份 Skill，多处使用”。</p>
+<h2 id="一、为什么要在多个-IDE-之间共享-Skill？"><a href="#一、为什么要在多个-IDE-之间共享-Skill？" class="headerlink" title="一、为什么要在多个 IDE 之间共享 Skill？"></a>一、为什么要在多个 IDE 之间共享 Skill？</h2><p>首先，是因为<strong>多个 IDE 可以一起薅羊毛</strong>。</p>
+<p>不同 AI IDE 往往有不同的优势。</p>
+<p>有的 IDE 更适合日常 Coding，有的 Agent 能力比较强，有的在代码补全、项目理解、Terminal 操作或者国内服务接入方面体验更好。</p>
+<p>既然不同 IDE 各有所长，没有必要强迫自己只使用一个。</p>
+<p>真正应该统一的，是自己的“工作方法”。</p>
+<p>例如，我可能有这样几个 Skill：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">code-review</span><br><span class="line">git-commit</span><br><span class="line">write-test</span><br><span class="line">project-analysis</span><br><span class="line">api-design</span><br><span class="line">documentation</span><br></pre></td></tr></table></figure>
+
+<p>这些东西描述的是<strong>我希望 AI 如何帮我工作</strong>，而不是某个 IDE 专属的能力。</p>
+<p>所以它们天然应该独立于 IDE 存在。</p>
+<hr>
+<h2 id="二、把-Skill-从-IDE-中“解耦”出来"><a href="#二、把-Skill-从-IDE-中“解耦”出来" class="headerlink" title="二、把 Skill 从 IDE 中“解耦”出来"></a>二、把 Skill 从 IDE 中“解耦”出来</h2><p>假设我们建立一个统一的 Skill 仓库：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br><span class="line">├── code-review/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── git-commit/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── write-test/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── project-analysis/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">└── api-design/</span><br><span class="line">    └── SKILL.md</span><br></pre></td></tr></table></figure>
+
+<p>以后不管使用 Qoder、TRAE 还是 CodeBuddy，都不直接维护自己的 Skill 内容。</p>
+<p>而是让它们共同使用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>从逻辑上看，就变成了：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             ┌── Qoder</span><br><span class="line">             │</span><br><span class="line">shared-skills├── TRAE</span><br><span class="line">             │</span><br><span class="line">             └── CodeBuddy</span><br></pre></td></tr></table></figure>
+
+<p>三个 IDE 是不同的入口，但背后使用的是同一套 Skill。</p>
+<p>这样做最大的好处就是：</p>
+<blockquote>
+<p><strong>Skill 和 IDE 解耦。</strong></p>
+</blockquote>
+<p>IDE 可以换，Skill 不需要跟着换。</p>
+<hr>
+<h2 id="三、关键技巧：用软链接共享-Skill"><a href="#三、关键技巧：用软链接共享-Skill" class="headerlink" title="三、关键技巧：用软链接共享 Skill"></a>三、关键技巧：用软链接共享 Skill</h2><p>如果不同 IDE 都支持从固定目录加载 Skill，那么最简单的方法就是使用软链接。</p>
+<p>例如，我们把真正的 Skill 放在：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>然后让各个 IDE 的 Skill 目录指向它。</p>
+<p>Linux&#x2F;macOS 下可以使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.qoder/skills</span><br><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.trae/skills</span><br><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.codebuddy/skills</span><br></pre></td></tr></table></figure>
+
+<p>具体目录需要根据各个 IDE 当前版本的 Skill 目录规则进行调整。</p>
+<p>最终效果类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Qoder Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br><span class="line"></span><br><span class="line">TRAE Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br><span class="line"></span><br><span class="line">CodeBuddy Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>于是你只需要修改：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/code-review/SKILL.md</span><br></pre></td></tr></table></figure>
+
+<p>三个 IDE 使用的就是同一份内容。</p>
+<p>这就解决了一个非常痛苦的问题：</p>
+<p><strong>一处修改，所有 IDE 生效。</strong></p>
+<hr>
+<h2 id="四、Skill-不只是共享，还可以用-Git-管起来"><a href="#四、Skill-不只是共享，还可以用-Git-管起来" class="headerlink" title="四、Skill 不只是共享，还可以用 Git 管起来"></a>四、Skill 不只是共享，还可以用 Git 管起来</h2><p>如果只是把 Skill 放到一个公共目录，其实还不够。</p>
+<p>因为 Skill 本身也是代码和知识资产。</p>
+<p>既然是自己的工作流，为什么不把它放进 Git？</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/shared-skills</span><br><span class="line"></span><br><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init skills&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后修改 Skill：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;improve code review skill&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>甚至可以直接把它放到 GitHub、GitLab 或公司的 Git 服务中。</p>
+<p>这样就有了一个独立的：</p>
+<blockquote>
+<p><strong>个人 AI Skill 仓库。</strong></p>
+</blockquote>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">my-ai-skills/</span><br><span class="line">├── README.md</span><br><span class="line">├── coding/</span><br><span class="line">│   ├── code-review/</span><br><span class="line">│   └── write-test/</span><br><span class="line">├── git/</span><br><span class="line">│   └── git-commit/</span><br><span class="line">├── architecture/</span><br><span class="line">│   └── project-analysis/</span><br><span class="line">└── documentation/</span><br><span class="line">    └── api-doc/</span><br></pre></td></tr></table></figure>
+
+<p>换电脑的时候，只需要：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> &lt;your-skill-repository&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后重新建立 IDE 的软链接即可。</p>
+<hr>
+<h2 id="五、这套方案真正有价值的地方"><a href="#五、这套方案真正有价值的地方" class="headerlink" title="五、这套方案真正有价值的地方"></a>五、这套方案真正有价值的地方</h2><p>很多人一开始会觉得：</p>
+<p>“几个 SKILL.md 文件而已，有必要这么折腾吗？”</p>
+<p>真正用一段时间之后，就会发现价值非常大。</p>
+<p>因为 Skill 会不断迭代。</p>
+<p>比如最开始的 <code>code-review</code> 只有几十行，后来你发现 AI 经常漏掉异常处理，于是增加：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">检查异常处理</span><br><span class="line">检查边界条件</span><br><span class="line">检查资源释放</span><br><span class="line">检查并发安全</span><br></pre></td></tr></table></figure>
+
+<p>再后来，又加入公司的编码规范。</p>
+<p>如果每个 IDE 都维护一份，那么修改一次就要同步三次。</p>
+<p>但共享 Skill 后：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改一次</span><br><span class="line">   ↓</span><br><span class="line">Git commit</span><br><span class="line">   ↓</span><br><span class="line">所有 IDE 自动使用最新版</span><br></pre></td></tr></table></figure>
+
+<p>这时候 Skill 才真正变成了自己的<strong>可积累资产</strong>。</p>
+<hr>
+<h2 id="六、不同-IDE-擅长不同事情，但-Skill-可以保持一致"><a href="#六、不同-IDE-擅长不同事情，但-Skill-可以保持一致" class="headerlink" title="六、不同 IDE 擅长不同事情，但 Skill 可以保持一致"></a>六、不同 IDE 擅长不同事情，但 Skill 可以保持一致</h2><p>这也是我比较推荐这种方案的另一个原因。</p>
+<p>我们没有必要因为使用多个 IDE，就让工作流也碎片化。</p>
+<p>可以让：</p>
+<ul>
+<li><strong>Qoder</strong> 负责它擅长的 Agent &#x2F; Coding 场景</li>
+<li><strong>TRAE</strong> 负责适合它的开发任务</li>
+<li><strong>CodeBuddy</strong> 处理另外一些项目或工作流</li>
+</ul>
+<p>但是，无论 AI 来自哪个 IDE，都遵循同一套：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">代码规范</span><br><span class="line">↓</span><br><span class="line">项目分析方法</span><br><span class="line">↓</span><br><span class="line">测试规范</span><br><span class="line">↓</span><br><span class="line">Git 规范</span><br><span class="line">↓</span><br><span class="line">Code Review 规范</span><br><span class="line">↓</span><br><span class="line">文档规范</span><br></pre></td></tr></table></figure>
+
+<p>也就是说：</p>
+<blockquote>
+<p><strong>IDE 可以不同，AI 的“工作方法”可以统一。</strong></p>
+</blockquote>
+<p>这其实比单纯共享几个 Prompt 更重要。</p>
+<hr>
+<h2 id="七、进一步：把-Skill-当成自己的“AI-配置仓库”"><a href="#七、进一步：把-Skill-当成自己的“AI-配置仓库”" class="headerlink" title="七、进一步：把 Skill 当成自己的“AI 配置仓库”"></a>七、进一步：把 Skill 当成自己的“AI 配置仓库”</h2><p>如果再往前走一步，可以把 Skill 当成 dotfiles 一样管理。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/dotfiles/</span><br><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
+
+<p>里面保存的不是某个 IDE 的配置，而是自己长期积累下来的 AI 工作流。</p>
+<p>最终形成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                    ┌── Qoder</span><br><span class="line">                    │</span><br><span class="line">                    ├── TRAE</span><br><span class="line">shared-skills ──────┤</span><br><span class="line">                    └── CodeBuddy</span><br><span class="line">                         │</span><br><span class="line">                         ↓</span><br><span class="line">                    Git Repository</span><br></pre></td></tr></table></figure>
+
+<p>以后无论换电脑、换 IDE，甚至换团队，只要新的工具支持类似的 Skill 机制，就可以继续复用。</p>
+<p><strong>工具会变化，但自己的工作流可以沉淀下来。</strong></p>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>AI IDE 的竞争会越来越激烈，我们没有必要在不同工具之间“二选一”。</p>
+<p>哪个 IDE 在什么事情上好用，就用哪个。</p>
+<p>真正值得沉淀的，不应该是某一个 IDE 的配置，而是我们自己积累出来的 Skill。</p>
+<p>把 Skill 独立出来，再通过软链接让 Qoder、TRAE、CodeBuddy 共享，最后交给 Git 管理，就可以形成一套非常简单但实用的工作方式：</p>
+<blockquote>
+<p><strong>多个 IDE，一起薅羊毛；不同 IDE，各司其职；Skill 一份维护，到处生效；Git 管理，持续沉淀。</strong></p>
+</blockquote>
+<p>最终，你使用的不再只是几个 AI IDE，而是一套属于自己的、可以不断迭代的 <strong>AI Coding 工作流</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/13/Algorithm-Minimum-Path-Sum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/13/Algorithm-Minimum-Path-Sum/" class="post-title-link" itemprop="url">算法 - 最小路径和</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-13 09:27:15" itemprop="dateCreated datePublished" datetime="2026-09-13T09:27:15+08:00">2026-09-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个包含非负整数的 m × n 网格 <code>grid</code>，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。</p>
+<p>说明：每次只能向下或者向右移动一步。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入: grid = [</span><br><span class="line">  [1,3,1],</span><br><span class="line">  [1,5,1],</span><br><span class="line">  [4,2,1]</span><br><span class="line">]</span><br><span class="line">输出: 7</span><br><span class="line">解释: 路径 1→3→1→1→1 总和最小 = 7。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>只能向右或向下 ⇒ 到达 <code>(i, j)</code> 的前驱只有 <code>(i-1, j)</code> 和 <code>(i, j-1)</code>，是最经典的 DP。</p>
+<h2 id="2-1-状态定义"><a href="#2-1-状态定义" class="headerlink" title="2.1 状态定义"></a>2.1 状态定义</h2><p><code>dp[i][j]</code> &#x3D; 从左上角到 <code>(i, j)</code> 的最小路径和。</p>
+<p>转移方程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])</span><br></pre></td></tr></table></figure>
+
+<p>边界：第一行只能从左边来 <code>dp[0][j] = dp[0][j-1] + grid[0][j]</code>；第一列只能从上边来 <code>dp[i][0] = dp[i-1][0] + grid[i][0]</code>。</p>
+<ul>
+<li>时间复杂度：O(m·n)，空间复杂度：O(m·n)。</li>
+</ul>
+<h2 id="2-2-空间优化到-O-n"><a href="#2-2-空间优化到-O-n" class="headerlink" title="2.2 空间优化到 O(n)"></a>2.2 空间优化到 O(n)</h2><p>每行只依赖「上一行」和「本行左边」，可用一维滚动数组：<code>dp[j] = grid[i][j] + min(dp[j](上一行的值), dp[j-1](本行左边的值))</code>。</p>
+<p>极限可原地改 grid 到 O(1)（若允许修改输入）。</p>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-二维-DP（清晰）"><a href="#3-1-二维-DP（清晰）" class="headerlink" title="3.1 二维 DP（清晰）"></a>3.1 二维 DP（清晰）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">minPathSum</span>(<span class="params"><span class="attr">grid</span>: <span class="built_in">number</span>[][]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> m = grid.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> n = grid[<span class="number">0</span>].<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: m &#125;, <span class="function">() =&gt;</span> <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = grid[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt; n; j++) dp[<span class="number">0</span>][j] = dp[<span class="number">0</span>][j - <span class="number">1</span>] + grid[<span class="number">0</span>][j];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; m; i++) dp[i][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>] + grid[i][<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; m; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            dp[i][j] = grid[i][j] + <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[i - <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[m - <span class="number">1</span>][n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">minPathSum</span>([[<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span>], [<span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>]])); <span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-一维滚动数组"><a href="#3-2-一维滚动数组" class="headerlink" title="3.2 一维滚动数组"></a>3.2 一维滚动数组</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">minPathSumOpt</span>(<span class="params"><span class="attr">grid</span>: <span class="built_in">number</span>[][]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> m = grid.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> n = grid[<span class="number">0</span>].<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i === <span class="number">0</span> &amp;&amp; j === <span class="number">0</span>) dp[j] = grid[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (i === <span class="number">0</span>) dp[j] = dp[j - <span class="number">1</span>] + grid[i][j];       <span class="comment">// 第一行</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (j === <span class="number">0</span>) dp[j] = dp[j] + grid[i][j];           <span class="comment">// 第一列，dp[j] 仍是上一行值</span></span><br><span class="line">            <span class="keyword">else</span> dp[j] = <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[j], dp[j - <span class="number">1</span>]) + grid[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>变体：不同路径</strong>（计数而非求和）把 <code>min</code> 换成 <code>+</code>，是同一网格 DP 骨架。</li>
+<li><strong>带障碍 &#x2F; 三角形最小路径和 &#x2F; 地下城游戏</strong>：注意「地下城游戏」需从右下<strong>倒推</strong>（HP 约束），说明并非所有网格 DP 都能正向做。</li>
+<li>追问：为什么一维数组里 <code>dp[j]</code> 在更新前代表上一行？因为本行还没覆盖它，天然滚动——这是滚动数组的核心技巧。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 64 | 网格 DP 入门</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/08/09/Algorithm-Validate-BST/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/09/Algorithm-Validate-BST/" class="post-title-link" itemprop="url">算法 - 验证二叉搜索树</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-09 15:33:48" itemprop="dateCreated datePublished" datetime="2026-08-09T15:33:48+08:00">2026-08-09</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个二叉树的根节点 <code>root</code>，判断其是否是一个有效的二叉搜索树（BST）。</p>
+<p>有效 BST 定义：</p>
+<ul>
+<li>节点的左子树只包含<strong>小于</strong>当前节点的数。</li>
+<li>节点的右子树只包含<strong>大于</strong>当前节点的数。</li>
+<li>所有左子树和右子树自身必须也是二叉搜索树。</li>
+</ul>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: root = [5,1,4,null,null,3,6]</span><br><span class="line">        5</span><br><span class="line">       / \</span><br><span class="line">      1   4</span><br><span class="line">         / \</span><br><span class="line">        3   6</span><br><span class="line">输出: false</span><br><span class="line">解释: 根节点 5 的右子树里出现 3（&lt; 5），违反 BST 定义。</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-常见错误：只比较父子"><a href="#2-1-常见错误：只比较父子" class="headerlink" title="2.1 常见错误：只比较父子"></a>2.1 常见错误：只比较父子</h2><p>只判断「左子 &lt; 父 &lt; 右子」是不够的——如上图，节点 3 是其父 4 的合法左子，但它位于根 5 的右子树中，必须 &gt; 5。<strong>约束是从根一路传递下来的区间。</strong></p>
+<h2 id="2-2-上下界递归（正确）"><a href="#2-2-上下界递归（正确）" class="headerlink" title="2.2 上下界递归（正确）"></a>2.2 上下界递归（正确）</h2><p>给每个节点维护一个开区间 <code>(min, max)</code>：</p>
+<ul>
+<li><p>根的区间是 <code>(-∞, +∞)</code>。</p>
+</li>
+<li><p>走向左孩子：上界收紧为父节点值 → <code>(min, node.val)</code>。</p>
+</li>
+<li><p>走向右孩子：下界收紧为父节点值 → <code>(node.val, max)</code>。</p>
+</li>
+<li><p>节点值必须严格落在自己区间内，否则非法。</p>
+</li>
+<li><p>时间复杂度：O(n)，空间复杂度：O(h)。</p>
+</li>
+</ul>
+<h2 id="2-3-中序遍历递增"><a href="#2-3-中序遍历递增" class="headerlink" title="2.3 中序遍历递增"></a>2.3 中序遍历递增</h2><p>BST 的<strong>中序遍历结果严格递增</strong>。迭代中序遍历，比较当前值与前驱值 <code>prev</code>，若 <code>val &lt;= prev</code> 则非法。用 <code>prev</code> 记录上一个访问值即可，天然利用「左→根→右」顺序。</p>
+<ul>
+<li>时间复杂度：O(n)，空间复杂度：O(h)。</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><p>树节点定义：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="attr">val</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">left</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="attr">right</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">val = <span class="number">0</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">val</span> = val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">left</span> = <span class="variable language_">this</span>.<span class="property">right</span> = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-1-上下界递归"><a href="#3-1-上下界递归" class="headerlink" title="3.1 上下界递归"></a>3.1 上下界递归</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">isValidBST</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> check = (<span class="attr">node</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>, <span class="attr">min</span>: <span class="built_in">number</span>, <span class="attr">max</span>: <span class="built_in">number</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!node) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (node.<span class="property">val</span> &lt;= min || node.<span class="property">val</span> &gt;= max) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="title function_">check</span>(node.<span class="property">left</span>, min, node.<span class="property">val</span>) &amp;&amp;</span><br><span class="line">            <span class="title function_">check</span>(node.<span class="property">right</span>, node.<span class="property">val</span>, max)</span><br><span class="line">        );</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">check</span>(root, -<span class="title class_">Infinity</span>, <span class="title class_">Infinity</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-中序遍历（迭代）"><a href="#3-2-中序遍历（迭代）" class="headerlink" title="3.2 中序遍历（迭代）"></a>3.2 中序遍历（迭代）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">isValidBSTInorder</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">stack</span>: <span class="title class_">TreeNode</span>[] = [];</span><br><span class="line">    <span class="keyword">let</span> cur = root;</span><br><span class="line">    <span class="keyword">let</span> prev = -<span class="title class_">Infinity</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cur || stack.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (cur) &#123;</span><br><span class="line">            stack.<span class="title function_">push</span>(cur);</span><br><span class="line">            cur = cur.<span class="property">left</span>;         <span class="comment">// 一路向左</span></span><br><span class="line">        &#125;</span><br><span class="line">        cur = stack.<span class="title function_">pop</span>()!;</span><br><span class="line">        <span class="keyword">if</span> (cur.<span class="property">val</span> &lt;= prev) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 非严格递增</span></span><br><span class="line">        prev = cur.<span class="property">val</span>;</span><br><span class="line">        cur = cur.<span class="property">right</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>为什么用严格 <code>&lt;</code>、<code>&gt;</code>（而非 <code>&lt;=</code>）</strong>：BST 定义里子树值必须严格小于&#x2F;大于，相等也算非法；用 <code>Infinity</code> 做初始边界可避免「节点值恰好等于 INT_MIN&#x2F;INT_MAX」的坑（用 <code>null</code> 表示无边界更稳妥）。</li>
+<li><strong>传递区间 vs 传递父指针</strong>：区间法最直观；中序法把「树问题」转成「有序序列问题」是常用思维。</li>
+<li>关联题：BST 第 k 小、把有序数组转 BST、LCA of BST 都依赖「中序有序」或「值域可二分」性质。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 98 | BST 性质 &#x2F; 遍历</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/07/12/Algorithm-Decode-String/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/12/Algorithm-Decode-String/" class="post-title-link" itemprop="url">算法 - 字符串解码（Decode String）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-12 10:41:26" itemprop="dateCreated datePublished" datetime="2026-07-12T10:41:26+08:00">2026-07-12</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个经过编码的字符串，返回它解码后的字符串。</p>
+<p>编码规则为: <code>k[encoded_string]</code>，表示其中方括号内部的 <code>encoded_string</code> 正好重复 <code>k</code> 次。注意 <code>k</code> 保证为正整数。</p>
+<p>你可以认为输入字符串总是有效的，输入中没有额外的空格，且方括号内总是含有小写字母或另外一个方括号。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;3[a]2[bc]&quot;    输出: &quot;aaabcbc&quot;</span><br><span class="line">输入: s = &quot;3[a2[c]]&quot;    输出: &quot;accaccacc&quot;</span><br><span class="line">输入: s = &quot;2[abc]3[cd]ef&quot; 输出: &quot;abcabccdcdcdef&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>存在<strong>嵌套</strong>结构 <code>k[...]</code>，天然适合<strong>栈</strong>（或递归 DFS）。</p>
+<h2 id="2-1-双栈法（数字栈-字符串栈）"><a href="#2-1-双栈法（数字栈-字符串栈）" class="headerlink" title="2.1 双栈法（数字栈 + 字符串栈）"></a>2.1 双栈法（数字栈 + 字符串栈）</h2><p>用两个栈分别保存括号层的「重复次数」和「进入括号前已拼好的字符串」：</p>
+<ul>
+<li><p><code>curStr</code> 累积当前层字符串，<code>num</code> 累积当前解析的数字。</p>
+</li>
+<li><p>遇到 <code>[</code>：把当前的 <code>num</code> 压入 <code>numStack</code>、当前 <code>curStr</code> 压入 <code>strStack</code>，然后清空 <code>num</code> 和 <code>curStr</code>，进入内层。</p>
+</li>
+<li><p>遇到 <code>]</code>：弹出内层重复次数 <code>k</code> 和「外层字符串」<code>prev</code>，令 <code>curStr = prev + curStr.repeat(k)</code>，回到外层。</p>
+</li>
+<li><p>遇到字母：拼进 <code>curStr</code>；遇到数字：<code>num = num * 10 + d</code>（处理多位数）。</p>
+</li>
+<li><p>时间复杂度：O(输出长度)，空间复杂度：O(嵌套深度)。</p>
+</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双栈"><a href="#3-1-双栈" class="headerlink" title="3.1 双栈"></a>3.1 双栈</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">decodeString</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">numStack</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">strStack</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line">    <span class="keyword">let</span> curStr = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> ch <span class="keyword">of</span> s) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ch &gt;= <span class="string">&quot;0&quot;</span> &amp;&amp; ch &lt;= <span class="string">&quot;9&quot;</span>) &#123;</span><br><span class="line">            num = num * <span class="number">10</span> + <span class="title class_">Number</span>(ch);      <span class="comment">// 多位数字</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ch === <span class="string">&quot;[&quot;</span>) &#123;</span><br><span class="line">            numStack.<span class="title function_">push</span>(num);               <span class="comment">// 保存本层重复次数</span></span><br><span class="line">            strStack.<span class="title function_">push</span>(curStr);            <span class="comment">// 保存进入括号前的字符串</span></span><br><span class="line">            curStr = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            num = <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ch === <span class="string">&quot;]&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> k = numStack.<span class="title function_">pop</span>()!;</span><br><span class="line">            <span class="keyword">const</span> prev = strStack.<span class="title function_">pop</span>()!;</span><br><span class="line">            curStr = prev + curStr.<span class="title function_">repeat</span>(k); <span class="comment">// 内层展开并拼接外层</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            curStr += ch;                      <span class="comment">// 普通字母</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curStr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">decodeString</span>(<span class="string">&quot;3[a2[c]]&quot;</span>)); <span class="comment">// accaccacc</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-单栈（把字符逐个压栈）"><a href="#3-2-单栈（把字符逐个压栈）" class="headerlink" title="3.2 单栈（把字符逐个压栈）"></a>3.2 单栈（把字符逐个压栈）</h2><p>把 <code>]</code> 之前的所有字符压栈，遇到 <code>]</code> 时弹栈收集字母与数字，再展开重新压回。写法统一但弹栈拼接略繁。</p>
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>递归解法</strong>：用全局指针 <code>i</code>，<code>decode()</code> 遇到 <code>[</code> 递归取内层结果并 repeat，遇到 <code>]</code> 返回——很多前端候选人觉得递归更直观。</li>
+<li>本题是「括号匹配 &#x2F; 嵌套求值」家族，同族：基本计算器、有效括号、<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">最小栈</a>。看到「嵌套 + 需要回到上一层状态」就应条件反射想到栈&#x2F;递归。</li>
+<li>坑点：数字可能是多位（如 <code>12[a]</code>），必须用 <code>num = num*10 + d</code> 累积，不能 <code>Number(ch)</code> 单独取。</li>
+</ul>
+<blockquote>
+<p>难度：中等 | LeetCode 394 | 栈 &#x2F; 递归</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -640,499 +1258,6 @@
 </ul>
 <blockquote>
 <p>难度：困难 | LeetCode 41 | 原地哈希经典</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/01/09/Algorithm-Hamming-Distance/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/01/09/Algorithm-Hamming-Distance/" class="post-title-link" itemprop="url">算法 - 汉明距离</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-01-09 10:05:22" itemprop="dateCreated datePublished" datetime="2026-01-09T10:05:22+08:00">2026-01-09</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>两个整数之间的<strong>汉明距离</strong>指的是这两个数字对应二进制位不同的位置的数目。</p>
-<p>给你两个整数 <code>x</code> 和 <code>y</code>，计算并返回它们之间的汉明距离。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入: x = 1, y = 4</span><br><span class="line">输出: 2</span><br><span class="line">解释:</span><br><span class="line">1   (0 0 0 1)</span><br><span class="line">4   (0 1 0 0)</span><br><span class="line">      ↑   ↑</span><br><span class="line">上面的箭头指出了对应二进制位不同的位置。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-异或-统计-1-的个数"><a href="#2-1-异或-统计-1-的个数" class="headerlink" title="2.1 异或 + 统计 1 的个数"></a>2.1 异或 + 统计 1 的个数</h2><p>对应位不同 ⟺ 异或后该位为 1。所以：</p>
-<ol>
-<li><code>n = x ^ y</code></li>
-<li>统计 <code>n</code> 的二进制中 1 的个数（population count）。</li>
-</ol>
-<p>统计 1 的个数有两种经典写法：</p>
-<ul>
-<li><p>逐位 <code>n &amp; 1</code> 后右移。</p>
-</li>
-<li><p><strong><code>n &amp; (n - 1)</code></strong> 每次抹掉最低位的 1，循环次数 &#x3D; 1 的个数，更优。</p>
-</li>
-<li><p>时间复杂度：O(1)（最多 32 位），空间复杂度：O(1)。</p>
-</li>
-</ul>
-<blockquote>
-<p>注意：JS 的位运算按 32 位有符号整数处理，本题 LeetCode 数据范围 0 ≤ x, y ≤ 2³¹-1，用 <code>^</code>、<code>&amp;</code> 安全；若涉及无符号右移请用 <code>&gt;&gt;&gt;</code>。</p>
-</blockquote>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-Brian-Kernighan-算法（推荐）"><a href="#3-1-Brian-Kernighan-算法（推荐）" class="headerlink" title="3.1 Brian Kernighan 算法（推荐）"></a>3.1 Brian Kernighan 算法（推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">hammingDistance</span>(<span class="params"><span class="attr">x</span>: <span class="built_in">number</span>, <span class="attr">y</span>: <span class="built_in">number</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> n = x ^ y;</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (n) &#123;</span><br><span class="line">        n = n &amp; (n - <span class="number">1</span>); <span class="comment">// 抹掉最低位的 1</span></span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">hammingDistance</span>(<span class="number">1</span>, <span class="number">4</span>)); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-内置位计数（一行流）"><a href="#3-2-内置位计数（一行流）" class="headerlink" title="3.2 内置位计数（一行流）"></a>3.2 内置位计数（一行流）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hammingDistanceBitCount = (<span class="attr">x</span>: <span class="built_in">number</span>, <span class="attr">y</span>: <span class="built_in">number</span>): <span class="function"><span class="params">number</span> =&gt;</span></span><br><span class="line">    (x ^ y).<span class="title function_">toString</span>(<span class="number">2</span>).<span class="title function_">split</span>(<span class="string">&quot;0&quot;</span>).<span class="title function_">join</span>(<span class="string">&quot;&quot;</span>).<span class="property">length</span>;</span><br><span class="line"><span class="comment">// 或 (x ^ y).toString(2).match(/1/g)?.length ?? 0</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><h2 id="4-1-总汉明距离（LeetCode-477）"><a href="#4-1-总汉明距离（LeetCode-477）" class="headerlink" title="4.1 总汉明距离（LeetCode 477）"></a>4.1 总汉明距离（LeetCode 477）</h2><p>给数组 <code>nums</code>，求所有数对汉明距离之和。逐位暴力 O(n²·32) 会超时，按位统计更优：</p>
-<p>对第 <code>i</code> 位，统计数组中该位为 1 的个数 <code>ones</code>，为 0 的个数 <code>zeros = n - ones</code>，则该位对总距离的贡献为 <code>ones * zeros</code>（每一位独立）。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">totalHammingDistance</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">let</span> ones = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> x <span class="keyword">of</span> nums) &#123;</span><br><span class="line">            ones += (x &gt;&gt;&gt; i) &amp; <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        total += ones * (n - ones); <span class="comment">// 该位 1 与 0 的两两配对数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>时间复杂度：O(32·n)，空间复杂度：O(1)。</li>
-</ul>
-<h2 id="4-2-知识点"><a href="#4-2-知识点" class="headerlink" title="4.2 知识点"></a>4.2 知识点</h2><ul>
-<li><strong><code>n &amp; (n-1)</code></strong> 技巧：可用于判断 2 的幂、统计位 1 个数、求两数异或差异。</li>
-<li>汉明距离是「信息&#x2F;编码」基础概念，延伸可谈海明码纠错。</li>
-</ul>
-<blockquote>
-<p>难度：简单 | LeetCode 461 &#x2F; 477 | 位运算</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/12/05/Algorithm-Binary-Tree-Zigzag-Level-Order/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/12/05/Algorithm-Binary-Tree-Zigzag-Level-Order/" class="post-title-link" itemprop="url">算法 - 二叉树的锯齿形层序遍历</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-12-05 11:23:50" itemprop="dateCreated datePublished" datetime="2025-12-05T11:23:50+08:00">2025-12-05</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你二叉树的根节点 <code>root</code>，返回其节点值的<strong>锯齿形层序遍历</strong>。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: root = [3,9,20,null,null,15,7]</span><br><span class="line">        3</span><br><span class="line">       / \</span><br><span class="line">      9  20</span><br><span class="line">     /  \</span><br><span class="line">    15   7</span><br><span class="line">输出: [[3],[20,9],[15,7]]</span><br><span class="line">解释: 第 0 层从左到右 [3]，第 1 层从右到左 [20,9]，第 2 层从左到右 [15,7]。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>本质还是<strong>层序遍历（BFS）</strong>，只是在收集结果时按层的奇偶决定正序还是逆序。</p>
-<h2 id="2-1-BFS-奇偶翻转（推荐）"><a href="#2-1-BFS-奇偶翻转（推荐）" class="headerlink" title="2.1 BFS + 奇偶翻转（推荐）"></a>2.1 BFS + 奇偶翻转（推荐）</h2><ul>
-<li><p>用队列逐层遍历，逻辑与普通层序遍历完全一致。</p>
-</li>
-<li><p>维护 <code>leftToRight</code> 布尔标记，每处理完一层取反。</p>
-</li>
-<li><p>该层节点值先按正常顺序存入 <code>level</code>，若当前层应从右到左，则 <code>level.reverse()</code> 后再 push 进结果。</p>
-</li>
-<li><p>时间复杂度：O(n)，空间复杂度：O(n)。</p>
-</li>
-</ul>
-<h2 id="2-2-双端队列-头尾插入"><a href="#2-2-双端队列-头尾插入" class="headerlink" title="2.2 双端队列 &#x2F; 头尾插入"></a>2.2 双端队列 &#x2F; 头尾插入</h2><p>把每层结果用 <code>unshift</code>&#x2F;<code>push</code> 分别从头或尾插入，避免整层 reverse。写法更巧但可读性略差。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-BFS-层反转"><a href="#3-1-BFS-层反转" class="headerlink" title="3.1 BFS + 层反转"></a>3.1 BFS + 层反转</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="attr">val</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">left</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="attr">right</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">val = <span class="number">0</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">val</span> = val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">left</span> = <span class="variable language_">this</span>.<span class="property">right</span> = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">zigzagLevelOrder</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span> [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">queue</span>: <span class="title class_">TreeNode</span>[] = [root];</span><br><span class="line">    <span class="keyword">let</span> leftToRight = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (queue.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> size = queue.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">const</span> <span class="attr">level</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="keyword">const</span> node = queue.<span class="title function_">shift</span>()!;</span><br><span class="line">            level.<span class="title function_">push</span>(node.<span class="property">val</span>);</span><br><span class="line">            <span class="keyword">if</span> (node.<span class="property">left</span>) queue.<span class="title function_">push</span>(node.<span class="property">left</span>);</span><br><span class="line">            <span class="keyword">if</span> (node.<span class="property">right</span>) queue.<span class="title function_">push</span>(node.<span class="property">right</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        res.<span class="title function_">push</span>(leftToRight ? level : level.<span class="title function_">reverse</span>());</span><br><span class="line">        leftToRight = !leftToRight; <span class="comment">// 下一层方向翻转</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-头尾插入（免-reverse）"><a href="#3-2-头尾插入（免-reverse）" class="headerlink" title="3.2 头尾插入（免 reverse）"></a>3.2 头尾插入（免 reverse）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">zigzagLevelOrderDeque</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span> [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">queue</span>: <span class="title class_">TreeNode</span>[] = [root];</span><br><span class="line">    <span class="keyword">let</span> leftToRight = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (queue.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="attr">level</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">        <span class="keyword">const</span> <span class="attr">next</span>: <span class="title class_">TreeNode</span>[] = [];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> node <span class="keyword">of</span> queue) &#123;</span><br><span class="line">            leftToRight ? level.<span class="title function_">push</span>(node.<span class="property">val</span>) : level.<span class="title function_">unshift</span>(node.<span class="property">val</span>);</span><br><span class="line">            <span class="keyword">if</span> (node.<span class="property">left</span>) next.<span class="title function_">push</span>(node.<span class="property">left</span>);</span><br><span class="line">            <span class="keyword">if</span> (node.<span class="property">right</span>) next.<span class="title function_">push</span>(node.<span class="property">right</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        res.<span class="title function_">push</span>(level);</span><br><span class="line">        queue = next;</span><br><span class="line">        leftToRight = !leftToRight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li>与<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">二叉树层序遍历</a>、<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">右视图</a>是同一套 BFS 模板的小变形，考察「层」的边界控制（<code>size</code> 快照）。</li>
-<li>DFS 也能做：把每层值按奇偶 push&#x2F;unshift 到 <code>res[depth]</code>，注意方向由 <code>depth % 2</code> 决定。</li>
-<li>坑点：<code>level.reverse()</code> 是原地反转，此处无副作用；但在其他共享引用场景要警惕。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 103 | BFS 层序变形</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/11/08/Algorithm-Binary-Tree-Right-Side-View/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/11/08/Algorithm-Binary-Tree-Right-Side-View/" class="post-title-link" itemprop="url">算法 - 二叉树的右视图</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-11-08 15:47:03" itemprop="dateCreated datePublished" datetime="2025-11-08T15:47:03+08:00">2025-11-08</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一棵二叉树的根节点 <code>root</code>，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3,null,5,null,4]</span><br><span class="line">        1            &lt;---</span><br><span class="line">      /   \</span><br><span class="line">     2     3         &lt;---</span><br><span class="line">      \     \</span><br><span class="line">       5     4       &lt;---</span><br><span class="line">输出: [1,3,4]</span><br><span class="line">解释: 每一层最右边的节点构成右视图。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>「右视图」本质是<strong>求每一层的最右一个节点</strong>。两种主流做法：</p>
-<h2 id="2-1-BFS-层序遍历（最直观）"><a href="#2-1-BFS-层序遍历（最直观）" class="headerlink" title="2.1 BFS 层序遍历（最直观）"></a>2.1 BFS 层序遍历（最直观）</h2><p>用队列逐层遍历，记录每层的节点个数 <code>levelSize</code>，取该层<strong>最后一个</strong>出队的节点值加入结果。</p>
-<ul>
-<li>时间复杂度：O(n)，空间复杂度：O(n)（队列最宽一层的节点数）。</li>
-</ul>
-<h2 id="2-2-DFS（根-→-右-→-左）"><a href="#2-2-DFS（根-→-右-→-左）" class="headerlink" title="2.2 DFS（根 → 右 → 左）"></a>2.2 DFS（根 → 右 → 左）</h2><p>关键是<strong>先遍历右子树</strong>。对每一层，第一个被访问到的节点就是右视图节点。用 <code>depth</code> 记录层数，当 <code>res.length === depth</code> 时说明这一层还没收集过节点，push 当前值。</p>
-<ul>
-<li>因为先走右，所以「第一个到达」的必然是该层最右侧节点。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><p>树节点定义：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="attr">val</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">left</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="attr">right</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">val = <span class="number">0</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">val</span> = val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">left</span> = <span class="variable language_">this</span>.<span class="property">right</span> = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-1-BFS"><a href="#3-1-BFS" class="headerlink" title="3.1 BFS"></a>3.1 BFS</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">rightSideView</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span> [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">queue</span>: <span class="title class_">TreeNode</span>[] = [root];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (queue.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> size = queue.<span class="property">length</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="keyword">const</span> node = queue.<span class="title function_">shift</span>()!;</span><br><span class="line">            <span class="keyword">if</span> (i === size - <span class="number">1</span>) res.<span class="title function_">push</span>(node.<span class="property">val</span>); <span class="comment">// 本层最后一个</span></span><br><span class="line">            <span class="keyword">if</span> (node.<span class="property">left</span>) queue.<span class="title function_">push</span>(node.<span class="property">left</span>);</span><br><span class="line">            <span class="keyword">if</span> (node.<span class="property">right</span>) queue.<span class="title function_">push</span>(node.<span class="property">right</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-DFS（先右后左）"><a href="#3-2-DFS（先右后左）" class="headerlink" title="3.2 DFS（先右后左）"></a>3.2 DFS（先右后左）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">rightSideViewDFS</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">number</span>[] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">dfs</span> = (<span class="params"><span class="attr">node</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>, <span class="attr">depth</span>: <span class="built_in">number</span></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (!node) <span class="keyword">return</span>;</span><br><span class="line">        <span class="comment">// 该层尚未收集，则当前(最右优先)节点即右视图节点</span></span><br><span class="line">        <span class="keyword">if</span> (depth === res.<span class="property">length</span>) res.<span class="title function_">push</span>(node.<span class="property">val</span>);</span><br><span class="line">        <span class="title function_">dfs</span>(node.<span class="property">right</span>, depth + <span class="number">1</span>); <span class="comment">// 先右</span></span><br><span class="line">        <span class="title function_">dfs</span>(node.<span class="property">left</span>, depth + <span class="number">1</span>);  <span class="comment">// 后左</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">dfs</span>(root, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>左视图</strong>：BFS 取每层 <code>i === 0</code>；DFS 改成「先左后右」。</li>
-<li><strong>俯视图 &#x2F; 剖面</strong>等变形考察的是对遍历顺序与层&#x2F;列归属的理解。</li>
-<li>追问：DSF 解法空间上省去队列，但递归栈最坏 O(h)，h 为树高； skewed tree 下退化为 O(n)。</li>
-<li><code>queue.shift()</code> 在 JS 中是 O(n)，严格优化可用双指针索引或自定义队列，面试点出即可。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 199 | BFS&#x2F;DFS 层序思想</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/10/11/Algorithm-Permutations/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/11/Algorithm-Permutations/" class="post-title-link" itemprop="url">算法 - 全排列（Permutations）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-10-11 09:18:40" itemprop="dateCreated datePublished" datetime="2025-10-11T09:18:40+08:00">2025-10-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个没有重复数字的数组 <code>nums</code>，返回其所有可能的全排列。可以按任意顺序返回答案。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [1,2,3]</span><br><span class="line">输出: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>排列与组合&#x2F;子集的最大区别：<strong>顺序有关，每层都要从头开始选</strong>。</p>
-<h2 id="2-1-回溯-used-标记"><a href="#2-1-回溯-used-标记" class="headerlink" title="2.1 回溯 + used 标记"></a>2.1 回溯 + used 标记</h2><ul>
-<li>每一层递归都遍历整个数组，用 <code>used[i]</code> 记录 <code>nums[i]</code> 是否已在当前路径中。</li>
-<li>选中一个数就 <code>path.push</code> + <code>used[i] = true</code>，递归进入下一层；返回后撤销（<code>pop</code> + <code>used[i] = false</code>）。</li>
-<li>当 <code>path.length === nums.length</code> 时到达叶子节点，收集一个完整排列。</li>
-</ul>
-<p>排列数 n!，故：</p>
-<ul>
-<li>时间复杂度：O(n·n!)，空间复杂度：O(n)。</li>
-</ul>
-<h2 id="2-2-交换法（原地生成，省空间）"><a href="#2-2-交换法（原地生成，省空间）" class="headerlink" title="2.2 交换法（原地生成，省空间）"></a>2.2 交换法（原地生成，省空间）</h2><p>在 index 位置，依次把后面的元素换到前面，递归处理 index+1。优点是不需要额外 <code>used</code> 数组，但顺序不保证字典序。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-回溯-used"><a href="#3-1-回溯-used" class="headerlink" title="3.1 回溯 + used"></a>3.1 回溯 + used</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">permute</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">path</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">const</span> used = <span class="keyword">new</span> <span class="title class_">Array</span>&lt;<span class="built_in">boolean</span>&gt;(nums.<span class="property">length</span>).<span class="title function_">fill</span>(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">backtrack</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (path.<span class="property">length</span> === nums.<span class="property">length</span>) &#123;</span><br><span class="line">            res.<span class="title function_">push</span>([...path]);   <span class="comment">// 到达叶子才收集</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (used[i]) <span class="keyword">continue</span>; <span class="comment">// 同一条路径不能重复用同一个元素</span></span><br><span class="line">            used[i] = <span class="literal">true</span>;</span><br><span class="line">            path.<span class="title function_">push</span>(nums[i]);</span><br><span class="line"></span><br><span class="line">            <span class="title function_">backtrack</span>();</span><br><span class="line"></span><br><span class="line">            path.<span class="title function_">pop</span>();</span><br><span class="line">            used[i] = <span class="literal">false</span>;       <span class="comment">// 撤销选择</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">backtrack</span>();</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">permute</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]));</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-交换法（原地）"><a href="#3-2-交换法（原地）" class="headerlink" title="3.2 交换法（原地）"></a>3.2 交换法（原地）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">permuteSwap</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">dfs</span> = (<span class="params"><span class="attr">first</span>: <span class="built_in">number</span></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (first === nums.<span class="property">length</span>) &#123;</span><br><span class="line">            res.<span class="title function_">push</span>([...nums]);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = first; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">            [nums[first], nums[i]] = [nums[i], nums[first]];</span><br><span class="line">            <span class="title function_">dfs</span>(first + <span class="number">1</span>);</span><br><span class="line">            [nums[first], nums[i]] = [nums[i], nums[first]]; <span class="comment">// 回溯</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">dfs</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>变体：Permutations II（含重复数字）</strong>：先排序，同层去重 <code>if (i &gt; 0 &amp;&amp; nums[i] === nums[i-1] &amp;&amp; !used[i-1]) continue;</code>——前一个相同值未被使用时跳过，保证相同元素只按固定相对顺序出现一次。</li>
-<li><strong>子集 vs 组合 vs 排列</strong> 的递归起点：子集&#x2F;组合用 <code>start</code>（不回头），排列每层从 0 开始（靠 <code>used</code> 去重）。这是最容易混的考点。</li>
-<li>JS 中 <code>path.push(...)</code> 传引用会污染结果，务必 <code>[...path]</code> 或 <code>path.slice()</code> 拷贝。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 46 | 回溯法核心题</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2025/09/06/Algorithm-Subsets/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/09/06/Algorithm-Subsets/" class="post-title-link" itemprop="url">算法 - 子集（Subsets）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2025-09-06 10:32:15" itemprop="dateCreated datePublished" datetime="2025-09-06T10:32:15+08:00">2025-09-06</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个整数数组 <code>nums</code>，数组中的元素<strong>互不相同</strong>。返回该数组所有可能的子集（幂集）。</p>
-<p>解集不能包含重复的子集，你可以按任意顺序返回解集。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [1,2,3]</span><br><span class="line">输出: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>子集总数为 2ⁿ，所以任何解法时间复杂度下限就是 O(n·2ⁿ)。常见三种套路：</p>
-<h2 id="2-1-回溯法（选-不选）"><a href="#2-1-回溯法（选-不选）" class="headerlink" title="2.1 回溯法（选 &#x2F; 不选）"></a>2.1 回溯法（选 &#x2F; 不选）</h2><p>把问题看成遍历一棵决策树：对每个元素做「选它」或「跳过它」的决定。为了避免产生重复子集，引入 <code>start</code> 参数——每层只允许从当前下标往后选，保证结果按下标递增顺序排列。</p>
-<ul>
-<li><p>递归到任意节点时，<code>path</code> 都是一个合法子集（不只是叶子节点），所以进入递归就收集。</p>
-</li>
-<li><p>时间复杂度：O(n·2ⁿ)，空间复杂度：O(n)（递归栈）。</p>
-</li>
-</ul>
-<h2 id="2-2-迭代法（逐步扩张）"><a href="#2-2-迭代法（逐步扩张）" class="headerlink" title="2.2 迭代法（逐步扩张）"></a>2.2 迭代法（逐步扩张）</h2><p>从 <code>[[]]</code> 开始，每遇到一个新数 <code>x</code>，就把已有所有子集各追加一个 <code>x</code> 形成新子集，并入结果。</p>
-<h2 id="2-3-二进制枚举"><a href="#2-3-二进制枚举" class="headerlink" title="2.3 二进制枚举"></a>2.3 二进制枚举</h2><p>用 0~2ⁿ-1 的每个整数的二进制位表示「第 i 个元素选或不选」，适合炫技。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-回溯法"><a href="#3-1-回溯法" class="headerlink" title="3.1 回溯法"></a>3.1 回溯法</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">subsets</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">path</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">backtrack</span> = (<span class="params"><span class="attr">start</span>: <span class="built_in">number</span></span>) =&gt; &#123;</span><br><span class="line">        <span class="comment">// 每个节点都是一个合法子集</span></span><br><span class="line">        res.<span class="title function_">push</span>([...path]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = start; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">            path.<span class="title function_">push</span>(nums[i]);       <span class="comment">// 选</span></span><br><span class="line">            <span class="title function_">backtrack</span>(i + <span class="number">1</span>);         <span class="comment">// 只往后看，避免重复</span></span><br><span class="line">            path.<span class="title function_">pop</span>();               <span class="comment">// 不选（撤销选择）</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">backtrack</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">subsets</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]));</span><br><span class="line"><span class="comment">// [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-迭代法"><a href="#3-2-迭代法" class="headerlink" title="3.2 迭代法"></a>3.2 迭代法</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">subsetsIterative</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [[]];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> x <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="comment">// 基于「本轮开始前」的子集扩张，不能边遍历边 push 同一数组</span></span><br><span class="line">        res = [...res, ...res.<span class="title function_">map</span>(<span class="function">(<span class="params">set</span>) =&gt;</span> [...set, x])];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-3-二进制枚举"><a href="#3-3-二进制枚举" class="headerlink" title="3.3 二进制枚举"></a>3.3 二进制枚举</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">subsetsBitmask</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span>[][] &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">res</span>: <span class="built_in">number</span>[][] = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> mask = <span class="number">0</span>; mask &lt; <span class="number">1</span> &lt;&lt; n; mask++) &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="attr">subset</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mask &amp; (<span class="number">1</span> &lt;&lt; i)) subset.<span class="title function_">push</span>(nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        res.<span class="title function_">push</span>(subset);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>变体：Subsets II（含重复元素）</strong>：先排序，同一层中跳过与前一个相同的值 <code>if (i &gt; start &amp;&amp; nums[i] === nums[i-1]) continue;</code>。</li>
-<li><strong>回溯三板斧</strong>：路径（path）→ 选择列表（start 之后的元素）→ 结束条件（遍历完当前层）。收集时机是本题关键：子集问题在<strong>每个节点</strong>收集，组合问题通常在<strong>叶子</strong>收集。</li>
-<li>与<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">全排列</a>对比：排列每层从 0 开始并用 <code>used</code> 数组去重，子集&#x2F;组合用 <code>start</code> 剪枝。</li>
-</ul>
-<blockquote>
-<p>难度：简单 | LeetCode 78 | 回溯入门必考</p>
 </blockquote>
 
       

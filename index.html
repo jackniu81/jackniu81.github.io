@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,1458 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/10/MCP-Production-Engineering-Selection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/10/MCP-Production-Engineering-Selection/" class="post-title-link" itemprop="url">深入浅出 MCP 系列教程（五）：工程落地与选型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-10 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-10T09:00:00+08:00">2026-11-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本系列完结篇。前四篇覆盖了协议规范、核心原语、传输层和进阶能力，本篇从”协议是什么”转向”怎么在生产环境稳定跑起来”：SDK 上手、安全模型、网关架构、可观测性、限流熔断，最后横向对比 Function Calling、Agent 框架、A2A，给出选型决策与反模式清单。</p>
+</blockquote>
+<h2 id="一、SDK-选型与基础代码骨架"><a href="#一、SDK-选型与基础代码骨架" class="headerlink" title="一、SDK 选型与基础代码骨架"></a>一、SDK 选型与基础代码骨架</h2><p>MCP 本身只是协议，手写 JSON-RPC、流分割、重连非常容易出错。生产优先使用官方&#x2F;社区 SDK，不要裸写协议层。</p>
+<h3 id="1-1-主流-SDK"><a href="#1-1-主流-SDK" class="headerlink" title="1.1 主流 SDK"></a>1.1 主流 SDK</h3><ul>
+<li><strong>TypeScript &#x2F; Node.js：@modelcontextprotocol&#x2F;sdk</strong>（官方，生态最好，更新最快）</li>
+<li><strong>Python：mcp（官方）</strong>，适合数据、脚本、AI 工具快速封装</li>
+<li><strong>Go：github.com&#x2F;modelcontextprotocol&#x2F;go-sdk</strong>，适合高性能网关、常驻服务</li>
+<li><strong>Rust：官方 Rust SDK</strong>，适合资源占用低、安全敏感的独立 Server</li>
+<li>C# &#x2F; Java：社区第三方实现，版本跟进略慢，适合传统后端集成</li>
+</ul>
+<blockquote>
+<p>原则：业务语言优先官方 SDK；网关、代理、高吞吐组件优先 Go &#x2F; Rust。</p>
+</blockquote>
+<h3 id="1-2-Node-js-最简-stdio-Server-骨架"><a href="#1-2-Node-js-最简-stdio-Server-骨架" class="headerlink" title="1.2 Node.js 最简 stdio Server 骨架"></a>1.2 Node.js 最简 stdio Server 骨架</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Server</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@modelcontextprotocol/sdk/server/index.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">StdioServerTransport</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@modelcontextprotocol/sdk/server/stdio.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">ListToolsRequestSchema</span>,</span><br><span class="line">  <span class="title class_">CallToolRequestSchema</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;@modelcontextprotocol/sdk/types.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = <span class="keyword">new</span> <span class="title class_">Server</span>(</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;demo-server&quot;</span>, <span class="attr">version</span>: <span class="string">&quot;1.0.0&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">capabilities</span>: &#123; <span class="attr">tools</span>: &#123;&#125; &#125; &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">server.<span class="title function_">setRequestHandler</span>(<span class="title class_">ListToolsRequestSchema</span>, <span class="title function_">async</span> () =&gt; (&#123;</span><br><span class="line">  <span class="attr">tools</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&quot;echo&quot;</span>,</span><br><span class="line">      <span class="attr">description</span>: <span class="string">&quot;回显文本&quot;</span>,</span><br><span class="line">      <span class="attr">inputSchema</span>: &#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;object&quot;</span>,</span><br><span class="line">        <span class="attr">properties</span>: &#123; <span class="attr">text</span>: &#123; <span class="attr">type</span>: <span class="string">&quot;string&quot;</span> &#125; &#125;,</span><br><span class="line">        <span class="attr">required</span>: [<span class="string">&quot;text&quot;</span>],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">server.<span class="title function_">setRequestHandler</span>(<span class="title class_">CallToolRequestSchema</span>, <span class="title function_">async</span> (req) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> text = req.<span class="property">params</span>.<span class="property">arguments</span>.<span class="property">text</span> <span class="keyword">as</span> <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">content</span>: [&#123; <span class="attr">type</span>: <span class="string">&quot;text&quot;</span>, text &#125;] &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> transport = <span class="keyword">new</span> <span class="title class_">StdioServerTransport</span>();</span><br><span class="line"><span class="keyword">await</span> server.<span class="title function_">connect</span>(transport);</span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li>SDK 自动处理 JSONL 分割、JSON-RPC id 路由、握手、capability 协商；</li>
+<li>业务只需要注册各类请求 handler；</li>
+<li>如果开启 sampling、roots、resources，在初始化 capabilities 里声明，再注册对应 handler。</li>
+</ul>
+<h3 id="1-3-Streamable-HTTP-服务骨架要点"><a href="#1-3-Streamable-HTTP-服务骨架要点" class="headerlink" title="1.3 Streamable HTTP 服务骨架要点"></a>1.3 Streamable HTTP 服务骨架要点</h3><p>HTTP 版本拆成两块：SSE 下行流管理（维护每个 sessionId 对应的 SSE 连接、消息入队）和 POST 上行接收（校验 session、鉴权、投递消息到对应会话）。SDK 一般提供独立的 <code>StreamableHttpTransport</code>，内置会话存储、SSE 推送。</p>
+<blockquote>
+<p>自建 HTTP MCP 最大坑：SSE 断开后消息队列堆积，必须设置单会话消息上限、过期丢弃。</p>
+</blockquote>
+<h2 id="二、完整安全模型"><a href="#二、完整安全模型" class="headerlink" title="二、完整安全模型"></a>二、完整安全模型</h2><p>MCP 的安全不是单点，是分层防御，很多人只依赖 Roots，这远远不够。</p>
+<h3 id="2-1-分层安全框架"><a href="#2-1-分层安全框架" class="headerlink" title="2.1 分层安全框架"></a>2.1 分层安全框架</h3><ol>
+<li><p><strong>传输层安全</strong></p>
+<ul>
+<li>stdio：本机信任边界；不要用 stdio 加载来源不明的第三方 Server；</li>
+<li>Streamable HTTP：必须 HTTPS，禁止裸 HTTP；使用 Bearer &#x2F; mTLS，不要把密钥放 query；</li>
+<li>代理侧：禁止开放公网无鉴权 MCP 端点。</li>
+</ul>
+</li>
+<li><p><strong>身份与鉴权层</strong></p>
+<ul>
+<li>每个用户独立会话；鉴权信息和 sessionId 解耦；</li>
+<li>多租户场景：所有后端操作带上用户身份上下文，不能共用一个数据库账号；</li>
+<li>权限最小化：同一个 MCP Server，不同用户看到不同工具、不同 roots。</li>
+</ul>
+</li>
+<li><p><strong>Roots（资源沙箱）</strong></p>
+<ul>
+<li>只管控 <code>resources/read</code>；它是白名单，不是系统沙箱；</li>
+<li>校验逻辑：严格 URI 前缀校验，不能简单字符串匹配（规避 <code>file:///work../etc/</code> 这类逃逸）；</li>
+<li>推荐 Host 侧也做一层同样的 URI 校验，双重防御。</li>
+</ul>
+</li>
+<li><p><strong>工具权限隔离（最容易缺失）</strong><br>Roots 管读资源；工具的写、删除、执行、SQL、接口调用需要单独权限系统：</p>
+<ul>
+<li>工具白名单：用户 A 允许 <code>read_file</code>，不允许 <code>delete_file</code>；</li>
+<li>参数校验：高危工具增加参数正则、黑名单；</li>
+<li>人工审批策略：匹配高危工具 + 敏感参数，强制弹窗确认；</li>
+<li>审批记录永久留存。</li>
+</ul>
+</li>
+<li><p><strong>Sampling 安全边界</strong></p>
+<ul>
+<li>Server 提交的 sampling 请求属于不可信输入，统一经过 Host 的内容安全审核；</li>
+<li>可配置策略：某些 Server 禁止 sampling，或必须人工审批；</li>
+<li>Token 配额按用户隔离，防止某个 Server 无限消耗模型额度。</li>
+</ul>
+</li>
+<li><p><strong>提示注入防护</strong></p>
+<ul>
+<li>外部资源、工具返回内容在送入 LLM 时，做边界封装；</li>
+<li>不把外部原始文本直接和系统提示拼接；</li>
+<li>高安全场景使用分隔标记、独立消息块、内容摘要替代原文。</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-2-高危操作黑名单（生产建议）"><a href="#2-2-高危操作黑名单（生产建议）" class="headerlink" title="2.2 高危操作黑名单（生产建议）"></a>2.2 高危操作黑名单（生产建议）</h3><p>任何下面这类工具，默认不开放，开启必须强审批：</p>
+<ul>
+<li>文件删除、覆盖、批量修改；</li>
+<li>任意 shell 执行；</li>
+<li>无限制 SQL 执行；</li>
+<li>发送邮件、短信、企业消息；</li>
+<li>访问内部凭证、密钥仓库；</li>
+<li>公网出网扫描。</li>
+</ul>
+<h3 id="2-3-供应链风险"><a href="#2-3-供应链风险" class="headerlink" title="2.3 供应链风险"></a>2.3 供应链风险</h3><p>MCP 生态是”Host 加载外部 Server”，这是核心攻击面：</p>
+<ul>
+<li>第三方 MCP Server 拥有你下发的 roots、工具权限；</li>
+<li>恶意 Server 可以通过 sampling 诱导 Host 模型泄露信息；</li>
+<li>企业内部：维护 MCP Server 准入清单，禁止用户随意加载外部 Server。</li>
+</ul>
+<h2 id="三、网关架构（企业主流落地形态）"><a href="#三、网关架构（企业主流落地形态）" class="headerlink" title="三、网关架构（企业主流落地形态）"></a>三、网关架构（企业主流落地形态）</h2><h3 id="3-1-网关职责"><a href="#3-1-网关职责" class="headerlink" title="3.1 网关职责"></a>3.1 网关职责</h3><ul>
+<li><strong>统一接入</strong>：对外只暴露一个 Streamable HTTP 端点；</li>
+<li><strong>鉴权 &amp; SSO</strong>：对接 OIDC、内部账号；</li>
+<li><strong>路由</strong>：按请求、用户配置转发到对应的后端 MCP Server（stdio 子进程或远程 HTTP MCP）；</li>
+<li><strong>能力聚合</strong>：合并多个后端的 tools &#x2F; resources &#x2F; prompts，对外统一返回；</li>
+<li><strong>权限裁剪</strong>：根据用户权限过滤工具、裁剪 roots；</li>
+<li><strong>审计、限流、熔断、日志集中采集</strong>；</li>
+<li><strong>协议适配</strong>：后端是 stdio，对外暴露成 Streamable HTTP。</li>
+</ul>
+<h3 id="3-2-两种网关模式"><a href="#3-2-两种网关模式" class="headerlink" title="3.2 两种网关模式"></a>3.2 两种网关模式</h3><ol>
+<li><strong>透明代理模式</strong>：网关只转发消息，不解析业务原语。实现简单，但无法做工具粒度权限、聚合；</li>
+<li><strong>控制平面网关（智能网关）</strong>：网关完整解析 MCP 消息，可以在 <code>tools/list</code> 返回前过滤工具、在 <code>tools/call</code> 之前拦截审批、修改 roots 下发列表、合并多个后端能力集。企业生产首选，复杂度更高。</li>
+</ol>
+<h3 id="3-3-网关会话管理"><a href="#3-3-网关会话管理" class="headerlink" title="3.3 网关会话管理"></a>3.3 网关会话管理</h3><p>网关侧持有 sessionId，一个网关会话可以绑定多个后端 MCP 会话，负责生命周期管理：</p>
+<ul>
+<li>用户登出：批量销毁所有后端会话、杀掉 stdio 子进程；</li>
+<li>闲置超时：回收连接、释放文件句柄、数据库连接；</li>
+<li>后端 Server 崩溃：网关感知，向上返回错误，可选自动重建后端会话。</li>
+</ul>
+<h3 id="3-4-部署拓扑示例"><a href="#3-4-部署拓扑示例" class="headerlink" title="3.4 部署拓扑示例"></a>3.4 部署拓扑示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">用户 Host（Claude Desktop / 自研 Agent）</span><br><span class="line">        ↓ HTTPS（Streamable HTTP）</span><br><span class="line">        MCP Gateway（鉴权、审计、路由、限流）</span><br><span class="line">        ├─→ 内部 stdio MCP Server（文件、Git）</span><br><span class="line">        ├─→ 远程 HTTP MCP Server（工单、知识库）</span><br><span class="line">        └─→ 内部服务封装 MCP（运维、发布平台）</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、可观测性"><a href="#四、可观测性" class="headerlink" title="四、可观测性"></a>四、可观测性</h2><p>MCP 是异步双向协议，链路追踪比普通 REST 更复杂。可观测分三块：结构化日志、指标、链路追踪。</p>
+<h3 id="4-1-结构化日志规范"><a href="#4-1-结构化日志规范" class="headerlink" title="4.1 结构化日志规范"></a>4.1 结构化日志规范</h3><p>每条日志至少包含：<code>sessionId</code>、<code>user_id</code>、<code>requestId</code>（JSON-RPC id）、<code>method</code>、耗时、状态、错误码、工具名称、URI（脱敏）。</p>
+<p>区分几类日志：</p>
+<ul>
+<li><strong>审计日志（不可篡改）</strong>：所有 <code>tools/call</code>、roots 变更、sampling 请求、审批结果；</li>
+<li><strong>运行日志</strong>：info &#x2F; warn &#x2F; error，用于排障；</li>
+<li><strong>访问日志</strong>：连接建立、断开、重连、鉴权失败。</li>
+</ul>
+<blockquote>
+<p>不要直接把完整参数明文入库：密钥、敏感内容脱敏。</p>
+</blockquote>
+<h3 id="4-2-核心指标（Prometheus）"><a href="#4-2-核心指标（Prometheus）" class="headerlink" title="4.2 核心指标（Prometheus）"></a>4.2 核心指标（Prometheus）</h3><ul>
+<li>连接指标：活跃会话数、新建会话、会话销毁、SSE 重连次数；</li>
+<li>请求指标：每个 method 的 QPS、成功&#x2F;失败计数、P50&#x2F;P95&#x2F;P99 耗时；</li>
+<li>工具粒度：每个工具调用次数、失败率、平均耗时；</li>
+<li>Sampling 指标：反向模型调用次数、token 消耗、拒绝次数；</li>
+<li>资源指标：<code>resources/read</code> 读取量、订阅数量；</li>
+<li>资源水位：子进程数量、消息队列堆积、内存。</li>
+</ul>
+<p>告警重点：工具错误率突增、SSE 频繁重连、会话堆积不释放、sampling token 消耗突增、鉴权失败风暴。</p>
+<h3 id="4-3-链路追踪"><a href="#4-3-链路追踪" class="headerlink" title="4.3 链路追踪"></a>4.3 链路追踪</h3><p>MCP 是异步双向，一条链路可能跨 Host → Gateway → MCP Server → 下游服务，还可能反向 sampling 再回到 Host。方案：</p>
+<ul>
+<li>用自定义 header（<code>traceparent</code>，W3C trace）在 Streamable HTTP 上透传；</li>
+<li>stdio 场景：通过环境变量注入 trace id；</li>
+<li>一条 <code>tools/call</code> 生成一条 trace；里面触发 sampling 作为子 span；</li>
+<li>进度通知、资源更新通知打上同一个 trace id，串联整个任务。</li>
+</ul>
+<h2 id="五、限流、熔断、背压、重试"><a href="#五、限流、熔断、背压、重试" class="headerlink" title="五、限流、熔断、背压、重试"></a>五、限流、熔断、背压、重试</h2><p>MCP 双向异步，盲目重试很容易放大故障。</p>
+<h3 id="5-1-限流维度"><a href="#5-1-限流维度" class="headerlink" title="5.1 限流维度"></a>5.1 限流维度</h3><ul>
+<li>用户级：每个用户总 QPS、sampling token 上限、并发工具调用数；</li>
+<li>会话级：单会话消息速率，防止单会话打满服务；</li>
+<li>工具级：高危工具单独限流；</li>
+<li>网关全局限流。</li>
+</ul>
+<h3 id="5-2-熔断"><a href="#5-2-熔断" class="headerlink" title="5.2 熔断"></a>5.2 熔断</h3><p>针对后端 MCP Server：连续报错超过阈值就熔断、快速失败；熔断状态下不再转发请求，返回友好错误；配合熔断窗口、半开探测。适合场景：后端数据库挂掉、文件服务宕机、第三方接口超时。</p>
+<h3 id="5-3-背压（非常关键）"><a href="#5-3-背压（非常关键）" class="headerlink" title="5.3 背压（非常关键）"></a>5.3 背压（非常关键）</h3><p>异步通道天然存在背压问题：发送速度 &gt; 处理速度，消息队列无限堆积，OOM。策略：</p>
+<ul>
+<li>每个会话设置消息队列最大长度；</li>
+<li>队列满时：拒绝新消息或丢弃旧消息；</li>
+<li>长任务配合 progress 通知，同时控制并发；</li>
+<li>stdio：注意进程管道缓冲区阻塞，Node &#x2F; Python 尤其容易卡住。</li>
+</ul>
+<h3 id="5-4-重试策略"><a href="#5-4-重试策略" class="headerlink" title="5.4 重试策略"></a>5.4 重试策略</h3><ul>
+<li>JSON-RPC 请求：只有幂等操作才允许重试；删除、发送消息这类非幂等禁止自动重试；</li>
+<li>网络断开重连：SSE 按服务端 retry 间隔指数退避；</li>
+<li>业务失败（权限不足、参数错误）不重试；只有连接类、临时超时可以重试；</li>
+<li>重试必须带最大次数，防止风暴。</li>
+</ul>
+<h2 id="六、部署与测试"><a href="#六、部署与测试" class="headerlink" title="六、部署与测试"></a>六、部署与测试</h2><h3 id="6-1-部署要点"><a href="#6-1-部署要点" class="headerlink" title="6.1 部署要点"></a>6.1 部署要点</h3><p>stdio：进程托管（systemd &#x2F; supervisor）；监听子进程退出回收僵尸进程；版本升级重启进程即重启会话；用 cgroup 限制 CPU、内存。</p>
+<p>Streamable HTTP：容器化部署依赖外部会话存储（Redis）保存会话上下文；不要存在容器本地内存，否则扩缩容、滚动发布会话丢失；如果会话在 Redis，负载均衡不需要粘性会话；如果会话在进程内存，必须会话亲和，生产不推荐。</p>
+<h3 id="6-2-测试体系（四层）"><a href="#6-2-测试体系（四层）" class="headerlink" title="6.2 测试体系（四层）"></a>6.2 测试体系（四层）</h3><ol>
+<li><strong>单元测试</strong>：单独测试每个 tool、resource、prompt handler；用内存 transport 隔离；</li>
+<li><strong>协议一致性测试</strong>：校验握手、capability 协商、消息格式、错误码、通知语义；官方提供部分 conformance test 套件，可接入 CI；</li>
+<li><strong>集成测试</strong>：启动真实 transport，覆盖正常调用、参数错误、越界 roots、sampling 往返、SSE 断开重连、工具列表动态变更；</li>
+<li><strong>混沌测试（生产前）</strong>：随机断开 SSE、杀掉子进程、注入网络延迟丢包、超限大报文，验证不雪崩。</li>
+</ol>
+<blockquote>
+<p>不要只测”成功路径”；MCP 生产故障大多出在异步、断连、反向调用、权限逃逸。</p>
+</blockquote>
+<h3 id="6-3-排障清单（高频故障）"><a href="#6-3-排障清单（高频故障）" class="headerlink" title="6.3 排障清单（高频故障）"></a>6.3 排障清单（高频故障）</h3><ol>
+<li><strong>握手卡住、JSON parse error</strong>：stdio 场景 Server 在 stdout 打印日志；改成 stderr 或协议内 <code>logging/message</code>；</li>
+<li><strong>SSE 连上但收不到返回</strong>：检查 POST 是否携带正确 sessionId；SSE 是否被代理截断；消息队列是否满了；</li>
+<li><strong>roots 下发了仍可读取越界文件</strong>：URI 校验实现用了简单 startsWith，存在逃逸；改用 URI 标准库解析后校验；</li>
+<li><strong>sampling 请求发出去没有响应</strong>：Host 没在 initialize 声明 sampling；或 Host 拦截拒绝没有返回；</li>
+<li><strong>工具列表不更新</strong>：Host 没监听 <code>tools/list_changed</code>、没有主动刷新 <code>tools/list</code>；</li>
+<li><strong>会话越积越多，内存泄漏</strong>：没有闲置超时；SSE 断开会话没清理；</li>
+<li><strong>重连之后订阅失效</strong>：订阅是会话级，重连后需重新 <code>resources/subscribe</code>；</li>
+<li><strong>高并发下请求卡死</strong>：背压缺失、无队列上限、同步阻塞 handler 吃掉事件循环。</li>
+</ol>
+<h2 id="七、选型对比：MCP-在-AI-生态中的定位"><a href="#七、选型对比：MCP-在-AI-生态中的定位" class="headerlink" title="七、选型对比：MCP 在 AI 生态中的定位"></a>七、选型对比：MCP 在 AI 生态中的定位</h2><h3 id="7-1-MCP-vs-OpenAI-Function-Calling"><a href="#7-1-MCP-vs-OpenAI-Function-Calling" class="headerlink" title="7.1 MCP vs OpenAI Function Calling"></a>7.1 MCP vs OpenAI Function Calling</h3><p>二者不是替代关系，而是层级完全不同：</p>
+<ul>
+<li><strong>Function Calling</strong> 是 LLM 厂商的请求参数格式，嵌入在模型请求 payload 内部，绑定模型调用链路；</li>
+<li><strong>MCP</strong> 是独立于模型的双向会话协议，有独立的会话、订阅、反向采样、权限、生命周期。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Function Calling</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>绑定关系</td>
+<td>和模型强绑定</td>
+<td>和模型完全解耦</td>
+</tr>
+<tr>
+<td>会话状态</td>
+<td>无原生会话</td>
+<td>原生长会话、订阅、动态能力变更</td>
+</tr>
+<tr>
+<td>双向性</td>
+<td>单向：LLM → 工具</td>
+<td>双向：支持 Sampling</td>
+</tr>
+<tr>
+<td>能力发现</td>
+<td>每次请求携带或静态配置</td>
+<td>运行时动态发现、动态刷新</td>
+</tr>
+<tr>
+<td>权限沙箱</td>
+<td>没有内置规范</td>
+<td>内置 Roots</td>
+</tr>
+<tr>
+<td>跨客户端复用</td>
+<td>不同客户端需各自封装</td>
+<td>同一个 Server 可被多个 Host 接入</td>
+</tr>
+</tbody></table>
+<p>选型：简单、一次性、短流程的工具调用优先 Function Calling；工具服务要被多个客户端复用、需要长期资源订阅、需要反向采样、需要统一权限审计 → MCP。</p>
+<p>最常见组合：<strong>MCP 做工具服务层，Function Calling 做模型调用层</strong>——Host 把 MCP <code>tools/list</code> 转换为 function schema 发给兼容 OpenAI 接口的模型。</p>
+<h3 id="7-2-MCP-vs-Agent-框架（LangGraph、AutoGen、CrewAI）"><a href="#7-2-MCP-vs-Agent-框架（LangGraph、AutoGen、CrewAI）" class="headerlink" title="7.2 MCP vs Agent 框架（LangGraph、AutoGen、CrewAI）"></a>7.2 MCP vs Agent 框架（LangGraph、AutoGen、CrewAI）</h3><p>Agent 框架解决编排、记忆、规划、多轮推理；MCP 解决标准化工具接入层。</p>
+<ul>
+<li>只用框架、不用 MCP：上手快，但工具和编排代码耦合，新增工具要改代码发版本，很难被其他 Agent 复用；</li>
+<li>框架 + MCP：编排逻辑稳定，工具动态插拔，同一工具集可同时服务网页 Agent、桌面客户端、后台批处理；代价是多一层协议和运维体系。</li>
+</ul>
+<blockquote>
+<p>反模式：把复杂 Agent 编排逻辑写在 MCP Server 内部。MCP Server 应该是能力提供者，不是规划器。</p>
+</blockquote>
+<h3 id="7-3-MCP-vs-A2A（Agent2Agent）"><a href="#7-3-MCP-vs-A2A（Agent2Agent）" class="headerlink" title="7.3 MCP vs A2A（Agent2Agent）"></a>7.3 MCP vs A2A（Agent2Agent）</h3><p>一句话记忆：</p>
+<ul>
+<li><strong>A2A</strong>：Agent 找另一个 Agent 干活（任务委派、状态同步）；</li>
+<li><strong>MCP</strong>：Agent 找工具&#x2F;系统干活（能力暴露）。</li>
+</ul>
+<p>组合架构（联邦 Agent）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">主 Agent（Host）</span><br><span class="line"> ├─ MCP → 文件、数据库、业务系统（工具）</span><br><span class="line"> └─ A2A → 子 Agent（另一个独立 Agent）</span><br><span class="line">      └─ 子 Agent 内部再通过 MCP 调用它自己的工具</span><br></pre></td></tr></table></figure>
+
+<p>二者没有竞争关系，大型多 Agent 系统一般同时存在。如果只是让 Agent 读写文件、查内部系统，没有跨 Agent 委派，只用 MCP 就足够。</p>
+<h2 id="八、选型决策树与反模式"><a href="#八、选型决策树与反模式" class="headerlink" title="八、选型决策树与反模式"></a>八、选型决策树与反模式</h2><h3 id="8-1-决策树"><a href="#8-1-决策树" class="headerlink" title="8.1 决策树"></a>8.1 决策树</h3><ol>
+<li>只是给单一模型网关提供简单工具？→ 优先 Function Calling，轻量够用；</li>
+<li>工具需要被多个客户端复用？→ 倾向 MCP；</li>
+<li>有长生命周期资源（文件仓库、订阅变更）？→ 倾向 MCP；</li>
+<li>需要工具服务反向请求模型做子推理？→ MCP 的 Sampling 是核心卖点；</li>
+<li>是 Agent 和另一个独立 Agent 委派任务？→ 用 A2A，而不是把 Agent 封装成 MCP 工具；</li>
+<li>只在一个编排框架内部使用、不对外暴露工具？→ 可以不引入 MCP，直接本地函数；</li>
+<li>决定上 MCP 后：个人桌面、本地开发 → stdio；内网共享、多用户 → Streamable HTTP + 网关；跨部门联邦 → 多层网关 + 能力注册表。</li>
+</ol>
+<blockquote>
+<p>核心原则：MCP 不是默认答案，它是为「能力可独立部署、可共享、有会话和资源生命周期」而设计的方案。</p>
+</blockquote>
+<h3 id="8-2-经典权衡点"><a href="#8-2-经典权衡点" class="headerlink" title="8.2 经典权衡点"></a>8.2 经典权衡点</h3><ol>
+<li><strong>能力聚合 vs 透明转发网关</strong>：透明转发简单但做不到工具粒度权限；智能聚合网关能力强，但要完整解析 MCP 语义，兼容性风险更高；</li>
+<li><strong>本地 stdio 隔离 vs 远程 HTTP 共享</strong>：stdio 隔离性好但不能跨机器；HTTP 共享方便但必须处理鉴权、会话存储、网络故障；</li>
+<li><strong>Server 内做业务逻辑，还是推到 Host</strong>：MCP Server 适合封装外部系统；复杂规划、多轮判断、记忆放在 Host&#x2F;编排层。Server 逻辑太重会变成隐藏的 Agent，难以审计追踪。</li>
+</ol>
+<h3 id="8-3-高频设计反模式"><a href="#8-3-高频设计反模式" class="headerlink" title="8.3 高频设计反模式"></a>8.3 高频设计反模式</h3><table>
+<thead>
+<tr>
+<th>反模式</th>
+<th>问题</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>把完整 Agent 封装成一个 MCP Tool</td>
+<td>两层会话状态叠加、生命周期冲突、审计颗粒度变粗</td>
+<td>Agent 作为 Host，MCP 调用底层系统；跨 Agent 委派走 A2A</td>
+</tr>
+<tr>
+<td>用 MCP 替代普通同步 API</td>
+<td>协议开销、会话管理全是额外负担</td>
+<td>简单无状态查询直接用 HTTP API</td>
+</tr>
+<tr>
+<td>Roots 当成万能安全边界</td>
+<td>工具可以绕过 Roots 写文件、执行命令</td>
+<td>Roots 只保护 resources&#x2F;read；工具权限独立管控</td>
+</tr>
+<tr>
+<td>在 MCP Server 里硬编码模型 Key</td>
+<td>密钥分散、配额审核难统一</td>
+<td>走 Sampling，模型收敛在 Host</td>
+</tr>
+<tr>
+<td>无限缓存工具列表不刷新</td>
+<td>动态变更后客户端看不到最新工具</td>
+<td>监听 <code>tools/list_changed</code> 通知并刷新</td>
+</tr>
+<tr>
+<td>自定义扩展不用 <code>x-</code> 前缀</td>
+<td>未来官方升级直接冲突</td>
+<td>私有接口必须 <code>x-</code> 前缀</td>
+</tr>
+<tr>
+<td>业务状态存在 Server 本地内存</td>
+<td>多实例部署负载均衡后状态丢失</td>
+<td>会话外部持久化（Redis）</td>
+</tr>
+</tbody></table>
+<h2 id="九、系列总结：MCP-的核心思想"><a href="#九、系列总结：MCP-的核心思想" class="headerlink" title="九、系列总结：MCP 的核心思想"></a>九、系列总结：MCP 的核心思想</h2><p>回顾整个系列：</p>
+<ol>
+<li><strong>协议基础</strong>：角色、JSON-RPC、会话生命周期、initialize、capability 协商；</li>
+<li><strong>三大原语</strong>：Tools（执行动作）、Resources（只读资源）、Prompts（可复用提示模板）；</li>
+<li><strong>传输层</strong>：stdio（本地）、Streamable HTTP（远程，POST + SSE）；</li>
+<li><strong>进阶能力</strong>：Sampling（反向模型调用）、Roots（资源沙箱）、通知体系、错误、扩展规范；</li>
+<li><strong>生产工程</strong>：SDK、分层安全、网关、可观测、限流熔断、部署测试排障；</li>
+<li><strong>选型生态</strong>：对比 Function Calling、Agent 框架、A2A；决策树、反模式。</li>
+</ol>
+<p>MCP 的核心思想一句话概括：</p>
+<blockquote>
+<p>将外部系统的能力，封装成一套独立于模型、独立于 Agent 编排、可共享、带会话与权限语义的标准化服务。</p>
+</blockquote>
+<p>它不是一个做 Agent 的框架，而是让 Agent 安全、标准地接入真实世界系统的一层基础设施——AI 能力接口的”USB-C”。</p>
+<hr>
+<h3 id="系列文章导航"><a href="#系列文章导航" class="headerlink" title="系列文章导航"></a>系列文章导航</h3><ol>
+<li><a href="/2026/11/01/MCP-Protocol-Foundations/">深入浅出 MCP 系列教程（一）：协议基础与架构设计</a></li>
+<li><a href="/2026/11/08/MCP-Core-Primitives-Tools-Resources-Prompts/">深入浅出 MCP 系列教程（二）：三大核心原语实战</a></li>
+<li><a href="/2026/11/15/MCP-Transport-Stdio-Streamable-HTTP/">深入浅出 MCP 系列教程（三）：传输层实战</a></li>
+<li><a href="/2026/11/22/MCP-Advanced-Sampling-Roots-Notifications/">深入浅出 MCP 系列教程（四）：进阶能力</a></li>
+<li>深入浅出 MCP 系列教程（五）：工程落地与选型（本篇）</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/08/Algorithm-Merge-Sorted-Array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/08/Algorithm-Merge-Sorted-Array/" class="post-title-link" itemprop="url">算法 - 合并两个有序数组</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-08 10:19:33" itemprop="dateCreated datePublished" datetime="2026-11-08T10:19:33+08:00">2026-11-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你两个按<strong>非递减顺序</strong>排列的整数数组 <code>nums1</code> 和 <code>nums2</code>，另有两个整数 <code>m</code> 和 <code>n</code>，分别表示 <code>nums1</code> 和 <code>nums2</code> 中的元素数目。</p>
+<p>请你<strong>合并</strong> <code>nums2</code> 到 <code>nums1</code> 中，使合并后的数组同样按非递减顺序排列。</p>
+<p>注意：最终合并后数组不由函数返回，而是存储在数组 <code>nums1</code> 中。<code>nums1</code> 的初始长度为 <code>m + n</code>，其中前 m 个元素表示应合并的元素，后 n 个元素为 0，应忽略。<code>nums2</code> 的长度为 n。</p>
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3</span><br><span class="line">输出: [1,2,2,3,5,6]</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-为什么不能从前往后双指针？"><a href="#2-1-为什么不能从前往后双指针？" class="headerlink" title="2.1 为什么不能从前往后双指针？"></a>2.1 为什么不能从前往后双指针？</h2><p>若从下标 0 开始比较写入 <code>nums1</code>，会覆盖掉 <code>nums1</code> 尚未读取的有效元素。除非先拷贝一份 nums1（额外 O(m) 空间）。</p>
+<h2 id="2-2-逆向双指针（从头填充-→-从尾填充，最优）"><a href="#2-2-逆向双指针（从头填充-→-从尾填充，最优）" class="headerlink" title="2.2 逆向双指针（从头填充 → 从尾填充，最优）"></a>2.2 逆向双指针（从头填充 → 从尾填充，最优）</h2><p><strong>从后往前</strong>填：<code>nums1</code> 的尾部 <code>[m+n-1]</code> 是空的（全是 0 占位），把较大元素放到尾部就不会覆盖未处理数据。</p>
+<ul>
+<li><p>三指针：<code>p1 = m-1</code>、<code>p2 = n-1</code>、<code>tail = m+n-1</code>。</p>
+</li>
+<li><p>每次比较 <code>nums1[p1]</code> 与 <code>nums2[p2]</code>，把<strong>较大者</strong>放到 <code>tail</code>，对应指针前移。</p>
+</li>
+<li><p>当 <code>p1 &lt; 0</code> 时，把 <code>nums2</code> 剩余元素拷进 nums1 头部；当 <code>p2 &lt; 0</code> 时 nums1 剩余部分本就在正确位置，无需处理。</p>
+</li>
+<li><p>时间复杂度：O(m + n)，空间复杂度：O(1)。</p>
+</li>
+</ul>
+<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">merge</span>(<span class="params"></span></span><br><span class="line"><span class="params">    <span class="attr">nums1</span>: <span class="built_in">number</span>[],</span></span><br><span class="line"><span class="params">    <span class="attr">m</span>: <span class="built_in">number</span>,</span></span><br><span class="line"><span class="params">    <span class="attr">nums2</span>: <span class="built_in">number</span>[],</span></span><br><span class="line"><span class="params">    <span class="attr">n</span>: <span class="built_in">number</span></span></span><br><span class="line"><span class="params"></span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> p1 = m - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> p2 = n - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> tail = m + n - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (p1 &gt;= <span class="number">0</span> &amp;&amp; p2 &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nums1[p1] &gt;= nums2[p2]) &#123;</span><br><span class="line">            nums1[tail--] = nums1[p1--];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            nums1[tail--] = nums2[p2--];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// nums2 还有剩余，必须拷进 nums1 前段</span></span><br><span class="line">    <span class="keyword">while</span> (p2 &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        nums1[tail--] = nums2[p2--];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// nums1 有剩余则已在正确位置，无需处理</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];</span><br><span class="line"><span class="title function_">merge</span>(a, <span class="number">3</span>, [<span class="number">2</span>, <span class="number">5</span>, <span class="number">6</span>], <span class="number">3</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// [1,2,2,3,5,6]</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
+<li><strong>核心技巧「从后往前」</strong>：同适用于「字符串原地替换 &#x2F; 删除元素」等避免覆盖的场景，是原地合并的通用思路。</li>
+<li>对比：<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">合并两个有序链表</a> 用 dummy head 顺序拼接；合并区间（Merge Intervals）则先排序再线性扫描。三者都是「有序归并」家族。</li>
+<li>追问：为什么相等时先放 nums1？任意皆可，不影响正确性，只影响稳定性表述。</li>
+<li>归并排序 merge 步骤正是此逻辑，可顺势聊排序稳定性。</li>
+</ul>
+<blockquote>
+<p>难度：简单 | LeetCode 88 | 逆向双指针 &#x2F; 归并</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/" class="post-title-link" itemprop="url">深入浅出 MCP 系列教程（四）：进阶能力</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-08 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-08T09:00:00+08:00">2026-11-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本系列共 5 篇。前三篇覆盖了协议基础、三大原语和传输层，已构成一个最简可用的 MCP 服务。本篇讲解协议里用于双向协作、安全约束、异步反馈、扩展的高阶能力：Sampling、Roots、通知体系、精细化错误模型与扩展机制。这些能力全部是<strong>可选 capability</strong>，在 <code>initialize</code> 阶段协商开启，不是必选。</p>
+</blockquote>
+<h2 id="一、Sampling-——-Server-反向调用大模型"><a href="#一、Sampling-——-Server-反向调用大模型" class="headerlink" title="一、Sampling —— Server 反向调用大模型"></a>一、Sampling —— Server 反向调用大模型</h2><p>Sampling 是 MCP 最有特色、也最容易被低估的能力。常规流程是 Host 调用 Server；Sampling 反过来，<strong>由 MCP Server 发起请求，请 Host 调用它持有的大模型，再把模型返回结果交还给 Server</strong>。</p>
+<h3 id="1-1-适用场景"><a href="#1-1-适用场景" class="headerlink" title="1.1 适用场景"></a>1.1 适用场景</h3><p>普通 function calling 是：LLM → 调用工具。Sampling 是：工具服务 → 请求 LLM 帮忙做推理。典型场景：</p>
+<ul>
+<li>代码解析 Server：拿到一段代码，请求模型做摘要、风险识别；</li>
+<li>文档 Server：读取文档后，让模型抽取要点；</li>
+<li>工单 Server：拿到工单上下文，调用模型生成初步回复；</li>
+<li>多 Agent 编排：一个 MCP Server 本身作为子 Agent，需要上层 Host 的模型能力完成子任务。</li>
+</ul>
+<blockquote>
+<p>关键约束：Sampling 不是”Server 自己持有模型 Key”。模型密钥、模型选择、上下文配额、用户权限全部在 Host 一侧。Server 只负责描述：我想要什么样的模型输出。</p>
+</blockquote>
+<h3 id="1-2-开启前提"><a href="#1-2-开启前提" class="headerlink" title="1.2 开启前提"></a>1.2 开启前提</h3><p>必须同时满足两个条件：</p>
+<ol>
+<li>Client（Host）在 <code>initialize</code> 的 <code>capabilities</code> 里声明 <code>sampling: {}</code>；</li>
+<li>Server 在响应的 <code>capabilities</code> 里声明支持接收采样请求。</li>
+</ol>
+<p>只有两边都声明，会话内才允许使用 <code>sampling/createMessage</code>。如果 Host 不支持 sampling，Server 绝对不能发起这个调用，否则收到 <code>-32601</code> 方法不存在错误。</p>
+<h3 id="1-3-请求报文（Server-→-Host）"><a href="#1-3-请求报文（Server-→-Host）" class="headerlink" title="1.3 请求报文（Server → Host）"></a>1.3 请求报文（Server → Host）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sample-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sampling/createMessage&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;请总结下面这段日志，只列出错误：\nConnection refused at port 8080&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;modelPreferences&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;hints&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-4o-mini&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;intelligencePriority&quot;</span><span class="punctuation">:</span> <span class="number">0.7</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;speedPriority&quot;</span><span class="punctuation">:</span> <span class="number">0.2</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;costPriority&quot;</span><span class="punctuation">:</span> <span class="number">0.1</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;systemPrompt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你是日志分析助手，输出简洁。&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;maxTokens&quot;</span><span class="punctuation">:</span> <span class="number">512</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;temperature&quot;</span><span class="punctuation">:</span> <span class="number">0.3</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;stopSequences&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;---&quot;</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>字段说明：</p>
+<ul>
+<li><code>messages</code>：消息数组，支持 text &#x2F; image &#x2F; resource 内容；</li>
+<li><code>modelPreferences</code>：偏好提示，<strong>不是强制</strong>。Host 可以忽略，按照用户配置、配额、可用模型自行选择；</li>
+<li><code>maxTokens</code>、<code>temperature</code>、<code>stopSequences</code>：推理参数，Host 有权限做上限拦截；</li>
+<li>没有 <code>stream</code> 参数：标准 sampling 接口默认返回完整消息，不强制流式。</li>
+</ul>
+<h3 id="1-4-Host-返回报文"><a href="#1-4-Host-返回报文" class="headerlink" title="1.4 Host 返回报文"></a>1.4 Host 返回报文</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sample-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;assistant&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;错误：8080 端口连接被拒绝&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-4o-mini&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;stopReason&quot;</span><span class="punctuation">:</span> <span class="string">&quot;endTurn&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>stopReason</code> 可选枚举：<code>endTurn</code>、<code>maxTokens</code>、<code>stopSequence</code>。</p>
+<h3 id="1-5-安全与审批流（非常重要的工程点）"><a href="#1-5-安全与审批流（非常重要的工程点）" class="headerlink" title="1.5 安全与审批流（非常重要的工程点）"></a>1.5 安全与审批流（非常重要的工程点）</h3><ol>
+<li><strong>Host 拥有最终否决权</strong>：收到 <code>sampling/createMessage</code>，Host 可以直接调用模型返回结果、弹出审批让用户确认、或直接拒绝返回错误；</li>
+<li>计费、token 消耗归属 Host；多租户 Host 必须按用户隔离统计；</li>
+<li>提示注入风险：Server 传入的 messages 属于外部不可信输入，Host 需要做边界隔离；</li>
+<li>禁止 Server 通过 sampling 绕过 Host 的安全策略，例如内容审核必须统一经过。</li>
+</ol>
+<h3 id="1-6-典型误区"><a href="#1-6-典型误区" class="headerlink" title="1.6 典型误区"></a>1.6 典型误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sampling 代表 Server 可以绕过 Host 随便调用模型</td>
+<td>Host 可以拦截、拒绝、替换模型、覆盖参数</td>
+</tr>
+<tr>
+<td>modelPreferences 是硬性要求</td>
+<td>只是建议，Host 可以无视</td>
+</tr>
+<tr>
+<td>Sampling 等同于把模型 Key 交给 Server</td>
+<td>Server 永远拿不到密钥</td>
+</tr>
+</tbody></table>
+<h2 id="二、Roots-——-资源访问边界控制"><a href="#二、Roots-——-资源访问边界控制" class="headerlink" title="二、Roots —— 资源访问边界控制"></a>二、Roots —— 资源访问边界控制</h2><p>Roots 是 MCP 内置的沙箱机制，专门约束 Resources 的读取范围，解决一个核心风险：如果 filesystem MCP Server 可以读取本机任意文件，一旦被 LLM 诱导，很容易泄露密钥、配置文件。</p>
+<p>Roots 是 <strong>Host 下发给 Server 的一组允许访问的根 URI 列表</strong>。</p>
+<h3 id="2-1-开启前提"><a href="#2-1-开启前提" class="headerlink" title="2.1 开启前提"></a>2.1 开启前提</h3><p>握手时 Client（Host）声明 <code>roots: {}</code> 能力，Server 识别之后就必须遵守 Host 下发的根列表。Roots 属于 Host → Server 的单向配置，由 Host 主动推送通知，不是一次性握手参数。</p>
+<h3 id="2-2-下发通知"><a href="#2-2-下发通知" class="headerlink" title="2.2 下发通知"></a>2.2 下发通知</h3><p>这是一条通知（无 id），Host 在握手完成之后随时可以推送，包括后续动态更新权限：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/roots/list_changed&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;roots&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///home/user/work&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;工作目录&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>uri</code>：根地址；<code>name</code>：人类可读备注；</li>
+<li>可以下发多个 roots；空数组代表：不允许访问任何资源。</li>
+</ul>
+<p>Server 收到通知后，更新自己的访问白名单。</p>
+<h3 id="2-3-校验规则"><a href="#2-3-校验规则" class="headerlink" title="2.3 校验规则"></a>2.3 校验规则</h3><p>Server 需要判断：目标 URI 是否以其中一个 root URI 为前缀（按 URI 语义，不是简单字符串 startsWith）。</p>
+<p>允许 root：<code>file:///home/user/work</code></p>
+<ul>
+<li>✅ <code>file:///home/user/work/readme.md</code></li>
+<li>✅ <code>file:///home/user/work/src/index.js</code></li>
+<li>❌ <code>file:///home/user/.ssh/id_rsa</code>（不在根下）</li>
+<li>❌ <code>file:///etc/passwd</code></li>
+</ul>
+<blockquote>
+<p>校验是 Server 的责任，协议约定 Server 主动拒绝越界访问；Host 也可以叠加一层校验作为第二层防线。</p>
+</blockquote>
+<h3 id="2-4-动态变更"><a href="#2-4-动态变更" class="headerlink" title="2.4 动态变更"></a>2.4 动态变更</h3><p>Host 在会话存活期间可以多次推送 <code>roots/list_changed</code>：增加目录、删除目录、替换成全新列表、设置为空冻结所有资源读取。</p>
+<p>典型场景：用户在客户端 UI 里勾选&#x2F;取消允许访问的文件夹，Host 立刻推送更新给 filesystem server。</p>
+<h3 id="2-5-适用范围与局限"><a href="#2-5-适用范围与局限" class="headerlink" title="2.5 适用范围与局限"></a>2.5 适用范围与局限</h3><ul>
+<li>Roots 主要面向 <code>file://</code>，但语义上是通用 URI，<code>postgres://</code>、<code>git://</code> 等 scheme 也可以实现自己的 root 校验；</li>
+<li>Roots <strong>只约束 Resources</strong>，协议层面不强制约束 Tools；工具的权限校验需要 Server &#x2F; Host 单独实现；</li>
+<li>Roots 是语义约定，不是操作系统级沙箱；恶意实现的 Server 可以无视，所以 Host 仍需要不信任不受控的第三方 MCP Server。</li>
+</ul>
+<h2 id="三、完整通知体系"><a href="#三、完整通知体系" class="headerlink" title="三、完整通知体系"></a>三、完整通知体系</h2><p>MCP 大量异步事件依靠 Notification（不带 id，不需要回复）。通知分为两类：</p>
+<ul>
+<li><strong>标准通知</strong>：协议规范内定义，所有兼容实现语义统一；</li>
+<li><strong>自定义通知</strong>：以 <code>x-</code> 前缀，用于业务扩展。</li>
+</ul>
+<h3 id="3-1-会话基础通知"><a href="#3-1-会话基础通知" class="headerlink" title="3.1 会话基础通知"></a>3.1 会话基础通知</h3><ol>
+<li><code>initialized</code>：Client → Server，握手完成；</li>
+<li><code>notifications/roots/list_changed</code>：Host → Server，根目录权限更新。</li>
+</ol>
+<h3 id="3-2-Resources-相关通知"><a href="#3-2-Resources-相关通知" class="headerlink" title="3.2 Resources 相关通知"></a>3.2 Resources 相关通知</h3><p><code>notifications/resources/updated</code>：Server → Host，某个已订阅的资源发生变更。</p>
+<blockquote>
+<p>再次强调：通知只代表”变了”，不会携带新内容；Host 需要最新内容时主动调用 <code>resources/read</code>。</p>
+</blockquote>
+<h3 id="3-3-Tools-Prompts-列表变更通知"><a href="#3-3-Tools-Prompts-列表变更通知" class="headerlink" title="3.3 Tools &#x2F; Prompts 列表变更通知"></a>3.3 Tools &#x2F; Prompts 列表变更通知</h3><p><code>notifications/tools/list_changed</code>：Server → Host，可用工具列表动态变化。适用场景：Server 的工具根据登录用户、配置、插件加载动态增减。Host 收到通知后主动调用 <code>tools/list</code> 刷新缓存。同理有 <code>notifications/prompts/list_changed</code>。</p>
+<h3 id="3-4-运行时反馈通知（日志-进度）"><a href="#3-4-运行时反馈通知（日志-进度）" class="headerlink" title="3.4 运行时反馈通知（日志 + 进度）"></a>3.4 运行时反馈通知（日志 + 进度）</h3><p><strong>日志通知</strong> <code>notifications/logging/message</code>：Server 把结构化日志推送给 Host，在 UI 展示日志面板：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/logging/message&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;level&quot;</span><span class="punctuation">:</span> <span class="string">&quot;info&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;logger&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git-server&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="string">&quot;开始拉取远程分支&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-11-22T10:00:00Z&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>level 取值：<code>debug</code> &#x2F; <code>info</code> &#x2F; <code>warning</code> &#x2F; <code>error</code>。stdio 模式下 stderr 日志和协议内 logging 通知可以共存。</p>
+<p><strong>进度通知</strong> <code>notifications/progress</code>：用于长时间任务（大文件扫描、批量导入、数据库备份），给前端进度条：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/progress&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;progressToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;job-001&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;progress&quot;</span><span class="punctuation">:</span> <span class="number">0.4</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="number">100</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;已扫描 40/100 文件&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>progressToken</code>：任务令牌，由发起请求的一方生成，绑定这个任务；</li>
+<li><code>progress</code>：0~1 比例；<code>total</code>：可选总量。</li>
+</ul>
+<p>进度通知是非常重要的用户体验能力：没有它，Host 只能傻傻等待，不知道工具是不是卡死。</p>
+<h3 id="3-5-通知的通用约束"><a href="#3-5-通知的通用约束" class="headerlink" title="3.5 通知的通用约束"></a>3.5 通知的通用约束</h3><ol>
+<li>通知不保证送达、不保证顺序（网络代理、重连会丢）；</li>
+<li>通知不要求应答，接收方可以选择忽略；</li>
+<li>通知不能用来传递核心返回结果，结果必须放在 Response；</li>
+<li>会话断开之后，所有未送达通知全部丢弃，重连不会补发历史通知。</li>
+</ol>
+<h2 id="四、精细化错误模型"><a href="#四、精细化错误模型" class="headerlink" title="四、精细化错误模型"></a>四、精细化错误模型</h2><h3 id="4-1-三层错误"><a href="#4-1-三层错误" class="headerlink" title="4.1 三层错误"></a>4.1 三层错误</h3><ol>
+<li><strong>传输层错误</strong>：连接断开、解析失败、缓冲区溢出、HTTP 401&#x2F;404，由传输层向上抛出；</li>
+<li><strong>JSON-RPC 标准错误</strong>：协议方法层面错误；</li>
+<li><strong>业务语义错误</strong>：方法存在、参数合法，但业务执行失败（数据库查询失败、文件不存在、权限不足）。</li>
+</ol>
+<p>标准 JSON-RPC 错误码：</p>
+<table>
+<thead>
+<tr>
+<th>code</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-32600</td>
+<td>Invalid Request：消息格式非法</td>
+</tr>
+<tr>
+<td>-32601</td>
+<td>Method not found：方法不存在，或能力没有协商开启</td>
+</tr>
+<tr>
+<td>-32602</td>
+<td>Invalid params：参数不符合 schema &#x2F; 必填缺失</td>
+</tr>
+<tr>
+<td>-32603</td>
+<td>Internal error：服务内部异常</td>
+</tr>
+<tr>
+<td>-32700</td>
+<td>Parse error：JSON 解析失败</td>
+</tr>
+</tbody></table>
+<p>业务自定义错误：官方建议从 <code>-32000</code> 开始分配，不要占用预留段。</p>
+<h3 id="4-2-错误携带附加数据"><a href="#4-2-错误携带附加数据" class="headerlink" title="4.2 错误携带附加数据"></a>4.2 错误携带附加数据</h3><p>error 对象可以增加 <code>data</code> 字段，携带结构化附加信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;res-read-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">-32001</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;访问超出根目录范围&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;requestedUri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///etc/passwd&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowedRoots&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;file:///home/user/work&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Host 可以读取 <code>data</code>，给用户展示更友好的报错、告警。</p>
+<h3 id="4-3-错误处理策略（工程最佳实践）"><a href="#4-3-错误处理策略（工程最佳实践）" class="headerlink" title="4.3 错误处理策略（工程最佳实践）"></a>4.3 错误处理策略（工程最佳实践）</h3><ul>
+<li>Parse error：直接丢弃这条消息，打日志，会话继续；</li>
+<li>Method not found：代表能力协商不一致，Host 应当停止调用该系列接口；</li>
+<li>业务执行失败：把错误文本原样送入 LLM，让模型感知失败，进行重试或调整策略；</li>
+<li>致命内部错误：Server 可以主动关闭会话；stdio 模式一般直接退出进程。</li>
+</ul>
+<blockquote>
+<p>一个坑：不要把业务异常做成通知；调用失败必须返回 error response，不能只发一条日志通知了事。发起方需要知道调用结果。</p>
+</blockquote>
+<h2 id="五、协议版本与扩展机制"><a href="#五、协议版本与扩展机制" class="headerlink" title="五、协议版本与扩展机制"></a>五、协议版本与扩展机制</h2><p>MCP 的扩展哲学：<strong>优先能力协商，而不是版本号强绑定；标准之外允许自定义扩展，但有严格命名规范</strong>。</p>
+<h3 id="5-1-protocolVersion"><a href="#5-1-protocolVersion" class="headerlink" title="5.1 protocolVersion"></a>5.1 protocolVersion</h3><p><code>initialize</code> 里的 <code>protocolVersion</code>，当前稳定版本 <code>0.1.0</code>。版本兼容规则：</p>
+<ul>
+<li>主版本变更代表不兼容；次版本、补丁版本向后兼容；</li>
+<li>Server 收到不支持的主版本，可以拒绝握手；</li>
+<li>新增能力走 capabilities，而不是靠升级版本号强制开启。</li>
+</ul>
+<p>同一个版本号内，可以出现”有的 Server 支持 sampling，有的不支持”，靠能力交集区分，而不是版本。</p>
+<h3 id="5-2-扩展命名规范（强制）"><a href="#5-2-扩展命名规范（强制）" class="headerlink" title="5.2 扩展命名规范（强制）"></a>5.2 扩展命名规范（强制）</h3><p>所有不属于官方标准的 method、通知，必须加前缀 <code>x-</code>：</p>
+<ul>
+<li>✅ <code>x-query-metrics</code>（自定义请求）</li>
+<li>✅ <code>notifications/x-job-finished</code>（自定义通知）</li>
+<li>❌ <code>query-metrics</code>（无前缀，未来官方如果新增同名方法，直接冲突）</li>
+</ul>
+<h3 id="5-3-自定义方法的限制"><a href="#5-3-自定义方法的限制" class="headerlink" title="5.3 自定义方法的限制"></a>5.3 自定义方法的限制</h3><ul>
+<li>自定义方法同样走 JSON-RPC request &#x2F; response；</li>
+<li>自定义能力<strong>不能</strong>在顶层 capabilities 里随便新增；如果需要协商是否支持某个扩展，两种方案：在标准 tools 里封装成工具；或用一个自定义 <code>x-capabilities</code> 通知交换扩展支持列表；</li>
+<li>自定义扩展只在自己的 Host &#x2F; Server 生态互通；通用客户端（Claude Desktop）会忽略不认识的 x-* 接口。</li>
+</ul>
+<h3 id="5-4-什么时候适合扩展"><a href="#5-4-什么时候适合扩展" class="headerlink" title="5.4 什么时候适合扩展"></a>5.4 什么时候适合扩展</h3><p>适合：企业内部专属运维指令、任务状态查询；专属流式传输、大文件分片；内部审计、特权接口。</p>
+<p>不适合：需求具备通用性时应优先提官方规范提案，而不是自己造私有 method；也不要用自定义 method 重新实现已经存在的原语。</p>
+<h2 id="六、进阶能力组合实战"><a href="#六、进阶能力组合实战" class="headerlink" title="六、进阶能力组合实战"></a>六、进阶能力组合实战</h2><p>场景：一个带采样、roots、进度、动态工具列表的文件分析 MCP Server。</p>
+<ol>
+<li>Host 和 Server 握手，双方同时开启 <code>tools</code>、<code>resources(subscribe)</code>、<code>sampling</code>、<code>roots</code>；</li>
+<li>Host 下发 roots：只允许访问 <code>file:///work</code>；</li>
+<li>Host 调用 <code>tools/list</code>，拿到扫描工具；Server 插件加载完成后推送 <code>notifications/tools/list_changed</code>；</li>
+<li>Host 调用 <code>tools/call</code> 启动批量日志扫描；</li>
+<li>Server 持续推送 <code>notifications/progress</code> 进度；</li>
+<li>Server 在扫描中发现一段日志，发起 <code>sampling/createMessage</code>，请求 Host 的模型做风险识别；</li>
+<li>Host 返回模型结果，Server 继续处理；</li>
+<li>某个日志文件变更，Server 推送 <code>notifications/resources/updated</code>；</li>
+<li>用户取消文件夹权限，Host 推送 <code>roots/list_changed</code>，Server 立刻拒绝后续越界读取。</li>
+</ol>
+<p>这一套组合，就是企业落地里真正有生产力的 MCP 形态，而不只是简单调用工具。</p>
+<h2 id="七、第四篇小结与高频误区"><a href="#七、第四篇小结与高频误区" class="headerlink" title="七、第四篇小结与高频误区"></a>七、第四篇小结与高频误区</h2><h3 id="核心复盘"><a href="#核心复盘" class="headerlink" title="核心复盘"></a>核心复盘</h3><ol>
+<li>Sampling：反向推理，Server 请求 Host 的 LLM；Host 掌握审批、模型选择、配额；</li>
+<li>Roots：Host 下发资源白名单，由 Server 执行 URI 前缀校验，作为资源沙箱；</li>
+<li>通知体系：资源更新、工具列表变更、结构化日志、进度条，全部是异步无应答事件；通知只做提醒，不携带返回数据；</li>
+<li>错误分层：传输错误、标准 JSON-RPC 错误、业务错误；业务错误可以附带结构化 data；</li>
+<li>扩展原则：依靠 capabilities 做兼容；私有接口必须 <code>x-</code> 前缀。</li>
+</ol>
+<h3 id="高频误区"><a href="#高频误区" class="headerlink" title="高频误区"></a>高频误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Roots 可以限制工具的文件写入</td>
+<td>Roots 只约定 Resources；工具权限需要单独管控</td>
+</tr>
+<tr>
+<td>sampling 请求过来，Host 必须调用模型</td>
+<td>Host 有权拒绝、审批、替换参数</td>
+</tr>
+<tr>
+<td>收到 resources&#x2F;updated 就自动拿到新内容</td>
+<td>通知只是提醒，必须主动 resources&#x2F;read</td>
+</tr>
+<tr>
+<td>自定义方法可以不加前缀</td>
+<td>非标准 method &#x2F; notification 必须使用 <code>x-</code> 前缀</td>
+</tr>
+<tr>
+<td>进度通知可以作为任务完成标记</td>
+<td>进度只是反馈；任务成功&#x2F;失败仍依靠 tools&#x2F;call 的 response 或 error</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇（系列完结篇）：《深入浅出 MCP 系列教程（五）：工程落地与选型》，将讲解 SDK 上手、安全模型、网关架构、可观测性，以及 MCP 与 Function Calling &#x2F; Agent 框架 &#x2F; A2A 的对比与选型决策。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/" class="post-title-link" itemprop="url">深入浅出 MCP 系列教程（三）：传输层实战</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-06 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-06T09:00:00+08:00">2026-11-06</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本系列共 5 篇。前两篇讲解了协议基础与三大核心原语，本篇讲解传输层：协议报文如何在进程之间、跨机器网络上传递。覆盖 stdio 与 Streamable HTTP 两种官方传输的完整规范、握手流程、鉴权、会话管理与高频坑点。</p>
+</blockquote>
+<h2 id="一、传输层与协议层的边界"><a href="#一、传输层与协议层的边界" class="headerlink" title="一、传输层与协议层的边界"></a>一、传输层与协议层的边界</h2><p>先建立一条最重要的分界线：</p>
+<ul>
+<li><strong>协议层</strong>：规定消息结构、method、字段、会话顺序、capability 协商；报文本身和”怎么走”无关；</li>
+<li><strong>传输层</strong>：只负责字节流的打包、分割、投递、保序、连接维持；传输层<strong>不理解</strong> <code>tools/call</code>、<code>resources/read</code> 的业务含义。</li>
+</ul>
+<p>一条核心推论：只要能把 JSON-RPC 消息可靠、有序地双向投递，理论上就可以实现自定义传输（WebSocket、Unix Socket、串口等），只是官方只标准化 stdio 和 Streamable HTTP。</p>
+<h3 id="传输层必须保证的最小契约"><a href="#传输层必须保证的最小契约" class="headerlink" title="传输层必须保证的最小契约"></a>传输层必须保证的最小契约</h3><ol>
+<li><strong>消息边界可识别</strong>：接收方可以精准切分出一条条独立的 JSON-RPC 对象；</li>
+<li><strong>顺序</strong>：同一连接上发送顺序和接收顺序一致（流保序）；</li>
+<li><strong>双向</strong>：Client ↔ Server 都可以主动发消息（通知、反向 sampling 请求）；</li>
+<li><strong>连接断开感知</strong>：上层协议收到断开事件，自动销毁会话、订阅、状态。</li>
+</ol>
+<h3 id="传输层不负责"><a href="#传输层不负责" class="headerlink" title="传输层不负责"></a>传输层不负责</h3><p>版本兼容、capability 校验、业务权限过滤、报文 Schema 校验、消息重试（重试是上层业务逻辑）。</p>
+<h2 id="二、stdio-传输（本地子进程传输）"><a href="#二、stdio-传输（本地子进程传输）" class="headerlink" title="二、stdio 传输（本地子进程传输）"></a>二、stdio 传输（本地子进程传输）</h2><p>stdio 是本地场景默认、最简单、目前生态最成熟的传输方式。典型场景：Claude Desktop、本地 IDE 插件在本机启动一个独立子进程作为 MCP Server。</p>
+<h3 id="2-1-整体模型"><a href="#2-1-整体模型" class="headerlink" title="2.1 整体模型"></a>2.1 整体模型</h3><p>Host（Client）使用进程创建 API（spawn &#x2F; fork）启动 Server 可执行文件，绑定三个标准流：</p>
+<ul>
+<li><code>stdin</code>：Client → Server，发给 Server 的所有 JSON-RPC 请求、通知；</li>
+<li><code>stdout</code>：Server → Client，返回的响应、推送通知；</li>
+<li><code>stderr</code>：独立日志流，<strong>不属于 MCP 协议通道</strong>。</li>
+</ul>
+<h3 id="2-2-消息分割规则：JSON-Lines（JSONL）"><a href="#2-2-消息分割规则：JSON-Lines（JSONL）" class="headerlink" title="2.2 消息分割规则：JSON Lines（JSONL）"></a>2.2 消息分割规则：JSON Lines（JSONL）</h3><p>stdio 是无边界字节流，约定：<strong>每一条独立的 JSON-RPC 消息单独占一行，以换行符 <code>\n</code> 作为消息分隔符</strong>。每一行 &#x3D; 一条完整 JSON 对象，不能把一条消息拆成多行，也不能一行塞多条消息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;init-001&quot;,&quot;method&quot;:&quot;initialize&quot;,&quot;params&quot;:&#123;...&#125;&#125;\n</span><br><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;init-001&quot;,&quot;result&quot;:&#123;...&#125;&#125;\n</span><br><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;initialized&quot;,&quot;params&quot;:&#123;&#125;&#125;\n</span><br></pre></td></tr></table></figure>
+
+<p>接收方逻辑：持续读流，按 <code>\n</code> 切分行；对每一行 trim 后尝试 JSON parse；解析失败视为传输坏消息，上报日志、丢弃该行，不直接杀死整个会话。</p>
+<h3 id="2-3-stderr-的严格约定（最经典的坑）"><a href="#2-3-stderr-的严格约定（最经典的坑）" class="headerlink" title="2.3 stderr 的严格约定（最经典的坑）"></a>2.3 stderr 的严格约定（最经典的坑）</h3><p>Server 绝对不可以把协议消息输出到 stderr；同时，Server 不能随便往 stdout 打印调试日志。</p>
+<ul>
+<li>✅ stdout：只输出合法、单行 JSON-RPC</li>
+<li>✅ stderr：日志、调试、报错、堆栈</li>
+<li>❌ 错误写法：在 Server 代码里随便 <code>console.log(&quot;开始启动&quot;)</code>，这条文本会混进 stdout，破坏 JSONL 流，导致 Client 解析报错、握手直接失败</li>
+</ul>
+<p>新手最常见故障：启动 Server 后 Client 一直卡在初始化，报 JSON parse error，根源就是 Server 在 stdout 打了非 JSON 的调试文本。</p>
+<h3 id="2-4-进程生命周期与会话绑定"><a href="#2-4-进程生命周期与会话绑定" class="headerlink" title="2.4 进程生命周期与会话绑定"></a>2.4 进程生命周期与会话绑定</h3><p>stdio 模式：<strong>一个进程实例对应唯一一条 MCP 会话</strong>。</p>
+<ul>
+<li>Client 启动进程 → 开启会话；进程退出（正常 exit、崩溃、被 kill），流直接关闭，会话销毁，所有订阅、状态全部丢失；</li>
+<li>想重新会话必须重新 spawn 全新进程，从头走完整握手；</li>
+<li>Client 一般通过 <code>SIGTERM</code> 请求 Server 优雅退出；如果 Client 先退出，子进程可能变成孤儿进程，好的实现要做进程组托管。</li>
+</ul>
+<h3 id="2-5-配置传递"><a href="#2-5-配置传递" class="headerlink" title="2.5 配置传递"></a>2.5 配置传递</h3><p>启动子进程时，Client 通过命令行参数 + 环境变量给 Server 传递配置（数据库连接串、文件根目录、密钥、配置路径），而不是通过 MCP 报文。敏感密钥放环境变量比命令行稍微安全一点（命令行在进程列表更容易被看到），但仍然不是安全远程方案，stdio 仅限本机。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cp = <span class="title function_">spawn</span>(<span class="string">&quot;mcp-fileserver&quot;</span>, [], &#123;</span><br><span class="line">  <span class="attr">env</span>: &#123; <span class="attr">ROOT</span>: <span class="string">&quot;/home/user/docs&quot;</span> &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// cp.stdin -&gt; 发消息</span></span><br><span class="line"><span class="comment">// cp.stdout -&gt; 读消息</span></span><br><span class="line"><span class="comment">// cp.stderr -&gt; 单独收集日志</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-优缺点与适用边界"><a href="#2-6-优缺点与适用边界" class="headerlink" title="2.6 优缺点与适用边界"></a>2.6 优缺点与适用边界</h3><p>优点：</p>
+<ul>
+<li>零网络配置、不需要端口、不需要鉴权；</li>
+<li>生态成熟，绝大多数开源 MCP Server 默认支持；</li>
+<li>隔离天然：每个 Server 独立进程，崩溃不会直接搞崩 Host。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><strong>只能本机使用</strong>，不能跨机器；</li>
+<li>进程启动有冷启动开销；进程管理复杂（僵尸进程、卡死进程）；</li>
+<li>大流量场景下流阻塞风险（缓冲区满，互相卡住）。</li>
+</ul>
+<h3 id="2-7-stdio-高频坑清单"><a href="#2-7-stdio-高频坑清单" class="headerlink" title="2.7 stdio 高频坑清单"></a>2.7 stdio 高频坑清单</h3><ol>
+<li>平台换行符：Windows <code>\r\n</code>，解析时必须同时兼容；</li>
+<li>缓冲区：部分语言标准库会做行缓冲&#x2F;块缓冲，stdout 没有自动 flush，消息会卡在缓冲区不发出去（Python &#x2F; C++ 实现常踩）；</li>
+<li>二进制内容：blob base64 放在 JSON 内部，而不是直接裸流；</li>
+<li>不要在初始化之前就输出任何 stdout；</li>
+<li>超长单行 JSON 注意解析内存上限，防止超大报文 OOM。</li>
+</ol>
+<h2 id="三、Streamable-HTTP（远程网络传输）"><a href="#三、Streamable-HTTP（远程网络传输）" class="headerlink" title="三、Streamable HTTP（远程网络传输）"></a>三、Streamable HTTP（远程网络传输）</h2><p>当 MCP Server 不在本机，跑在内网另一台机器、云端容器，就需要 Streamable HTTP。它是官方标准化的远程传输方案，核心是：<strong>HTTP POST 上行 + SSE（Server-Sent Events）下行</strong>。</p>
+<p>为什么不用 WebSocket？官方设计选择：复用 HTTP 基础设施、更容易穿过反向代理、防火墙、鉴权中间件，同时保持双向消息通道。</p>
+<h3 id="3-1-架构总览"><a href="#3-1-架构总览" class="headerlink" title="3.1 架构总览"></a>3.1 架构总览</h3><p>两条独立逻辑通道，复用同一个 HTTP 服务：</p>
+<ol>
+<li><p><strong>上行通道（Client → Server）：POST 请求</strong><br>Client 把 JSON-RPC 消息放在 POST body 发给服务端点；服务返回 202 Accepted（接收成功）或错误码。</p>
+</li>
+<li><p><strong>下行通道（Server → Client）：SSE 长连接</strong><br>Client 发起一个 GET 请求，请求头 <code>Accept: text/event-stream</code>，建立 SSE；之后 Server 通过这个流持续推送响应、通知、sampling 请求。</p>
+</li>
+</ol>
+<blockquote>
+<p>关键点：两条通道解耦，靠一个会话标识符绑定在一起。</p>
+</blockquote>
+<h3 id="3-2-会话-ID（sessionId）"><a href="#3-2-会话-ID（sessionId）" class="headerlink" title="3.2 会话 ID（sessionId）"></a>3.2 会话 ID（sessionId）</h3><p>Streamable HTTP 的核心是 <code>sessionId</code>：</p>
+<ul>
+<li>Client 在握手阶段和服务协商得到一个 <code>sessionId</code>；</li>
+<li>后续所有 POST 上行请求、SSE 下行连接都必须带上它；</li>
+<li>Server 用 sessionId 把不同 HTTP 请求归到同一个 MCP 会话；</li>
+<li>sessionId 是服务端生成的不透明字符串，通常放在 HTTP header。</li>
+</ul>
+<p>对比 stdio：stdio 天然一个进程 &#x3D; 一个会话；HTTP 传输是无状态协议，必须用 sessionId 绑定会话上下文、订阅、能力协商结果。</p>
+<h3 id="3-3-完整握手流程"><a href="#3-3-完整握手流程" class="headerlink" title="3.3 完整握手流程"></a>3.3 完整握手流程</h3><ol>
+<li>Client 发起初始化请求，请求建立会话；</li>
+<li>Server 生成唯一 <code>sessionId</code> 返回；</li>
+<li>Client 使用这个 sessionId，打开 SSE GET 长连接，用于接收下行消息；</li>
+<li>Client 在同一会话内，通过 POST 发送第一条 <code>initialize</code> JSON-RPC 请求；</li>
+<li>Server 在 SSE 流返回 initialize 响应；</li>
+<li>Client 收到响应后，继续 POST 发送 <code>initialized</code> 通知；</li>
+<li>握手完成，进入正常交互：Client 所有往外发的消息走 POST；Server 所有往外推送走 SSE；</li>
+<li>SSE 断开：Client 携带同一个 sessionId 重连；服务端会话可配置超时保留，避免每次断连全部重建。</li>
+</ol>
+<blockquote>
+<p>MCP 协议层的握手顺序（initialize → 等待响应 → initialized）完全不变，只是报文承载在 HTTP&#x2F;SSE 上。</p>
+</blockquote>
+<h3 id="3-4-SSE-事件格式"><a href="#3-4-SSE-事件格式" class="headerlink" title="3.4 SSE 事件格式"></a>3.4 SSE 事件格式</h3><p>每一条 MCP JSON-RPC 消息封装成一个 event，event name 一般为 <code>message</code>，<code>data</code> 字段存放 JSON 字符串：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">event: message</span><br><span class="line">data: &#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;init-001&quot;,&quot;result&quot;:&#123;&quot;protocolVersion&quot;:&quot;0.1.0&quot;,...&#125;&#125;</span><br><span class="line"></span><br><span class="line">event: message</span><br><span class="line">data: &#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;notifications/resources/updated&quot;,&quot;params&quot;:&#123;&quot;uri&quot;:&quot;file:///demo.txt&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SSE 自带 <code>retry</code> 字段，通知 Client 断线之后等待多久重试连接，刚好适配重连逻辑。</p>
+<h3 id="3-5-上行-POST-请求规范"><a href="#3-5-上行-POST-请求规范" class="headerlink" title="3.5 上行 POST 请求规范"></a>3.5 上行 POST 请求规范</h3><ul>
+<li>Content-Type：<code>application/json</code></li>
+<li>Body：单条 JSON-RPC 对象（官方不鼓励 batch）</li>
+<li>Header：携带 <code>Mcp-Session-Id: xxx</code></li>
+<li>成功接收：返回 <code>202 Accepted</code>，<strong>不把响应放在这个 POST 的 body；响应一定从 SSE 返回</strong></li>
+<li>参数非法、session 不存在：返回 400 &#x2F; 401 &#x2F; 404 &#x2F; 429 等 HTTP 状态码</li>
+</ul>
+<blockquote>
+<p>这是很多人理解偏差的地方：POST 只是”投递消息”，不是 RPC 同步等待返回；返回走 SSE。</p>
+</blockquote>
+<h3 id="3-6-鉴权方案"><a href="#3-6-鉴权方案" class="headerlink" title="3.6 鉴权方案"></a>3.6 鉴权方案</h3><p>官方没有内置一套 auth，而是复用 HTTP 标准鉴权：</p>
+<ol>
+<li><strong>Bearer Token（最常用）</strong>：<code>Authorization: Bearer xxx</code>；</li>
+<li><strong>API Key</strong>：header &#x2F; query 参数；</li>
+<li><strong>OAuth2 &#x2F; OIDC</strong>：适合企业 SSO；</li>
+<li><strong>mTLS</strong>：机器间可信通信，高安全内网。</li>
+</ol>
+<p>安全提醒：</p>
+<ul>
+<li>绝对不要用 URL query 放长期密钥，日志容易泄露；优先 Authorization header；</li>
+<li><strong>sessionId ≠ 身份凭证</strong>：sessionId 只是会话句柄，鉴权独立于会话；</li>
+<li>服务端要做：会话超时、闲置回收、主动失效（登出）、限流。</li>
+</ul>
+<h3 id="3-7-重连、心跳、会话超时"><a href="#3-7-重连、心跳、会话超时" class="headerlink" title="3.7 重连、心跳、会话超时"></a>3.7 重连、心跳、会话超时</h3><p>网络传输一定会断：WiFi 切换、代理重启、负载均衡切流。标准实现策略：</p>
+<ol>
+<li>SSE 客户端监听 error &#x2F; close 事件，按服务给出的 retry 间隔重试；</li>
+<li>会话还在有效期：重连后继续接收消息，不需要重新走 MCP initialize；</li>
+<li>会话已超时销毁：重连失败，必须全新创建 session、完整重新握手；</li>
+<li>心跳：可用自定义 notification 双向心跳，探测对端是否存活；</li>
+<li>服务端策略：闲置 N 分钟销毁会话，释放订阅、文件句柄、数据库连接。</li>
+</ol>
+<h3 id="3-8-优缺点"><a href="#3-8-优缺点" class="headerlink" title="3.8 优缺点"></a>3.8 优缺点</h3><p>优点：</p>
+<ul>
+<li>支持跨机器、跨网络、云端部署；可放在反向代理、负载均衡后面；</li>
+<li>天然支持标准 HTTP 鉴权、限流、日志、审计；</li>
+<li>Host 和 Server 可以独立扩缩容。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>架构复杂很多，需要管理 session、SSE、超时、重连；</li>
+<li>网络延迟高于本地 stdio；</li>
+<li>防火墙、代理可能截断长 SSE 连接（很多代理默认有长连接超时）；</li>
+<li>状态托管在服务端，内存、连接资源成本更高。</li>
+</ul>
+<h2 id="四、两种传输选型与网关模式"><a href="#四、两种传输选型与网关模式" class="headerlink" title="四、两种传输选型与网关模式"></a>四、两种传输选型与网关模式</h2><h3 id="4-1-选型对照表"><a href="#4-1-选型对照表" class="headerlink" title="4.1 选型对照表"></a>4.1 选型对照表</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>stdio</th>
+<th>Streamable HTTP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>部署位置</td>
+<td>本机子进程</td>
+<td>内网&#x2F;云端远程</td>
+</tr>
+<tr>
+<td>鉴权</td>
+<td>不需要（本机信任）</td>
+<td>必须设计鉴权</td>
+</tr>
+<tr>
+<td>会话绑定</td>
+<td>进程绑定</td>
+<td>sessionId 绑定</td>
+</tr>
+<tr>
+<td>双向通道</td>
+<td>stdin&#x2F;stdout 流</td>
+<td>POST + SSE</td>
+</tr>
+<tr>
+<td>重连</td>
+<td>断了就销毁，重启进程</td>
+<td>支持会话重连</td>
+</tr>
+<tr>
+<td>适合场景</td>
+<td>桌面客户端、本地 IDE、单机工具</td>
+<td>企业共享 MCP 服务、云 MCP、多客户端共用</td>
+</tr>
+</tbody></table>
+<p>简单选型口诀：</p>
+<ul>
+<li>只给自己本机用 → stdio；</li>
+<li>多个用户、多台机器共享一套 MCP 能力 → Streamable HTTP；</li>
+<li>混合架构：本地 Host 通过 Streamable HTTP 接入内网中心 MCP 网关，网关再内部调用多个 stdio 本地服务。</li>
+</ul>
+<h3 id="4-2-MCP-网关模式（企业常用）"><a href="#4-2-MCP-网关模式（企业常用）" class="headerlink" title="4.2 MCP 网关模式（企业常用）"></a>4.2 MCP 网关模式（企业常用）</h3><p>企业落地经常不会让 Host 直连各个后端 MCP Server，而是加一层网关：</p>
+<ul>
+<li>Host 只对接网关（Streamable HTTP）；</li>
+<li>网关负责鉴权、路由、限流、审计；</li>
+<li>网关背后可以同时对接 stdio 本地服务、远端 HTTP MCP 服务；</li>
+<li>网关做能力聚合：把多个后端 Server 的 tools &#x2F; resources 合并，对外统一入口；</li>
+<li>网关做权限裁剪：同一个后端 Server，不同用户看到不同工具白名单。</li>
+</ul>
+<p>网关是传输层和安全层的组合，协议本身没有网关规范，属于上层工程模式。</p>
+<h2 id="五、传输层通用异常处理"><a href="#五、传输层通用异常处理" class="headerlink" title="五、传输层通用异常处理"></a>五、传输层通用异常处理</h2><p>不管哪种传输，都要处理这些共性问题：</p>
+<ol>
+<li><strong>消息超限</strong>：单条 JSON 过大，应拒绝并断开或截断，防止内存耗尽；</li>
+<li><strong>乱序、丢消息</strong>：stdio 流保序；HTTP+SSE 在代理异常场景可能丢推送，应用层可增加 sequence 序号做确认（协议层不强制）；</li>
+<li><strong>背压</strong>：Server 处理慢、Client 持续高速发消息，缓冲区堆积；实现需要背压控制，暂停读&#x2F;写流；</li>
+<li><strong>消息解析错误</strong>：一般策略是丢弃这条消息、打日志、不直接杀死整个会话；</li>
+<li><strong>通道半开</strong>：一边认为连接正常，另一边已经断开；心跳机制解决。</li>
+</ol>
+<p>限流位置：stdio 一般在进程内部做；Streamable HTTP 可以在反向代理、网关、服务端多级限流，按 token、session、用户维度。</p>
+<h2 id="六、第三篇小结与高频误区"><a href="#六、第三篇小结与高频误区" class="headerlink" title="六、第三篇小结与高频误区"></a>六、第三篇小结与高频误区</h2><h3 id="核心复盘"><a href="#核心复盘" class="headerlink" title="核心复盘"></a>核心复盘</h3><ol>
+<li>传输层只负责投递字节，不感知业务 method；协议报文可以在 stdio 和 Streamable HTTP 之间无缝迁移；</li>
+<li>stdio 依靠进程 + JSONL，stderr 隔离日志；最大坑点是 stdout 不能随便打印；会话和进程生命周期绑定；</li>
+<li>Streamable HTTP 使用 POST 上行、SSE 下行，依靠 sessionId 维持会话；鉴权复用 HTTP 体系；</li>
+<li>远程场景天然带来会话超时、重连、鉴权、代理长连接超时等工程问题。</li>
+</ol>
+<h3 id="高频误区"><a href="#高频误区" class="headerlink" title="高频误区"></a>高频误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST 请求会直接返回 tool 结果</td>
+<td>POST 只是投递消息；响应、推送全部从 SSE 返回</td>
+</tr>
+<tr>
+<td>sessionId 是鉴权令牌</td>
+<td>sessionId 只是会话句柄；鉴权独立</td>
+</tr>
+<tr>
+<td>stdio 可以跨机器远程调用</td>
+<td>stdio 是本机子进程机制，不适合远程</td>
+</tr>
+<tr>
+<td>SSE 是双向通道</td>
+<td>SSE 只能下行；上行依赖独立 POST</td>
+</tr>
+<tr>
+<td>切换传输需要修改 tools&#x2F;resources 报文结构</td>
+<td>协议报文不变，只改投递方式</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇：《深入浅出 MCP 系列教程（四）：进阶能力》，将详解 Sampling 反向模型调用、Roots 资源沙箱、完整通知体系、错误模型与协议扩展机制。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/" class="post-title-link" itemprop="url">深入浅出 MCP 系列教程（二）：三大核心原语实战</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-04 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-04T09:00:00+08:00">2026-11-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本系列共 5 篇。上一篇讲解了协议基础与架构设计，本篇深入 MCP 的三大核心原语：Resources（资源）、Tools（工具）、Prompts（提示模板），覆盖完整规范、字段、调用链路、校验规则与典型踩坑点。</p>
+</blockquote>
+<h2 id="一、为什么拆成三类，而不是全部打包成”函数”"><a href="#一、为什么拆成三类，而不是全部打包成”函数”" class="headerlink" title="一、为什么拆成三类，而不是全部打包成”函数”"></a>一、为什么拆成三类，而不是全部打包成”函数”</h2><p>MCP 刻意把 Agent 和外部交互拆成三类，这是区别于普通 function calling 的核心：</p>
+<ul>
+<li><strong>Resources：只读上下文源</strong>——把外部世界的信息送入模型，不产生副作用；支持 URI 寻址、变更订阅；</li>
+<li><strong>Tools：可执行动作</strong>——调用后可能修改外部状态；带输入 JSON Schema，高危动作需要 Host 侧人工审批；</li>
+<li><strong>Prompts：预编排任务模板</strong>——封装 system prompt、参数占位、子任务编排，提供可复用的任务入口。</li>
+</ul>
+<p>一个 MCP Server 可以只实现其中任意一个或多个，在 <code>initialize</code> 阶段通过 capabilities 声明：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;resources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;subscribe&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;prompts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>只要能力没有在双方协商交集里存在，Host 就绝对不能发起对应系列的请求。</p>
+<h2 id="二、Resources（资源）——-只读上下文"><a href="#二、Resources（资源）——-只读上下文" class="headerlink" title="二、Resources（资源）—— 只读上下文"></a>二、Resources（资源）—— 只读上下文</h2><h3 id="2-1-核心概念：Resource-URI"><a href="#2-1-核心概念：Resource-URI" class="headerlink" title="2.1 核心概念：Resource URI"></a>2.1 核心概念：Resource URI</h3><p>Resources 的设计思想：任何一条可被模型消费的信息，都拥有一个全局可定位的 URI，类似浏览器的 URL，但不局限于 HTTP。</p>
+<p>官方推荐的常见 scheme：</p>
+<ul>
+<li><code>file://</code>：本地文件</li>
+<li><code>postgres://</code>：数据库表&#x2F;记录</li>
+<li><code>git://</code>：仓库提交、分支、diff</li>
+<li><code>notion://</code>：Notion 页面</li>
+<li><code>slack://</code>：会话消息</li>
+</ul>
+<p><strong>URI 的所有权属于 Server</strong>：只有暴露这个资源的 Server 知道如何解析它。Host 只把 URI 当成不透明字符串，不会自己去解析、访问。Host 拿着 URI 调用 <code>resources/read</code>，由 Server 去读取对应内容。</p>
+<h3 id="2-2-Resource-对象完整字段"><a href="#2-2-Resource-对象完整字段" class="headerlink" title="2.2 Resource 对象完整字段"></a>2.2 Resource 对象完整字段</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>是否必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>uri</code></td>
+<td>string</td>
+<td>✅</td>
+<td>资源唯一标识 URI</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>人类可读名称，给用户&#x2F;模型识别</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>资源描述，推荐填写，辅助 LLM 判断要不要读取</td>
+</tr>
+<tr>
+<td><code>mimeType</code></td>
+<td>string</td>
+<td>❌</td>
+<td>MIME 类型，如 <code>text/markdown</code>，方便 Host 做渲染、截断</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-完整调用链路"><a href="#2-3-完整调用链路" class="headerlink" title="2.3 完整调用链路"></a>2.3 完整调用链路</h3><p>资源相关标准 method：</p>
+<ol>
+<li><code>resources/list</code>：列出所有可访问资源</li>
+<li><code>resources/read</code>：根据 URI 读取资源内容</li>
+<li><code>resources/subscribe</code>：订阅某个 URI 的变更（需要 <code>resources.subscribe: true</code>）</li>
+<li><code>resources/unsubscribe</code>：取消订阅</li>
+<li><code>notifications/resources/updated</code>：服务端推送变更通知（无 id）</li>
+</ol>
+<p>读取示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;res-read-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;resources/read&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///project/README.md&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回的核心是 <code>contents</code> 数组，一条资源可以返回多个内容块：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;res-read-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;contents&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///project/README.md&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;mimeType&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text/markdown&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;# Demo Project\nThis is a test project.&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>内容类型分两种：<code>text</code>（文本）、<code>blob</code>（base64 二进制，图片、PDF）。同一个内容块不能同时存在 text 和 blob。</p>
+</blockquote>
+<p>订阅成功之后，文件发生修改时 Server 主动推送一条通知，不需要 Client 轮询：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/resources/updated&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///project/README.md&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Host 收到通知后，按需再次调用 <code>resources/read</code> 拉取最新版本。</p>
+<h3 id="2-4-约束与安全边界"><a href="#2-4-约束与安全边界" class="headerlink" title="2.4 约束与安全边界"></a>2.4 约束与安全边界</h3><ol>
+<li><strong>只读语义约定</strong>：协议层面约定 Resources 不应产生副作用；这是语义约束，不是强制技术锁，靠实现遵守；</li>
+<li><strong>Roots 边界</strong>：如果协商开启 <code>roots</code>，Server 必须拒绝根以外的 URI 读取；</li>
+<li><strong>超大内容处理</strong>：几十 MB 的文件直接返回会瞬间耗尽上下文窗口；通常策略是截断 + 摘要 + 分页；</li>
+<li><strong>不可信数据</strong>：资源返回的文本属于外部不可信输入，存在提示注入风险，Host 需要做隔离、标记边界；</li>
+<li><strong>订阅是会话级</strong>：会话断开订阅自动失效，重连后需要重新订阅。</li>
+</ol>
+<h3 id="2-5-典型踩坑"><a href="#2-5-典型踩坑" class="headerlink" title="2.5 典型踩坑"></a>2.5 典型踩坑</h3><ul>
+<li>不要把动态查询塞进工具里，能用资源读就优先资源；但高频变更资源（实时日志）持续推送会压垮通道，适合分页拉取而不是订阅；</li>
+<li>URI 不要硬编码、不要让 LLM 自由构造不受控的 URI。</li>
+</ul>
+<h2 id="三、Tools（工具）——-带副作用的动作"><a href="#三、Tools（工具）——-带副作用的动作" class="headerlink" title="三、Tools（工具）—— 带副作用的动作"></a>三、Tools（工具）—— 带副作用的动作</h2><p>Tools 是大家最熟悉、面试最高频的原语。工具代表”执行动作”：增删改、发送消息、创建工单、执行 SQL、部署服务。</p>
+<h3 id="3-1-Tool-对象完整字段"><a href="#3-1-Tool-对象完整字段" class="headerlink" title="3.1 Tool 对象完整字段"></a>3.1 Tool 对象完整字段</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>唯一名称，LLM 依靠这个名字调用</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>✅</td>
+<td>给 LLM 看的自然语言描述，写得差模型就不会正确调用</td>
+</tr>
+<tr>
+<td><code>inputSchema</code></td>
+<td>object</td>
+<td>✅</td>
+<td>JSON Schema，严格定义入参结构、类型、必填项</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注意：没有 outputSchema。协议不强制约束返回结构，返回内容由业务决定。</p>
+</blockquote>
+<p>示例 Tool 定义：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;create_ticket&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;创建 IT 工单，用于提交故障申请，需要标题和描述，可选优先级&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;inputSchema&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;工单标题&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;故障详细描述&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;priority&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;enum&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;low&quot;</span><span class="punctuation">,</span> <span class="string">&quot;medium&quot;</span><span class="punctuation">,</span> <span class="string">&quot;high&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;default&quot;</span><span class="punctuation">:</span> <span class="string">&quot;medium&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;title&quot;</span><span class="punctuation">,</span> <span class="string">&quot;content&quot;</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-调用链路"><a href="#3-2-调用链路" class="headerlink" title="3.2 调用链路"></a>3.2 调用链路</h3><p>标准 method：<code>tools/list</code>（列出工具）、<code>tools/call</code>（执行工具）、<code>notifications/tools/list_changed</code>（工具列表动态变更推送）。</p>
+<p>调用示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool-call-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/call&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;create_ticket&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;服务无法启动&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;后端服务启动时报端口占用&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;priority&quot;</span><span class="punctuation">:</span> <span class="string">&quot;high&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回的 <code>content</code> 数组支持多种类型：<code>text</code>、<code>image</code>、<code>resource</code>（内嵌一条资源）。失败返回走标准 JSON-RPC error。</p>
+<h3 id="3-3-工具审批流（非常关键）"><a href="#3-3-工具审批流（非常关键）" class="headerlink" title="3.3 工具审批流（非常关键）"></a>3.3 工具审批流（非常关键）</h3><p>MCP <strong>没有内置”审批弹窗”报文</strong>，但规范定义了协作模式：</p>
+<ol>
+<li>Server 收到 <code>tools/call</code>，识别这是高危操作（删除、写库、发邮件）；</li>
+<li>Server <strong>不能直接弹出窗口</strong>，它只能正常返回结果或通过语义提示；</li>
+<li>真正的审批权在 Host：Host 在发起 <code>tools/call</code> 之前，根据工具白名单、工具名称、参数内容决定是否展示确认窗口；</li>
+<li>用户拒绝 → Host 直接不发起调用；用户同意 → 才发送 <code>tools/call</code>。</li>
+</ol>
+<blockquote>
+<p>很多新手误区：以为 Server 可以通知 Host”请你弹确认框”。协议没有这个指令；审批策略是 Host 的业务安全层。</p>
+</blockquote>
+<h3 id="3-4-设计规范与最佳实践"><a href="#3-4-设计规范与最佳实践" class="headerlink" title="3.4 设计规范与最佳实践"></a>3.4 设计规范与最佳实践</h3><ol>
+<li><strong>工具粒度不要过大</strong>：拆成原子操作（创建工单、关闭工单、添加备注），方便审批、审计、权限控制；</li>
+<li><strong>description 面向 LLM 写</strong>：写清楚什么时候适合调用、参数含义、限制条件；它不是给人类看的文档；</li>
+<li><strong>入参用 JSON Schema 严格约束</strong>：枚举、长度、正则，减少模型传错参数；</li>
+<li><strong>幂等优先</strong>：写类工具尽量设计成幂等，避免网络重试造成重复创建、重复发送；</li>
+<li><strong>审计埋点</strong>：所有 tools&#x2F;call 都应记录调用时间、工具名、入参、返回、用户身份、是否人工确认。</li>
+</ol>
+<h3 id="3-5-Tools-vs-Resources-判定口诀"><a href="#3-5-Tools-vs-Resources-判定口诀" class="headerlink" title="3.5 Tools vs Resources 判定口诀"></a>3.5 Tools vs Resources 判定口诀</h3><ul>
+<li>只拿信息、查询、读取，不改变外部状态 → Resources（优先）</li>
+<li>新增、修改、删除、发送、触发任务 → Tools</li>
+<li>查询有复杂过滤、聚合、计算，参数动态、不方便映射成静态 URI → 放到 Tool</li>
+</ul>
+<p>举例：读取单条工单详情用 <code>resources/read</code>；按关键词、时间、状态批量搜索工单用 <code>search_ticket</code> tool；创建工单用 tool；读取固定配置文件用 resource。</p>
+<h2 id="四、Prompts（提示模板）——-预编排任务入口"><a href="#四、Prompts（提示模板）——-预编排任务入口" class="headerlink" title="四、Prompts（提示模板）—— 预编排任务入口"></a>四、Prompts（提示模板）—— 预编排任务入口</h2><p>Prompts 是最容易被忽略，但在企业落地里价值很高的原语。它不是发给 LLM 的一次性 prompt，而是<strong>可被 Host 拉取的任务模板</strong>，带参数占位。</p>
+<p>它解决的问题：很多固定工作流（代码评审、周报生成、故障复盘、安全扫描）的 system prompt 很长、编排复杂，不适合每次让 LLM 自己从头生成。把模板托管在 MCP Server，所有接入的 Agent 都可以复用。</p>
+<h3 id="4-1-Prompt-对象字段"><a href="#4-1-Prompt-对象字段" class="headerlink" title="4.1 Prompt 对象字段"></a>4.1 Prompt 对象字段</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>模板唯一名称</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>❌</td>
+<td>模板用途描述</td>
+</tr>
+<tr>
+<td><code>arguments</code></td>
+<td>array</td>
+<td>❌</td>
+<td>参数定义数组（name &#x2F; description &#x2F; required）</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-调用链路"><a href="#4-2-调用链路" class="headerlink" title="4.2 调用链路"></a>4.2 调用链路</h3><p>标准 method：<code>prompts/list</code>、<code>prompts/get</code>。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompt-get-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompts/get&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;code_review&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="string">&quot;const x = eval(userInput);&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;language&quot;</span><span class="punctuation">:</span> <span class="string">&quot;javascript&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回结果里的 <code>messages</code> 是一组标准化对话消息（system &#x2F; user &#x2F; assistant），Host 可以直接送入 LLM：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompt-get-01&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;代码评审模板&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;system&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你是安全代码评审专家，重点检查注入、权限、资源泄露。&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;评审下面 JS 代码：const x = eval(userInput);&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-特点和边界"><a href="#4-3-特点和边界" class="headerlink" title="4.3 特点和边界"></a>4.3 特点和边界</h3><ol>
+<li><strong>模板托管在 Server</strong>：更新评审模板只改 MCP Server，所有接入的 Host 自动拿到新版本；</li>
+<li>返回的是消息序列，不是单纯字符串：支持多轮预设对话；</li>
+<li><strong>Prompt 本身不执行推理</strong>：<code>prompts/get</code> 只是把模板渲染出来；真正调用 LLM 是 Host 的工作；</li>
+<li>可以嵌入资源引用：模板内部可引用 Server 的 Resources，拉取参考文档作为上下文；</li>
+<li>适合标准化团队规范：企业把审批、巡检、复盘模板收敛在内部 MCP Server。</li>
+</ol>
+<h3 id="4-4-什么时候不要用-Prompt-原语"><a href="#4-4-什么时候不要用-Prompt-原语" class="headerlink" title="4.4 什么时候不要用 Prompt 原语"></a>4.4 什么时候不要用 Prompt 原语</h3><ul>
+<li>一次性、临时、用户随口输入的指令；</li>
+<li>动态性极强、每次结构完全不一样的任务；</li>
+<li>模板只是一行简短指令，收益很低。</li>
+</ul>
+<h2 id="五、原语组合实战：一个完整业务流程"><a href="#五、原语组合实战：一个完整业务流程" class="headerlink" title="五、原语组合实战：一个完整业务流程"></a>五、原语组合实战：一个完整业务流程</h2><p>场景：Agent 做工单复盘。</p>
+<ol>
+<li>Host 和工单 MCP Server 完成握手，协商：tools、resources、prompts、subscribe；</li>
+<li>Host 调用 <code>prompts/list</code>，找到 <code>incident_summary</code> 复盘模板；</li>
+<li>Host 调用 <code>prompts/get</code>，传入工单 id，拿到预定义 system prompt；</li>
+<li>Host 调用 <code>tools/call</code>，执行 <code>search_ticket</code>，拿到工单列表；</li>
+<li>Host 通过 <code>resources/read</code>，读取指定工单详情资源；</li>
+<li>如果开启订阅，后续工单更新会收到 <code>resources/updated</code> 通知；</li>
+<li>Host 把模板 + 工单上下文一起送入 LLM，生成复盘报告；</li>
+<li>需要保存复盘结果时，调用 <code>create_note</code> tool 写回工单。</li>
+</ol>
+<p>这就是 MCP 区别于普通 function calling 的核心：读上下文、执行动作、任务模板三者有独立标准，可以自由编排组合。</p>
+<h2 id="六、校验规则与错误模型"><a href="#六、校验规则与错误模型" class="headerlink" title="六、校验规则与错误模型"></a>六、校验规则与错误模型</h2><p>除了标准 JSON-RPC 错误码，三大原语有固定的业务错误场景：</p>
+<ul>
+<li>调用 <code>tools/call</code>，但 Server capabilities 没有 tools → 非法请求；</li>
+<li><code>inputSchema</code> 校验失败（参数缺失、类型不对、枚举值非法）→ 参数错误；</li>
+<li><code>resources/read</code> 访问不在 roots 范围内的 URI → 拒绝；</li>
+<li><code>prompts/get</code> 缺失必填 argument → 返回错误；</li>
+<li>订阅一个不支持 subscribe 的资源 → 返回错误。</li>
+</ul>
+<p>常见 JSON-RPC 标准错误码：</p>
+<table>
+<thead>
+<tr>
+<th>code</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-32601</code></td>
+<td>Method not found：调用了不存在的方法</td>
+</tr>
+<tr>
+<td><code>-32602</code></td>
+<td>Invalid params：参数不符合 schema</td>
+</tr>
+<tr>
+<td><code>-32600</code></td>
+<td>Invalid Request：消息格式非法</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>业务自定义错误码建议从 <code>-32000</code> 开始分配，避免和 JSON-RPC 预留冲突。</p>
+</blockquote>
+<h2 id="七、第二篇小结与高频误区"><a href="#七、第二篇小结与高频误区" class="headerlink" title="七、第二篇小结与高频误区"></a>七、第二篇小结与高频误区</h2><h3 id="核心复盘"><a href="#核心复盘" class="headerlink" title="核心复盘"></a>核心复盘</h3><ol>
+<li>Resources：URI 寻址的只读上下文，支持订阅推送；Host 不解析 URI；</li>
+<li>Tools：带副作用动作，附带 JSON Schema；审批策略由 Host 控制；</li>
+<li>Prompts：可拉取、带参数的任务模板；模板渲染和模型推理分离；</li>
+<li>三者是独立可插拔能力，靠握手协商开启。</li>
+</ol>
+<h3 id="高频误区"><a href="#高频误区" class="headerlink" title="高频误区"></a>高频误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>所有查询都做成 Tool</td>
+<td>优先用 Resources 承载静态、可寻址的只读数据</td>
+</tr>
+<tr>
+<td>Server 主动弹出确认窗口</td>
+<td>高危操作确认权在 Host</td>
+</tr>
+<tr>
+<td>Prompt 原语会直接调用模型</td>
+<td>它只返回渲染后的消息，Host 负责送模型</td>
+</tr>
+<tr>
+<td>订阅之后自动拿到新内容</td>
+<td>订阅只发变更通知，读内容仍需手动 <code>resources/read</code></td>
+</tr>
+<tr>
+<td>inputSchema 只是文档</td>
+<td>Server 有义务按 schema 校验入参，不能直接透传给业务</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇：《深入浅出 MCP 系列教程（三）：传输层实战》，将详解 stdio 与 Streamable HTTP 两种传输的完整握手流程、鉴权与会话管理。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -966,624 +2418,6 @@
 <p>开源免费无版权费用，只需要一台便宜的轻量服务器部署即可，不用每年花几千块续费SaaS模板。一次搭建，长期使用，自由迭代改版。</p>
 <p>不管是设计公司、小微企业、个人工作室，想要一个高颜值、可自主管控、支持定制的官网，这套架构都是最优解。</p>
 <p>不用将就千篇一律的模板，不用承担SaaS平台的数据绑架，用最低的成本，拿下高端定制网站的所有能力。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/29/Algorithm-moore-vote/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/29/Algorithm-moore-vote/" class="post-title-link" itemprop="url">一道数组面试题，搞懂摩尔投票法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-09-29 09:11:47" itemprop="dateCreated datePublished" datetime="2026-09-29T09:11:47+08:00">2026-09-29</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在前端&#x2F;全栈算法面试中，「多数元素」是一道非常经典的简单题。最容易想到的解法是用哈希表统计每个数字出现次数，遍历后找到大于 n&#x2F;2 的元素。哈希表思路直观，但需要 O(n) 的额空间。</p>
-<p>面试官经常会追加一个进阶问题：<strong>能不能在 O(n) 时间复杂度，O(1) 空间复杂度完成？</strong></p>
-<p>这时候，摩尔投票法（Boyer-Moore Majority Vote Algorithm）就是最优解。</p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定一个大小为 <code>n</code> 的数组 <code>nums</code>，返回其中的多数元素。多数元素是指在数组中出现次数 <strong>大于 ⌊ n&#x2F;2 ⌋</strong> 的元素。<br>题目保证数组非空，且一定存在多数元素。</p>
-<p>示例：<br>输入：<code>[2,2,1,1,1,2,2]</code><br>输出：<code>2</code></p>
-<blockquote>
-<p>解释：数组长度为7，多数元素出现次数需要大于3.5，也就是至少4次。数字2一共出现4次，满足条件。</p>
-</blockquote>
-<h2 id="摩尔投票法核心思想：相互抵消"><a href="#摩尔投票法核心思想：相互抵消" class="headerlink" title="摩尔投票法核心思想：相互抵消"></a>摩尔投票法核心思想：相互抵消</h2><p>摩尔投票的核心逻辑可以用一句话概括：<strong>不同元素相互抵消，相同元素累加。</strong></p>
-<p>我们可以把数组里每一个数字想象成不同阵营的士兵：</p>
-<ol>
-<li>遇到和当前候选相同的士兵，己方兵力+1；</li>
-<li>遇到敌方士兵，双方同归于尽，己方兵力-1；</li>
-<li>如果己方兵力归零，代表当前阵营全部阵亡，更换新的候选士兵。</li>
-</ol>
-<p>本题有一个关键前提：<strong>多数元素出现次数 &gt; 数组长度的一半</strong>。<br>也就是说，多数元素的总数量，大于剩下所有其他元素数量之和。<br>无论怎么两两抵消，最后剩下存活的候选，一定是这个多数元素。</p>
-<blockquote>
-<p>⚠️ 重要提醒：如果题目不保证一定存在大于 n&#x2F;2 的众数，摩尔投票得到的候选不能直接作为答案，必须再遍历一次数组，校验该候选的实际出现次数。</p>
-</blockquote>
-<h2 id="算法执行流程演示"><a href="#算法执行流程演示" class="headerlink" title="算法执行流程演示"></a>算法执行流程演示</h2><p>以数组 <code>[2,2,1,1,1,2,2]</code> 举例：</p>
-<ul>
-<li>初始候选：2，计数 count &#x3D; 1</li>
-<li>i&#x3D;1，元素2：相同，count&#x3D;2</li>
-<li>i&#x3D;2，元素1：不同，count&#x3D;1</li>
-<li>i&#x3D;3，元素1：不同，count&#x3D;0，兵力耗尽</li>
-<li>i&#x3D;4，元素1：count&#x3D;0，更换候选为1，count&#x3D;1</li>
-<li>i&#x3D;5，元素2：不同，count&#x3D;0，兵力耗尽</li>
-<li>i&#x3D;6，元素2：count&#x3D;0，更换候选为2，count&#x3D;1</li>
-</ul>
-<p>遍历结束，候选值为2，就是数组的多数元素。</p>
-<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><ul>
-<li>时间复杂度：O(n)，仅遍历数组一次</li>
-<li>空间复杂度：O(1)，只使用两个变量，不需要额外开辟存储空间</li>
-</ul>
-<blockquote>
-<p>对比哈希表解法：哈希表同样O(n)时间，但需要O(n)空间存储每个数字的计数。大数据场景下摩尔投票优势明显。</p>
-</blockquote>
-<h2 id="TypeScript-代码实现"><a href="#TypeScript-代码实现" class="headerlink" title="TypeScript 代码实现"></a>TypeScript 代码实现</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 摩尔投票法求解多数元素</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> nums 数字数组，题目保证存在出现次数大于 n/2 的元素</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> 多数元素</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">majorityElement</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="comment">// 当前候选元素</span></span><br><span class="line">    <span class="keyword">let</span> candidate = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">// 候选计数</span></span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从第二个元素开始遍历</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (count === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 兵力归零，更换候选</span></span><br><span class="line">            candidate = nums[i];</span><br><span class="line">            count = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[i] === candidate) &#123;</span><br><span class="line">            <span class="comment">// 相同元素，计数累加</span></span><br><span class="line">            count++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 不同元素，相互抵消</span></span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> candidate;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试用例</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">majorityElement</span>([<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>])); <span class="comment">// 2</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">majorityElement</span>([<span class="number">3</span>,<span class="number">2</span>,<span class="number">3</span>])); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="拓展版本（无“一定存在多数元素”的前提，增加校验）"><a href="#拓展版本（无“一定存在多数元素”的前提，增加校验）" class="headerlink" title="拓展版本（无“一定存在多数元素”的前提，增加校验）"></a>拓展版本（无“一定存在多数元素”的前提，增加校验）</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">majorityElementCheck</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> | <span class="literal">null</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> candidate = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; nums.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (count === <span class="number">0</span>) &#123;</span><br><span class="line">            candidate = nums[i];</span><br><span class="line">            count = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[i] === candidate) &#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 二次遍历校验候选是否满足条件</span></span><br><span class="line">    <span class="keyword">let</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> num <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">if</span> (num === candidate) total++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total &gt; nums.<span class="property">length</span> / <span class="number">2</span> ? candidate : <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="面试小结"><a href="#面试小结" class="headerlink" title="面试小结"></a>面试小结</h2><ol>
-<li>摩尔投票适合：寻找出现次数大于数组一半的元素；</li>
-<li>核心是抵消思想，O(1)空间是面试加分项；</li>
-<li>一定要记住边界：题目如果不保证存在众数，必须额外校验。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/25/Reuse-skill-qoder-trae-codebuddy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/25/Reuse-skill-qoder-trae-codebuddy/" class="post-title-link" itemprop="url">别再重复配置 Skill：Qoder、TRAE、CodeBuddy 实现全局共享 + Git 管理</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-09-25 09:52:11" itemprop="dateCreated datePublished" datetime="2026-09-25T09:52:11+08:00">2026-09-25</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="在-Qoder、TRAE、CodeBuddy-之间共享全局-Skill：多个-IDE，一套能力"><a href="#在-Qoder、TRAE、CodeBuddy-之间共享全局-Skill：多个-IDE，一套能力" class="headerlink" title="在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力"></a>在 Qoder、TRAE、CodeBuddy 之间共享全局 Skill：多个 IDE，一套能力</h1><p>现在做 AI 编程，很多人已经不是只用一个 IDE 了。 写代码时可能打开 Qoder，做一些 Agent 相关的工作；遇到自己更顺手的场景，又切到 TRAE；国内网络环境或者团队协作场景下，CodeBuddy 也可能成为主力。</p>
-<p>多个 IDE 并不是什么问题，真正麻烦的是：<strong>每个 IDE 都有自己的一套 Skill 配置。</strong></p>
-<p>你花时间写了一套代码规范、Git 提交规范、Code Review 规则，或者整理了一套“如何分析项目、如何写测试、如何生成 API 文档”的 Skill，结果换一个 IDE 就得重新配置一遍。</p>
-<p>更麻烦的是，Skill 一旦修改，就要同步到多个地方。</p>
-<p>有没有办法做到：</p>
-<blockquote>
-<p><strong>Skill 只维护一份，Qoder、TRAE、CodeBuddy 都能使用？</strong></p>
-</blockquote>
-<p>答案是可以。</p>
-<p>核心思路其实很简单：<strong>把 Skill 从 IDE 的配置目录中抽离出来，放到一个独立的全局目录，然后让不同 IDE 的 Skill 目录指向同一个位置。</strong></p>
-<p>这样，我们就可以实现“一份 Skill，多处使用”。</p>
-<h2 id="一、为什么要在多个-IDE-之间共享-Skill？"><a href="#一、为什么要在多个-IDE-之间共享-Skill？" class="headerlink" title="一、为什么要在多个 IDE 之间共享 Skill？"></a>一、为什么要在多个 IDE 之间共享 Skill？</h2><p>首先，是因为<strong>多个 IDE 可以一起薅羊毛</strong>。</p>
-<p>不同 AI IDE 往往有不同的优势。</p>
-<p>有的 IDE 更适合日常 Coding，有的 Agent 能力比较强，有的在代码补全、项目理解、Terminal 操作或者国内服务接入方面体验更好。</p>
-<p>既然不同 IDE 各有所长，没有必要强迫自己只使用一个。</p>
-<p>真正应该统一的，是自己的“工作方法”。</p>
-<p>例如，我可能有这样几个 Skill：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">code-review</span><br><span class="line">git-commit</span><br><span class="line">write-test</span><br><span class="line">project-analysis</span><br><span class="line">api-design</span><br><span class="line">documentation</span><br></pre></td></tr></table></figure>
-
-<p>这些东西描述的是<strong>我希望 AI 如何帮我工作</strong>，而不是某个 IDE 专属的能力。</p>
-<p>所以它们天然应该独立于 IDE 存在。</p>
-<hr>
-<h2 id="二、把-Skill-从-IDE-中“解耦”出来"><a href="#二、把-Skill-从-IDE-中“解耦”出来" class="headerlink" title="二、把 Skill 从 IDE 中“解耦”出来"></a>二、把 Skill 从 IDE 中“解耦”出来</h2><p>假设我们建立一个统一的 Skill 仓库：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br><span class="line">├── code-review/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── git-commit/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── write-test/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">├── project-analysis/</span><br><span class="line">│   └── SKILL.md</span><br><span class="line">└── api-design/</span><br><span class="line">    └── SKILL.md</span><br></pre></td></tr></table></figure>
-
-<p>以后不管使用 Qoder、TRAE 还是 CodeBuddy，都不直接维护自己的 Skill 内容。</p>
-<p>而是让它们共同使用：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
-
-<p>从逻辑上看，就变成了：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             ┌── Qoder</span><br><span class="line">             │</span><br><span class="line">shared-skills├── TRAE</span><br><span class="line">             │</span><br><span class="line">             └── CodeBuddy</span><br></pre></td></tr></table></figure>
-
-<p>三个 IDE 是不同的入口，但背后使用的是同一套 Skill。</p>
-<p>这样做最大的好处就是：</p>
-<blockquote>
-<p><strong>Skill 和 IDE 解耦。</strong></p>
-</blockquote>
-<p>IDE 可以换，Skill 不需要跟着换。</p>
-<hr>
-<h2 id="三、关键技巧：用软链接共享-Skill"><a href="#三、关键技巧：用软链接共享-Skill" class="headerlink" title="三、关键技巧：用软链接共享 Skill"></a>三、关键技巧：用软链接共享 Skill</h2><p>如果不同 IDE 都支持从固定目录加载 Skill，那么最简单的方法就是使用软链接。</p>
-<p>例如，我们把真正的 Skill 放在：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
-
-<p>然后让各个 IDE 的 Skill 目录指向它。</p>
-<p>Linux&#x2F;macOS 下可以使用：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.qoder/skills</span><br><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.trae/skills</span><br><span class="line"><span class="built_in">ln</span> -s ~/shared-skills ~/.codebuddy/skills</span><br></pre></td></tr></table></figure>
-
-<p>具体目录需要根据各个 IDE 当前版本的 Skill 目录规则进行调整。</p>
-<p>最终效果类似：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Qoder Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br><span class="line"></span><br><span class="line">TRAE Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br><span class="line"></span><br><span class="line">CodeBuddy Skill</span><br><span class="line">      ↓</span><br><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
-
-<p>于是你只需要修改：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/shared-skills/code-review/SKILL.md</span><br></pre></td></tr></table></figure>
-
-<p>三个 IDE 使用的就是同一份内容。</p>
-<p>这就解决了一个非常痛苦的问题：</p>
-<p><strong>一处修改，所有 IDE 生效。</strong></p>
-<hr>
-<h2 id="四、Skill-不只是共享，还可以用-Git-管起来"><a href="#四、Skill-不只是共享，还可以用-Git-管起来" class="headerlink" title="四、Skill 不只是共享，还可以用 Git 管起来"></a>四、Skill 不只是共享，还可以用 Git 管起来</h2><p>如果只是把 Skill 放到一个公共目录，其实还不够。</p>
-<p>因为 Skill 本身也是代码和知识资产。</p>
-<p>既然是自己的工作流，为什么不把它放进 Git？</p>
-<p>例如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/shared-skills</span><br><span class="line"></span><br><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init skills&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>之后修改 Skill：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;improve code review skill&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>甚至可以直接把它放到 GitHub、GitLab 或公司的 Git 服务中。</p>
-<p>这样就有了一个独立的：</p>
-<blockquote>
-<p><strong>个人 AI Skill 仓库。</strong></p>
-</blockquote>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">my-ai-skills/</span><br><span class="line">├── README.md</span><br><span class="line">├── coding/</span><br><span class="line">│   ├── code-review/</span><br><span class="line">│   └── write-test/</span><br><span class="line">├── git/</span><br><span class="line">│   └── git-commit/</span><br><span class="line">├── architecture/</span><br><span class="line">│   └── project-analysis/</span><br><span class="line">└── documentation/</span><br><span class="line">    └── api-doc/</span><br></pre></td></tr></table></figure>
-
-<p>换电脑的时候，只需要：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> &lt;your-skill-repository&gt;</span><br></pre></td></tr></table></figure>
-
-<p>然后重新建立 IDE 的软链接即可。</p>
-<hr>
-<h2 id="五、这套方案真正有价值的地方"><a href="#五、这套方案真正有价值的地方" class="headerlink" title="五、这套方案真正有价值的地方"></a>五、这套方案真正有价值的地方</h2><p>很多人一开始会觉得：</p>
-<p>“几个 SKILL.md 文件而已，有必要这么折腾吗？”</p>
-<p>真正用一段时间之后，就会发现价值非常大。</p>
-<p>因为 Skill 会不断迭代。</p>
-<p>比如最开始的 <code>code-review</code> 只有几十行，后来你发现 AI 经常漏掉异常处理，于是增加：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">检查异常处理</span><br><span class="line">检查边界条件</span><br><span class="line">检查资源释放</span><br><span class="line">检查并发安全</span><br></pre></td></tr></table></figure>
-
-<p>再后来，又加入公司的编码规范。</p>
-<p>如果每个 IDE 都维护一份，那么修改一次就要同步三次。</p>
-<p>但共享 Skill 后：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">修改一次</span><br><span class="line">   ↓</span><br><span class="line">Git commit</span><br><span class="line">   ↓</span><br><span class="line">所有 IDE 自动使用最新版</span><br></pre></td></tr></table></figure>
-
-<p>这时候 Skill 才真正变成了自己的<strong>可积累资产</strong>。</p>
-<hr>
-<h2 id="六、不同-IDE-擅长不同事情，但-Skill-可以保持一致"><a href="#六、不同-IDE-擅长不同事情，但-Skill-可以保持一致" class="headerlink" title="六、不同 IDE 擅长不同事情，但 Skill 可以保持一致"></a>六、不同 IDE 擅长不同事情，但 Skill 可以保持一致</h2><p>这也是我比较推荐这种方案的另一个原因。</p>
-<p>我们没有必要因为使用多个 IDE，就让工作流也碎片化。</p>
-<p>可以让：</p>
-<ul>
-<li><strong>Qoder</strong> 负责它擅长的 Agent &#x2F; Coding 场景</li>
-<li><strong>TRAE</strong> 负责适合它的开发任务</li>
-<li><strong>CodeBuddy</strong> 处理另外一些项目或工作流</li>
-</ul>
-<p>但是，无论 AI 来自哪个 IDE，都遵循同一套：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">代码规范</span><br><span class="line">↓</span><br><span class="line">项目分析方法</span><br><span class="line">↓</span><br><span class="line">测试规范</span><br><span class="line">↓</span><br><span class="line">Git 规范</span><br><span class="line">↓</span><br><span class="line">Code Review 规范</span><br><span class="line">↓</span><br><span class="line">文档规范</span><br></pre></td></tr></table></figure>
-
-<p>也就是说：</p>
-<blockquote>
-<p><strong>IDE 可以不同，AI 的“工作方法”可以统一。</strong></p>
-</blockquote>
-<p>这其实比单纯共享几个 Prompt 更重要。</p>
-<hr>
-<h2 id="七、进一步：把-Skill-当成自己的“AI-配置仓库”"><a href="#七、进一步：把-Skill-当成自己的“AI-配置仓库”" class="headerlink" title="七、进一步：把 Skill 当成自己的“AI 配置仓库”"></a>七、进一步：把 Skill 当成自己的“AI 配置仓库”</h2><p>如果再往前走一步，可以把 Skill 当成 dotfiles 一样管理。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~/dotfiles/</span><br><span class="line">~/shared-skills/</span><br></pre></td></tr></table></figure>
-
-<p>里面保存的不是某个 IDE 的配置，而是自己长期积累下来的 AI 工作流。</p>
-<p>最终形成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                    ┌── Qoder</span><br><span class="line">                    │</span><br><span class="line">                    ├── TRAE</span><br><span class="line">shared-skills ──────┤</span><br><span class="line">                    └── CodeBuddy</span><br><span class="line">                         │</span><br><span class="line">                         ↓</span><br><span class="line">                    Git Repository</span><br></pre></td></tr></table></figure>
-
-<p>以后无论换电脑、换 IDE，甚至换团队，只要新的工具支持类似的 Skill 机制，就可以继续复用。</p>
-<p><strong>工具会变化，但自己的工作流可以沉淀下来。</strong></p>
-<hr>
-<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>AI IDE 的竞争会越来越激烈，我们没有必要在不同工具之间“二选一”。</p>
-<p>哪个 IDE 在什么事情上好用，就用哪个。</p>
-<p>真正值得沉淀的，不应该是某一个 IDE 的配置，而是我们自己积累出来的 Skill。</p>
-<p>把 Skill 独立出来，再通过软链接让 Qoder、TRAE、CodeBuddy 共享，最后交给 Git 管理，就可以形成一套非常简单但实用的工作方式：</p>
-<blockquote>
-<p><strong>多个 IDE，一起薅羊毛；不同 IDE，各司其职；Skill 一份维护，到处生效；Git 管理，持续沉淀。</strong></p>
-</blockquote>
-<p>最终，你使用的不再只是几个 AI IDE，而是一套属于自己的、可以不断迭代的 <strong>AI Coding 工作流</strong>。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/13/Algorithm-Minimum-Path-Sum/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/13/Algorithm-Minimum-Path-Sum/" class="post-title-link" itemprop="url">算法 - 最小路径和</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-09-13 09:27:15" itemprop="dateCreated datePublished" datetime="2026-09-13T09:27:15+08:00">2026-09-13</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个包含非负整数的 m × n 网格 <code>grid</code>，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。</p>
-<p>说明：每次只能向下或者向右移动一步。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入: grid = [</span><br><span class="line">  [1,3,1],</span><br><span class="line">  [1,5,1],</span><br><span class="line">  [4,2,1]</span><br><span class="line">]</span><br><span class="line">输出: 7</span><br><span class="line">解释: 路径 1→3→1→1→1 总和最小 = 7。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>只能向右或向下 ⇒ 到达 <code>(i, j)</code> 的前驱只有 <code>(i-1, j)</code> 和 <code>(i, j-1)</code>，是最经典的 DP。</p>
-<h2 id="2-1-状态定义"><a href="#2-1-状态定义" class="headerlink" title="2.1 状态定义"></a>2.1 状态定义</h2><p><code>dp[i][j]</code> &#x3D; 从左上角到 <code>(i, j)</code> 的最小路径和。</p>
-<p>转移方程：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])</span><br></pre></td></tr></table></figure>
-
-<p>边界：第一行只能从左边来 <code>dp[0][j] = dp[0][j-1] + grid[0][j]</code>；第一列只能从上边来 <code>dp[i][0] = dp[i-1][0] + grid[i][0]</code>。</p>
-<ul>
-<li>时间复杂度：O(m·n)，空间复杂度：O(m·n)。</li>
-</ul>
-<h2 id="2-2-空间优化到-O-n"><a href="#2-2-空间优化到-O-n" class="headerlink" title="2.2 空间优化到 O(n)"></a>2.2 空间优化到 O(n)</h2><p>每行只依赖「上一行」和「本行左边」，可用一维滚动数组：<code>dp[j] = grid[i][j] + min(dp[j](上一行的值), dp[j-1](本行左边的值))</code>。</p>
-<p>极限可原地改 grid 到 O(1)（若允许修改输入）。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-二维-DP（清晰）"><a href="#3-1-二维-DP（清晰）" class="headerlink" title="3.1 二维 DP（清晰）"></a>3.1 二维 DP（清晰）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">minPathSum</span>(<span class="params"><span class="attr">grid</span>: <span class="built_in">number</span>[][]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> m = grid.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> n = grid[<span class="number">0</span>].<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: m &#125;, <span class="function">() =&gt;</span> <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = grid[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt; n; j++) dp[<span class="number">0</span>][j] = dp[<span class="number">0</span>][j - <span class="number">1</span>] + grid[<span class="number">0</span>][j];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; m; i++) dp[i][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>] + grid[i][<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; m; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            dp[i][j] = grid[i][j] + <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[i - <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[m - <span class="number">1</span>][n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">minPathSum</span>([[<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span>], [<span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>]])); <span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-一维滚动数组"><a href="#3-2-一维滚动数组" class="headerlink" title="3.2 一维滚动数组"></a>3.2 一维滚动数组</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">minPathSumOpt</span>(<span class="params"><span class="attr">grid</span>: <span class="built_in">number</span>[][]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> m = grid.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> n = grid[<span class="number">0</span>].<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i === <span class="number">0</span> &amp;&amp; j === <span class="number">0</span>) dp[j] = grid[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (i === <span class="number">0</span>) dp[j] = dp[j - <span class="number">1</span>] + grid[i][j];       <span class="comment">// 第一行</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (j === <span class="number">0</span>) dp[j] = dp[j] + grid[i][j];           <span class="comment">// 第一列，dp[j] 仍是上一行值</span></span><br><span class="line">            <span class="keyword">else</span> dp[j] = <span class="title class_">Math</span>.<span class="title function_">min</span>(dp[j], dp[j - <span class="number">1</span>]) + grid[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dp[n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>变体：不同路径</strong>（计数而非求和）把 <code>min</code> 换成 <code>+</code>，是同一网格 DP 骨架。</li>
-<li><strong>带障碍 &#x2F; 三角形最小路径和 &#x2F; 地下城游戏</strong>：注意「地下城游戏」需从右下<strong>倒推</strong>（HP 约束），说明并非所有网格 DP 都能正向做。</li>
-<li>追问：为什么一维数组里 <code>dp[j]</code> 在更新前代表上一行？因为本行还没覆盖它，天然滚动——这是滚动数组的核心技巧。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 64 | 网格 DP 入门</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/08/09/Algorithm-Validate-BST/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/09/Algorithm-Validate-BST/" class="post-title-link" itemprop="url">算法 - 验证二叉搜索树</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-08-09 15:33:48" itemprop="dateCreated datePublished" datetime="2026-08-09T15:33:48+08:00">2026-08-09</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给你一个二叉树的根节点 <code>root</code>，判断其是否是一个有效的二叉搜索树（BST）。</p>
-<p>有效 BST 定义：</p>
-<ul>
-<li>节点的左子树只包含<strong>小于</strong>当前节点的数。</li>
-<li>节点的右子树只包含<strong>大于</strong>当前节点的数。</li>
-<li>所有左子树和右子树自身必须也是二叉搜索树。</li>
-</ul>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: root = [5,1,4,null,null,3,6]</span><br><span class="line">        5</span><br><span class="line">       / \</span><br><span class="line">      1   4</span><br><span class="line">         / \</span><br><span class="line">        3   6</span><br><span class="line">输出: false</span><br><span class="line">解释: 根节点 5 的右子树里出现 3（&lt; 5），违反 BST 定义。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><h2 id="2-1-常见错误：只比较父子"><a href="#2-1-常见错误：只比较父子" class="headerlink" title="2.1 常见错误：只比较父子"></a>2.1 常见错误：只比较父子</h2><p>只判断「左子 &lt; 父 &lt; 右子」是不够的——如上图，节点 3 是其父 4 的合法左子，但它位于根 5 的右子树中，必须 &gt; 5。<strong>约束是从根一路传递下来的区间。</strong></p>
-<h2 id="2-2-上下界递归（正确）"><a href="#2-2-上下界递归（正确）" class="headerlink" title="2.2 上下界递归（正确）"></a>2.2 上下界递归（正确）</h2><p>给每个节点维护一个开区间 <code>(min, max)</code>：</p>
-<ul>
-<li><p>根的区间是 <code>(-∞, +∞)</code>。</p>
-</li>
-<li><p>走向左孩子：上界收紧为父节点值 → <code>(min, node.val)</code>。</p>
-</li>
-<li><p>走向右孩子：下界收紧为父节点值 → <code>(node.val, max)</code>。</p>
-</li>
-<li><p>节点值必须严格落在自己区间内，否则非法。</p>
-</li>
-<li><p>时间复杂度：O(n)，空间复杂度：O(h)。</p>
-</li>
-</ul>
-<h2 id="2-3-中序遍历递增"><a href="#2-3-中序遍历递增" class="headerlink" title="2.3 中序遍历递增"></a>2.3 中序遍历递增</h2><p>BST 的<strong>中序遍历结果严格递增</strong>。迭代中序遍历，比较当前值与前驱值 <code>prev</code>，若 <code>val &lt;= prev</code> 则非法。用 <code>prev</code> 记录上一个访问值即可，天然利用「左→根→右」顺序。</p>
-<ul>
-<li>时间复杂度：O(n)，空间复杂度：O(h)。</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><p>树节点定义：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="attr">val</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">left</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="attr">right</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">val = <span class="number">0</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">val</span> = val;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">left</span> = <span class="variable language_">this</span>.<span class="property">right</span> = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-1-上下界递归"><a href="#3-1-上下界递归" class="headerlink" title="3.1 上下界递归"></a>3.1 上下界递归</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">isValidBST</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> check = (<span class="attr">node</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span>, <span class="attr">min</span>: <span class="built_in">number</span>, <span class="attr">max</span>: <span class="built_in">number</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!node) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (node.<span class="property">val</span> &lt;= min || node.<span class="property">val</span> &gt;= max) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="title function_">check</span>(node.<span class="property">left</span>, min, node.<span class="property">val</span>) &amp;&amp;</span><br><span class="line">            <span class="title function_">check</span>(node.<span class="property">right</span>, node.<span class="property">val</span>, max)</span><br><span class="line">        );</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">check</span>(root, -<span class="title class_">Infinity</span>, <span class="title class_">Infinity</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-中序遍历（迭代）"><a href="#3-2-中序遍历（迭代）" class="headerlink" title="3.2 中序遍历（迭代）"></a>3.2 中序遍历（迭代）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">isValidBSTInorder</span>(<span class="params"><span class="attr">root</span>: <span class="title class_">TreeNode</span> | <span class="literal">null</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">stack</span>: <span class="title class_">TreeNode</span>[] = [];</span><br><span class="line">    <span class="keyword">let</span> cur = root;</span><br><span class="line">    <span class="keyword">let</span> prev = -<span class="title class_">Infinity</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cur || stack.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (cur) &#123;</span><br><span class="line">            stack.<span class="title function_">push</span>(cur);</span><br><span class="line">            cur = cur.<span class="property">left</span>;         <span class="comment">// 一路向左</span></span><br><span class="line">        &#125;</span><br><span class="line">        cur = stack.<span class="title function_">pop</span>()!;</span><br><span class="line">        <span class="keyword">if</span> (cur.<span class="property">val</span> &lt;= prev) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 非严格递增</span></span><br><span class="line">        prev = cur.<span class="property">val</span>;</span><br><span class="line">        cur = cur.<span class="property">right</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>为什么用严格 <code>&lt;</code>、<code>&gt;</code>（而非 <code>&lt;=</code>）</strong>：BST 定义里子树值必须严格小于&#x2F;大于，相等也算非法；用 <code>Infinity</code> 做初始边界可避免「节点值恰好等于 INT_MIN&#x2F;INT_MAX」的坑（用 <code>null</code> 表示无边界更稳妥）。</li>
-<li><strong>传递区间 vs 传递父指针</strong>：区间法最直观；中序法把「树问题」转成「有序序列问题」是常用思维。</li>
-<li>关联题：BST 第 k 小、把有序数组转 BST、LCA of BST 都依赖「中序有序」或「值域可二分」性质。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 98 | BST 性质 &#x2F; 遍历</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/07/12/Algorithm-Decode-String/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/12/Algorithm-Decode-String/" class="post-title-link" itemprop="url">算法 - 字符串解码（Decode String）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-07-12 10:41:26" itemprop="dateCreated datePublished" datetime="2026-07-12T10:41:26+08:00">2026-07-12</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>给定一个经过编码的字符串，返回它解码后的字符串。</p>
-<p>编码规则为: <code>k[encoded_string]</code>，表示其中方括号内部的 <code>encoded_string</code> 正好重复 <code>k</code> 次。注意 <code>k</code> 保证为正整数。</p>
-<p>你可以认为输入字符串总是有效的，输入中没有额外的空格，且方括号内总是含有小写字母或另外一个方括号。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;3[a]2[bc]&quot;    输出: &quot;aaabcbc&quot;</span><br><span class="line">输入: s = &quot;3[a2[c]]&quot;    输出: &quot;accaccacc&quot;</span><br><span class="line">输入: s = &quot;2[abc]3[cd]ef&quot; 输出: &quot;abcabccdcdcdef&quot;</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>存在<strong>嵌套</strong>结构 <code>k[...]</code>，天然适合<strong>栈</strong>（或递归 DFS）。</p>
-<h2 id="2-1-双栈法（数字栈-字符串栈）"><a href="#2-1-双栈法（数字栈-字符串栈）" class="headerlink" title="2.1 双栈法（数字栈 + 字符串栈）"></a>2.1 双栈法（数字栈 + 字符串栈）</h2><p>用两个栈分别保存括号层的「重复次数」和「进入括号前已拼好的字符串」：</p>
-<ul>
-<li><p><code>curStr</code> 累积当前层字符串，<code>num</code> 累积当前解析的数字。</p>
-</li>
-<li><p>遇到 <code>[</code>：把当前的 <code>num</code> 压入 <code>numStack</code>、当前 <code>curStr</code> 压入 <code>strStack</code>，然后清空 <code>num</code> 和 <code>curStr</code>，进入内层。</p>
-</li>
-<li><p>遇到 <code>]</code>：弹出内层重复次数 <code>k</code> 和「外层字符串」<code>prev</code>，令 <code>curStr = prev + curStr.repeat(k)</code>，回到外层。</p>
-</li>
-<li><p>遇到字母：拼进 <code>curStr</code>；遇到数字：<code>num = num * 10 + d</code>（处理多位数）。</p>
-</li>
-<li><p>时间复杂度：O(输出长度)，空间复杂度：O(嵌套深度)。</p>
-</li>
-</ul>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-双栈"><a href="#3-1-双栈" class="headerlink" title="3.1 双栈"></a>3.1 双栈</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">decodeString</span>(<span class="params"><span class="attr">s</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">numStack</span>: <span class="built_in">number</span>[] = [];</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">strStack</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line">    <span class="keyword">let</span> curStr = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> ch <span class="keyword">of</span> s) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ch &gt;= <span class="string">&quot;0&quot;</span> &amp;&amp; ch &lt;= <span class="string">&quot;9&quot;</span>) &#123;</span><br><span class="line">            num = num * <span class="number">10</span> + <span class="title class_">Number</span>(ch);      <span class="comment">// 多位数字</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ch === <span class="string">&quot;[&quot;</span>) &#123;</span><br><span class="line">            numStack.<span class="title function_">push</span>(num);               <span class="comment">// 保存本层重复次数</span></span><br><span class="line">            strStack.<span class="title function_">push</span>(curStr);            <span class="comment">// 保存进入括号前的字符串</span></span><br><span class="line">            curStr = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            num = <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ch === <span class="string">&quot;]&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> k = numStack.<span class="title function_">pop</span>()!;</span><br><span class="line">            <span class="keyword">const</span> prev = strStack.<span class="title function_">pop</span>()!;</span><br><span class="line">            curStr = prev + curStr.<span class="title function_">repeat</span>(k); <span class="comment">// 内层展开并拼接外层</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            curStr += ch;                      <span class="comment">// 普通字母</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curStr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">decodeString</span>(<span class="string">&quot;3[a2[c]]&quot;</span>)); <span class="comment">// accaccacc</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-单栈（把字符逐个压栈）"><a href="#3-2-单栈（把字符逐个压栈）" class="headerlink" title="3.2 单栈（把字符逐个压栈）"></a>3.2 单栈（把字符逐个压栈）</h2><p>把 <code>]</code> 之前的所有字符压栈，遇到 <code>]</code> 时弹栈收集字母与数字，再展开重新压回。写法统一但弹栈拼接略繁。</p>
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>递归解法</strong>：用全局指针 <code>i</code>，<code>decode()</code> 遇到 <code>[</code> 递归取内层结果并 repeat，遇到 <code>]</code> 返回——很多前端候选人觉得递归更直观。</li>
-<li>本题是「括号匹配 &#x2F; 嵌套求值」家族，同族：基本计算器、有效括号、<a href="https://jackniu81.github.io/tags/%E7%AE%97%E6%B3%95/">最小栈</a>。看到「嵌套 + 需要回到上一层状态」就应条件反射想到栈&#x2F;递归。</li>
-<li>坑点：数字可能是多位（如 <code>12[a]</code>），必须用 <code>num = num*10 + d</code> 累积，不能 <code>Number(ch)</code> 单独取。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 394 | 栈 &#x2F; 递归</p>
-</blockquote>
 
       
     </div>

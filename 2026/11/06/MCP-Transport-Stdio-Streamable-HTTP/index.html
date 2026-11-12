@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本系列共 5 篇。前两篇讲解了协议基础与三大核心原语，本篇讲解传输层：协议报文如何在进程之间、跨机器网络上传递。覆盖 stdio 与 Streamable HTTP 两种官方传输的完整规范、握手流程、鉴权、会话管理与高频坑点。  一、传输层与协议层的边界先建立一条最重要的分界线：  协议层：规定消息结构、method、字段、会话顺序、capability 协商；报文本身和”怎么走”无关； 传输层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出 MCP 系列教程（三）：传输层实战">
+<meta property="og:url" content="https://jackniu81.github.io/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="本系列共 5 篇。前两篇讲解了协议基础与三大核心原语，本篇讲解传输层：协议报文如何在进程之间、跨机器网络上传递。覆盖 stdio 与 Streamable HTTP 两种官方传输的完整规范、握手流程、鉴权、会话管理与高频坑点。  一、传输层与协议层的边界先建立一条最重要的分界线：  协议层：规定消息结构、method、字段、会话顺序、capability 协商；报文本身和”怎么走”无关； 传输层">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-11-06T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T02:41:37.794Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/","path":"2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/","title":"深入浅出 MCP 系列教程（三）：传输层实战"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入浅出 MCP 系列教程（三）：传输层实战 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BC%A0%E8%BE%93%E5%B1%82%E4%B8%8E%E5%8D%8F%E8%AE%AE%E5%B1%82%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="nav-number">1.</span> <span class="nav-text">一、传输层与协议层的边界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82%E5%BF%85%E9%A1%BB%E4%BF%9D%E8%AF%81%E7%9A%84%E6%9C%80%E5%B0%8F%E5%A5%91%E7%BA%A6"><span class="nav-number">1.1.</span> <span class="nav-text">传输层必须保证的最小契约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82%E4%B8%8D%E8%B4%9F%E8%B4%A3"><span class="nav-number">1.2.</span> <span class="nav-text">传输层不负责</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81stdio-%E4%BC%A0%E8%BE%93%EF%BC%88%E6%9C%AC%E5%9C%B0%E5%AD%90%E8%BF%9B%E7%A8%8B%E4%BC%A0%E8%BE%93%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">二、stdio 传输（本地子进程传输）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%95%B4%E4%BD%93%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 整体模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%B6%88%E6%81%AF%E5%88%86%E5%89%B2%E8%A7%84%E5%88%99%EF%BC%9AJSON-Lines%EF%BC%88JSONL%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 消息分割规则：JSON Lines（JSONL）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-stderr-%E7%9A%84%E4%B8%A5%E6%A0%BC%E7%BA%A6%E5%AE%9A%EF%BC%88%E6%9C%80%E7%BB%8F%E5%85%B8%E7%9A%84%E5%9D%91%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 stderr 的严格约定（最经典的坑）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E8%BF%9B%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E4%BC%9A%E8%AF%9D%E7%BB%91%E5%AE%9A"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 进程生命周期与会话绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E9%85%8D%E7%BD%AE%E4%BC%A0%E9%80%92"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 配置传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E4%BC%98%E7%BC%BA%E7%82%B9%E4%B8%8E%E9%80%82%E7%94%A8%E8%BE%B9%E7%95%8C"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 优缺点与适用边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-stdio-%E9%AB%98%E9%A2%91%E5%9D%91%E6%B8%85%E5%8D%95"><span class="nav-number">2.7.</span> <span class="nav-text">2.7 stdio 高频坑清单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Streamable-HTTP%EF%BC%88%E8%BF%9C%E7%A8%8B%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">三、Streamable HTTP（远程网络传输）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%9E%B6%E6%9E%84%E6%80%BB%E8%A7%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 架构总览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%BC%9A%E8%AF%9D-ID%EF%BC%88sessionId%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 会话 ID（sessionId）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%AE%8C%E6%95%B4%E6%8F%A1%E6%89%8B%E6%B5%81%E7%A8%8B"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 完整握手流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-SSE-%E4%BA%8B%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 SSE 事件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E4%B8%8A%E8%A1%8C-POST-%E8%AF%B7%E6%B1%82%E8%A7%84%E8%8C%83"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 上行 POST 请求规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E9%89%B4%E6%9D%83%E6%96%B9%E6%A1%88"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 鉴权方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E9%87%8D%E8%BF%9E%E3%80%81%E5%BF%83%E8%B7%B3%E3%80%81%E4%BC%9A%E8%AF%9D%E8%B6%85%E6%97%B6"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 重连、心跳、会话超时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">3.8.</span> <span class="nav-text">3.8 优缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%B8%A4%E7%A7%8D%E4%BC%A0%E8%BE%93%E9%80%89%E5%9E%8B%E4%B8%8E%E7%BD%91%E5%85%B3%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">四、两种传输选型与网关模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E9%80%89%E5%9E%8B%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 选型对照表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-MCP-%E7%BD%91%E5%85%B3%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%BC%81%E4%B8%9A%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 MCP 网关模式（企业常用）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BC%A0%E8%BE%93%E5%B1%82%E9%80%9A%E7%94%A8%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">五、传输层通用异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E7%AC%AC%E4%B8%89%E7%AF%87%E5%B0%8F%E7%BB%93%E4%B8%8E%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">6.</span> <span class="nav-text">六、第三篇小结与高频误区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%A4%8D%E7%9B%98"><span class="nav-number">6.1.</span> <span class="nav-text">核心复盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%A2%91%E8%AF%AF%E5%8C%BA"><span class="nav-number">6.2.</span> <span class="nav-text">高频误区</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/06/MCP-Transport-Stdio-Streamable-HTTP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入浅出 MCP 系列教程（三）：传输层实战 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入浅出 MCP 系列教程（三）：传输层实战
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-06 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-06T09:00:00+08:00">2026-11-06</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本系列共 5 篇。前两篇讲解了协议基础与三大核心原语，本篇讲解传输层：协议报文如何在进程之间、跨机器网络上传递。覆盖 stdio 与 Streamable HTTP 两种官方传输的完整规范、握手流程、鉴权、会话管理与高频坑点。</p>
+</blockquote>
+<h2 id="一、传输层与协议层的边界"><a href="#一、传输层与协议层的边界" class="headerlink" title="一、传输层与协议层的边界"></a>一、传输层与协议层的边界</h2><p>先建立一条最重要的分界线：</p>
+<ul>
+<li><strong>协议层</strong>：规定消息结构、method、字段、会话顺序、capability 协商；报文本身和”怎么走”无关；</li>
+<li><strong>传输层</strong>：只负责字节流的打包、分割、投递、保序、连接维持；传输层<strong>不理解</strong> <code>tools/call</code>、<code>resources/read</code> 的业务含义。</li>
+</ul>
+<p>一条核心推论：只要能把 JSON-RPC 消息可靠、有序地双向投递，理论上就可以实现自定义传输（WebSocket、Unix Socket、串口等），只是官方只标准化 stdio 和 Streamable HTTP。</p>
+<h3 id="传输层必须保证的最小契约"><a href="#传输层必须保证的最小契约" class="headerlink" title="传输层必须保证的最小契约"></a>传输层必须保证的最小契约</h3><ol>
+<li><strong>消息边界可识别</strong>：接收方可以精准切分出一条条独立的 JSON-RPC 对象；</li>
+<li><strong>顺序</strong>：同一连接上发送顺序和接收顺序一致（流保序）；</li>
+<li><strong>双向</strong>：Client ↔ Server 都可以主动发消息（通知、反向 sampling 请求）；</li>
+<li><strong>连接断开感知</strong>：上层协议收到断开事件，自动销毁会话、订阅、状态。</li>
+</ol>
+<h3 id="传输层不负责"><a href="#传输层不负责" class="headerlink" title="传输层不负责"></a>传输层不负责</h3><p>版本兼容、capability 校验、业务权限过滤、报文 Schema 校验、消息重试（重试是上层业务逻辑）。</p>
+<h2 id="二、stdio-传输（本地子进程传输）"><a href="#二、stdio-传输（本地子进程传输）" class="headerlink" title="二、stdio 传输（本地子进程传输）"></a>二、stdio 传输（本地子进程传输）</h2><p>stdio 是本地场景默认、最简单、目前生态最成熟的传输方式。典型场景：Claude Desktop、本地 IDE 插件在本机启动一个独立子进程作为 MCP Server。</p>
+<h3 id="2-1-整体模型"><a href="#2-1-整体模型" class="headerlink" title="2.1 整体模型"></a>2.1 整体模型</h3><p>Host（Client）使用进程创建 API（spawn &#x2F; fork）启动 Server 可执行文件，绑定三个标准流：</p>
+<ul>
+<li><code>stdin</code>：Client → Server，发给 Server 的所有 JSON-RPC 请求、通知；</li>
+<li><code>stdout</code>：Server → Client，返回的响应、推送通知；</li>
+<li><code>stderr</code>：独立日志流，<strong>不属于 MCP 协议通道</strong>。</li>
+</ul>
+<h3 id="2-2-消息分割规则：JSON-Lines（JSONL）"><a href="#2-2-消息分割规则：JSON-Lines（JSONL）" class="headerlink" title="2.2 消息分割规则：JSON Lines（JSONL）"></a>2.2 消息分割规则：JSON Lines（JSONL）</h3><p>stdio 是无边界字节流，约定：<strong>每一条独立的 JSON-RPC 消息单独占一行，以换行符 <code>\n</code> 作为消息分隔符</strong>。每一行 &#x3D; 一条完整 JSON 对象，不能把一条消息拆成多行，也不能一行塞多条消息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;init-001&quot;,&quot;method&quot;:&quot;initialize&quot;,&quot;params&quot;:&#123;...&#125;&#125;\n</span><br><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;init-001&quot;,&quot;result&quot;:&#123;...&#125;&#125;\n</span><br><span class="line">&#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;initialized&quot;,&quot;params&quot;:&#123;&#125;&#125;\n</span><br></pre></td></tr></table></figure>
+
+<p>接收方逻辑：持续读流，按 <code>\n</code> 切分行；对每一行 trim 后尝试 JSON parse；解析失败视为传输坏消息，上报日志、丢弃该行，不直接杀死整个会话。</p>
+<h3 id="2-3-stderr-的严格约定（最经典的坑）"><a href="#2-3-stderr-的严格约定（最经典的坑）" class="headerlink" title="2.3 stderr 的严格约定（最经典的坑）"></a>2.3 stderr 的严格约定（最经典的坑）</h3><p>Server 绝对不可以把协议消息输出到 stderr；同时，Server 不能随便往 stdout 打印调试日志。</p>
+<ul>
+<li>✅ stdout：只输出合法、单行 JSON-RPC</li>
+<li>✅ stderr：日志、调试、报错、堆栈</li>
+<li>❌ 错误写法：在 Server 代码里随便 <code>console.log(&quot;开始启动&quot;)</code>，这条文本会混进 stdout，破坏 JSONL 流，导致 Client 解析报错、握手直接失败</li>
+</ul>
+<p>新手最常见故障：启动 Server 后 Client 一直卡在初始化，报 JSON parse error，根源就是 Server 在 stdout 打了非 JSON 的调试文本。</p>
+<h3 id="2-4-进程生命周期与会话绑定"><a href="#2-4-进程生命周期与会话绑定" class="headerlink" title="2.4 进程生命周期与会话绑定"></a>2.4 进程生命周期与会话绑定</h3><p>stdio 模式：<strong>一个进程实例对应唯一一条 MCP 会话</strong>。</p>
+<ul>
+<li>Client 启动进程 → 开启会话；进程退出（正常 exit、崩溃、被 kill），流直接关闭，会话销毁，所有订阅、状态全部丢失；</li>
+<li>想重新会话必须重新 spawn 全新进程，从头走完整握手；</li>
+<li>Client 一般通过 <code>SIGTERM</code> 请求 Server 优雅退出；如果 Client 先退出，子进程可能变成孤儿进程，好的实现要做进程组托管。</li>
+</ul>
+<h3 id="2-5-配置传递"><a href="#2-5-配置传递" class="headerlink" title="2.5 配置传递"></a>2.5 配置传递</h3><p>启动子进程时，Client 通过命令行参数 + 环境变量给 Server 传递配置（数据库连接串、文件根目录、密钥、配置路径），而不是通过 MCP 报文。敏感密钥放环境变量比命令行稍微安全一点（命令行在进程列表更容易被看到），但仍然不是安全远程方案，stdio 仅限本机。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cp = <span class="title function_">spawn</span>(<span class="string">&quot;mcp-fileserver&quot;</span>, [], &#123;</span><br><span class="line">  <span class="attr">env</span>: &#123; <span class="attr">ROOT</span>: <span class="string">&quot;/home/user/docs&quot;</span> &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// cp.stdin -&gt; 发消息</span></span><br><span class="line"><span class="comment">// cp.stdout -&gt; 读消息</span></span><br><span class="line"><span class="comment">// cp.stderr -&gt; 单独收集日志</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-优缺点与适用边界"><a href="#2-6-优缺点与适用边界" class="headerlink" title="2.6 优缺点与适用边界"></a>2.6 优缺点与适用边界</h3><p>优点：</p>
+<ul>
+<li>零网络配置、不需要端口、不需要鉴权；</li>
+<li>生态成熟，绝大多数开源 MCP Server 默认支持；</li>
+<li>隔离天然：每个 Server 独立进程，崩溃不会直接搞崩 Host。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><strong>只能本机使用</strong>，不能跨机器；</li>
+<li>进程启动有冷启动开销；进程管理复杂（僵尸进程、卡死进程）；</li>
+<li>大流量场景下流阻塞风险（缓冲区满，互相卡住）。</li>
+</ul>
+<h3 id="2-7-stdio-高频坑清单"><a href="#2-7-stdio-高频坑清单" class="headerlink" title="2.7 stdio 高频坑清单"></a>2.7 stdio 高频坑清单</h3><ol>
+<li>平台换行符：Windows <code>\r\n</code>，解析时必须同时兼容；</li>
+<li>缓冲区：部分语言标准库会做行缓冲&#x2F;块缓冲，stdout 没有自动 flush，消息会卡在缓冲区不发出去（Python &#x2F; C++ 实现常踩）；</li>
+<li>二进制内容：blob base64 放在 JSON 内部，而不是直接裸流；</li>
+<li>不要在初始化之前就输出任何 stdout；</li>
+<li>超长单行 JSON 注意解析内存上限，防止超大报文 OOM。</li>
+</ol>
+<h2 id="三、Streamable-HTTP（远程网络传输）"><a href="#三、Streamable-HTTP（远程网络传输）" class="headerlink" title="三、Streamable HTTP（远程网络传输）"></a>三、Streamable HTTP（远程网络传输）</h2><p>当 MCP Server 不在本机，跑在内网另一台机器、云端容器，就需要 Streamable HTTP。它是官方标准化的远程传输方案，核心是：<strong>HTTP POST 上行 + SSE（Server-Sent Events）下行</strong>。</p>
+<p>为什么不用 WebSocket？官方设计选择：复用 HTTP 基础设施、更容易穿过反向代理、防火墙、鉴权中间件，同时保持双向消息通道。</p>
+<h3 id="3-1-架构总览"><a href="#3-1-架构总览" class="headerlink" title="3.1 架构总览"></a>3.1 架构总览</h3><p>两条独立逻辑通道，复用同一个 HTTP 服务：</p>
+<ol>
+<li><p><strong>上行通道（Client → Server）：POST 请求</strong><br>Client 把 JSON-RPC 消息放在 POST body 发给服务端点；服务返回 202 Accepted（接收成功）或错误码。</p>
+</li>
+<li><p><strong>下行通道（Server → Client）：SSE 长连接</strong><br>Client 发起一个 GET 请求，请求头 <code>Accept: text/event-stream</code>，建立 SSE；之后 Server 通过这个流持续推送响应、通知、sampling 请求。</p>
+</li>
+</ol>
+<blockquote>
+<p>关键点：两条通道解耦，靠一个会话标识符绑定在一起。</p>
+</blockquote>
+<h3 id="3-2-会话-ID（sessionId）"><a href="#3-2-会话-ID（sessionId）" class="headerlink" title="3.2 会话 ID（sessionId）"></a>3.2 会话 ID（sessionId）</h3><p>Streamable HTTP 的核心是 <code>sessionId</code>：</p>
+<ul>
+<li>Client 在握手阶段和服务协商得到一个 <code>sessionId</code>；</li>
+<li>后续所有 POST 上行请求、SSE 下行连接都必须带上它；</li>
+<li>Server 用 sessionId 把不同 HTTP 请求归到同一个 MCP 会话；</li>
+<li>sessionId 是服务端生成的不透明字符串，通常放在 HTTP header。</li>
+</ul>
+<p>对比 stdio：stdio 天然一个进程 &#x3D; 一个会话；HTTP 传输是无状态协议，必须用 sessionId 绑定会话上下文、订阅、能力协商结果。</p>
+<h3 id="3-3-完整握手流程"><a href="#3-3-完整握手流程" class="headerlink" title="3.3 完整握手流程"></a>3.3 完整握手流程</h3><ol>
+<li>Client 发起初始化请求，请求建立会话；</li>
+<li>Server 生成唯一 <code>sessionId</code> 返回；</li>
+<li>Client 使用这个 sessionId，打开 SSE GET 长连接，用于接收下行消息；</li>
+<li>Client 在同一会话内，通过 POST 发送第一条 <code>initialize</code> JSON-RPC 请求；</li>
+<li>Server 在 SSE 流返回 initialize 响应；</li>
+<li>Client 收到响应后，继续 POST 发送 <code>initialized</code> 通知；</li>
+<li>握手完成，进入正常交互：Client 所有往外发的消息走 POST；Server 所有往外推送走 SSE；</li>
+<li>SSE 断开：Client 携带同一个 sessionId 重连；服务端会话可配置超时保留，避免每次断连全部重建。</li>
+</ol>
+<blockquote>
+<p>MCP 协议层的握手顺序（initialize → 等待响应 → initialized）完全不变，只是报文承载在 HTTP&#x2F;SSE 上。</p>
+</blockquote>
+<h3 id="3-4-SSE-事件格式"><a href="#3-4-SSE-事件格式" class="headerlink" title="3.4 SSE 事件格式"></a>3.4 SSE 事件格式</h3><p>每一条 MCP JSON-RPC 消息封装成一个 event，event name 一般为 <code>message</code>，<code>data</code> 字段存放 JSON 字符串：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">event: message</span><br><span class="line">data: &#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;init-001&quot;,&quot;result&quot;:&#123;&quot;protocolVersion&quot;:&quot;0.1.0&quot;,...&#125;&#125;</span><br><span class="line"></span><br><span class="line">event: message</span><br><span class="line">data: &#123;&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;notifications/resources/updated&quot;,&quot;params&quot;:&#123;&quot;uri&quot;:&quot;file:///demo.txt&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SSE 自带 <code>retry</code> 字段，通知 Client 断线之后等待多久重试连接，刚好适配重连逻辑。</p>
+<h3 id="3-5-上行-POST-请求规范"><a href="#3-5-上行-POST-请求规范" class="headerlink" title="3.5 上行 POST 请求规范"></a>3.5 上行 POST 请求规范</h3><ul>
+<li>Content-Type：<code>application/json</code></li>
+<li>Body：单条 JSON-RPC 对象（官方不鼓励 batch）</li>
+<li>Header：携带 <code>Mcp-Session-Id: xxx</code></li>
+<li>成功接收：返回 <code>202 Accepted</code>，<strong>不把响应放在这个 POST 的 body；响应一定从 SSE 返回</strong></li>
+<li>参数非法、session 不存在：返回 400 &#x2F; 401 &#x2F; 404 &#x2F; 429 等 HTTP 状态码</li>
+</ul>
+<blockquote>
+<p>这是很多人理解偏差的地方：POST 只是”投递消息”，不是 RPC 同步等待返回；返回走 SSE。</p>
+</blockquote>
+<h3 id="3-6-鉴权方案"><a href="#3-6-鉴权方案" class="headerlink" title="3.6 鉴权方案"></a>3.6 鉴权方案</h3><p>官方没有内置一套 auth，而是复用 HTTP 标准鉴权：</p>
+<ol>
+<li><strong>Bearer Token（最常用）</strong>：<code>Authorization: Bearer xxx</code>；</li>
+<li><strong>API Key</strong>：header &#x2F; query 参数；</li>
+<li><strong>OAuth2 &#x2F; OIDC</strong>：适合企业 SSO；</li>
+<li><strong>mTLS</strong>：机器间可信通信，高安全内网。</li>
+</ol>
+<p>安全提醒：</p>
+<ul>
+<li>绝对不要用 URL query 放长期密钥，日志容易泄露；优先 Authorization header；</li>
+<li><strong>sessionId ≠ 身份凭证</strong>：sessionId 只是会话句柄，鉴权独立于会话；</li>
+<li>服务端要做：会话超时、闲置回收、主动失效（登出）、限流。</li>
+</ul>
+<h3 id="3-7-重连、心跳、会话超时"><a href="#3-7-重连、心跳、会话超时" class="headerlink" title="3.7 重连、心跳、会话超时"></a>3.7 重连、心跳、会话超时</h3><p>网络传输一定会断：WiFi 切换、代理重启、负载均衡切流。标准实现策略：</p>
+<ol>
+<li>SSE 客户端监听 error &#x2F; close 事件，按服务给出的 retry 间隔重试；</li>
+<li>会话还在有效期：重连后继续接收消息，不需要重新走 MCP initialize；</li>
+<li>会话已超时销毁：重连失败，必须全新创建 session、完整重新握手；</li>
+<li>心跳：可用自定义 notification 双向心跳，探测对端是否存活；</li>
+<li>服务端策略：闲置 N 分钟销毁会话，释放订阅、文件句柄、数据库连接。</li>
+</ol>
+<h3 id="3-8-优缺点"><a href="#3-8-优缺点" class="headerlink" title="3.8 优缺点"></a>3.8 优缺点</h3><p>优点：</p>
+<ul>
+<li>支持跨机器、跨网络、云端部署；可放在反向代理、负载均衡后面；</li>
+<li>天然支持标准 HTTP 鉴权、限流、日志、审计；</li>
+<li>Host 和 Server 可以独立扩缩容。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>架构复杂很多，需要管理 session、SSE、超时、重连；</li>
+<li>网络延迟高于本地 stdio；</li>
+<li>防火墙、代理可能截断长 SSE 连接（很多代理默认有长连接超时）；</li>
+<li>状态托管在服务端，内存、连接资源成本更高。</li>
+</ul>
+<h2 id="四、两种传输选型与网关模式"><a href="#四、两种传输选型与网关模式" class="headerlink" title="四、两种传输选型与网关模式"></a>四、两种传输选型与网关模式</h2><h3 id="4-1-选型对照表"><a href="#4-1-选型对照表" class="headerlink" title="4.1 选型对照表"></a>4.1 选型对照表</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>stdio</th>
+<th>Streamable HTTP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>部署位置</td>
+<td>本机子进程</td>
+<td>内网&#x2F;云端远程</td>
+</tr>
+<tr>
+<td>鉴权</td>
+<td>不需要（本机信任）</td>
+<td>必须设计鉴权</td>
+</tr>
+<tr>
+<td>会话绑定</td>
+<td>进程绑定</td>
+<td>sessionId 绑定</td>
+</tr>
+<tr>
+<td>双向通道</td>
+<td>stdin&#x2F;stdout 流</td>
+<td>POST + SSE</td>
+</tr>
+<tr>
+<td>重连</td>
+<td>断了就销毁，重启进程</td>
+<td>支持会话重连</td>
+</tr>
+<tr>
+<td>适合场景</td>
+<td>桌面客户端、本地 IDE、单机工具</td>
+<td>企业共享 MCP 服务、云 MCP、多客户端共用</td>
+</tr>
+</tbody></table>
+<p>简单选型口诀：</p>
+<ul>
+<li>只给自己本机用 → stdio；</li>
+<li>多个用户、多台机器共享一套 MCP 能力 → Streamable HTTP；</li>
+<li>混合架构：本地 Host 通过 Streamable HTTP 接入内网中心 MCP 网关，网关再内部调用多个 stdio 本地服务。</li>
+</ul>
+<h3 id="4-2-MCP-网关模式（企业常用）"><a href="#4-2-MCP-网关模式（企业常用）" class="headerlink" title="4.2 MCP 网关模式（企业常用）"></a>4.2 MCP 网关模式（企业常用）</h3><p>企业落地经常不会让 Host 直连各个后端 MCP Server，而是加一层网关：</p>
+<ul>
+<li>Host 只对接网关（Streamable HTTP）；</li>
+<li>网关负责鉴权、路由、限流、审计；</li>
+<li>网关背后可以同时对接 stdio 本地服务、远端 HTTP MCP 服务；</li>
+<li>网关做能力聚合：把多个后端 Server 的 tools &#x2F; resources 合并，对外统一入口；</li>
+<li>网关做权限裁剪：同一个后端 Server，不同用户看到不同工具白名单。</li>
+</ul>
+<p>网关是传输层和安全层的组合，协议本身没有网关规范，属于上层工程模式。</p>
+<h2 id="五、传输层通用异常处理"><a href="#五、传输层通用异常处理" class="headerlink" title="五、传输层通用异常处理"></a>五、传输层通用异常处理</h2><p>不管哪种传输，都要处理这些共性问题：</p>
+<ol>
+<li><strong>消息超限</strong>：单条 JSON 过大，应拒绝并断开或截断，防止内存耗尽；</li>
+<li><strong>乱序、丢消息</strong>：stdio 流保序；HTTP+SSE 在代理异常场景可能丢推送，应用层可增加 sequence 序号做确认（协议层不强制）；</li>
+<li><strong>背压</strong>：Server 处理慢、Client 持续高速发消息，缓冲区堆积；实现需要背压控制，暂停读&#x2F;写流；</li>
+<li><strong>消息解析错误</strong>：一般策略是丢弃这条消息、打日志、不直接杀死整个会话；</li>
+<li><strong>通道半开</strong>：一边认为连接正常，另一边已经断开；心跳机制解决。</li>
+</ol>
+<p>限流位置：stdio 一般在进程内部做；Streamable HTTP 可以在反向代理、网关、服务端多级限流，按 token、session、用户维度。</p>
+<h2 id="六、第三篇小结与高频误区"><a href="#六、第三篇小结与高频误区" class="headerlink" title="六、第三篇小结与高频误区"></a>六、第三篇小结与高频误区</h2><h3 id="核心复盘"><a href="#核心复盘" class="headerlink" title="核心复盘"></a>核心复盘</h3><ol>
+<li>传输层只负责投递字节，不感知业务 method；协议报文可以在 stdio 和 Streamable HTTP 之间无缝迁移；</li>
+<li>stdio 依靠进程 + JSONL，stderr 隔离日志；最大坑点是 stdout 不能随便打印；会话和进程生命周期绑定；</li>
+<li>Streamable HTTP 使用 POST 上行、SSE 下行，依靠 sessionId 维持会话；鉴权复用 HTTP 体系；</li>
+<li>远程场景天然带来会话超时、重连、鉴权、代理长连接超时等工程问题。</li>
+</ol>
+<h3 id="高频误区"><a href="#高频误区" class="headerlink" title="高频误区"></a>高频误区</h3><table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST 请求会直接返回 tool 结果</td>
+<td>POST 只是投递消息；响应、推送全部从 SSE 返回</td>
+</tr>
+<tr>
+<td>sessionId 是鉴权令牌</td>
+<td>sessionId 只是会话句柄；鉴权独立</td>
+</tr>
+<tr>
+<td>stdio 可以跨机器远程调用</td>
+<td>stdio 是本机子进程机制，不适合远程</td>
+</tr>
+<tr>
+<td>SSE 是双向通道</td>
+<td>SSE 只能下行；上行依赖独立 POST</td>
+</tr>
+<tr>
+<td>切换传输需要修改 tools&#x2F;resources 报文结构</td>
+<td>协议报文不变，只改投递方式</td>
+</tr>
+</tbody></table>
+<hr>
+<p>下一篇：《深入浅出 MCP 系列教程（四）：进阶能力》，将详解 Sampling 反向模型调用、Roots 资源沙箱、完整通知体系、错误模型与协议扩展机制。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/04/MCP-Core-Primitives-Tools-Resources-Prompts/" rel="prev" title="深入浅出 MCP 系列教程（二）：三大核心原语实战">
+                  <i class="fa fa-angle-left"></i> 深入浅出 MCP 系列教程（二）：三大核心原语实战
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/08/MCP-Advanced-Sampling-Roots-Notifications/" rel="next" title="深入浅出 MCP 系列教程（四）：进阶能力">
+                  深入浅出 MCP 系列教程（四）：进阶能力 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

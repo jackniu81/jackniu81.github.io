@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">104</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,749 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/04/10/React-starter-2-React-Router-Dom/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/04/10/React-starter-2-React-Router-Dom/" class="post-title-link" itemprop="url">React 入门（2）- 路由 React Router</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-10 22:11:55" itemprop="dateCreated datePublished" datetime="2021-04-10T22:11:55+08:00">2021-04-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1. 概述</a></li>
+<li><a href="#browserrouter%E4%B8%8Ehashrouter%E7%9A%84%E5%8C%BA%E5%88%AB">BrowserRouter与HashRouter的区别</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8">安装和使用</a></li>
+</ul>
+<blockquote>
+<p>环境:</p>
+<ul>
+<li>React 17.x</li>
+<li>react-router-dom: 5.2</li>
+</ul>
+</blockquote>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>React 本身是一个极简的类库，并且遵循渐进式原则，所以是不带路由（Router）功能的。对于稍复杂些的应用，没有路由显然是不可以的，所以就需要引入路由（React Router）库。</p>
+<p>React Router 从5.0开始只分为Core，Web 和Native3种。 从5.0开始，彻底将原本的针对网页使用的react-router的npm package命名改为了react-router-dom。也就是说，针对web应用，用react-router-dom吧。（本文暂不涉及Native)</p>
+<blockquote>
+<p>官方文档： <a target="_blank" rel="noopener" href="https://reacttraining.com/react-router/">https://reacttraining.com/react-router/</a></p>
+</blockquote>
+<h1 id="BrowserRouter与HashRouter的区别"><a href="#BrowserRouter与HashRouter的区别" class="headerlink" title="BrowserRouter与HashRouter的区别"></a>BrowserRouter与HashRouter的区别</h1><p>React Router 有2中模式，BrowserRouter与HashRouter，下面我们来看一下区别</p>
+<ol>
+<li>url表现形式不一样，看是否包含#</li>
+</ol>
+<ul>
+<li>BrowserRouter没有，例如：<a target="_blank" rel="noopener" href="http://localhost:3000/about">http://localhost:3000/about</a></li>
+<li>HashRouter的路径包含＃，例如：<a target="_blank" rel="noopener" href="http://localhost:3000/#/about">http://localhost:3000/#/about</a></li>
+</ul>
+<ol start="2">
+<li>底层原理不一样</li>
+</ol>
+<ul>
+<li>BrowserRouter使用的是HTML5的history API(window.history.pushState, popState)</li>
+<li>HashRouter使用的是URL的哈希值。</li>
+</ul>
+<ol start="3">
+<li>刷新后对路由state参数的影响</li>
+</ol>
+<ul>
+<li>BrowserRouter没有任何影响，因为state保存在history对象中。</li>
+<li>HashRouter刷新后会导致路由state参数的丢失。</li>
+</ul>
+<h1 id="安装和使用"><a href="#安装和使用" class="headerlink" title="安装和使用"></a>安装和使用</h1><ol>
+<li><p>安装：<br><code>npm i react-router-dom</code></p>
+</li>
+<li><p>简单使用，<br>参考：<a target="_blank" rel="noopener" href="https://reactrouter.com/web/guides/quick-start">https://reactrouter.com/web/guides/quick-start</a></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/30/angular-perfromance-in-binding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/30/angular-perfromance-in-binding/" class="post-title-link" itemprop="url">angular绑定（脏检查）方面的性能优化技巧</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-30 14:48:39" itemprop="dateCreated datePublished" datetime="2021-03-30T14:48:39+08:00">2021-03-30</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BC%98%E5%8C%96">1. 为什么要优化</a></li>
+<li><a href="#2-%E7%BC%96%E7%A8%8B%E4%B9%A0%E6%83%AF%E6%96%B9%E9%9D%A2">2. 编程习惯方面</a><ul>
+<li><a href="#21-ngforof%E5%8A%A0%E5%85%A5trackby%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD">2.1. NgForOf，加入trackBy提升性能</a></li>
+<li><a href="#22-angular%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F">2.2. Angular数据绑定的三种方式</a></li>
+<li><a href="#23-%E9%99%A4%E9%9D%9E%E9%9C%80%E8%A6%81%E9%83%BD%E6%98%AF%E7%94%A8%E5%8D%95%E5%90%91%E7%BB%91%E5%AE%9A%E5%87%8F%E5%B0%91%E7%9B%91%E6%8E%A7%E5%80%BC%E7%9A%84%E4%B8%AA%E6%95%B0">2.3. 除非需要，都是用单向绑定，减少监控值的个数</a></li>
+</ul>
+</li>
+<li><a href="#3-changedetectionstrategyonpush-%E8%BF%9B%E8%A1%8C%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87">3. ChangeDetectionStrategy.OnPush 进行性能提升</a></li>
+<li><a href="#4-%E5%88%A9%E7%94%A8ngzone-runoutsideangular%E4%BC%98%E5%8C%96">4. 利用ngzone-runOutsideAngular优化</a></li>
+<li><a href="#5-%E6%89%8B%E5%8A%A8%E6%8E%A7%E5%88%B6%E8%84%8F%E6%A3%80%E6%9F%A5-changedetectorref">5. 手动控制脏检查 ChangeDetectorRef</a></li>
+<li><a href="#6-%E6%80%BB%E7%BB%93">6. 总结</a></li>
+</ul>
+<blockquote>
+<p>环境: </p>
+<ul>
+<li>Angular: 8+</li>
+</ul>
+</blockquote>
+<h1 id="1-为什么要优化"><a href="#1-为什么要优化" class="headerlink" title="1. 为什么要优化"></a>1. 为什么要优化</h1><p>双向绑定是一柄双刃剑，提高开发效率的同时，也牺牲了性能。当然，随着硬件性能的提升，Angular自身性能的提升，对于一般（中小）复杂度的应用，性能问题可以忽略不计。但是对于特殊场景，或复杂页面来说，我们就需要单独的处理数据绑定问题，否则就会有卡顿的现象，影响用户体验。</p>
+<h1 id="2-编程习惯方面"><a href="#2-编程习惯方面" class="headerlink" title="2. 编程习惯方面"></a>2. 编程习惯方面</h1><p>平时的一些小技巧，小习惯，都可以改善Angular绑定方面的性能。</p>
+<h2 id="2-1-NgForOf，加入trackBy提升性能"><a href="#2-1-NgForOf，加入trackBy提升性能" class="headerlink" title="2.1. NgForOf，加入trackBy提升性能"></a>2.1. NgForOf，加入trackBy提升性能</h2><p>trackBy定义如何跟踪可迭代项的更改的函数。在迭代器中添加、移动或删除条目时，指令必须重新渲染适当的 DOM 节点。为了最大程度地减少 DOM 中的搅动，仅重新渲染已更改的节点。</p>
+<p>默认情况下，变更检测器假定对象实例标识可迭代对象。提供此函数后，指令将使用调用此函数的结果来标识项节点，而不是对象本身的标识。</p>
+<h2 id="2-2-Angular数据绑定的三种方式"><a href="#2-2-Angular数据绑定的三种方式" class="headerlink" title="2.2. Angular数据绑定的三种方式"></a>2.2. Angular数据绑定的三种方式</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>Name &#123;&#123;item.name&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>  <span class="comment">&lt;!-- 1. 直接绑定 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>Classes &#123;&#123;item | classPipe&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="comment">&lt;!-- 2. pipe方式--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>Classes &#123;&#123;classes(item)&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="comment">&lt;!-- 3.绑定方法调用的结果 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>直接绑定： 大多数情况下，这都是性能最好的方式。</li>
+<li>绑定方法调用的结果：在每个脏值检测过程中，classes方程都要被调用一遍。如果没有特殊需求，应尽量避免这种使用方式。</li>
+<li>pipe方式： 它和绑定function类似，每次脏值检测classPipe都会被调用。不过Angular给pipe做了优化，加了缓存，如果item和上次相等，则直接返回结果。</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> *<span class="attr">ngFor</span>=<span class="string">&quot;let item of items; index as i; trackBy: trackByFn&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-除非需要，都是用单向绑定，减少监控值的个数"><a href="#2-3-除非需要，都是用单向绑定，减少监控值的个数" class="headerlink" title="2.3. 除非需要，都是用单向绑定，减少监控值的个数"></a>2.3. 除非需要，都是用单向绑定，减少监控值的个数</h2><p>对于一般数据来说，都是只需要展示给用户，不需要修改。那么对于这部分数据，使用单向绑定即可(ts-&gt;html).<br>如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 也称插值绑定 --&gt;</span><br><span class="line"> &lt;span&gt;&#123;&#123;yourMessage&#125;&#125;&lt;/span&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-ChangeDetectionStrategy-OnPush-进行性能提升"><a href="#3-ChangeDetectionStrategy-OnPush-进行性能提升" class="headerlink" title="3. ChangeDetectionStrategy.OnPush 进行性能提升"></a>3. ChangeDetectionStrategy.OnPush 进行性能提升</h1><p>对于一些很复杂的页面，上面的小技巧就不够用了，不过Angular也是考虑到这些了，提供了不少方法。<br>Angular 对比 AngularJS 在变化检测上由原来的双向检测(父-&gt;子，子-&gt;父)变为了单向(父-&gt;子)。所以每一次变化检测都会确定性地收敛。<br>Angular定义一个组件时，可以传入一个变化检测配置项为</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">changeDetection</span>: <span class="title class_">ChangeDetectionStrategy</span>.<span class="property">OnPush</span> | <span class="title class_">ChangeDetectionStrategy</span>.<span class="property">Default</span>;</span><br></pre></td></tr></table></figure>
+
+<p>onpush策略只判断输入的引用(如果是object)是否改变，来判断是否进行脏检查。因此，我们可以使用onpush策略来减少变化检测的开销。</p>
+<h1 id="4-利用ngzone-runOutsideAngular优化"><a href="#4-利用ngzone-runOutsideAngular优化" class="headerlink" title="4. 利用ngzone-runOutsideAngular优化"></a>4. 利用ngzone-runOutsideAngular优化</h1><p>Angular依赖NgZone来监听异步操作，并从根部执行变化检测。换句话说，我们代码中的每一个 addEventListener都会触发脏检查。但是如果我们非常明确，有些addEventListener要执行的东西，不会（或者说可以忽略）影响数据结果，不想然他触发脏检查。比如监测scroll，监测鼠标事件等。</p>
+<p>针对这种情况， 我们可以使用zone提供的runOutsideAngular，让这些事件不触发脏检查。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">zone</span>.<span class="title function_">runOutsideAngular</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="property">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;mousemove&#x27;</span>, <span class="variable language_">this</span>.<span class="property">bindMouse</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-手动控制脏检查-ChangeDetectorRef"><a href="#5-手动控制脏检查-ChangeDetectorRef" class="headerlink" title="5. 手动控制脏检查 ChangeDetectorRef"></a>5. 手动控制脏检查 ChangeDetectorRef</h1><p>Angular的ChangeDetectorRef实例上提供了可以绑定或解绑某个组件脏检查的方法。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ChangeDetectorRef</span> &#123;</span><br><span class="line">  <span class="title function_">markForCheck</span>() : <span class="built_in">void</span>     <span class="comment">// 通知框架进行变化检查/Change Detection</span></span><br><span class="line">  <span class="title function_">detach</span>() : <span class="built_in">void</span>           <span class="comment">// 禁止脏检查</span></span><br><span class="line">  <span class="title function_">detectChanges</span>() : <span class="built_in">void</span>    <span class="comment">// 手工触发脏检查， 从该组件到各个子组件执行一次变化检测</span></span><br><span class="line">  <span class="title function_">checkNoChanges</span>() : <span class="built_in">void</span></span><br><span class="line">  <span class="title function_">reattach</span>() : <span class="built_in">void</span>         <span class="comment">// detach逆操作，启用脏检查</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
+<li>平时的一些小习惯，都可以提高angular的性能；</li>
+<li>针对复杂应用，或者当出现卡顿时，我们也是有办法的！</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/CSS-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/07/CSS-interview-qa/" class="post-title-link" itemprop="url">CSS面试题汇总</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="CSS实现水平垂直居中"><a href="#CSS实现水平垂直居中" class="headerlink" title="CSS实现水平垂直居中"></a>CSS实现水平垂直居中</h1><ol>
+<li>margin: auto;实现绝对定位元素的居中</li>
+</ol>
+<pre><code class="language-css">    .center-vertical{
+        width: 100px;
+        height: 100px;
+        background: orange;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+</code></pre>
+<ol start="2">
+<li>CSS3.0弹性布局</li>
+</ol>
+<pre><code class="language-css">      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* 定义body的元素水平居中 */
+      }
+      .content {
+        width: 300px;
+        height: 300px;
+        background: orange;
+      }
+</code></pre>
+<h1 id="行内元素有哪些？块级元素有哪些？"><a href="#行内元素有哪些？块级元素有哪些？" class="headerlink" title="行内元素有哪些？块级元素有哪些？"></a>行内元素有哪些？块级元素有哪些？</h1><ol>
+<li>行内元素有：<code>a b span img input select strong</code></li>
+<li>块级元素有：<code>div ul ol li dl dt dd h1 h2 h3 h4…p</code></li>
+<li>常见的空元素：    <code>&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt; &lt;link&gt; &lt;meta&gt;</code></li>
+</ol>
+<h1 id="CSS3有哪些新特性？"><a href="#CSS3有哪些新特性？" class="headerlink" title="CSS3有哪些新特性？"></a>CSS3有哪些新特性？</h1><ol>
+<li>新增各种CSS选择器  （: not(.input)：）</li>
+<li>圆角            （border-radius:8px）</li>
+<li>多列布局      （multi-column layout）</li>
+<li>阴影和反射   （Shadow\Reflect）</li>
+<li>文字特效      （text-shadow）</li>
+<li>文字渲染      （Text-decoration）</li>
+<li>线性渐变      （gradient）</li>
+<li>旋转            （transform）</li>
+<li>缩放,定位,倾斜,动画,多背景</li>
+</ol>
+<p><br><br></p>
+<blockquote>
+<p>—————- END —————-</p>
+</blockquote>
+<p><br><br><br><br><br></p>
+<blockquote>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/07/web-frontend-interview-qa/" class="post-title-link" itemprop="url">前端(Fontend)面试题汇总</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-07 13:06:00" itemprop="dateCreated datePublished" datetime="2021-03-07T13:06:00+08:00">2021-03-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/03/07/web-frontend-interview-qa/">前端(Fontend)面试题汇总</a></p>
+</blockquote>
+<h1 id="1-http-1-1-2-0-新增加的功能"><a href="#1-http-1-1-2-0-新增加的功能" class="headerlink" title="1. http 1.1&#x2F;2.0 新增加的功能"></a>1. http 1.1&#x2F;2.0 新增加的功能</h1><p><strong>HTTP1.1</strong></p>
+<ol>
+<li><strong>缓存处理</strong>，在 HTTP1.0 中主要使用 header 来控制缓存策略。</li>
+<li><strong>带宽优化及网络连接的使用</strong>，HTTP1.1 则在请求头引入了 range 头域，它允许只请求资源的某个部分， 并且支持断点续传。</li>
+<li><strong>错误通知的管理</strong>，在 HTTP1.1 中新增了 24 个错误状态响应码，如 409（Conflict）表示请求的资源与资源的当前状态发生冲突；410（Gone）表示服务器上的某个资源被永久性的删除。</li>
+<li>Host 头处理，在 HTTP1.0 中认为每台服务器都绑定一个唯一的 IP 地址，因此，请求消息中的 URL 并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个 IP 地址。HTTP1.1 的请求消息和响应消息都应支持 Host 头域，且请求消息中如果没有 Host 头域会报告一个错误（400 Bad Request）。</li>
+<li>长连接，HTTP 1.1 支持长连接（PersistentConnection）和请求的流水线（Pipelining）处理，在一个 TCP 连接上可以传送多个 HTTP 请求和响应. (Connection： keep-alive)</li>
+</ol>
+<p><strong>HTTP2.0</strong> 大幅度的提高了 web 性能，进一步减少了网络的延迟。实现低延迟高吞吐量。</p>
+<ol>
+<li>二进制分帧 （二进制格式编码）</li>
+<li>首部压缩 （header）</li>
+<li>多路复用 （HTTP2.0 可以在共享 TCP 连接的基础上同时发送请求和响应，避免 HTTP 旧版本的队头阻塞问题）</li>
+<li>请求优先级</li>
+<li>服务器推送 （服务端根据客户端的请求，提前返回多个响应，推送额外的资源给客户端。）</li>
+</ol>
+<h1 id="2-用户输入-URL-到浏览器显现给用户页面经过了什么过程"><a href="#2-用户输入-URL-到浏览器显现给用户页面经过了什么过程" class="headerlink" title="2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程"></a>2. 用户输入 URL 到浏览器显现给用户页面经过了什么过程</h1><ol>
+<li>用户输入 URL，浏览器获取到 URL</li>
+<li>检查缓存，如果有有效缓存，直接加载</li>
+<li>浏览器(应用层)进行 DNS 解析（直接输入 IP 地址既跳过该步骤）</li>
+<li>根据解析出的 IP 地址+端口，浏览器（应用层）发起 HTTP 请求</li>
+<li>请求到达传输层，tcp 协议为传输报文提供可靠的字节流传输服务，它通过三次握手等手段来保证传输过程中的安全可靠。通过对大块数据的分割成一个个报文段的方式提供给大量数据的便携传输。</li>
+<li>服务器端收到发送方的 HTTP 请求之后，进行请求文件资源（如 HTML 页面）的寻找并响应报文</li>
+<li>客户端收到返回内容后，处理 html</li>
+<li>解析 html，生成 dom 树</li>
+<li>CSS 解析，为 DOM 中元素加入样式</li>
+<li>javascript 解析处理，更改 dom 树</li>
+<li>进行页面渲染</li>
+<li>重排、重绘</li>
+</ol>
+<h1 id="3-HTML5-的新特性"><a href="#3-HTML5-的新特性" class="headerlink" title="3. HTML5 的新特性"></a>3. HTML5 的新特性</h1><ol>
+<li>新的内容标签：header nav content footer article 1. aside</li>
+<li>更好的单元格体系:</li>
+<li>音频、视频 API:video radio</li>
+<li>画布(Canvas) API</li>
+<li>地理(Geolocation) API</li>
+<li>网页存储(Web storage) 1. API:localStorage,sessionStorage</li>
+<li>拖拽释放(Drag and drop) API</li>
+</ol>
+<h1 id="4-对浏览器内核的理解"><a href="#4-对浏览器内核的理解" class="headerlink" title="4. 对浏览器内核的理解"></a>4. 对浏览器内核的理解</h1><p>主要分成两部分：渲染引擎(layout engine 或 Rendering Engine)和 JS 引擎。</p>
+<ol>
+<li>渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入 CSS 等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。</li>
+<li>JS 引擎则：解析和执行 javascript 来实现网页的动态效果。最开始渲染引擎和 JS 引擎并没有区分的很明确，后来 JS 引擎越来越独立，内核就倾向于只指渲染引擎。</li>
+</ol>
+<h1 id="5-cookies，sessionStorage-和-localStorage"><a href="#5-cookies，sessionStorage-和-localStorage" class="headerlink" title="5. cookies，sessionStorage 和 localStorage"></a>5. cookies，sessionStorage 和 localStorage</h1><p>cookie 是网站为了标示用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。<br>cookie 数据始终在同源的 http 请求中携带（即使不需要），记会在浏览器和服务器间来回传递。<br>sessionStorage 和 localStorage 不会自动把数据发给服务器，仅在本地保存。</p>
+<p>存储大小：<br>cookie 数据大小不能超过 4k。<br>sessionStorage 和 localStorage 虽然也有存储大小的限制，但比 cookie 大得多，可以达到 5M 或更大。</p>
+<p>有期时间：<br>localStorage 存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；<br>sessionStorage 数据在当前浏览器窗口关闭后自动删除。<br>cookie 设置的 cookie 过期时间之前一直有效，即使窗口或浏览器关闭</p>
+<h1 id="6-如何实现浏览器内多个标签页之间的通"><a href="#6-如何实现浏览器内多个标签页之间的通" class="headerlink" title="6. 如何实现浏览器内多个标签页之间的通"></a>6. 如何实现浏览器内多个标签页之间的通</h1><p>WebSocket、SharedWorker；也可以调用 localstorge、cookies 等本地存储方式；</p>
+<h1 id="7-script标签中的async、defer属性的作用"><a href="#7-script标签中的async、defer属性的作用" class="headerlink" title="7. script标签中的async、defer属性的作用"></a>7. script标签中的async、defer属性的作用</h1><ol>
+<li>Async: 可选属性。表示应该立即下载脚本，但不应妨碍页面中的其他操作，比如下载其他资源或等待加载其他脚本。</li>
+<li>Defer: 可选属性。标识脚本可以延迟到文档完全被解析和显示之后再执行。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/02/javascript-interview-qa/" class="post-title-link" itemprop="url">2021 javascript 面试题汇总</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-02 14:06:00" itemprop="dateCreated datePublished" datetime="2021-03-02T14:06:00+08:00">2021-03-02</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><a href="https://jackniu81.github.io/2021/03/02/javascript-interview-qa/">2021 javascript 面试题汇总</a></p>
+</blockquote>
+<h1 id="1-this-都可以是哪些内容"><a href="#1-this-都可以是哪些内容" class="headerlink" title="1. this 都可以是哪些内容"></a>1. this 都可以是哪些内容</h1><p>对 C#、Java 等语言，this 就是当前对象，但是 javascript 不是，简单来说：</p>
+<ul>
+<li>全局 this 是 window;</li>
+<li>函数 this 是调用者;</li>
+<li>构造函数的 this 是 new 之后的新对象,</li>
+<li>call 和 apply bind 的 this 第一个参数</li>
+</ul>
+<h1 id="2-原型链-prototype"><a href="#2-原型链-prototype" class="headerlink" title="2. 原型链, prototype"></a>2. 原型链, prototype</h1><ul>
+<li>函数对象都包含 prototype 属性（函数的原型对象），其作用就是让该函数所实例化的对象们都可以找到公用的属性和方法；</li>
+<li>constructor 属性的含义就是指向该对象的构造函数</li>
+<li><code>__proto__</code>和 constructor 属性是对象所独有的；prototype 属性是函数所独有的，因为函数也是一种对象，所以函数也拥有<code>__proto__</code>和 constructor 属性。</li>
+<li>JavaScript 的每个对象都继承另一个父级对象，父级对象称为原型 (prototype) 对象。</li>
+<li>每一个实例对象都有一个私有属性<strong>proto</strong>指向其构造函数的原型对象 prototype；该原型对象也会作为实例对象有一个私有属性<strong>proto</strong>，层层向上直到一个对象的原型对象值为 null。</li>
+<li>当访问一个对象的属性或方法时，js 引擎会先查找该对象本身是否包含，如果没有，会去该对象的<strong>proto</strong>属性所指向的原型对象上找，如果没有，会继续向上一层找，直到某个对象的<strong>proto</strong>值为 null,这就是原型链。</li>
+<li>每个构造函数都有一个 prototype 属性，指向另外一个对象，说明整个对象所有的属性和方法都会被构造函数所拥有。</li>
+</ul>
+<h1 id="3-new-操作符都做了什么"><a href="#3-new-操作符都做了什么" class="headerlink" title="3. new 操作符都做了什么"></a>3. new 操作符都做了什么</h1><p>new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象类型之一。</p>
+<p>new Object()举例:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>把新对象的原型(<code>__proto__</code>)指向构造函数的 prototype</li>
+<li>把构造函数里的 this 指向新对象</li>
+<li>返回这个新对象</li>
+</ol>
+<h1 id="4-Javascript-的内存回收机制"><a href="#4-Javascript-的内存回收机制" class="headerlink" title="4. Javascript 的内存回收机制"></a>4. Javascript 的内存回收机制</h1><p>Javascript 内嵌了垃圾收集器，用来跟踪内存的分配和使用，以便当分配的内存不再使用时，自动释放它。垃圾收集器会按照固定的时间间隔，或代码执行中预定的收集时间，周期性地执行这一操作。<br>垃圾收集器必须跟踪哪个变量有用哪个变量无用，对于不再有用的变量打上标记，以备将来收回其所占用的内存。用于标识无用变量的策略通常有标记清除和引用计数两种。不同浏览器采用的策略不完全一致。</p>
+<h1 id="5-内存泄漏的主要原因"><a href="#5-内存泄漏的主要原因" class="headerlink" title="5. 内存泄漏的主要原因"></a>5. 内存泄漏的主要原因</h1><ul>
+<li>缓存</li>
+<li>队列消费不及时</li>
+<li>作用域未释放</li>
+</ul>
+<h1 id="6-Javascript-性能优化"><a href="#6-Javascript-性能优化" class="headerlink" title="6. Javascript 性能优化"></a>6. Javascript 性能优化</h1><ol>
+<li>针对 js 方面的前端性能优化，可以 1）使用 ansyc&#x2F;defer 加载；2）加载时，放到<code>&lt;/body&gt;</code>之前；3) 合并 JS 文件，并进行最小化处理；4）缓存；5）使用 CDN 网络；6）js 的 HTTP 压缩</li>
+<li>删除未使用的功能性代码以及与之相关的代码， 多余的依赖库，被滥用的 npm 包。</li>
+<li>减少作用域链上的查找次数（减少循环中的活动）。比如 for 循环，把 Array.length 赋值给一个变量，而不是每次比较都直接使用 length 属性；对页面元素进行操作时，取出复制给一个变量，每次操作都对这个变量进行操作，而不是每次操作都再重复取一下这个元素；</li>
+<li>闭包导致的内存泄露。闭包可以保证函数内的变量安全，可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，不会被自动清除。我们需要手动销毁内存中的变量。（赋值为 null）；</li>
+<li>尽量少用全局变量，尽量使用局部变量。</li>
+<li>减少不必要的变量</li>
+<li>类型转换：把数字转换成字符串使用 number + “” 。 性能对比： (“” + ) &gt; String() &gt; .toString() &gt; new String()</li>
+<li>对字符串进行循环操作，譬如替换、查找，应使用正则表达式。因为本身 JavaScript 的循环速度就比较慢，而正则表达式的操作是用 C 写成的语言的 API，性能很好。</li>
+<li>浮点数转换成整型使用 Math.floor()或者 Math.round()。parseInt()是用于将字符串转换成数字，Math 是内部对象，所以 Math.floor()其实并没有多少查询方法和调用的时间，速度是最快的。</li>
+<li>使用 classname 代替大量的内联样式修改。</li>
+<li>循环遍历，尽量少用 for in， 虽然代码易读，但性能很差。 尤其是遍历属性数量未知的情况下，少用。</li>
+</ol>
+<h1 id="7-ES6-ES7-ES8-…-新增的功能"><a href="#7-ES6-ES7-ES8-…-新增的功能" class="headerlink" title="7. ES6&#x2F;ES7&#x2F;ES8&#x2F;… 新增的功能"></a>7. ES6&#x2F;ES7&#x2F;ES8&#x2F;… 新增的功能</h1><h2 id="7-1-ES6-（2015）"><a href="#7-1-ES6-（2015）" class="headerlink" title="7.1. ES6 （2015）"></a>7.1. ES6 （2015）</h2><ul>
+<li>类</li>
+<li>模块化</li>
+<li>箭头函数</li>
+<li>函数参数默认值</li>
+<li>模板字符串</li>
+<li>解构赋值</li>
+<li>延展操作符</li>
+<li>对象属性简写</li>
+<li>Promise</li>
+<li>Let与Const</li>
+</ul>
+<h2 id="7-2-ES7（2016）"><a href="#7-2-ES7（2016）" class="headerlink" title="7.2. ES7（2016）"></a>7.2. ES7（2016）</h2><ul>
+<li>数组includes()方法，用来判断一个数组是否包含一个指定的值，根据情况，如果包含则返回true，否则返回false。</li>
+<li>**指数运算符： a ** b指数运算符，它与 Math.pow(a, b)相同。</li>
+</ul>
+<h2 id="7-3-ES8（2017）"><a href="#7-3-ES8（2017）" class="headerlink" title="7.3. ES8（2017）"></a>7.3. ES8（2017）</h2><ul>
+<li>async&#x2F;await</li>
+<li>Object.values()</li>
+<li>Object.entries()</li>
+<li>String padding: padStart()和padEnd()，填充字符串达到当前长度</li>
+<li>函数参数列表结尾允许逗号</li>
+<li>Object.getOwnPropertyDescriptors()</li>
+<li>ShareArrayBuffer和Atomics对象，用于从共享内存位置读取和写入</li>
+</ul>
+<h2 id="7-4-ES9（2018）"><a href="#7-4-ES9（2018）" class="headerlink" title="7.4. ES9（2018）"></a>7.4. ES9（2018）</h2><ul>
+<li>异步迭代</li>
+<li>Promise.finally()</li>
+<li>Rest&#x2F;Spread 属性: ES2015引入了Rest参数和扩展运算符。三个点（…）仅用于数组。Rest参数语法允许我们将一个不定数量的参数表示为一个数组。</li>
+<li>正则表达式命名捕获组</li>
+<li>正则表达式反向断言</li>
+</ul>
+<h2 id="7-5-ES10新特性（2019）"><a href="#7-5-ES10新特性（2019）" class="headerlink" title="7.5. ES10新特性（2019）"></a>7.5. ES10新特性（2019）</h2><ul>
+<li>行分隔符（U + 2028）和段分隔符（U + 2029）符号现在允许在字符串文字中，与JSON匹配</li>
+<li>更加友好的 JSON.stringify</li>
+<li>新增了Array的flat()方法和flatMap()方法</li>
+<li>新增了String的trimStart()方法和trimEnd()方法</li>
+<li>Object.fromEntries()</li>
+<li>Symbol.prototype.description</li>
+<li>String.prototype.matchAll</li>
+<li>Function.prototype.toString()现在返回精确字符，包括空格和注释</li>
+<li>简化try {} catch {},修改 catch 绑定</li>
+<li>新的基本数据类型BigInt</li>
+<li>globalThis</li>
+<li>import()</li>
+<li>Legacy RegEx</li>
+<li>私有的实例方法和访问器</li>
+</ul>
+<h2 id="7-6-ES11（2020）"><a href="#7-6-ES11（2020）" class="headerlink" title="7.6. ES11（2020）"></a>7.6. ES11（2020）</h2><ul>
+<li>Nullish coalescing Operator(空值处理)</li>
+<li>import() 按需导入</li>
+</ul>
+<h2 id="7-7-ES12（2021）"><a href="#7-7-ES12（2021）" class="headerlink" title="7.7. ES12（2021）"></a>7.7. ES12（2021）</h2><ul>
+<li>string增加replaceAll</li>
+<li>Promise.any, 收一个Promise可迭代对象，只要其中的一个 promise 成功，就返回那个已经成功的 promise</li>
+<li>WeakRefs, 使用WeakRefs的Class类创建对对象的弱引用(对对象的弱引用是指当该对象应该被GC回收时不会阻止GC的回收行为)</li>
+<li>数字分隔符</li>
+<li>逻辑运算符和赋值表达式</li>
+</ul>
+<h1 id="8-VS"><a href="#8-VS" class="headerlink" title="8. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;"></a>8. &#x3D;&#x3D;&#x3D; VS &#x3D;&#x3D;</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> == <span class="string">&quot;100&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="number">0</span> == <span class="literal">false</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">false</span> == <span class="string">&quot;&quot;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>很有意思吧， 看看这两个，是等效的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj == <span class="literal">null</span>;</span><br><span class="line">obj === <span class="literal">null</span> || obj === <span class="literal">undefined</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="9-闭包"><a href="#9-闭包" class="headerlink" title="9. 闭包"></a>9. 闭包</h1><p>在 JavaScript 中，实现外部作用域访问内部作用域中变量的方法叫做闭包（closure)。这得益于高阶函数的特性：函数可以作为参数或者者返回值；</p>
+<p><strong>当一个内部函数被调用，就会形成闭包</strong>，闭包就是能够读取其他函数内部变量的函数，就是一个函数去访问了另外一个函数的中的变量的函数。</p>
+<p><strong>闭包作用</strong>：局部变量无法共享和长久的保存，而全局变量可能造成变量污染，所以我们希望有一种机制既可以长久的保存变量又不会造成全局污染。延伸变量的作用范围。</p>
+<p><strong>闭包特点</strong>：占用更多内存；不容易被释放</p>
+<p><strong>闭包用法</strong>：变量既想反复使用，又想避免全局污染如何使用？</p>
+<ol>
+<li>定义外层函数，封装被保护的局部变量。</li>
+<li>定义内层函数，执行对外部函数变量的操作。</li>
+<li>外层函数返回内层函数的对象，并且外层函数被调用，结果保存在一个全局的变量中。</li>
+</ol>
+<p>e.g.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">outerMethod</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="string">&quot;some value&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> innerMethod = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(a + <span class="string">&quot;!&quot;</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="title function_">innerMethod</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="10-js-里的作用域是什么样子的？"><a href="#10-js-里的作用域是什么样子的？" class="headerlink" title="10. js 里的作用域是什么样子的？"></a>10. js 里的作用域是什么样子的？</h1><p>大多数语言里边都是块作作用域，以{}进行限定，js 里边不是．js 里边叫函数作用域，就是一个变量在全函数里有效．比如有个变量 p1 在函数最后一行定义，第一行也有效，但是值是 undefined.</p>
+<h1 id="11-let-和-var-的区别"><a href="#11-let-和-var-的区别" class="headerlink" title="11. let 和 var 的区别"></a>11. let 和 var 的区别</h1><ul>
+<li>var 声明变量可以重复声明，而 let 不可以重复声明，属于 TDZ 暂时性死区问题</li>
+<li>作用域不同，var 是函数作用域，而 let 是块级作用域；</li>
+<li>var 可以在声明的上面访问变量，而 let 不存在变量提升；</li>
+</ul>
+<h1 id="12-对-async-和-await-的理解"><a href="#12-对-async-和-await-的理解" class="headerlink" title="12. 对 async 和 await 的理解"></a>12. 对 async 和 await 的理解</h1><ol>
+<li>async…await 是基于 promise 的 generator 语法糖，是用来解决异步的，它用来等待 promise 的执行结果，常规函数使用 await 没有效果；</li>
+<li>async 函数返回一个 Promise 对象，可以使用 then 方法添加回调函数</li>
+<li>当函数执行的时候，一旦遇到 await 就会先返回，等到异步操作完成，再接着执行函数体内后面的语句；</li>
+</ol>
+<h1 id="13-promised-的三种状态"><a href="#13-promised-的三种状态" class="headerlink" title="13. promised 的三种状态"></a>13. promised 的三种状态</h1><p>promise 有三种状态：pending&#x2F;reslove&#x2F;reject 。pending 就是未决，resolve 可以理解为成功，reject 可以理解为拒绝。</p>
+<h1 id="14-async-await-的优点"><a href="#14-async-await-的优点" class="headerlink" title="14. async&#x2F;await 的优点"></a>14. async&#x2F;await 的优点</h1><p><strong>1）方便级联调用：</strong> 即调用依次发生的场景；</p>
+<p><strong>2）同步代码编写方式：</strong> Promise 使用 then 函数进行链式调用，一直点点点，是一种从左向右的横向写法；async&#x2F;await 从上到下，顺序执行，就像写同步代码一样，更符合代码编写习惯；</p>
+<p><strong>3）多个参数传递：</strong> Promise 的 then 函数只能传递一个参数，虽然可以通过包装成对象来传递多个参数，但是会导致传递冗余信息，频繁的解析又重新组合参数，比较麻烦；async&#x2F;await 没有这个限制，可以当做普通的局部变量来处理，用 let 或者 const 定义的块级变量想怎么用就怎么用，想定义几个就定义几个，完全没有限制，也没有冗余工作；</p>
+<p><strong>4）同步代码和异步代码可以一起编写：</strong> 使用 Promise 的时候最好将同步代码和异步代码放在不同的 then 节点中，这样结构更加清晰；async&#x2F;await 整个书写习惯都是同步的，不需要纠结同步和异步的区别，当然，异步过程需要包装成一个 Promise 对象放在 await 关键字后面；</p>
+<p><strong>5）基于协程：</strong> Promise 是根据函数式编程的范式，对异步过程进行了一层封装，async&#x2F;await 基于协程的机制，是真正的“保存上下文，控制权切换……控制权恢复，取回上下文”这种机制，是对异步过程更精确的一种描述；</p>
+<p><strong>6）async&#x2F;await 是对 Promise 的优化：</strong> async&#x2F;await 是基于 Promise 的，是进一步的一种优化，不过在写代码时，Promise 本身的 API 出现得很少，很接近同步代码的写法；</p>
+<h1 id="15-async-await-的写法"><a href="#15-async-await-的写法" class="headerlink" title="15. async&#x2F;await 的写法"></a>15. async&#x2F;await 的写法</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">testAsync</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello async&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用时</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">await</span> <span class="title function_">testAsync</span>();</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="16-apply、call-和-bind-的区别"><a href="#16-apply、call-和-bind-的区别" class="headerlink" title="16. apply、call 和 bind 的区别"></a>16. apply、call 和 bind 的区别</h1><p>这三者都是用来改变函数的 this 对象的指向的(也就是说要改变函数运行时的 context 即上下文),第一个参数都是 this 要指向的对象。</p>
+<p>不同之处：</p>
+<ol>
+<li>call 接受连续参数，apply 接受数组参数。</li>
+<li>bind 功能和 call apply 差不多，区别在于 bind 返回的是一个改变 this 指向的新函数，这个函数不是立即执行函数（call apply 两个立即执行！）</li>
+</ol>
+<h1 id="17-深拷贝的原理"><a href="#17-深拷贝的原理" class="headerlink" title="17. 深拷贝的原理"></a>17. 深拷贝的原理</h1><p>操作的是值，取出对象的值，放到一个新的{}，修改时不会影响到原数据；要完成对象的深拷贝需要使用递归遍历所有对象的属性进行赋值，也可以使用 JSON.stringfy 和 JSON.parse 操作。</p>
+<h1 id="18-set-和-Map-的区别"><a href="#18-set-和-Map-的区别" class="headerlink" title="18. set 和 Map 的区别"></a>18. set 和 Map 的区别</h1><ol>
+<li>Set 是一种类似数组的集合类型，它与数组不同的是，不允许存在重复数据；常用操作方法有：add,delete,has,clear 等；遍历使用 forEach；</li>
+<li>Map 是一种类似对象的集合类型，它与对象不同的是，key 可以接受对象类型，常用的操作方法有：set,get,has,delete 等；遍历使用 forEach</li>
+</ol>
+<h1 id="19-JS-实现双向绑定-（vue-angular-双向绑定的原理）"><a href="#19-JS-实现双向绑定-（vue-angular-双向绑定的原理）" class="headerlink" title="19. JS 实现双向绑定 （vue&#x2F;angular 双向绑定的原理）"></a>19. JS 实现双向绑定 （vue&#x2F;angular 双向绑定的原理）</h1><p><strong>vue.js</strong> 采用数据劫持（Proxy 模式）结合发布者-订阅者模式（PubSub 模式）的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。<br>Object.defineProperty( )内还包含一对儿 getter 和 setter 函数，它们被称作这个对象的访问器属性，这两个函数都不是必须的，只是在读取访问对象属性时，会调用 getter 函数，这个函数负责返回有效值，在写入对象属性时，会调用 setter 函数并传入新值，这个函数负责决定如何处理数据。</p>
+<p><strong>Angular</strong>, 采用脏检查的方式。基于 zone.js，重写 setTimeout, httpRequest 等方法，触发脏检查, 更新 dom 节点。</p>
+<h1 id="20-var-和-let-的区别"><a href="#20-var-和-let-的区别" class="headerlink" title="20. var 和 let 的区别"></a>20. var 和 let 的区别</h1><ol>
+<li>作用域不同， var 是函数作用域，let 是块作用域。</li>
+</ol>
+<ul>
+<li>在函数中声明了 var，整个函数内都是有效的，比如说在 for 循环内定义的一个 var 变量，实际上其在 for 循环以外也是可以访问的</li>
+<li>而 let 由于是块作用域，所以如果在块作用域内定义的变量，比如说在 for 循环内，在其外面是不可被访问的，所以 for 循环推荐用 let</li>
+</ul>
+<ol start="2">
+<li>let 不能在定义之前访问该变量，但是 var 可以。 （var 可以提升变量作用域）</li>
+<li>let不能被重新定义，但是var是可以的。（重新定义var，执行时会忽略）</li>
+</ol>
+<h1 id="21-Javascript-如何实现继承？"><a href="#21-Javascript-如何实现继承？" class="headerlink" title="21. Javascript 如何实现继承？"></a>21. Javascript 如何实现继承？</h1><p>1、构造继承<br>2、原型继承: Child.prototype &#x3D; new Parent();<br>3、实例继承<br>4、拷贝继承</p>
+<h1 id="22-变量提升"><a href="#22-变量提升" class="headerlink" title="22. 变量提升"></a>22. 变量提升</h1><p>js 引擎首先在读取 js 代码时默认执行 2 个步骤：</p>
+<ol>
+<li>解释(通篇扫描所有 js 代码，然后把所有声明(变量申明、函数声明)提升到对应作用域顶端)</li>
+<li>执行(执行逻辑操作)</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 输出 ReferenceError: b is not defined</span></span><br><span class="line">b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 输出 undefined</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 输出 2</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="23-函数提升"><a href="#23-函数提升" class="headerlink" title="23. 函数提升"></a>23. 函数提升</h1><p>首先要知道函数定义有两种方式的，一种是函数定义表达式，一种是函数声明语句。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数定义表达式</span></span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">function</span> (<span class="params"></span>)&#123;</span><br><span class="line">&#125;；</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明语句</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提升测试</span></span><br><span class="line"><span class="comment">// 例1.</span></span><br><span class="line"><span class="title function_">f</span>();</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 test</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2.</span></span><br><span class="line"><span class="title function_">f</span>();</span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//输出 Uncaught TypeError: f is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(f);</span><br><span class="line"><span class="keyword">var</span> f = <span class="number">10</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(f);</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;fff&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//  输出</span></span><br><span class="line"><span class="comment">//  [Function: f]</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  a = <span class="number">10</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 输出：10</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>) &#123;&#125; <span class="comment">// 看似无用， 实际上在foo的作用域内重新声明了&#x27;a&#x27;，和外面的a不一样了</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">foo</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 输出：1</span></span><br><span class="line"><span class="comment">//输出：</span></span><br><span class="line"><span class="comment">// 10</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>重点：</p>
+<ol>
+<li>函数提升针对是函数声明语句而言，其次变量提升只提升变量名而函数提升会提升整个函数体</li>
+<li>优先级，函数提升会在变量提升的上面</li>
+</ol>
+<h1 id="24-作用域"><a href="#24-作用域" class="headerlink" title="24. 作用域"></a>24. 作用域</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1 块级作用域, 不适合变量提升</span></span><br><span class="line"><span class="comment">// es6允许块级作用域的任意嵌套。外层作用域无法读取内层作用域的变量。</span></span><br><span class="line"><span class="comment">// 内层作用域可以定义外层作用域的同名变量。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出 hello</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> z = <span class="string">&quot;!&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(v, z);</span><br><span class="line"><span class="comment">//输出 :</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"><span class="comment">// world !</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例2 闭包，变量提升</span></span><br><span class="line"><span class="keyword">var</span> v = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v);</span><br><span class="line">  <span class="keyword">var</span> v = <span class="string">&quot;world&quot;</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">//输出 undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例 3， 块级作用域内let和const命令所声明的变量，只在命令所在的代码块内有效。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例4 let， var与作用域、变量提升</span></span><br><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">var</span> b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//ReferenceError: a is not defined.</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="25-实现一个随机排序的程序"><a href="#25-实现一个随机排序的程序" class="headerlink" title="25. 实现一个随机排序的程序"></a>25. 实现一个随机排序的程序</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">randomSort</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">random</span>() - <span class="number">0.5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.<span class="title function_">sort</span>(randomSort);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;after random sort: &quot;</span>, list.<span class="title function_">join</span>(<span class="string">&quot;,&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6 箭头函数写法</span></span><br><span class="line"><span class="keyword">let</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>];</span><br><span class="line">list.<span class="title function_">sort</span>(<span class="function">() =&gt;</span> <span class="title class_">Math</span>.<span class="title function_">random</span>() - <span class="number">0.5</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;after random sort: &quot;</span>, list.<span class="title function_">join</span>(<span class="string">&quot;,&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h1 id="26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"><a href="#26-实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量" class="headerlink" title="26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量"></a>26. 实现一个函数，传入一个字符串，得到使用次数最多的字符，以及数量</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getMostUsedChar</span>(<span class="params">sourceString</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> length = sourceString.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">let</span> counter = &#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> currentChar = sourceString[i];</span><br><span class="line">    <span class="keyword">if</span> (counter[currentChar]) &#123;</span><br><span class="line">      counter[currentChar]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      counter[currentChar] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> maxCount = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> maxChar = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> counter) &#123;</span><br><span class="line">    <span class="keyword">if</span> (counter[key] &gt;= maxCount) &#123;</span><br><span class="line">      maxChar = key;</span><br><span class="line">      maxCount = counter[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`most used char: <span class="subst">$&#123;maxChar&#125;</span>, count: <span class="subst">$&#123;maxCount&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">getMostUsedChar</span>(<span class="string">&quot;fjiwejfal33232jkj3fjfie&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>参考:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md">https://github.com/lydiahallie/javascript-questions/blob/master/zh-CN/README-zh_CN.md</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -787,767 +1530,6 @@
 <li>公共内容，建议放到共享模块-SharedModule中。</li>
 <li>对于功能模块，可以通过惰性加载（延迟）加载，提高首页加载速度；同时通过预加载技术，可以在空闲时间加载这部分模块，使用户体验更好。</li>
 </ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/css3-flex-box/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/29/css3-flex-box/" class="post-title-link" itemprop="url">CSS3 Flex Box 弹性盒子、弹性布局</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-29 13:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T13:06:00+08:00">2021-01-29</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
-<li><a href="#2-justify-content-%E5%B1%9E%E6%80%A7">2. justify-content 属性</a></li>
-<li><a href="#3-align-items-%E5%B1%9E%E6%80%A7">3. align-items 属性</a></li>
-<li><a href="#4-flex-wrap-%E5%B1%9E%E6%80%A7">4. flex-wrap 属性</a></li>
-<li><a href="#5-align-content-%E5%B1%9E%E6%80%A7">5. align-content 属性</a></li>
-<li><a href="#6-%E5%B1%85%E4%B8%AD">6. 居中</a></li>
-<li><a href="#7-align-self">7. align-self</a></li>
-<li><a href="#8-%E6%80%BB%E7%BB%93">8. 总结</a></li>
-</ul>
-<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>Flexible Box翻译过来就是弹性盒子、弹性布局，是css3中新增的一种布局方式，是当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。引入弹性布局模型的目的是提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间。</p>
-<p>弹性盒子由弹性容器(Flex container)和弹性子元素(Flex item)组成。</p>
-<ul>
-<li>弹性容器通过设置 display 属性的值为 flex 或 inline-flex将其定义为弹性容器。</li>
-<li>弹性容器内包含了一个或多个弹性子元素。</li>
-</ul>
-<table>
-    <tbody>
-        <tr>
-            <th style="width:25%">属性</th>
-            <th>描述</th>
-        </tr>
-        <tr>
-            <td>display
-            </td>
-            <td>指定 HTML 元素盒子类型。</td>
-        </tr>
-        <tr>
-            <td>flex-direction</td>
-            <td>指定了弹性容器中子元素的排列方式</td>
-        </tr>
-        <tr>
-            <td>justify-content
-            </td>
-            <td>设置弹性盒子元素在主轴（横轴）方向上的对齐方式。</td>
-        </tr>
-        <tr>
-            <td>align-items
-            </td>
-            <td>设置弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</td>
-        </tr>
-        <tr>
-            <td>flex-wrap
-            </td>
-            <td>设置弹性盒子的子元素超出父容器时是否换行。</td>
-        </tr>
-        <tr>
-            <td>align-content
-            </td>
-            <td>修改 flex-wrap 属性的行为，类似align-items, 但不是设置子元素对齐，而是设置行对齐</td>
-        </tr>
-        <tr>
-            <td>flex-flow
-            </td>
-            <td>flex-direction 和 flex-wrap 的简写</td>
-        </tr>
-        <tr>
-            <td>order
-            </td>
-            <td>设置弹性盒子的子元素排列顺序。</td>
-        </tr>
-        <tr>
-            <td>align-self
-            </td>
-            <td>在弹性子元素上使用。覆盖容器的 align-items 属性。</td>
-        </tr>
-        <tr>
-            <td>flex
-            </td>
-            <td>设置弹性盒子的子元素如何分配空间。</td>
-        </tr>
-    </tbody>
-</table>
-
-
-<h1 id="2-justify-content-属性"><a href="#2-justify-content-属性" class="headerlink" title="2. justify-content 属性"></a>2. justify-content 属性</h1><p>内容对齐（justify-content）属性应用在弹性容器上，把弹性项沿着弹性容器的横轴（主轴线，main axis）对齐。</p>
-<p><code>·justify-content</code> 语法：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">justify-content</span>: flex-start | flex-end | center | space-between | space-around</span><br></pre></td></tr></table></figure>
-<p>可选项：</p>
-<ul>
-<li>flex-start：弹性项目向行头紧挨着填充。这个是默认值。第一个弹性项的main-start外边距边线被放置在该行的main-start边线，而后续弹性项依次平齐摆放。</li>
-<li>flex-end：弹性项目向行尾紧挨着填充。第一个弹性项的main-end外边距边线被放置在该行的main-end边线，而后续弹性项依次平齐摆放。</li>
-<li>center：弹性项目居中紧挨着填充。（如果剩余的自由空间是负的，则弹性项目将在两个方向上同时溢出）。</li>
-<li>space-between：弹性项目平均分布在该行上。如果剩余空间为负或者只有一个弹性项，则该值等同于flex-start。否则，第1个弹性项的外边距和行的main-start边线对齐，而最后1个弹性项的外边距和行的main-end边线对齐，然后剩余的弹性项分布在该行上，相邻项目的间隔相等。</li>
-<li>space-around：弹性项目平均分布在该行上，两边留有一半的间隔空间。如果剩余空间为负或者只有一个弹性项，则该值等同于center。否则，弹性项目沿该行分布，且彼此间隔相等（比如是20px），同时首尾两边和弹性容器之间留有一半的间隔（1&#x2F;2*20px&#x3D;10px）。</li>
-</ul>
-<h1 id="3-align-items-属性"><a href="#3-align-items-属性" class="headerlink" title="3. align-items 属性"></a>3. align-items 属性</h1><p>align-items 设置或检索弹性盒子元素在侧轴（纵轴）方向上的对齐方式。</p>
-<p><code>align-items</code>语法</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">align-items</span>: flex-start | flex-end | center | baseline | stretch</span><br></pre></td></tr></table></figure>
-<p>可选项：</p>
-<ul>
-<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
-<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
-<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
-<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
-<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min&#x2F;max-width&#x2F;height’属性的限制。</li>
-</ul>
-<h1 id="4-flex-wrap-属性"><a href="#4-flex-wrap-属性" class="headerlink" title="4. flex-wrap 属性"></a>4. flex-wrap 属性</h1><p>flex-wrap 属性用于指定弹性盒子的子元素换行方式。</p>
-<p>语法</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">flex-wrap</span>: nowrap|wrap|wrap-reverse|initial|inherit; </span><br></pre></td></tr></table></figure>
-<p>可选项:</p>
-<ul>
-<li>nowrap - 默认，弹性容器为单行。该情况下弹性子项可能会溢出容器。</li>
-<li>wrap - 弹性容器为多行。该情况下弹性子项溢出的部分会被放置到新行，子项内部会发生断行</li>
-<li>wrap-reverse -反转 wrap 排列。</li>
-</ul>
-<h1 id="5-align-content-属性"><a href="#5-align-content-属性" class="headerlink" title="5. align-content 属性"></a>5. align-content 属性</h1><p><code>align-content</code> 属性用于修改 flex-wrap 属性的行为。类似于 align-items, 但它不是设置弹性子元素的对齐，而是设置各个行的对齐。</p>
-<p>语法</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">align-content</span>: flex-start | flex-end | center | space-between | space-around | stretch</span><br></pre></td></tr></table></figure>
-<p>各个值解析:</p>
-<ul>
-<li>stretch - 默认。各行将会伸展以占用剩余的空间。</li>
-<li>flex-start - 各行向弹性盒容器的起始位置堆叠。</li>
-<li>flex-end - 各行向弹性盒容器的结束位置堆叠。</li>
-<li>center -各行向弹性盒容器的中间位置堆叠。</li>
-<li>space-between -各行在弹性盒容器中平均分布。</li>
-<li>space-around - 各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。</li>
-</ul>
-<h1 id="6-居中"><a href="#6-居中" class="headerlink" title="6. 居中"></a>6. 居中</h1><p>使用弹性盒子，居中变的很简单，只想要设置 margin: auto; 可以使得弹性子元素在两上轴方向上完全居中:</p>
-<p>如</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.flex-item</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="7-align-self"><a href="#7-align-self" class="headerlink" title="7. align-self"></a>7. align-self</h1><p>align-self 属性用于设置弹性元素自身在侧轴（纵轴）方向上的对齐方式。</p>
-<p>选项：</p>
-<ul>
-<li>auto：如果’align-self’的值为’auto’，则其计算值为元素的父元素的’align-items’值，如果其没有父元素，则计算值为’stretch’。</li>
-<li>flex-start：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界。</li>
-<li>flex-end：弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。</li>
-<li>center：弹性盒子元素在该行的侧轴（纵轴）上居中放置。（如果该行的尺寸小于弹性盒子元素的尺寸，则会向两个方向溢出相同的长度）。</li>
-<li>baseline：如弹性盒子元素的行内轴与侧轴为同一条，则该值与’flex-start’等效。其它情况下，该值将参与基线对齐。</li>
-<li>stretch：如果指定侧轴大小的属性值为’auto’，则其值会使项目的边距盒的尺寸尽可能接近所在行的尺寸，但同时会遵照’min&#x2F;max-width&#x2F;height’属性的限制。</li>
-</ul>
-<h1 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h1><p>1. </p>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/29/Angular-Starter-14-compile-publish/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/29/Angular-Starter-14-compile-publish/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（14）- Angular 编译打包 & Docker发布</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-29 10:06:00" itemprop="dateCreated datePublished" datetime="2021-01-29T10:06:00+08:00">2021-01-29</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%A6%82%E8%A6%81">1. 概要</a></li>
-<li><a href="#2-%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85">2. 编译打包</a><ul>
-<li><a href="#21-%E5%9F%BA%E6%9C%AC%E6%89%93%E5%8C%85%E5%91%BD%E4%BB%A4">2.1. 基本打包命令</a></li>
-<li><a href="#22-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0%E4%BA%8C%E7%BA%A7%E7%9B%AE%E5%BD%95">2.2. 打包部署到二级目录</a></li>
-</ul>
-</li>
-<li><a href="#3-angular%E7%AB%99%E7%82%B9%E7%9A%84%E5%8F%91%E5%B8%83">3. Angular站点的发布</a><ul>
-<li><a href="#31-web%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E5%B8%83">3.1. web服务器发布</a></li>
-<li><a href="#32-%E4%BD%BF%E7%94%A8docker%E5%8F%91%E5%B8%83">3.2. 使用docker发布</a></li>
-</ul>
-</li>
-<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-概要"><a href="#1-概要" class="headerlink" title="1. 概要"></a>1. 概要</h1><p>当我们完成angular的开发后，如何部署到服务器呢？</p>
-<h1 id="2-编译打包"><a href="#2-编译打包" class="headerlink" title="2. 编译打包"></a>2. 编译打包</h1><h2 id="2-1-基本打包命令"><a href="#2-1-基本打包命令" class="headerlink" title="2.1. 基本打包命令"></a>2.1. 基本打包命令</h2><p>基于Angular CLI生成的Angular项目，默认会有2个环境配置文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">└──myProject/src/environments/</span><br><span class="line">               └──environment.ts</span><br><span class="line">               └──environment.prod.ts</span><br></pre></td></tr></table></figure>
-<ol>
-<li>environment.ts: 针对开发环境使用的环境文件</li>
-<li>environment.prod.ts: 生产环境编译时，将替换原有的environment.ts，然后再打包。 （根目录下的angular.json定义了这个默认行为，有需要，可以进行修改）</li>
-</ol>
-<p>AngularCLI刚刚生成2个文件后，如果打开比较2个文件的区别，可以看到开发环境使用的environment.ts文件中，有这么一句<code>production: false</code>。因为，针对生产环境，angular在编译时需要核心考虑效率等问题，而开发环境，要考虑方便开发者进行调试，侧重点不同。</p>
-<p>那么针对生产环境如何编译呢？Angular CLI同样提供了命令,</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod</span><br></pre></td></tr></table></figure>
-
-<p>其中，参数<code>--prod</code> 即告诉编译环境，编译为生产环境包。同样，angular.json中定义了默认的编译参数，如果需要，可以进行修改。主要配置参数如下</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;configurations&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;production&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;fileReplacements&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;replace&quot;</span>: <span class="string">&quot;src/environments/environment.ts&quot;</span>,</span><br><span class="line">            <span class="string">&quot;with&quot;</span>: <span class="string">&quot;src/environments/environment.prod.ts&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&quot;optimization&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;outputHashing&quot;</span>: <span class="string">&quot;all&quot;</span>,</span><br><span class="line">        <span class="string">&quot;sourceMap&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractCss&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;namedChunks&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;aot&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;extractLicenses&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;vendorChunk&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;buildOptimizer&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="string">&quot;budgets&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;initial&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumWarning&quot;</span>: <span class="string">&quot;5mb&quot;</span>,</span><br><span class="line">            <span class="string">&quot;maximumError&quot;</span>: <span class="string">&quot;10mb&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Angular默认打包到根目录下的<code>dist</code>目录下，生成的文件为纯静态文件（html, css, js)，以及图片文件。</p>
-<h2 id="2-2-打包部署到二级目录"><a href="#2-2-打包部署到二级目录" class="headerlink" title="2.2. 打包部署到二级目录"></a>2.2. 打包部署到二级目录</h2><p>有不少情况，我们的angular web站点不能直接部署到网站的根目录下，需要部署到二级目录下。 比如，不能部署到 <a target="_blank" rel="noopener" href="http://abc.com下,要求部署到/">http://abc.com下，要求部署到</a> <a target="_blank" rel="noopener" href="http://abc.com/demo">http://abc.com/demo</a> 这个二级目录下。针对这种情况，就需要修改一下我们的编译参数，修改为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng build --prod --deploy-url /demo/ --base-href /demo/</span><br></pre></td></tr></table></figure>
-<p>增加 <code>--deploy-url</code> 和 <code>--base-href</code>。</p>
-<blockquote>
-<p>使用场景：比如我们有多个站点，希望使用同一个反向代理， <code>http://site1</code>, <code>http://site2</code>, 分别映射到 <code>http://abc.com/site1</code>, <code>http://abc.com/site2/</code>。 那么为了方便配置，需要把site1， site2都部署到二级目录，如<code>http://site1/site1</code>, <code>http://site2/site2</code>。 然后 <code>http://site1/site1</code>代理到<code>http://abc.com/site1</code>, <code>http://site2/site2</code>代理到<code>http://abc.com/site2/</code>， 免得css、js因为目录级别问题找不到。</p>
-</blockquote>
-<h1 id="3-Angular站点的发布"><a href="#3-Angular站点的发布" class="headerlink" title="3. Angular站点的发布"></a>3. Angular站点的发布</h1><p>Angular站点编译打包后，可以方便的发布到已有web服务器，或者打成docker image， 然后发布。</p>
-<h2 id="3-1-web服务器发布"><a href="#3-1-web服务器发布" class="headerlink" title="3.1. web服务器发布"></a>3.1. web服务器发布</h2><p>因为我们打包后，生成的文件为纯静态文件（html, css, js, 图片等)， 所以打包后的问题，可以直接copy到iis， nginx , apache tomcat等web服务器，或者node.js， java等可以显示静态文件的程序的目录下即可。</p>
-<h2 id="3-2-使用docker发布"><a href="#3-2-使用docker发布" class="headerlink" title="3.2. 使用docker发布"></a>3.2. 使用docker发布</h2><p>如果部署到docker，我们可以基于一个基础的nginx docker， 然后把编译好的angular项目，copy到docker 内的nginx目录下即可。</p>
-<p>基本步骤：</p>
-<ol>
-<li>准备Dockerfile 文件， docker可以基于<code>nginx:alpine</code>， 将编译好的angular 站点文件复制到 docker 的nginx默认目录 <code>/usr/share/nginx/html</code></li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx:alpine</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>说明： 1) 假设angular打包后的文件，与Dockerfile文件在同一个目录<br>2) COPY . &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html, 两个参数 <code>.</code> 代表当前路径， <code>/usr/share/nginx/html</code>是docker中的目标目录</p>
-</blockquote>
-<ol start="2">
-<li>编译docker。 在Dockerfile目录下，执行</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t your-docker-name .</span><br><span class="line">docker save your-docker-name &gt; your-docker-name.tar</span><br><span class="line">gzip your-docker-name.tar</span><br></pre></td></tr></table></figure>
-
-<p>三条命令分别为：</p>
-<ul>
-<li>生成docker image， 名字（name）为your-docker-name</li>
-<li>导出docker image为本地文件， 文件名为 your-docker-name.tar</li>
-<li>压缩docker image</li>
-</ul>
-<p>可以看到，因为angular编译后为纯静态文件，所以使用docker发布非常简单。部署时，只需要复制docker文件到目标机器，解压缩，然后执行  <code>docker load &lt; your-docker-name.tar</code> 即可加载docker image到目标机器。</p>
-<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><ol>
-<li>为生产环境编译，一定要加参数<code>--prod</code></li>
-<li>如果要部署到二级目录，编译时加参数。如部署到&#x2F;demo二级目录下，加参数： <code>--deploy-url /demo/ --base-href /demo/</code></li>
-<li>使用docker发布,可以选择基本的nginx docker， 然后将编译好的angular文件copy到nginx目录下即可。</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/25/Angular-Starter-13-gard-routing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/25/Angular-Starter-13-gard-routing/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（13）- 路由守卫（Route Guards）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-25 15:06:00" itemprop="dateCreated datePublished" datetime="2021-01-25T15:06:00+08:00">2021-01-25</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%ABroute-guards">2. 路由守卫（Route Guards）</a><ul>
-<li><a href="#21-%E5%88%9B%E5%BB%BA%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%AB">2.1. 创建路由守卫</a></li>
-<li><a href="#22-%E6%8E%A7%E5%88%B6%E8%B7%AF%E7%94%B1%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E6%BF%80%E6%B4%BB">2.2. 控制路由是否可以激活</a></li>
-<li><a href="#23-%E6%8E%A7%E5%88%B6%E8%B7%AF%E7%94%B1%E6%98%AF%E5%90%A6%E9%80%80%E5%87%BA%E7%A6%BB%E5%BC%80">2.3. 控制路由是否退出（离开）</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>在我们的实际的业务开发过程中，我们经常会遇到如下需求：</p>
-<ol>
-<li>需要限制某些 URL 的可访问性，例如，对于系统管理界面，只有那些拥有管理员权限的用户才能打开。</li>
-<li>当用户处于编辑界面时，在没有保存就离开时，需要提示用户是否放弃修改。</li>
-</ol>
-<p>针对以上场景，Angualr使用<code>路由守卫</code>（Route Guards）来实现。</p>
-<h1 id="2-路由守卫（Route-Guards）"><a href="#2-路由守卫（Route-Guards）" class="headerlink" title="2. 路由守卫（Route Guards）"></a>2. 路由守卫（Route Guards）</h1><h2 id="2-1-创建路由守卫"><a href="#2-1-创建路由守卫" class="headerlink" title="2.1. 创建路由守卫"></a>2.1. 创建路由守卫</h2><p>Angular CLI提供了命令行工具，可以快速创建路由守卫框架文件：<code>ng generate guard auth</code>。 执行后，Angular CLI会问我们需要实现哪些接口，我们直接勾选即可：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">? Which interfaces would you like to implement? (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">(*) CanActivate</span></span><br><span class="line"> ( ) CanActivateChild</span><br><span class="line"> ( ) CanDeactivate</span><br><span class="line"> ( ) CanLoad</span><br></pre></td></tr></table></figure>
-
-<p>说明：</p>
-<ol>
-<li>CanActivate: 控制路由是否可以激活</li>
-<li>CanActivateChild: 控制子路由是否可以激活</li>
-<li>CanDeactivate: 控制路由是否可以退出</li>
-<li>CanLoad: 控制模块（module）是否可以被加载</li>
-</ol>
-<p>比较经常使用的是1、3，分别控制进入和退出。 按照上面配置，AngularCLI自动生成如下代码，<code>return true;</code> 替换为我们实际的代码即可。<code>return false;</code> 表示不允许跳转，或者取消离开当前页面。</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// auth.guard.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CanActivate</span>, <span class="title class_">CanDeactivate</span>, <span class="title class_">ActivatedRouteSnapshot</span>, <span class="title class_">RouterStateSnapshot</span>, <span class="title class_">UrlTree</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/router&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Observable</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;rxjs&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Injectable</span>(&#123;</span><br><span class="line">  <span class="attr">providedIn</span>: <span class="string">&#x27;root&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AuthGuard</span> <span class="keyword">implements</span> <span class="title class_">CanActivate</span>, <span class="title class_">CanDeactivate</span>&lt;<span class="built_in">unknown</span>&gt; &#123;</span><br><span class="line">  <span class="title function_">canActivate</span>(</span><br><span class="line">    <span class="attr">route</span>: <span class="title class_">ActivatedRouteSnapshot</span>,</span><br><span class="line">    <span class="attr">state</span>: <span class="title class_">RouterStateSnapshot</span>): <span class="title class_">Observable</span>&lt;<span class="built_in">boolean</span> | <span class="title class_">UrlTree</span>&gt; | <span class="title class_">Promise</span>&lt;<span class="built_in">boolean</span> | <span class="title class_">UrlTree</span>&gt; | <span class="built_in">boolean</span> | <span class="title class_">UrlTree</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在canActivate方法中，我们还可以使用跳转。如页面判断是否已经登录，如果没有登录，跳转到Login页面：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">router</span>.<span class="title function_">navigate</span>([<span class="string">&#x27;/login&#x27;</span>]);</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-2-控制路由是否可以激活"><a href="#2-2-控制路由是否可以激活" class="headerlink" title="2.2. 控制路由是否可以激活"></a>2.2. 控制路由是否可以激活</h2><p>控制路由是否可以激活，需要定义在定义路由的地方，增加canActivate属性。如果需要，还可以增加data属性， 比如告诉我们的AuthGuard进入当前路由需要验证哪些权限。data属性是可选的。</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&quot;page1&quot;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Page1Component</span>,</span><br><span class="line">    <span class="attr">data</span>: &#123; <span class="attr">permissions</span>: [<span class="string">&#x27;YourPage1Permission&#x27;</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    <span class="attr">canActivate</span>: [<span class="title class_">AuthGuard</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&quot;page2&quot;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Page2</span>omponent,</span><br><span class="line">    <span class="attr">data</span>: &#123; <span class="attr">permissions</span>: [<span class="string">&#x27;YourPage2Permission&#x27;</span>] &#125;,  <span class="comment">// 传入参数给AuthGuard，可选</span></span><br><span class="line">    <span class="attr">canActivate</span>: [<span class="title class_">AuthGuard</span>]</span><br><span class="line">  &#125;</span><br><span class="line">]  </span><br></pre></td></tr></table></figure>
-
-<h2 id="2-3-控制路由是否退出（离开）"><a href="#2-3-控制路由是否退出（离开）" class="headerlink" title="2.3. 控制路由是否退出（离开）"></a>2.3. 控制路由是否退出（离开）</h2><p>和控制路由是否可以激活类似，在路由定义出增加 <code>canDeactivate</code>，并制定相应的Guard守卫即可。这里不再举例</p>
-<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><ol>
-<li>通过路由守卫（Route Guards）实现控制URL的进入和离开;</li>
-<li>Angular CLI可以辅助我们创建guard文件;</li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/25/Angular-Starter-12-routing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/25/Angular-Starter-12-routing/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（12）- 路由（Routing）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-25 10:06:00" itemprop="dateCreated datePublished" datetime="2021-01-25T10:06:00+08:00">2021-01-25</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E8%B7%AF%E7%94%B1router%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95">2. 路由（Router）基本用法</a><ul>
-<li><a href="#21-%E5%87%86%E5%A4%87">2.1. 准备</a></li>
-<li><a href="#22-%E6%B3%A8%E5%86%8C%E8%B7%AF%E7%94%B1">2.2. 注册路由</a></li>
-<li><a href="#23-html%E4%B8%AD%E7%9A%84%E7%94%A8%E6%B3%95">2.3. html中的用法</a></li>
-<li><a href="#24-ts-%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E7%94%A8%E6%B3%95">2.4. ts 代码中的用法</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%8E%A5%E6%94%B6%E5%8F%82%E6%95%B0">3. 接收参数</a><ul>
-<li><a href="#31-%E8%B7%AF%E5%BE%84%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0">3.1. 路径中的参数</a></li>
-<li><a href="#32-%E5%8F%82%E6%95%B0queryparameter%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0">3.2. 参数（QueryParameter）中的参数</a></li>
-</ul>
-</li>
-<li><a href="#4-url%E8%B7%AF%E5%BE%84%E6%98%BE%E7%A4%BA%E6%A0%BC%E5%BC%8F">4. URL路径显示格式</a></li>
-<li><a href="#5-%E9%83%A8%E7%BD%B2%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98">5. 部署中遇到的问题</a></li>
-<li><a href="#6-%E6%80%BB%E7%BB%93">6. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>简单来说地址栏中，不同的地址（URL）对应不同的页面，这就是路由。同时，点击浏览器的前进和后退按钮，浏览器就会在你的浏览历史中向前或向后导航，这也是基于路由。</p>
-<p>在 Angular 里面，Router 是一个独立的模块，定义在 @angular&#x2F;router 模块中，</p>
-<ol>
-<li>Router 可以配合 NgModule 进行模块的延迟加载（懒加载）、预加载操作（参考《Angular入门到精通系列教程（11）- 模块(NgModule)，延迟加载模块》）；</li>
-<li>Router 会管理组件的生命周期，它会负责创建、销毁组件。</li>
-</ol>
-<p>对于一个新的基于AngularCLI的项目，初始化时可以通过选项，将AppRoutingModule默认加入到app.component.ts中。</p>
-<h1 id="2-路由（Router）基本用法"><a href="#2-路由（Router）基本用法" class="headerlink" title="2. 路由（Router）基本用法"></a>2. 路由（Router）基本用法</h1><h2 id="2-1-准备"><a href="#2-1-准备" class="headerlink" title="2.1. 准备"></a>2.1. 准备</h2><p>我们首先创建2个页面，用于说明路由的使用：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ng g c page1</span><br><span class="line">ng g c page2</span><br></pre></td></tr></table></figure>
-<p>使用上面AnuglarCLI命令，创建Page1Component, Page2Component 2个组件。</p>
-<h2 id="2-2-注册路由"><a href="#2-2-注册路由" class="headerlink" title="2.2. 注册路由"></a>2.2. 注册路由</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//src\app\app-routing.module.ts</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;page1&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Page1Component</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;page2&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Page2Component</span></span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [<span class="title class_">RouterModule</span>.<span class="title function_">forRoot</span>(routes)],</span><br><span class="line">  <span class="attr">exports</span>: [<span class="title class_">RouterModule</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppRoutingModule</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到，简单的路由注册，只需要path和component2个属性，分别定义路由的相对路径，以及这个路由的响应组件。</p>
-<h2 id="2-3-html中的用法"><a href="#2-3-html中的用法" class="headerlink" title="2.3. html中的用法"></a>2.3. html中的用法</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">&quot;page1&quot;</span>&gt;</span>Page1<span class="tag">&lt;/<span class="name">a</span>&gt;</span> |</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">routerLink</span>=<span class="string">&quot;page2&quot;</span>&gt;</span>Page2<span class="tag">&lt;/<span class="name">a</span>&gt;</span> </span><br></pre></td></tr></table></figure>
-<p>在html模板中，直接使用routerLink属性，标识为angular的路由。执行代码，可以看到 Page1和Page2 两个超链接，点击可以看到地址栏地址改为<a target="_blank" rel="noopener" href="http://localhost:4200/page2%E6%88%96http://localhost:4200/page1%EF%BC%8C">http://localhost:4200/page2或http://localhost:4200/page1，</a> 页面内容在page1和page2中切换</p>
-<h2 id="2-4-ts-代码中的用法"><a href="#2-4-ts-代码中的用法" class="headerlink" title="2.4. ts 代码中的用法"></a>2.4. ts 代码中的用法</h2><p>有时候，需要根据ts中的业务逻辑，进行跳转。ts中，需要注入Router实例，如</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">constructor</span>(<span class="params"><span class="keyword">private</span> <span class="attr">router</span>: <span class="title class_">Router</span></span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>跳转代码：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到 /page1</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">router</span>.<span class="title function_">navigate</span>([<span class="string">&#x27;/page1&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 跳转到 /page1/123</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">router</span>.<span class="title function_">navigate</span>([<span class="string">&#x27;/page1&#x27;</span>, <span class="number">123</span>]);</span><br></pre></td></tr></table></figure>
-
-<h1 id="3-接收参数"><a href="#3-接收参数" class="headerlink" title="3. 接收参数"></a>3. 接收参数</h1><h2 id="3-1-路径中的参数"><a href="#3-1-路径中的参数" class="headerlink" title="3.1. 路径中的参数"></a>3.1. 路径中的参数</h2><p>一般来说，我们把参数作为url中的一段，如&#x2F;users&#x2F;1, 代表查询id是1的用户，路由定义为”&#x2F;users&#x2F;id” 这种风格。</p>
-<p>针对我们的简单页面，比如我们的page1页面可以传id参数，那么我们需要修改我们的routing为：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Routes</span> = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;page1/:id&#x27;</span>,    <span class="comment">//接收id参数</span></span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Page1Component</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 实现可选参数的小技巧。 这个routing处理没有参数的url</span></span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;page1&#x27;</span>,        </span><br><span class="line">    <span class="attr">redirectTo</span>: <span class="string">&#x27;page1/&#x27;</span>,   <span class="comment">// 跳转到&#x27;page1/:id&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;page2&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Page2Component</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<p>ts代码读取参数时， 首先需要注入ActivatedRoute，代码如下：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">constructor</span>(<span class="params"><span class="keyword">private</span> <span class="attr">activatedRoute</span>: <span class="title class_">ActivatedRoute</span></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">ngOnInit</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">activatedRoute</span>.<span class="property">paramMap</span>.<span class="title function_">subscribe</span>(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Parameter id: &#x27;</span>, params.<span class="title function_">get</span>(<span class="string">&#x27;id&#x27;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/33   </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:  33</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 地址 http://localhost:4200/page1/     </span></span><br><span class="line">    <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-2-参数（QueryParameter）中的参数"><a href="#3-2-参数（QueryParameter）中的参数" class="headerlink" title="3.2. 参数（QueryParameter）中的参数"></a>3.2. 参数（QueryParameter）中的参数</h2><p>参数还有另外一种写法，如<a target="_blank" rel="noopener" href="http://localhost:4200/?name=cat">http://localhost:4200/?name=cat</a>, 即URL地址后，加一个问号’?’, 之后再加参数名和参数值（’name&#x3D;cat’）。这种称为查询参数(QueryParameter)。</p>
-<p>取这查询参数时，和之前的路由参数类似，只是paramMap改为queryParamMap，代码如下：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">activatedRoute</span>.<span class="property">queryParamMap</span>.<span class="title function_">subscribe</span>(<span class="function">(<span class="params">params</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Query Parameter name: &#x27;</span>, params.<span class="title function_">get</span>(<span class="string">&#x27;name&#x27;</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1?name=cat</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:  cat</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 地址 http://localhost:4200/page1/</span></span><br><span class="line">  <span class="comment">// 控制台输出：Query Parameter name:   (实际结果为undefined)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-URL路径显示格式"><a href="#4-URL路径显示格式" class="headerlink" title="4. URL路径显示格式"></a>4. URL路径显示格式</h1><p>不同于传统的纯静态（html）站点，angular中的url不是对应一个真实的文件（页面），因为anuglar接管的路由（Routing）处理，来决定显示那个Component给终端用户。为了针对不同的场景，angular的URL路径显示格式有2中：</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="http://localhost:4200/page1/123">http://localhost:4200/page1/123</a></li>
-<li><a target="_blank" rel="noopener" href="http://localhost:4200/#/page1/123">http://localhost:4200/#/page1/123</a></li>
-</ol>
-<p>默认是第一种，不加#的。如果需要，可以在app-routing.ts中，加入<code>useHash: true</code>, 如：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-routing.ts</span></span><br><span class="line"><span class="meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [<span class="title class_">RouterModule</span>.<span class="title function_">forRoot</span>(routes, &#123; <span class="attr">useHash</span>: <span class="literal">true</span> &#125;)],</span><br><span class="line">  <span class="attr">exports</span>: [<span class="title class_">RouterModule</span>],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h1 id="5-部署中遇到的问题"><a href="#5-部署中遇到的问题" class="headerlink" title="5. 部署中遇到的问题"></a>5. 部署中遇到的问题</h1><p>同样，因为anuglar接管的路由（Routing）处理，所以部署时，部署到iis, nginx等等的服务器，都会有不同的技巧（要求），详细参考：<br><a target="_blank" rel="noopener" href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode</a></p>
-<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
-<li>angular默认不支持可选路由（e.g. &#x2F;user&#x2F;:id?),但是我们可以定义2个路由，指向同一个Component来实现这个，达到代码复用；（或者使用redirectTo）</li>
-<li>可以使用useHash参数，实现augular路径前加一个#；</li>
-<li>读取参数时，都需要subscribe订阅一下，不能直接读取。</li>
-<li>打包后部署问题，查看官方wifi （<a target="_blank" rel="noopener" href="https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode%EF%BC%89">https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode）</a></li>
-</ol>
-<p><br><br></p>
-<blockquote>
-<p>—————- END —————-</p>
-</blockquote>
-<p><br><br><br><br><br></p>
-<blockquote>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2021/01/13/Angular-Starter-10-Directive-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/13/Angular-Starter-10-Directive-1/" class="post-title-link" itemprop="url">Angular入门到精通系列教程（10）- 指令（Directive）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-13 13:11:30" itemprop="dateCreated datePublished" datetime="2021-01-13T13:11:30+08:00">2021-01-13</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E6%91%98%E8%A6%81">1. 摘要</a></li>
-<li><a href="#2-%E7%BB%84%E4%BB%B6%E4%B8%8E%E6%8C%87%E4%BB%A4%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">2. 组件与指令之间的关系</a><ul>
-<li><a href="#21-%E6%8C%87%E4%BB%A4%E7%9A%84%E7%A7%8D%E7%B1%BB">2.1. 指令的种类</a></li>
-</ul>
-</li>
-<li><a href="#3-angular-%E4%B8%AD%E6%8C%87%E4%BB%A4%E7%9A%84%E7%94%A8%E9%80%94">3. Angular 中指令的用途</a></li>
-<li><a href="#4-%E6%8C%87%E4%BB%A4%E4%B8%BE%E4%BE%8B">4. 指令举例</a><ul>
-<li><a href="#41-%E6%8C%87%E4%BB%A4%E5%8A%9F%E8%83%BD">4.1. 指令功能</a></li>
-<li><a href="#42-anuglar-cli%E7%94%9F%E6%88%90%E5%9F%BA%E6%9C%AC%E6%96%87%E4%BB%B6">4.2. Anuglar CLI生成基本文件</a></li>
-<li><a href="#43-directive%E6%8C%87%E4%BB%A4%E6%A0%B8%E5%BF%83%E4%BB%A3%E7%A0%81">4.3. Directive指令核心代码</a></li>
-<li><a href="#44-%E4%BD%BF%E7%94%A8%E8%AF%A5%E6%8C%87%E4%BB%A4">4.4. 使用该指令</a></li>
-</ul>
-</li>
-<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
-</ul>
-<blockquote>
-<p>环境: </p>
-<ul>
-<li>Angular CLI: 11.0.6</li>
-<li>Angular: 11.0.7</li>
-<li>Node: 12.18.3 </li>
-<li>npm : 6.14.6</li>
-<li>IDE: Visual Studio Code</li>
-</ul>
-</blockquote>
-<h1 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h1><p>指令（Directive）在Angular 1.0时代（当时叫AngularJS）是很流行的，现在用到的偏少。可以简单理解为，指令（Directive）用于扩展已有Element（DOM）。</p>
-<h1 id="2-组件与指令之间的关系"><a href="#2-组件与指令之间的关系" class="headerlink" title="2. 组件与指令之间的关系"></a>2. 组件与指令之间的关系</h1><p>如果去看Angular源码，可以看到下面定义</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Supplies configuration metadata for an Angular component.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@publicApi</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">interface</span> <span class="title class_">Component</span> <span class="keyword">extends</span> <span class="title class_">Directive</span> &#123;</span><br></pre></td></tr></table></figure>
-<p>是的，Component派生于Directive，也就是说，Component属于Directive。</p>
-<h2 id="2-1-指令的种类"><a href="#2-1-指令的种类" class="headerlink" title="2.1. 指令的种类"></a>2.1. 指令的种类</h2><ol>
-<li>Component 是 Directive 的子接口，是一种特殊的指令，Component 可以带有 HTML 模板，Directive 不能有模板。</li>
-<li>属性型指令：用来修改 DOM 元素的外观和行为，但是不会改变DOM 结构，Angular 内置指令里面典型的属性型指令有 ngClass、ngStyle，如果打算封装自己的组件库，属性型指令是必备的内容。</li>
-<li>结构型指令：可以修改 DOM 结构，内置的常用结构型指令有 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code>。由于结构型指令会修改 DOM 结构，因而同一个 HTML 标签上面不能同时使用多个结构型指令。如果要在同一个 HTML 元素上面使用多个结构性指令，可以考虑加一层空的元素来嵌套，比如在外面套一层空的（<code>div</code>) 。</li>
-</ol>
-<h1 id="3-Angular-中指令的用途"><a href="#3-Angular-中指令的用途" class="headerlink" title="3. Angular 中指令的用途"></a>3. Angular 中指令的用途</h1><p>Angualr中用指令来增强DOM的功能，包括 HTML 原生DOM和我们自己自定义的组件（Component）。举例来说，可以扩展一个Button，实现避免点击后，服务器端未响应前的二次点击；高亮某些收入内容等等。</p>
-<h1 id="4-指令举例"><a href="#4-指令举例" class="headerlink" title="4. 指令举例"></a>4. 指令举例</h1><h2 id="4-1-指令功能"><a href="#4-1-指令功能" class="headerlink" title="4.1. 指令功能"></a>4.1. 指令功能</h2><p>实现一个指令，鼠标移动到上面时， 背景显示为黄色，鼠标移开，恢复正常。</p>
-<h2 id="4-2-Anuglar-CLI生成基本文件"><a href="#4-2-Anuglar-CLI生成基本文件" class="headerlink" title="4.2. Anuglar CLI生成基本文件"></a>4.2. Anuglar CLI生成基本文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate directive MyHighlight</span><br></pre></td></tr></table></figure>
-<p>Anuglar CLI自动生成html、css、ut等文件。</p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="4-3-Directive指令核心代码"><a href="#4-3-Directive指令核心代码" class="headerlink" title="4.3. Directive指令核心代码"></a>4.3. Directive指令核心代码</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Directive</span>, <span class="title class_">ElementRef</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@angular/core&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Directive</span>(&#123;</span><br><span class="line">  <span class="attr">selector</span>: <span class="string">&#x27;[appHighlight]&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">HighlightDirective</span> &#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">el</span>: <span class="title class_">ElementRef</span></span>) &#123;</span><br><span class="line">       el.<span class="property">nativeElement</span>.<span class="property">style</span>.<span class="property">backgroundColor</span> = <span class="string">&#x27;yellow&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">&#x27;mouseenter&#x27;</span>) <span class="title function_">onMouseEnter</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">highlight</span>(<span class="string">&#x27;yellow&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HostListener</span>(<span class="string">&#x27;mouseleave&#x27;</span>) <span class="title function_">onMouseLeave</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">highlight</span>(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">highlight</span>(<span class="params"><span class="attr">color</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">el</span>.<span class="property">nativeElement</span>.<span class="property">style</span>.<span class="property">backgroundColor</span> = color;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-4-使用该指令"><a href="#4-4-使用该指令" class="headerlink" title="4.4. 使用该指令"></a>4.4. 使用该指令</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">my-highlight</span>&gt;</span>Highlight me!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>my-highlight</code> 即我们的元素扩展属性（指令、directive）。</p>
-</blockquote>
-<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h1><ul>
-<li>指令（Directive）用于扩展DOM 元素或组件的功能。</li>
-<li>Angular中的 <code>*ngFor</code>、<code>*ngIf</code> 和 <code>*ngSwitch</code> 都是Angular内置的指令。</li>
-</ul>
 <p><br><br></p>
 <blockquote>
 <p>—————- END —————-</p>

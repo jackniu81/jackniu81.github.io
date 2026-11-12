@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本系列完结篇。前四篇覆盖了协议规范、核心原语、传输层和进阶能力，本篇从”协议是什么”转向”怎么在生产环境稳定跑起来”：SDK 上手、安全模型、网关架构、可观测性、限流熔断，最后横向对比 Function Calling、Agent 框架、A2A，给出选型决策与反模式清单。  一、SDK 选型与基础代码骨架MCP 本身只是协议，手写 JSON-RPC、流分割、重连非常容易出错。生产优先使用官方&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出 MCP 系列教程（五）：工程落地与选型">
+<meta property="og:url" content="https://jackniu81.github.io/2026/11/10/MCP-Production-Engineering-Selection/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="本系列完结篇。前四篇覆盖了协议规范、核心原语、传输层和进阶能力，本篇从”协议是什么”转向”怎么在生产环境稳定跑起来”：SDK 上手、安全模型、网关架构、可观测性、限流熔断，最后横向对比 Function Calling、Agent 框架、A2A，给出选型决策与反模式清单。  一、SDK 选型与基础代码骨架MCP 本身只是协议，手写 JSON-RPC、流分割、重连非常容易出错。生产优先使用官方&amp;#">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-11-10T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T02:41:37.794Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/11/10/MCP-Production-Engineering-Selection/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/11/10/MCP-Production-Engineering-Selection/","path":"2026/11/10/MCP-Production-Engineering-Selection/","title":"深入浅出 MCP 系列教程（五）：工程落地与选型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入浅出 MCP 系列教程（五）：工程落地与选型 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81SDK-%E9%80%89%E5%9E%8B%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BB%A3%E7%A0%81%E9%AA%A8%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">一、SDK 选型与基础代码骨架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%BB%E6%B5%81-SDK"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 主流 SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Node-js-%E6%9C%80%E7%AE%80-stdio-Server-%E9%AA%A8%E6%9E%B6"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Node.js 最简 stdio Server 骨架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Streamable-HTTP-%E6%9C%8D%E5%8A%A1%E9%AA%A8%E6%9E%B6%E8%A6%81%E7%82%B9"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 Streamable HTTP 服务骨架要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%8C%E6%95%B4%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">二、完整安全模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%88%86%E5%B1%82%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 分层安全框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%AB%98%E5%8D%B1%E6%93%8D%E4%BD%9C%E9%BB%91%E5%90%8D%E5%8D%95%EF%BC%88%E7%94%9F%E4%BA%A7%E5%BB%BA%E8%AE%AE%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 高危操作黑名单（生产建议）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%BE%9B%E5%BA%94%E9%93%BE%E9%A3%8E%E9%99%A9"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 供应链风险</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%BD%91%E5%85%B3%E6%9E%B6%E6%9E%84%EF%BC%88%E4%BC%81%E4%B8%9A%E4%B8%BB%E6%B5%81%E8%90%BD%E5%9C%B0%E5%BD%A2%E6%80%81%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">三、网关架构（企业主流落地形态）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%BD%91%E5%85%B3%E8%81%8C%E8%B4%A3"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 网关职责</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%B8%A4%E7%A7%8D%E7%BD%91%E5%85%B3%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 两种网关模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%BD%91%E5%85%B3%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 网关会话管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E9%83%A8%E7%BD%B2%E6%8B%93%E6%89%91%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 部署拓扑示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">四、可观测性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E7%BB%93%E6%9E%84%E5%8C%96%E6%97%A5%E5%BF%97%E8%A7%84%E8%8C%83"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 结构化日志规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87%EF%BC%88Prometheus%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 核心指标（Prometheus）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 链路追踪</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%99%90%E6%B5%81%E3%80%81%E7%86%94%E6%96%AD%E3%80%81%E8%83%8C%E5%8E%8B%E3%80%81%E9%87%8D%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">五、限流、熔断、背压、重试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E9%99%90%E6%B5%81%E7%BB%B4%E5%BA%A6"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 限流维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E7%86%94%E6%96%AD"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 熔断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E8%83%8C%E5%8E%8B%EF%BC%88%E9%9D%9E%E5%B8%B8%E5%85%B3%E9%94%AE%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 背压（非常关键）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E9%87%8D%E8%AF%95%E7%AD%96%E7%95%A5"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 重试策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">六、部署与测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E9%83%A8%E7%BD%B2%E8%A6%81%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 部署要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%B5%8B%E8%AF%95%E4%BD%93%E7%B3%BB%EF%BC%88%E5%9B%9B%E5%B1%82%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 测试体系（四层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E6%8E%92%E9%9A%9C%E6%B8%85%E5%8D%95%EF%BC%88%E9%AB%98%E9%A2%91%E6%95%85%E9%9A%9C%EF%BC%89"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 排障清单（高频故障）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E9%80%89%E5%9E%8B%E5%AF%B9%E6%AF%94%EF%BC%9AMCP-%E5%9C%A8-AI-%E7%94%9F%E6%80%81%E4%B8%AD%E7%9A%84%E5%AE%9A%E4%BD%8D"><span class="nav-number">7.</span> <span class="nav-text">七、选型对比：MCP 在 AI 生态中的定位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-MCP-vs-OpenAI-Function-Calling"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 MCP vs OpenAI Function Calling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-MCP-vs-Agent-%E6%A1%86%E6%9E%B6%EF%BC%88LangGraph%E3%80%81AutoGen%E3%80%81CrewAI%EF%BC%89"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 MCP vs Agent 框架（LangGraph、AutoGen、CrewAI）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-MCP-vs-A2A%EF%BC%88Agent2Agent%EF%BC%89"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 MCP vs A2A（Agent2Agent）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%80%89%E5%9E%8B%E5%86%B3%E7%AD%96%E6%A0%91%E4%B8%8E%E5%8F%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text">八、选型决策树与反模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%86%B3%E7%AD%96%E6%A0%91"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 决策树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E7%BB%8F%E5%85%B8%E6%9D%83%E8%A1%A1%E7%82%B9"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 经典权衡点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E9%AB%98%E9%A2%91%E8%AE%BE%E8%AE%A1%E5%8F%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 高频设计反模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E7%B3%BB%E5%88%97%E6%80%BB%E7%BB%93%EF%BC%9AMCP-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">9.</span> <span class="nav-text">九、系列总结：MCP 的核心思想</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0%E5%AF%BC%E8%88%AA"><span class="nav-number">9.1.</span> <span class="nav-text">系列文章导航</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React, Next.js, node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/10/MCP-Production-Engineering-Selection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入浅出 MCP 系列教程（五）：工程落地与选型 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入浅出 MCP 系列教程（五）：工程落地与选型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-10 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-10T09:00:00+08:00">2026-11-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本系列完结篇。前四篇覆盖了协议规范、核心原语、传输层和进阶能力，本篇从”协议是什么”转向”怎么在生产环境稳定跑起来”：SDK 上手、安全模型、网关架构、可观测性、限流熔断，最后横向对比 Function Calling、Agent 框架、A2A，给出选型决策与反模式清单。</p>
+</blockquote>
+<h2 id="一、SDK-选型与基础代码骨架"><a href="#一、SDK-选型与基础代码骨架" class="headerlink" title="一、SDK 选型与基础代码骨架"></a>一、SDK 选型与基础代码骨架</h2><p>MCP 本身只是协议，手写 JSON-RPC、流分割、重连非常容易出错。生产优先使用官方&#x2F;社区 SDK，不要裸写协议层。</p>
+<h3 id="1-1-主流-SDK"><a href="#1-1-主流-SDK" class="headerlink" title="1.1 主流 SDK"></a>1.1 主流 SDK</h3><ul>
+<li><strong>TypeScript &#x2F; Node.js：@modelcontextprotocol&#x2F;sdk</strong>（官方，生态最好，更新最快）</li>
+<li><strong>Python：mcp（官方）</strong>，适合数据、脚本、AI 工具快速封装</li>
+<li><strong>Go：github.com&#x2F;modelcontextprotocol&#x2F;go-sdk</strong>，适合高性能网关、常驻服务</li>
+<li><strong>Rust：官方 Rust SDK</strong>，适合资源占用低、安全敏感的独立 Server</li>
+<li>C# &#x2F; Java：社区第三方实现，版本跟进略慢，适合传统后端集成</li>
+</ul>
+<blockquote>
+<p>原则：业务语言优先官方 SDK；网关、代理、高吞吐组件优先 Go &#x2F; Rust。</p>
+</blockquote>
+<h3 id="1-2-Node-js-最简-stdio-Server-骨架"><a href="#1-2-Node-js-最简-stdio-Server-骨架" class="headerlink" title="1.2 Node.js 最简 stdio Server 骨架"></a>1.2 Node.js 最简 stdio Server 骨架</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Server</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@modelcontextprotocol/sdk/server/index.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">StdioServerTransport</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@modelcontextprotocol/sdk/server/stdio.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">ListToolsRequestSchema</span>,</span><br><span class="line">  <span class="title class_">CallToolRequestSchema</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;@modelcontextprotocol/sdk/types.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> server = <span class="keyword">new</span> <span class="title class_">Server</span>(</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&quot;demo-server&quot;</span>, <span class="attr">version</span>: <span class="string">&quot;1.0.0&quot;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">capabilities</span>: &#123; <span class="attr">tools</span>: &#123;&#125; &#125; &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">server.<span class="title function_">setRequestHandler</span>(<span class="title class_">ListToolsRequestSchema</span>, <span class="title function_">async</span> () =&gt; (&#123;</span><br><span class="line">  <span class="attr">tools</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&quot;echo&quot;</span>,</span><br><span class="line">      <span class="attr">description</span>: <span class="string">&quot;回显文本&quot;</span>,</span><br><span class="line">      <span class="attr">inputSchema</span>: &#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;object&quot;</span>,</span><br><span class="line">        <span class="attr">properties</span>: &#123; <span class="attr">text</span>: &#123; <span class="attr">type</span>: <span class="string">&quot;string&quot;</span> &#125; &#125;,</span><br><span class="line">        <span class="attr">required</span>: [<span class="string">&quot;text&quot;</span>],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">server.<span class="title function_">setRequestHandler</span>(<span class="title class_">CallToolRequestSchema</span>, <span class="title function_">async</span> (req) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> text = req.<span class="property">params</span>.<span class="property">arguments</span>.<span class="property">text</span> <span class="keyword">as</span> <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">content</span>: [&#123; <span class="attr">type</span>: <span class="string">&quot;text&quot;</span>, text &#125;] &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> transport = <span class="keyword">new</span> <span class="title class_">StdioServerTransport</span>();</span><br><span class="line"><span class="keyword">await</span> server.<span class="title function_">connect</span>(transport);</span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li>SDK 自动处理 JSONL 分割、JSON-RPC id 路由、握手、capability 协商；</li>
+<li>业务只需要注册各类请求 handler；</li>
+<li>如果开启 sampling、roots、resources，在初始化 capabilities 里声明，再注册对应 handler。</li>
+</ul>
+<h3 id="1-3-Streamable-HTTP-服务骨架要点"><a href="#1-3-Streamable-HTTP-服务骨架要点" class="headerlink" title="1.3 Streamable HTTP 服务骨架要点"></a>1.3 Streamable HTTP 服务骨架要点</h3><p>HTTP 版本拆成两块：SSE 下行流管理（维护每个 sessionId 对应的 SSE 连接、消息入队）和 POST 上行接收（校验 session、鉴权、投递消息到对应会话）。SDK 一般提供独立的 <code>StreamableHttpTransport</code>，内置会话存储、SSE 推送。</p>
+<blockquote>
+<p>自建 HTTP MCP 最大坑：SSE 断开后消息队列堆积，必须设置单会话消息上限、过期丢弃。</p>
+</blockquote>
+<h2 id="二、完整安全模型"><a href="#二、完整安全模型" class="headerlink" title="二、完整安全模型"></a>二、完整安全模型</h2><p>MCP 的安全不是单点，是分层防御，很多人只依赖 Roots，这远远不够。</p>
+<h3 id="2-1-分层安全框架"><a href="#2-1-分层安全框架" class="headerlink" title="2.1 分层安全框架"></a>2.1 分层安全框架</h3><ol>
+<li><p><strong>传输层安全</strong></p>
+<ul>
+<li>stdio：本机信任边界；不要用 stdio 加载来源不明的第三方 Server；</li>
+<li>Streamable HTTP：必须 HTTPS，禁止裸 HTTP；使用 Bearer &#x2F; mTLS，不要把密钥放 query；</li>
+<li>代理侧：禁止开放公网无鉴权 MCP 端点。</li>
+</ul>
+</li>
+<li><p><strong>身份与鉴权层</strong></p>
+<ul>
+<li>每个用户独立会话；鉴权信息和 sessionId 解耦；</li>
+<li>多租户场景：所有后端操作带上用户身份上下文，不能共用一个数据库账号；</li>
+<li>权限最小化：同一个 MCP Server，不同用户看到不同工具、不同 roots。</li>
+</ul>
+</li>
+<li><p><strong>Roots（资源沙箱）</strong></p>
+<ul>
+<li>只管控 <code>resources/read</code>；它是白名单，不是系统沙箱；</li>
+<li>校验逻辑：严格 URI 前缀校验，不能简单字符串匹配（规避 <code>file:///work../etc/</code> 这类逃逸）；</li>
+<li>推荐 Host 侧也做一层同样的 URI 校验，双重防御。</li>
+</ul>
+</li>
+<li><p><strong>工具权限隔离（最容易缺失）</strong><br>Roots 管读资源；工具的写、删除、执行、SQL、接口调用需要单独权限系统：</p>
+<ul>
+<li>工具白名单：用户 A 允许 <code>read_file</code>，不允许 <code>delete_file</code>；</li>
+<li>参数校验：高危工具增加参数正则、黑名单；</li>
+<li>人工审批策略：匹配高危工具 + 敏感参数，强制弹窗确认；</li>
+<li>审批记录永久留存。</li>
+</ul>
+</li>
+<li><p><strong>Sampling 安全边界</strong></p>
+<ul>
+<li>Server 提交的 sampling 请求属于不可信输入，统一经过 Host 的内容安全审核；</li>
+<li>可配置策略：某些 Server 禁止 sampling，或必须人工审批；</li>
+<li>Token 配额按用户隔离，防止某个 Server 无限消耗模型额度。</li>
+</ul>
+</li>
+<li><p><strong>提示注入防护</strong></p>
+<ul>
+<li>外部资源、工具返回内容在送入 LLM 时，做边界封装；</li>
+<li>不把外部原始文本直接和系统提示拼接；</li>
+<li>高安全场景使用分隔标记、独立消息块、内容摘要替代原文。</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-2-高危操作黑名单（生产建议）"><a href="#2-2-高危操作黑名单（生产建议）" class="headerlink" title="2.2 高危操作黑名单（生产建议）"></a>2.2 高危操作黑名单（生产建议）</h3><p>任何下面这类工具，默认不开放，开启必须强审批：</p>
+<ul>
+<li>文件删除、覆盖、批量修改；</li>
+<li>任意 shell 执行；</li>
+<li>无限制 SQL 执行；</li>
+<li>发送邮件、短信、企业消息；</li>
+<li>访问内部凭证、密钥仓库；</li>
+<li>公网出网扫描。</li>
+</ul>
+<h3 id="2-3-供应链风险"><a href="#2-3-供应链风险" class="headerlink" title="2.3 供应链风险"></a>2.3 供应链风险</h3><p>MCP 生态是”Host 加载外部 Server”，这是核心攻击面：</p>
+<ul>
+<li>第三方 MCP Server 拥有你下发的 roots、工具权限；</li>
+<li>恶意 Server 可以通过 sampling 诱导 Host 模型泄露信息；</li>
+<li>企业内部：维护 MCP Server 准入清单，禁止用户随意加载外部 Server。</li>
+</ul>
+<h2 id="三、网关架构（企业主流落地形态）"><a href="#三、网关架构（企业主流落地形态）" class="headerlink" title="三、网关架构（企业主流落地形态）"></a>三、网关架构（企业主流落地形态）</h2><h3 id="3-1-网关职责"><a href="#3-1-网关职责" class="headerlink" title="3.1 网关职责"></a>3.1 网关职责</h3><ul>
+<li><strong>统一接入</strong>：对外只暴露一个 Streamable HTTP 端点；</li>
+<li><strong>鉴权 &amp; SSO</strong>：对接 OIDC、内部账号；</li>
+<li><strong>路由</strong>：按请求、用户配置转发到对应的后端 MCP Server（stdio 子进程或远程 HTTP MCP）；</li>
+<li><strong>能力聚合</strong>：合并多个后端的 tools &#x2F; resources &#x2F; prompts，对外统一返回；</li>
+<li><strong>权限裁剪</strong>：根据用户权限过滤工具、裁剪 roots；</li>
+<li><strong>审计、限流、熔断、日志集中采集</strong>；</li>
+<li><strong>协议适配</strong>：后端是 stdio，对外暴露成 Streamable HTTP。</li>
+</ul>
+<h3 id="3-2-两种网关模式"><a href="#3-2-两种网关模式" class="headerlink" title="3.2 两种网关模式"></a>3.2 两种网关模式</h3><ol>
+<li><strong>透明代理模式</strong>：网关只转发消息，不解析业务原语。实现简单，但无法做工具粒度权限、聚合；</li>
+<li><strong>控制平面网关（智能网关）</strong>：网关完整解析 MCP 消息，可以在 <code>tools/list</code> 返回前过滤工具、在 <code>tools/call</code> 之前拦截审批、修改 roots 下发列表、合并多个后端能力集。企业生产首选，复杂度更高。</li>
+</ol>
+<h3 id="3-3-网关会话管理"><a href="#3-3-网关会话管理" class="headerlink" title="3.3 网关会话管理"></a>3.3 网关会话管理</h3><p>网关侧持有 sessionId，一个网关会话可以绑定多个后端 MCP 会话，负责生命周期管理：</p>
+<ul>
+<li>用户登出：批量销毁所有后端会话、杀掉 stdio 子进程；</li>
+<li>闲置超时：回收连接、释放文件句柄、数据库连接；</li>
+<li>后端 Server 崩溃：网关感知，向上返回错误，可选自动重建后端会话。</li>
+</ul>
+<h3 id="3-4-部署拓扑示例"><a href="#3-4-部署拓扑示例" class="headerlink" title="3.4 部署拓扑示例"></a>3.4 部署拓扑示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">用户 Host（Claude Desktop / 自研 Agent）</span><br><span class="line">        ↓ HTTPS（Streamable HTTP）</span><br><span class="line">        MCP Gateway（鉴权、审计、路由、限流）</span><br><span class="line">        ├─→ 内部 stdio MCP Server（文件、Git）</span><br><span class="line">        ├─→ 远程 HTTP MCP Server（工单、知识库）</span><br><span class="line">        └─→ 内部服务封装 MCP（运维、发布平台）</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、可观测性"><a href="#四、可观测性" class="headerlink" title="四、可观测性"></a>四、可观测性</h2><p>MCP 是异步双向协议，链路追踪比普通 REST 更复杂。可观测分三块：结构化日志、指标、链路追踪。</p>
+<h3 id="4-1-结构化日志规范"><a href="#4-1-结构化日志规范" class="headerlink" title="4.1 结构化日志规范"></a>4.1 结构化日志规范</h3><p>每条日志至少包含：<code>sessionId</code>、<code>user_id</code>、<code>requestId</code>（JSON-RPC id）、<code>method</code>、耗时、状态、错误码、工具名称、URI（脱敏）。</p>
+<p>区分几类日志：</p>
+<ul>
+<li><strong>审计日志（不可篡改）</strong>：所有 <code>tools/call</code>、roots 变更、sampling 请求、审批结果；</li>
+<li><strong>运行日志</strong>：info &#x2F; warn &#x2F; error，用于排障；</li>
+<li><strong>访问日志</strong>：连接建立、断开、重连、鉴权失败。</li>
+</ul>
+<blockquote>
+<p>不要直接把完整参数明文入库：密钥、敏感内容脱敏。</p>
+</blockquote>
+<h3 id="4-2-核心指标（Prometheus）"><a href="#4-2-核心指标（Prometheus）" class="headerlink" title="4.2 核心指标（Prometheus）"></a>4.2 核心指标（Prometheus）</h3><ul>
+<li>连接指标：活跃会话数、新建会话、会话销毁、SSE 重连次数；</li>
+<li>请求指标：每个 method 的 QPS、成功&#x2F;失败计数、P50&#x2F;P95&#x2F;P99 耗时；</li>
+<li>工具粒度：每个工具调用次数、失败率、平均耗时；</li>
+<li>Sampling 指标：反向模型调用次数、token 消耗、拒绝次数；</li>
+<li>资源指标：<code>resources/read</code> 读取量、订阅数量；</li>
+<li>资源水位：子进程数量、消息队列堆积、内存。</li>
+</ul>
+<p>告警重点：工具错误率突增、SSE 频繁重连、会话堆积不释放、sampling token 消耗突增、鉴权失败风暴。</p>
+<h3 id="4-3-链路追踪"><a href="#4-3-链路追踪" class="headerlink" title="4.3 链路追踪"></a>4.3 链路追踪</h3><p>MCP 是异步双向，一条链路可能跨 Host → Gateway → MCP Server → 下游服务，还可能反向 sampling 再回到 Host。方案：</p>
+<ul>
+<li>用自定义 header（<code>traceparent</code>，W3C trace）在 Streamable HTTP 上透传；</li>
+<li>stdio 场景：通过环境变量注入 trace id；</li>
+<li>一条 <code>tools/call</code> 生成一条 trace；里面触发 sampling 作为子 span；</li>
+<li>进度通知、资源更新通知打上同一个 trace id，串联整个任务。</li>
+</ul>
+<h2 id="五、限流、熔断、背压、重试"><a href="#五、限流、熔断、背压、重试" class="headerlink" title="五、限流、熔断、背压、重试"></a>五、限流、熔断、背压、重试</h2><p>MCP 双向异步，盲目重试很容易放大故障。</p>
+<h3 id="5-1-限流维度"><a href="#5-1-限流维度" class="headerlink" title="5.1 限流维度"></a>5.1 限流维度</h3><ul>
+<li>用户级：每个用户总 QPS、sampling token 上限、并发工具调用数；</li>
+<li>会话级：单会话消息速率，防止单会话打满服务；</li>
+<li>工具级：高危工具单独限流；</li>
+<li>网关全局限流。</li>
+</ul>
+<h3 id="5-2-熔断"><a href="#5-2-熔断" class="headerlink" title="5.2 熔断"></a>5.2 熔断</h3><p>针对后端 MCP Server：连续报错超过阈值就熔断、快速失败；熔断状态下不再转发请求，返回友好错误；配合熔断窗口、半开探测。适合场景：后端数据库挂掉、文件服务宕机、第三方接口超时。</p>
+<h3 id="5-3-背压（非常关键）"><a href="#5-3-背压（非常关键）" class="headerlink" title="5.3 背压（非常关键）"></a>5.3 背压（非常关键）</h3><p>异步通道天然存在背压问题：发送速度 &gt; 处理速度，消息队列无限堆积，OOM。策略：</p>
+<ul>
+<li>每个会话设置消息队列最大长度；</li>
+<li>队列满时：拒绝新消息或丢弃旧消息；</li>
+<li>长任务配合 progress 通知，同时控制并发；</li>
+<li>stdio：注意进程管道缓冲区阻塞，Node &#x2F; Python 尤其容易卡住。</li>
+</ul>
+<h3 id="5-4-重试策略"><a href="#5-4-重试策略" class="headerlink" title="5.4 重试策略"></a>5.4 重试策略</h3><ul>
+<li>JSON-RPC 请求：只有幂等操作才允许重试；删除、发送消息这类非幂等禁止自动重试；</li>
+<li>网络断开重连：SSE 按服务端 retry 间隔指数退避；</li>
+<li>业务失败（权限不足、参数错误）不重试；只有连接类、临时超时可以重试；</li>
+<li>重试必须带最大次数，防止风暴。</li>
+</ul>
+<h2 id="六、部署与测试"><a href="#六、部署与测试" class="headerlink" title="六、部署与测试"></a>六、部署与测试</h2><h3 id="6-1-部署要点"><a href="#6-1-部署要点" class="headerlink" title="6.1 部署要点"></a>6.1 部署要点</h3><p>stdio：进程托管（systemd &#x2F; supervisor）；监听子进程退出回收僵尸进程；版本升级重启进程即重启会话；用 cgroup 限制 CPU、内存。</p>
+<p>Streamable HTTP：容器化部署依赖外部会话存储（Redis）保存会话上下文；不要存在容器本地内存，否则扩缩容、滚动发布会话丢失；如果会话在 Redis，负载均衡不需要粘性会话；如果会话在进程内存，必须会话亲和，生产不推荐。</p>
+<h3 id="6-2-测试体系（四层）"><a href="#6-2-测试体系（四层）" class="headerlink" title="6.2 测试体系（四层）"></a>6.2 测试体系（四层）</h3><ol>
+<li><strong>单元测试</strong>：单独测试每个 tool、resource、prompt handler；用内存 transport 隔离；</li>
+<li><strong>协议一致性测试</strong>：校验握手、capability 协商、消息格式、错误码、通知语义；官方提供部分 conformance test 套件，可接入 CI；</li>
+<li><strong>集成测试</strong>：启动真实 transport，覆盖正常调用、参数错误、越界 roots、sampling 往返、SSE 断开重连、工具列表动态变更；</li>
+<li><strong>混沌测试（生产前）</strong>：随机断开 SSE、杀掉子进程、注入网络延迟丢包、超限大报文，验证不雪崩。</li>
+</ol>
+<blockquote>
+<p>不要只测”成功路径”；MCP 生产故障大多出在异步、断连、反向调用、权限逃逸。</p>
+</blockquote>
+<h3 id="6-3-排障清单（高频故障）"><a href="#6-3-排障清单（高频故障）" class="headerlink" title="6.3 排障清单（高频故障）"></a>6.3 排障清单（高频故障）</h3><ol>
+<li><strong>握手卡住、JSON parse error</strong>：stdio 场景 Server 在 stdout 打印日志；改成 stderr 或协议内 <code>logging/message</code>；</li>
+<li><strong>SSE 连上但收不到返回</strong>：检查 POST 是否携带正确 sessionId；SSE 是否被代理截断；消息队列是否满了；</li>
+<li><strong>roots 下发了仍可读取越界文件</strong>：URI 校验实现用了简单 startsWith，存在逃逸；改用 URI 标准库解析后校验；</li>
+<li><strong>sampling 请求发出去没有响应</strong>：Host 没在 initialize 声明 sampling；或 Host 拦截拒绝没有返回；</li>
+<li><strong>工具列表不更新</strong>：Host 没监听 <code>tools/list_changed</code>、没有主动刷新 <code>tools/list</code>；</li>
+<li><strong>会话越积越多，内存泄漏</strong>：没有闲置超时；SSE 断开会话没清理；</li>
+<li><strong>重连之后订阅失效</strong>：订阅是会话级，重连后需重新 <code>resources/subscribe</code>；</li>
+<li><strong>高并发下请求卡死</strong>：背压缺失、无队列上限、同步阻塞 handler 吃掉事件循环。</li>
+</ol>
+<h2 id="七、选型对比：MCP-在-AI-生态中的定位"><a href="#七、选型对比：MCP-在-AI-生态中的定位" class="headerlink" title="七、选型对比：MCP 在 AI 生态中的定位"></a>七、选型对比：MCP 在 AI 生态中的定位</h2><h3 id="7-1-MCP-vs-OpenAI-Function-Calling"><a href="#7-1-MCP-vs-OpenAI-Function-Calling" class="headerlink" title="7.1 MCP vs OpenAI Function Calling"></a>7.1 MCP vs OpenAI Function Calling</h3><p>二者不是替代关系，而是层级完全不同：</p>
+<ul>
+<li><strong>Function Calling</strong> 是 LLM 厂商的请求参数格式，嵌入在模型请求 payload 内部，绑定模型调用链路；</li>
+<li><strong>MCP</strong> 是独立于模型的双向会话协议，有独立的会话、订阅、反向采样、权限、生命周期。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Function Calling</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>绑定关系</td>
+<td>和模型强绑定</td>
+<td>和模型完全解耦</td>
+</tr>
+<tr>
+<td>会话状态</td>
+<td>无原生会话</td>
+<td>原生长会话、订阅、动态能力变更</td>
+</tr>
+<tr>
+<td>双向性</td>
+<td>单向：LLM → 工具</td>
+<td>双向：支持 Sampling</td>
+</tr>
+<tr>
+<td>能力发现</td>
+<td>每次请求携带或静态配置</td>
+<td>运行时动态发现、动态刷新</td>
+</tr>
+<tr>
+<td>权限沙箱</td>
+<td>没有内置规范</td>
+<td>内置 Roots</td>
+</tr>
+<tr>
+<td>跨客户端复用</td>
+<td>不同客户端需各自封装</td>
+<td>同一个 Server 可被多个 Host 接入</td>
+</tr>
+</tbody></table>
+<p>选型：简单、一次性、短流程的工具调用优先 Function Calling；工具服务要被多个客户端复用、需要长期资源订阅、需要反向采样、需要统一权限审计 → MCP。</p>
+<p>最常见组合：<strong>MCP 做工具服务层，Function Calling 做模型调用层</strong>——Host 把 MCP <code>tools/list</code> 转换为 function schema 发给兼容 OpenAI 接口的模型。</p>
+<h3 id="7-2-MCP-vs-Agent-框架（LangGraph、AutoGen、CrewAI）"><a href="#7-2-MCP-vs-Agent-框架（LangGraph、AutoGen、CrewAI）" class="headerlink" title="7.2 MCP vs Agent 框架（LangGraph、AutoGen、CrewAI）"></a>7.2 MCP vs Agent 框架（LangGraph、AutoGen、CrewAI）</h3><p>Agent 框架解决编排、记忆、规划、多轮推理；MCP 解决标准化工具接入层。</p>
+<ul>
+<li>只用框架、不用 MCP：上手快，但工具和编排代码耦合，新增工具要改代码发版本，很难被其他 Agent 复用；</li>
+<li>框架 + MCP：编排逻辑稳定，工具动态插拔，同一工具集可同时服务网页 Agent、桌面客户端、后台批处理；代价是多一层协议和运维体系。</li>
+</ul>
+<blockquote>
+<p>反模式：把复杂 Agent 编排逻辑写在 MCP Server 内部。MCP Server 应该是能力提供者，不是规划器。</p>
+</blockquote>
+<h3 id="7-3-MCP-vs-A2A（Agent2Agent）"><a href="#7-3-MCP-vs-A2A（Agent2Agent）" class="headerlink" title="7.3 MCP vs A2A（Agent2Agent）"></a>7.3 MCP vs A2A（Agent2Agent）</h3><p>一句话记忆：</p>
+<ul>
+<li><strong>A2A</strong>：Agent 找另一个 Agent 干活（任务委派、状态同步）；</li>
+<li><strong>MCP</strong>：Agent 找工具&#x2F;系统干活（能力暴露）。</li>
+</ul>
+<p>组合架构（联邦 Agent）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">主 Agent（Host）</span><br><span class="line"> ├─ MCP → 文件、数据库、业务系统（工具）</span><br><span class="line"> └─ A2A → 子 Agent（另一个独立 Agent）</span><br><span class="line">      └─ 子 Agent 内部再通过 MCP 调用它自己的工具</span><br></pre></td></tr></table></figure>
+
+<p>二者没有竞争关系，大型多 Agent 系统一般同时存在。如果只是让 Agent 读写文件、查内部系统，没有跨 Agent 委派，只用 MCP 就足够。</p>
+<h2 id="八、选型决策树与反模式"><a href="#八、选型决策树与反模式" class="headerlink" title="八、选型决策树与反模式"></a>八、选型决策树与反模式</h2><h3 id="8-1-决策树"><a href="#8-1-决策树" class="headerlink" title="8.1 决策树"></a>8.1 决策树</h3><ol>
+<li>只是给单一模型网关提供简单工具？→ 优先 Function Calling，轻量够用；</li>
+<li>工具需要被多个客户端复用？→ 倾向 MCP；</li>
+<li>有长生命周期资源（文件仓库、订阅变更）？→ 倾向 MCP；</li>
+<li>需要工具服务反向请求模型做子推理？→ MCP 的 Sampling 是核心卖点；</li>
+<li>是 Agent 和另一个独立 Agent 委派任务？→ 用 A2A，而不是把 Agent 封装成 MCP 工具；</li>
+<li>只在一个编排框架内部使用、不对外暴露工具？→ 可以不引入 MCP，直接本地函数；</li>
+<li>决定上 MCP 后：个人桌面、本地开发 → stdio；内网共享、多用户 → Streamable HTTP + 网关；跨部门联邦 → 多层网关 + 能力注册表。</li>
+</ol>
+<blockquote>
+<p>核心原则：MCP 不是默认答案，它是为「能力可独立部署、可共享、有会话和资源生命周期」而设计的方案。</p>
+</blockquote>
+<h3 id="8-2-经典权衡点"><a href="#8-2-经典权衡点" class="headerlink" title="8.2 经典权衡点"></a>8.2 经典权衡点</h3><ol>
+<li><strong>能力聚合 vs 透明转发网关</strong>：透明转发简单但做不到工具粒度权限；智能聚合网关能力强，但要完整解析 MCP 语义，兼容性风险更高；</li>
+<li><strong>本地 stdio 隔离 vs 远程 HTTP 共享</strong>：stdio 隔离性好但不能跨机器；HTTP 共享方便但必须处理鉴权、会话存储、网络故障；</li>
+<li><strong>Server 内做业务逻辑，还是推到 Host</strong>：MCP Server 适合封装外部系统；复杂规划、多轮判断、记忆放在 Host&#x2F;编排层。Server 逻辑太重会变成隐藏的 Agent，难以审计追踪。</li>
+</ol>
+<h3 id="8-3-高频设计反模式"><a href="#8-3-高频设计反模式" class="headerlink" title="8.3 高频设计反模式"></a>8.3 高频设计反模式</h3><table>
+<thead>
+<tr>
+<th>反模式</th>
+<th>问题</th>
+<th>正解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>把完整 Agent 封装成一个 MCP Tool</td>
+<td>两层会话状态叠加、生命周期冲突、审计颗粒度变粗</td>
+<td>Agent 作为 Host，MCP 调用底层系统；跨 Agent 委派走 A2A</td>
+</tr>
+<tr>
+<td>用 MCP 替代普通同步 API</td>
+<td>协议开销、会话管理全是额外负担</td>
+<td>简单无状态查询直接用 HTTP API</td>
+</tr>
+<tr>
+<td>Roots 当成万能安全边界</td>
+<td>工具可以绕过 Roots 写文件、执行命令</td>
+<td>Roots 只保护 resources&#x2F;read；工具权限独立管控</td>
+</tr>
+<tr>
+<td>在 MCP Server 里硬编码模型 Key</td>
+<td>密钥分散、配额审核难统一</td>
+<td>走 Sampling，模型收敛在 Host</td>
+</tr>
+<tr>
+<td>无限缓存工具列表不刷新</td>
+<td>动态变更后客户端看不到最新工具</td>
+<td>监听 <code>tools/list_changed</code> 通知并刷新</td>
+</tr>
+<tr>
+<td>自定义扩展不用 <code>x-</code> 前缀</td>
+<td>未来官方升级直接冲突</td>
+<td>私有接口必须 <code>x-</code> 前缀</td>
+</tr>
+<tr>
+<td>业务状态存在 Server 本地内存</td>
+<td>多实例部署负载均衡后状态丢失</td>
+<td>会话外部持久化（Redis）</td>
+</tr>
+</tbody></table>
+<h2 id="九、系列总结：MCP-的核心思想"><a href="#九、系列总结：MCP-的核心思想" class="headerlink" title="九、系列总结：MCP 的核心思想"></a>九、系列总结：MCP 的核心思想</h2><p>回顾整个系列：</p>
+<ol>
+<li><strong>协议基础</strong>：角色、JSON-RPC、会话生命周期、initialize、capability 协商；</li>
+<li><strong>三大原语</strong>：Tools（执行动作）、Resources（只读资源）、Prompts（可复用提示模板）；</li>
+<li><strong>传输层</strong>：stdio（本地）、Streamable HTTP（远程，POST + SSE）；</li>
+<li><strong>进阶能力</strong>：Sampling（反向模型调用）、Roots（资源沙箱）、通知体系、错误、扩展规范；</li>
+<li><strong>生产工程</strong>：SDK、分层安全、网关、可观测、限流熔断、部署测试排障；</li>
+<li><strong>选型生态</strong>：对比 Function Calling、Agent 框架、A2A；决策树、反模式。</li>
+</ol>
+<p>MCP 的核心思想一句话概括：</p>
+<blockquote>
+<p>将外部系统的能力，封装成一套独立于模型、独立于 Agent 编排、可共享、带会话与权限语义的标准化服务。</p>
+</blockquote>
+<p>它不是一个做 Agent 的框架，而是让 Agent 安全、标准地接入真实世界系统的一层基础设施——AI 能力接口的”USB-C”。</p>
+<hr>
+<h3 id="系列文章导航"><a href="#系列文章导航" class="headerlink" title="系列文章导航"></a>系列文章导航</h3><ol>
+<li><a href="/2026/11/01/MCP-Protocol-Foundations/">深入浅出 MCP 系列教程（一）：协议基础与架构设计</a></li>
+<li><a href="/2026/11/08/MCP-Core-Primitives-Tools-Resources-Prompts/">深入浅出 MCP 系列教程（二）：三大核心原语实战</a></li>
+<li><a href="/2026/11/15/MCP-Transport-Stdio-Streamable-HTTP/">深入浅出 MCP 系列教程（三）：传输层实战</a></li>
+<li><a href="/2026/11/22/MCP-Advanced-Sampling-Roots-Notifications/">深入浅出 MCP 系列教程（四）：进阶能力</a></li>
+<li>深入浅出 MCP 系列教程（五）：工程落地与选型（本篇）</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/08/Algorithm-Merge-Sorted-Array/" rel="prev" title="算法 - 合并两个有序数组">
+                  <i class="fa fa-angle-left"></i> 算法 - 合并两个有序数组
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
