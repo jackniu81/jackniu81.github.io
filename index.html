@@ -132,12 +132,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">110</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">50</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -154,6 +154,408 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/13/How-to-Choose-Between-LangChain-LangGraph-Deep-Agents-Managed-Deep-Agents.md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/13/How-to-Choose-Between-LangChain-LangGraph-Deep-Agents-Managed-Deep-Agents.md/" class="post-title-link" itemprop="url">LangChain、LangGraph、Deep Agents、Managed Deep Agents：四个框架到底该选哪个？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-13 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-13T09:00:00+08:00">2026-11-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="这几年-AI-Agent-越来越火，相关开发框架也开始扎堆出现。"><a href="#这几年-AI-Agent-越来越火，相关开发框架也开始扎堆出现。" class="headerlink" title="这几年 AI Agent 越来越火，相关开发框架也开始扎堆出现。"></a>这几年 AI Agent 越来越火，相关开发框架也开始扎堆出现。</h2><p>如果你关注过 LangChain 生态，大概率见过这几个名字：</p>
+<ul>
+<li><p>LangChain</p>
+</li>
+<li><p>LangGraph</p>
+</li>
+<li><p>Deep Agents</p>
+</li>
+<li><p>Managed Deep Agents</p>
+</li>
+</ul>
+<p>名字看起来像一家人，实际上也确实是一家人。但它们的定位并不相同。</p>
+<p>有点像一家公司的四个岗位：有人负责提供工具，有人负责安排流程，有人负责带队完成复杂任务，还有人干脆把整套基础设施都给你准备好了。</p>
+<p>问题来了：开发一个 Agent ，到底应该选哪个？</p>
+<p>先别急着全部学一遍。我们一个一个来看。</p>
+<h3 id="一、先搞清楚：它们到底有什么区别？"><a href="#一、先搞清楚：它们到底有什么区别？" class="headerlink" title="一、先搞清楚：它们到底有什么区别？"></a>一、先搞清楚：它们到底有什么区别？</h3><p>先用一句话概括：</p>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>核心定位</th>
+<th>通俗理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LangChain</td>
+<td>Agent Framework</td>
+<td>提供工具和积木</td>
+</tr>
+<tr>
+<td>LangGraph</td>
+<td>Agent Runtime</td>
+<td>负责流程和状态管理</td>
+</tr>
+<tr>
+<td>Deep Agents</td>
+<td>Agent Harness</td>
+<td>自带规划能力的智能团队</td>
+</tr>
+<tr>
+<td>Managed Deep Agents</td>
+<td>托管运行平台</td>
+<td>连服务器和运行环境也帮你管</td>
+</tr>
+</tbody></table>
+<p>这里有一个容易误解的地方：四者不是完全平级的竞争关系。</p>
+<p>LangGraph 更接近底层运行引擎，LangChain 提供开发抽象和集成能力，Deep Agents 则在此基础上封装出更完整的自主 Agent 能力。</p>
+<p>Managed Deep Agents 又往前走了一步，解决的是 Agent 部署和生产运行的问题。</p>
+<h3 id="二、LangChain：给你一套积木，怎么搭自己决定"><a href="#二、LangChain：给你一套积木，怎么搭自己决定" class="headerlink" title="二、LangChain：给你一套积木，怎么搭自己决定"></a>二、LangChain：给你一套积木，怎么搭自己决定</h3><p>LangChain 可以说是这个生态里最容易入门的选择。</p>
+<p>它提供了模型、 Prompt 、Tool、Retriever、Agent 等常用组件，让开发者不用每次都从零开始。</p>
+<p>例如，你想开发一个能够查询天气、搜索 知识库 、调用第三方 API 的 Agent。</p>
+<p>基本流程就是：</p>
+<ol>
+<li><p>用户提出问题。</p>
+</li>
+<li><p>LLM 分析用户意图。</p>
+</li>
+<li><p>决定是否调用工具。</p>
+</li>
+<li><p>获取工具执行结果。</p>
+</li>
+<li><p>根据结果生成回答。</p>
+</li>
+</ol>
+<p>LangChain 已经帮你处理好了 Agent 与工具之间的基本循环。</p>
+<p>它的优点是简单、灵活、集成丰富。</p>
+<p>但它不会替你设计所有复杂业务流程。需要什么功能，自己组合；需要什么规则，自己添加。</p>
+<p><strong>适合什么场景？</strong></p>
+<ul>
+<li><p>RAG 知识库问答</p>
+</li>
+<li><p>简单 Tool Calling</p>
+</li>
+<li><p>数据查询 Agent</p>
+</li>
+<li><p>API 自动化</p>
+</li>
+<li><p>普通客服和助手</p>
+</li>
+</ul>
+<p>如果只是想做一个能调用工具的 AI 助手，没必要一上来就请出一支 Agent 军团。</p>
+<h3 id="三、LangGraph：不想让-AI-自由发挥？那就给它画张流程图"><a href="#三、LangGraph：不想让-AI-自由发挥？那就给它画张流程图" class="headerlink" title="三、LangGraph：不想让 AI 自由发挥？那就给它画张流程图"></a>三、LangGraph：不想让 AI 自由发挥？那就给它画张流程图</h3><p>LangChain 让 Agent 自己决定下一步做什么，但有些业务可不能这么随意。</p>
+<p>比如订单审批：</p>
+<ul>
+<li><p>先检查订单信息。</p>
+</li>
+<li><p>再验证支付状态。</p>
+</li>
+<li><p>然后检查库存。</p>
+</li>
+<li><p>满足条件才能发货。</p>
+</li>
+<li><p>遇到异常还要人工审批。</p>
+</li>
+</ul>
+<p>这时候，如果把所有决定都交给 LLM ，就像让一个刚入职的实习生负责整个公司的财务审批。</p>
+<p>勇气可嘉，风险也不小。</p>
+<p>LangGraph 就是解决这类问题的。</p>
+<p>它采用 Graph 的方式组织工作流，核心概念包括：</p>
+<ul>
+<li><p>State：记录当前任务状态。</p>
+</li>
+<li><p>Node：执行具体任务。</p>
+</li>
+<li><p>Edge：定义执行顺序。</p>
+</li>
+<li><p>Conditional Edge：根据条件决定下一步。</p>
+</li>
+<li><p>Checkpoint：保存执行进度。</p>
+</li>
+<li><p>Interrupt：暂停任务，等待人工介入。</p>
+</li>
+</ul>
+<p>最大的特点就是：<strong>流程由开发者控制，LLM 只在需要智能判断的地方参与。</strong></p>
+<p>例如代码审核：</p>
+<p>提交代码 → 静态检查 → 自动测试 → 判断结果 → 通过或返回修改。</p>
+<p>哪一步必须执行、失败后如何处理、什么时候需要人工介入，都可以明确规定。</p>
+<p><strong>适合什么场景？</strong></p>
+<ul>
+<li><p>复杂业务工作流</p>
+</li>
+<li><p>多步骤审批</p>
+</li>
+<li><p>多 Agent 协作</p>
+</li>
+<li><p>需要暂停和恢复的任务</p>
+</li>
+<li><p>对执行顺序和可靠性要求较高的系统</p>
+</li>
+</ul>
+<p>一句话：如果业务流程比 AI 的自由发挥更重要，LangGraph 通常更合适。</p>
+<h3 id="四、Deep-Agents：不只会调用工具，还要会自己安排工作"><a href="#四、Deep-Agents：不只会调用工具，还要会自己安排工作" class="headerlink" title="四、Deep Agents：不只会调用工具，还要会自己安排工作"></a>四、Deep Agents：不只会调用工具，还要会自己安排工作</h3><p>前面两个框架解决的是基础构建和流程控制问题。</p>
+<p>但如果你希望 Agent 完成的任务是：</p>
+<p>「帮我研究一下竞品，收集资料，分析优缺点，最后整理成一份报告。」</p>
+<p>事情就不一样了。</p>
+<p>这种任务没有固定的执行步骤。Agent 需要自己拆解目标、安排任务、搜索资料、分析结果，甚至在过程中调整计划。</p>
+<p>这就是 Deep Agents 擅长的方向。</p>
+<p>它可以理解为一个自带工作方法的高级 Agent Harness。</p>
+<p>主要提供以下能力：</p>
+<p><strong>1. Planning：任务规划</strong></p>
+<p>把复杂目标拆分成多个小任务，并跟踪任务进度。</p>
+<p><strong>2. Subagents：子 Agent</strong></p>
+<p>可以把任务分配给不同的子 Agent。</p>
+<p>例如研究 Agent 负责搜索资料，分析 Agent 负责对比数据，写作 Agent 负责生成报告。</p>
+<p>主 Agent 最后整合结果。</p>
+<p><strong>3. Filesystem：文件系统</strong></p>
+<p>Agent 可以读写文件，保存研究资料、中间结果和最终报告。</p>
+<p><strong>4. Context Management：上下文管理</strong></p>
+<p>长任务容易遇到上下文越来越长的问题。Deep Agents 提供摘要压缩、工具结果卸载、子 Agent 上下文隔离等能力。</p>
+<p><strong>5. Skills 和 Memory：技能与记忆</strong></p>
+<p>可以让 Agent 按需加载技能说明，并在不同任务之间保留有用的信息。</p>
+<p>这些能力组合起来，就能支持更复杂、更长时间的自主任务。</p>
+<p><strong>适合什么场景？</strong></p>
+<ul>
+<li><p>自主研究 Agent</p>
+</li>
+<li><p>Coding Agent</p>
+</li>
+<li><p>自动生成分析报告</p>
+</li>
+<li><p>多步骤数据分析</p>
+</li>
+<li><p>需要任务拆解和子 Agent 协作的应用</p>
+</li>
+</ul>
+<p>它有点像一个项目经理：你给它目标，它负责安排工作。</p>
+<p>不过，项目经理也可能做出错误决策。Agent 越自主，越需要做好权限控制、执行验证和成本管理。</p>
+<h3 id="五、Managed-Deep-Agents：代码你写，服务器我来管"><a href="#五、Managed-Deep-Agents：代码你写，服务器我来管" class="headerlink" title="五、Managed Deep Agents：代码你写，服务器我来管"></a>五、Managed Deep Agents：代码你写，服务器我来管</h3><p>如果 Deep Agents 已经能帮你完成复杂任务，那么 Managed Deep Agents 解决的就是另一个问题：</p>
+<p>Agent 开发完成后，怎么把它放到生产环境运行？</p>
+<p>传统方式下，你不仅要写 Agent，还要考虑：</p>
+<ul>
+<li><p>运行服务器</p>
+</li>
+<li><p>执行环境</p>
+</li>
+<li><p>持久化存储</p>
+</li>
+<li><p>任务调度</p>
+</li>
+<li><p>运行监控</p>
+</li>
+<li><p>部署和扩容</p>
+</li>
+</ul>
+<p>这些工作加起来，有时候 Agent 还没上线，运维工作已经先上线了。</p>
+<p>Managed Deep Agents 就是为了减少这些工作。</p>
+<p>它运行在 LangSmith Cloud 上，使用开源 Deep Agents Harness。你负责定义 Agent 的指令、工具和模型，平台负责托管运行环境及相关生产基础设施。</p>
+<p>开发流程也比较直接：</p>
+<ul>
+<li><p><code>mda dev</code>：本地开发和调试。</p>
+</li>
+<li><p><code>mda deploy</code>：部署到 LangSmith。</p>
+</li>
+</ul>
+<p>它还提供持久化记忆、沙箱、定时任务等生产能力。</p>
+<p><strong>适合什么场景？</strong></p>
+<ul>
+<li><p>想快速把 Deep Agent 部署上线。</p>
+</li>
+<li><p>不想自己维护 Agent 运行基础设施。</p>
+</li>
+<li><p>需要长期运行、定时执行的 Agent。</p>
+</li>
+<li><p>希望把精力集中在业务逻辑上。</p>
+</li>
+</ul>
+<p>当然，托管不是免费的午餐。平台费用、数据安全、服务区域、供应商依赖等问题，还是需要提前考虑。</p>
+<p>如果你希望完全掌控运行环境，也可以使用 Deep Agents SDK 自行部署。</p>
+<h3 id="六、四个框架横向对比"><a href="#六、四个框架横向对比" class="headerlink" title="六、四个框架横向对比"></a>六、四个框架横向对比</h3><table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>LangChain</th>
+<th>LangGraph</th>
+<th>Deep Agents</th>
+<th>Managed Deep Agents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心定位</td>
+<td>开发框架</td>
+<td>运行引擎</td>
+<td>Agent Harness</td>
+<td>托管平台</td>
+</tr>
+<tr>
+<td>抽象程度</td>
+<td>中</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td>流程控制</td>
+<td>Agent Loop</td>
+<td>自定义 Graph</td>
+<td>Agent 自主规划</td>
+<td>托管 Deep Agents</td>
+</tr>
+<tr>
+<td>任务拆解</td>
+<td>自行实现</td>
+<td>自行实现</td>
+<td>内置能力</td>
+<td>内置能力</td>
+</tr>
+<tr>
+<td>子 Agent</td>
+<td>可组合实现</td>
+<td>Subgraph</td>
+<td>内置委派能力</td>
+<td>内置委派能力</td>
+</tr>
+<tr>
+<td>上下文管理</td>
+<td>自行配置</td>
+<td>自行配置</td>
+<td>内置能力</td>
+<td>内置能力</td>
+</tr>
+<tr>
+<td>持久化执行</td>
+<td>依赖运行层</td>
+<td>核心能力</td>
+<td>基于 LangGraph</td>
+<td>托管支持</td>
+</tr>
+<tr>
+<td>部署方式</td>
+<td>自行部署</td>
+<td>自行部署</td>
+<td>SDK 自行部署</td>
+<td>LangSmith Cloud</td>
+</tr>
+</tbody></table>
+<p>需要注意，表格中的「内置」不代表所有功能都不需要配置，实际能力还取决于所用版本、后端和具体集成。</p>
+<h3 id="七、实际项目中，应该怎么选？"><a href="#七、实际项目中，应该怎么选？" class="headerlink" title="七、实际项目中，应该怎么选？"></a>七、实际项目中，应该怎么选？</h3><p>给几个实际例子：</p>
+<p><strong>场景一：开发一个企业知识库问答系统</strong></p>
+<p>用户提问，系统检索 向量数据库 ，再由 LLM 整理答案。</p>
+<p>推荐：LangChain。</p>
+<p>这种场景不需要复杂的任务规划，简单的 Agent Loop 就能满足需求。</p>
+<p><strong>场景二：开发一个自动化订单审批系统</strong></p>
+<p>需要检查订单、验证支付、检查库存，并在异常时暂停等待人工处理。</p>
+<p>推荐：LangGraph。</p>
+<p>业务步骤明确，流程必须可控，不适合让 Agent 随意发挥。</p>
+<p><strong>场景三：开发一个自动竞品研究系统</strong></p>
+<p>用户只提供一个产品名称，Agent 自己搜索资料、分析市场、比较竞争对手，最后生成报告。</p>
+<p>推荐：Deep Agents。</p>
+<p>这种任务目标明确，但执行路径不固定，适合自主规划和子 Agent 协作。</p>
+<p><strong>场景四：把竞品研究 Agent 部署成一个长期运行的服务</strong></p>
+<p>需要定时执行、持久化记忆，又不想自己维护服务器。</p>
+<p>推荐：Managed Deep Agents。</p>
+<p>它可以减少生产环境基础设施的搭建工作。</p>
+<h3 id="八、最后总结：别为了用框架而用框架"><a href="#八、最后总结：别为了用框架而用框架" class="headerlink" title="八、最后总结：别为了用框架而用框架"></a>八、最后总结：别为了用框架而用框架</h3><p>四者并不是非此即彼的关系。</p>
+<p>它们可以组合使用：</p>
+<ul>
+<li><p>LangChain 提供模型、工具和开发抽象。</p>
+</li>
+<li><p>LangGraph 负责底层状态管理和流程编排。</p>
+</li>
+<li><p>Deep Agents 在上面增加规划、上下文管理和子 Agent 等能力。</p>
+</li>
+<li><p>Managed Deep Agents 则负责托管 Deep Agents 的生产运行。</p>
+</li>
+</ul>
+<p>实际开发时，也不需要把四个框架全部用上。</p>
+<p>我的建议是：</p>
+<table>
+<thead>
+<tr>
+<th>你的目标</th>
+<th>优先选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>快速开发普通 Agent</td>
+<td>LangChain</td>
+</tr>
+<tr>
+<td>构建复杂、可靠的业务流程</td>
+<td>LangGraph</td>
+</tr>
+<tr>
+<td>开发自主性较强的复杂 Agent</td>
+<td>Deep Agents</td>
+</tr>
+<tr>
+<td>快速部署和托管 Agent</td>
+<td>Managed Deep Agents</td>
+</tr>
+</tbody></table>
+<p>如果你刚开始学习 Agent 开发，可以先理解 LangChain 的基本机制，再学习 LangGraph 的状态和流程控制，最后体验 Deep Agents。</p>
+<p>但如果现在就要开发一个自主研究、自动编程或者复杂任务执行 Agent，也可以直接从 Deep Agents 入手。</p>
+<p><strong>记住一个原则：简单任务别搞复杂，复杂任务别硬凑简单框架。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2322,102 +2724,6 @@
 <blockquote>
 <p>难度：中等 | LeetCode 198 | 线性 DP</p>
 </blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/09/30/cms-strapi-v5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React, Next.js, node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/30/cms-strapi-v5/" class="post-title-link" itemprop="url">别再用老旧模板建站了！Strapi 才是现代网站的最优解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-09-30 09:11:47" itemprop="dateCreated datePublished" datetime="2026-09-30T09:11:47+08:00">2026-09-30</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>做网站这件事，很多人的认知还停留在十年前。</p>
-<p>要么花几百块用凡科、建站之星套模板，页面千篇一律，一眼就是廉价流水线作品；要么找人定制开发，前端后端从头写起，改个新闻都要找程序员改代码，费时又费钱。</p>
-<p>尤其是设计公司、品牌工作室这类靠颜值吃饭的行业，模板网站的土味质感，完全撑不起自身的高端定位。</p>
-<p>今天给大家聊的 <strong>Strapi</strong>，就是目前开发者圈公认的「现代建站神器」。它完美解决了传统建站的所有痛点，也是现在高端定制企业官网的主流后台方案。</p>
-<p>很多人听不懂「无头CMS」「前后端解耦」这些专业词，没关系，我用大白话带你彻底搞懂它。</p>
-<h2 id="Strapi-到底是什么？"><a href="#Strapi-到底是什么？" class="headerlink" title="Strapi 到底是什么？"></a>Strapi 到底是什么？</h2><p>简单说，Strapi 就是一个<strong>免费开源、自己掌控、零代码搭后台</strong>的内容管理系统。</p>
-<p>区别于凡科、有赞这类租即用的SaaS建站平台，Strapi 不是成品网站，而是一个「万能后台容器」。你可以把它理解成一个全自动的后端工人：不用手写代码，就能帮你建数据库、存内容、管权限、出接口。</p>
-<p>它最核心的特点就是<strong>无头（Headless）</strong>。通俗解释就是：它只负责管好所有数据内容，不捆绑任何前端页面样式。</p>
-<p>传统CMS是“捆绑一体机”，后台数据和前台页面焊死，想改设计、换风格处处受限。而Strapi 只做后端本职工作，前端页面你想用Next.js、Vue随便选，自由度直接拉满。</p>
-<h2 id="不用写代码，普通人也能搭专业后台"><a href="#不用写代码，普通人也能搭专业后台" class="headerlink" title="不用写代码，普通人也能搭专业后台"></a>不用写代码，普通人也能搭专业后台</h2><p>这是Strapi 最圈粉的优势，也是它吊打传统建站工具的关键。</p>
-<p>以往做企业官网后台，想要实现「项目案例、新闻动态、公司介绍、留言表单」的管理功能，后端开发者要手动建数据表、写增删改查接口、配置权限，至少大半天起步。</p>
-<p>但用Strapi，全程可视化拖拽操作。</p>
-<p>你在后台点点鼠标，就能创建各类内容模型：单页的官网配置、多条目的项目案例、可双语切换的新闻资讯、存储留言的表单库，全部一键生成。</p>
-<p>同时自带完整的权限体系，你可以设置管理员、普通编辑账号，区分谁能改内容、谁只能查看，完美适配企业运营场景。</p>
-<p>更贴心的是原生支持中英双语，不用自己折腾代码适配，做外贸、高端双语官网简直是量身定制。</p>
-<h2 id="专属现代架构，速度和颜值双在线"><a href="#专属现代架构，速度和颜值双在线" class="headerlink" title="专属现代架构，速度和颜值双在线"></a>专属现代架构，速度和颜值双在线</h2><p>现在的高端企业官网，都追求静态渲染、CDN加速、极速打开，这也是模板网站做不到的。</p>
-<p>Strapi 搭配Next.js 是目前行业顶配组合。前端用Next.js 写出高颜值、自适应的静态页面，通过CDN全网加速，打开速度飞快，SEO表现也远超模板站。</p>
-<p>后端交给Strapi 全权托管，所有项目、新闻、文案、图片都存在自己的PostgreSQL数据库里。</p>
-<p>这里必须提一句核心优势：<strong>数据完全归自己</strong>。</p>
-<p>凡科、建站之星这类SaaS平台，数据都存在厂商服务器里，年费一停，网站和数据直接清零。而Strapi 是自托管部署，服务器、数据库、所有内容全权掌控，安全感拉满。</p>
-<h2 id="轻量二次开发，按需定制不臃肿"><a href="#轻量二次开发，按需定制不臃肿" class="headerlink" title="轻量二次开发，按需定制不臃肿"></a>轻量二次开发，按需定制不臃肿</h2><p>很多人担心，零代码工具会功能受限，满足不了定制需求。Strapi 完美避开了这个坑。</p>
-<p>日常90%的建站需求，纯后台配置就能搞定，完全不用写代码。</p>
-<p>遇到特殊需求也不怕，它支持轻量化二次开发。比如表单提交后自动发邮件通知、留言数据统计、自动导出表格、IP防刷限流，简单写几行代码就能实现。</p>
-<p>而且扩展开发不会改动系统内核，后续升级版本、维护迭代都很方便，不会出现越改越乱的情况。</p>
-<h2 id="适配中小企业，性价比拉满"><a href="#适配中小企业，性价比拉满" class="headerlink" title="适配中小企业，性价比拉满"></a>适配中小企业，性价比拉满</h2><p>论成本，Strapi 优势也十分明显。</p>
-<p>开源免费无版权费用，只需要一台便宜的轻量服务器部署即可，不用每年花几千块续费SaaS模板。一次搭建，长期使用，自由迭代改版。</p>
-<p>不管是设计公司、小微企业、个人工作室，想要一个高颜值、可自主管控、支持定制的官网，这套架构都是最优解。</p>
-<p>不用将就千篇一律的模板，不用承担SaaS平台的数据绑架，用最低的成本，拿下高端定制网站的所有能力。</p>
 
       
     </div>
