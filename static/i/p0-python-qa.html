@@ -43,37 +43,198 @@
 <h1>Python 面试题（从简单到难）</h1>
 <blockquote>
 <p><strong>难度分级</strong>：🟢 初级（基础语法/概念）→ 🟡 中级（进阶特性/原理）→ 🔴 高级（并发/工程/源码/性能）</p>
-<p><strong>目录</strong>：Python 基础 🟢 → Python 进阶 🟡 → Python 高级与工程 🔴 → Python 高频补充 🟡🔴 → Django 基础 🟢 → Django 进阶 🟡 → Django 工程化/性能 🔴</p>
-<p>共 126 题，按从简单到难排列，适合 p1 级别系统复习。</p>
+<p><strong>目录</strong>：FastAPI 与 asyncio 专题 🟡🔴 → Python 基础 🟢 → Python 进阶 🟡 → Python 高级与工程 🔴 → Python 高频补充 🟡🔴 → Django 基础 🟢 → Django 进阶 🟡 → Django 工程化/性能 🔴</p>
+<p>共 146 题，按从简单到难排列，适合 p1 级别系统复习。</p>
 </blockquote>
+<h2>FastAPI 与 asyncio 专题</h2>
+<blockquote>
+<p>本专题置于最前，覆盖现代 Python 异步 Web 开发两大核心：<code>asyncio</code>（异步运行时）与 <code>FastAPI</code>（异步 Web 框架），共 20 题（🟡中级 → 🔴高级）。</p>
+</blockquote>
+<h3>asyncio 简介</h3>
+<p><code>asyncio</code> 是 Python 标准库提供的<strong>异步 IO 框架</strong>，通过单线程内的<strong>事件循环（Event Loop）</strong> 调度大量<strong>协程（coroutine）</strong> 来实现并发。协程用 <code>async def</code> 定义、<code>await</code> 挂起：当某个协程在等待 IO（网络、磁盘、数据库）时，事件循环会切去执行其他就绪的协程，从而在<strong>一个线程</strong>里处理成千上万个并发连接，特别适合 IO 密集型场景（爬虫、网关、微服务、实时通信）。它与多线程/多进程的本质区别是<strong>协作式</strong>（自己让出 CPU）而非操作系统抢占式调度，切换开销极小。</p>
+<h3>FastAPI 简介</h3>
+<p><code>FastAPI</code> 是一个现代、高性能的 <strong>ASGI Web 框架</strong>，构建在 <strong>Starlette</strong>（路由、异步 Web 内核）与 <strong>Pydantic</strong>（基于类型注解的数据校验/序列化）之上。它原生支持 <code>async def</code>、通过<strong>类型注解</strong>自动生成请求校验和 <strong>OpenAPI/Swagger 交互文档</strong>，并内置**依赖注入（DI）**系统。性能可与 Node.js、Go 媲美，是目前 AI 接口、微服务、高性能 API 的首选 Python 框架。</p>
+<h3>1. 什么是 asyncio？它解决什么问题？</h3>
+<p><strong>答案：</strong>
+<code>asyncio</code> 是 Python 的异步 IO 框架，用单线程事件循环调度协程实现并发，主要解决 <strong>IO 密集型</strong>任务在高并发下线程/进程模型开销大的问题。传统同步方式每个连接占一个线程，成百上千连接时内存和上下文切换成本高；asyncio 用少量线程甚至单线程即可处理海量并发连接，切换发生在协程层面，开销极小。</p>
+<h3>2. <code>async def</code>、<code>await</code>、协程、事件循环之间是什么关系？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>async def</code> 定义的函数是<strong>协程函数</strong>，调用它返回<strong>协程对象</strong>（不会立即执行）；</li>
+<li><code>await xxx</code> 只能出现在 <code>async def</code> 内，表示「挂起当前协程、等 await 的结果就绪后再恢复」，挂起期间事件循环去跑别的协程；</li>
+<li><strong>事件循环</strong>是调度器，负责在多个协程间来回切换、监听 IO 就绪、恢复被挂起的协程。用 <code>asyncio.run(main())</code> 启动循环并执行入口协程。</li>
+</ul>
+<h3>3. 调用一个 async 函数为什么不执行？<code>asyncio.run()</code> 的作用？</h3>
+<p><strong>答案：</strong>
+<code>coro = fetch()</code> 只是创建协程对象，并未运行；必须在事件循环里被 <code>await</code> 或被封装成 Task 才会真正执行。<code>asyncio.run(coro)</code> 是程序入口的推荐方式：它创建一个新事件循环、把协程作为主任务运行、直到完成后关闭循环（Python 3.7+）。不能在已有运行中的循环里嵌套调用 <code>asyncio.run()</code>。</p>
+<h3>4. Task 和 Future 是什么？<code>create_task()</code> 和直接 <code>await</code> 有什么区别？</h3>
+<p><strong>答案：</strong>
+<code>Future</code> 代表「一个尚未完成、将来会有结果」的对象；<code>Task</code> 是 <code>Future</code> 的子类，把一个协程交给事件循环<strong>立即调度执行</strong>。区别：</p>
+<ul>
+<li><code>await coro</code>：串行等待这一个协程完成才继续；</li>
+<li><code>task = asyncio.create_task(coro)</code>：立刻把协程排入调度（并发开始跑），之后再 <code>await task</code> 取结果。要<strong>并发</strong>执行多个协程必须先 <code>create_task</code> 再用 <code>gather</code>，否则写成连续 <code>await</code> 会退化为串行。</li>
+</ul>
+<h3>5. <code>asyncio.gather()</code> 和 <code>asyncio.wait()</code> 有什么区别？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>gather(*aws)</code>：并发运行多个协程/任务，按<strong>传入顺序</strong>返回结果列表；默认某个异常会向上抛出，<code>return_exceptions=True</code> 时把异常作为结果收集而不中断其他任务。</li>
+<li><code>wait(tasks)</code>：返回 <code>(done, pending)</code> 两个任务集合，不直接给结果，需自己从 Task 取；可用 <code>return_when=FIRST_COMPLETED/FIRST_EXCEPTION/ALL_COMPLETED</code> 控制何时返回，适合「谁先完成先处理」的场景。另有 <code>as_completed()</code> 按完成顺序迭代结果。</li>
+</ul>
+<h3>6. 在 async 代码里误用同步阻塞调用会怎样？如何正确「异步化」？</h3>
+<p><strong>答案：</strong>
+事件循环是单线程的，一个同步阻塞调用（<code>requests.get</code>、<code>time.sleep</code>、重 CPU 计算、同步数据库驱动）会<strong>卡住整个事件循环</strong>，导致所有协程一起停摆。正确做法：</p>
+<ul>
+<li>IO 用异步库：<code>aiohttp</code>/<code>httpx</code> 代替 requests、<code>asyncio.sleep</code> 代替 time.sleep、asyncpg 等异步驱动；</li>
+<li>无法避免的阻塞调用丢到线程/进程池：<code>await asyncio.to_thread(fn, ...)</code>（3.9+）或 <code>loop.run_in_executor()</code>。</li>
+</ul>
+<h3>7. <code>async with</code>、<code>async for</code> 和异步生成器是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>async with</code>：异步上下文管理器，<code>__aenter__/__aexit__</code> 可是协程，用于异步获取/释放资源（如 <code>async with session.get(url) as resp</code>）；</li>
+<li><code>async for</code>：异步迭代，每次取元素可能 <code>await</code>；</li>
+<li><strong>异步生成器</strong>：<code>async def</code> 中用 <code>yield</code>，配合 <code>async for</code> 惰性产出异步数据（如流式响应、SSE）。标准库 <code>agen</code> 用 <code>__aiter__/__anext__</code> 实现。</li>
+</ul>
+<h3>8. 如何做异步超时与取消？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>asyncio.wait_for(coro, timeout)</code>：超过 timeout 未完成则取消该协程并抛 <code>TimeoutError</code>；</li>
+<li>Python 3.11+ 推荐 <code>async with asyncio.timeout(5):</code> 上下文管理器，更直观地给一段代码设超时；</li>
+<li>取消：<code>task.cancel()</code> 会在协程的下一个 <code>await</code> 点抛出 <code>CancelledError</code>（继承自 <code>BaseException</code>），用于优雅中断；协程内可用 <code>try/finally</code> 或 <code>asyncio.shield()</code> 做清理/防取消。</li>
+</ul>
+<h3>9. 如何限制 asyncio 的并发数量？</h3>
+<p><strong>答案：</strong>
+用 <code>asyncio.Semaphore(n)</code> 信号量：<code>async with sem:</code> 保证同时最多 n 个协程进入临界区，常用于限制对下游服务/数据库的并发连接数，防止打垮目标。示例：</p>
+<pre><code class="language-python">sem = asyncio.Semaphore(10)
+async def fetch_one(url):
+    async with sem:               # 最多 10 个并发
+        async with session.get(url) as r:
+            return await r.text()
+await asyncio.gather(*(fetch_one(u) for u in urls))
+</code></pre>
+<h3>10. Python 3.11 的 TaskGroup（结构化并发）是什么？</h3>
+<p><strong>答案：</strong>
+<code>asyncio.TaskGroup</code>（3.11+）是更安全的并发任务管理方式：</p>
+<pre><code class="language-python">async with asyncio.TaskGroup() as tg:
+    t1 = tg.create_task(a())
+    t2 = tg.create_task(b())
+# 退出 async with 时等所有任务完成；任一任务抛异常会取消组内其他任务，并以 ExceptionGroup 汇总
+</code></pre>
+<p>相比裸 <code>gather</code>，它保证「要么全部正常完成，要么整体失败并清理」，避免任务泄漏（忘记 await 的孤儿任务），是官方推荐的结构化并发写法。</p>
+<h3>11. 什么是 FastAPI？相比 Flask / Django 有什么优势？</h3>
+<p><strong>答案：</strong>
+FastAPI 是基于 ASGI 的高性能现代 Web 框架。优势：</p>
+<ul>
+<li><strong>异步原生</strong>：<code>async def</code> 路径函数，基于 Starlette，吞吐量接近 Node/Go；</li>
+<li><strong>自动校验</strong>：用 Python 类型注解 + Pydantic 自动完成请求/响应校验，错误信息清晰；</li>
+<li><strong>自动文档</strong>：免费生成交互式 Swagger（<code>/docs</code>）和 ReDoc（<code>/redoc</code>）OpenAPI 文档；</li>
+<li><strong>依赖注入</strong>：内置 <code>Depends</code> 系统，便于复用鉴权、数据库会话等逻辑；</li>
+<li>相比 Flask（同步微框架）、Django（全家桶但偏重），FastAPI 更适合 API / 微服务 / AI 推理接口。Django/Flask 走 WSGI，FastAPI 走 ASGI（Uvicorn）。</li>
+</ul>
+<h3>12. FastAPI 的两大底层依赖是什么？各自负责什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>Starlette</strong>：提供异步 Web 内核——路由、请求/响应、WebSocket、中间件、后台任务、ASGI 支持；</li>
+<li><strong>Pydantic</strong>：基于类型注解的数据模型层——请求体/查询参数校验、序列化、响应模型转换，并为 OpenAPI 文档提供 schema。
+FastAPI 本身是在这两者之上做了「用类型注解驱动一切」的开发者体验封装。</li>
+</ul>
+<h3>13. 路径函数用 <code>async def</code> 和 <code>def</code> 有什么区别？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>async def</code>：FastAPI 直接在事件循环里 <code>await</code> 它，函数内部<strong>不能</strong>有同步阻塞调用（否则卡住循环）；</li>
+<li><code>def</code>（普通同步函数）：FastAPI 会把它放到<strong>外部线程池</strong>（<code>run_in_executor</code>）中并发运行，避免阻塞事件循环。因此当你要调用的是同步库（如 requests、同步 ORM）时，用 <code>def</code> 声明反而更合适。经验：纯异步 IO 用 <code>async def</code>，只有同步阻塞代码时用 <code>def</code>。</li>
+</ul>
+<h3>14. FastAPI 如何声明路径参数、查询参数和请求体？</h3>
+<p><strong>答案：</strong>
+靠<strong>函数签名 + 类型注解</strong>自动区分：</p>
+<pre><code class="language-python">from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    price: float
+
+@app.get(&quot;/items/{item_id}&quot;)        # item_id 是路径参数
+def read(item_id: int, q: str | None = None,  # q 有默认值 → 查询参数
+          item: Item | None = None):           # Pydantic 模型 → 请求体
+    ...
+</code></pre>
+<p>规则：出现在路由路径里的 → 路径参数；函数参数是 Pydantic 模型 → 请求体 JSON；带默认值且非模型 → 查询参数。可用 <code>Query(...)</code>、<code>Path(...)</code> 加校验约束。</p>
+<h3>15. FastAPI 的依赖注入 <code>Depends</code> 是什么？有什么好处？</h3>
+<p><strong>答案：</strong>
+<code>Depends(函数)</code> 让 FastAPI 在处理请求前自动调用该依赖并把返回值注入到参数，支持依赖<strong>嵌套复用</strong>。典型用途：数据库会话、当前用户鉴权、分页参数等。好处：逻辑集中复用、天然可测试（可 <code>app.dependency_overrides</code> 覆盖）、异步/同步依赖都支持。示例：</p>
+<pre><code class="language-python">async def get_db():
+    db = SessionLocal()
+    try:
+        yield db           # 生成器依赖：yield 前=进入，后=清理（关闭会话）
+    finally:
+        db.close()
+
+@app.get(&quot;/users&quot;)
+def list_users(db: Session = Depends(get_db),
+               current=Depends(get_current_user)):
+    ...
+</code></pre>
+<h3>16. FastAPI 的自动 API 文档是怎么来的？</h3>
+<p><strong>答案：</strong>
+FastAPI 根据<strong>路由 + Pydantic 类型注解</strong>在运行时自动生成符合 <strong>OpenAPI (Swagger)</strong> 规范的 schema，默认暴露 <code>/docs</code>（Swagger UI，可在线调试）、<code>/redoc</code>、<code>/openapi.json</code>。给路由填 <code>summary</code>/<code>description</code>/<code>response_model</code>/<code>status_code</code>、给字段加 <code>Field(..., description=...)</code> 都会体现在文档里，实现「代码即文档」，前端可直接据此对接或生成 SDK。</p>
+<h3>17. FastAPI 如何做异常处理和 HTTP 错误响应？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>业务代码中直接 <code>raise HTTPException(status_code=404, detail=&quot;Not found&quot;)</code>，FastAPI 自动转成对应状态码的 JSON 错误响应；</li>
+<li>用 <code>@app.exception_handler(自定义异常)</code> 注册全局处理器，把领域异常统一映射为响应；</li>
+<li>Pydantic 校验失败会自动返回 <code>422 Unprocessable Entity</code> 并带详细字段错误。异常处理函数签名同路径函数，可返回自定义 <code>JSONResponse</code>。</li>
+</ul>
+<h3>18. FastAPI 的中间件和依赖有什么区别？如何写一个中间件？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>中间件（<code>@app.middleware(&quot;http&quot;)</code> / <code>BaseHTTPMiddleware</code>）</strong>：作用于<strong>所有请求/响应</strong>，在路由匹配前后执行，适合日志、CORS、耗时统计、统一加响应头，能拿到原始 <code>Request</code>/<code>Response</code>；</li>
+<li><strong>依赖（<code>Depends</code>）</strong>：与具体路由/子路由绑定，能享受参数解析、可被覆盖、更细粒度，适合业务级复用逻辑。
+中间件示例：</li>
+</ul>
+<pre><code class="language-python">@app.middleware(&quot;http&quot;)
+async def add_time(request, call_next):
+    start = time.time()
+    resp = await call_next(request)
+    resp.headers[&quot;X-Process-Time&quot;] = str(time.time() - start)
+    return resp
+</code></pre>
+<h3>19. FastAPI 如何做后台任务和生命周期管理？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>后台任务</strong>：路径函数接收 <code>BackgroundTasks</code> 参数，<code>bg.add_task(fn, args)</code> 注册在<strong>响应返回之后</strong>执行的轻量任务（如发通知、写日志），不阻塞响应；重任务应交给 Celery/RQ 等消息队列。</li>
+<li><strong>生命周期</strong>：新版用 <code>@asynccontextmanager</code> 定义 <code>lifespan</code> 传给 <code>FastAPI(lifespan=lifespan)</code>，<code>yield</code> 前做启动初始化（建连接池、加载模型），<code>yield</code> 后做关闭清理（旧版 <code>on_event(&quot;startup&quot;/&quot;shutdown&quot;)</code> 已弃用）。</li>
+</ul>
+<h3>20. FastAPI 应用如何部署到生产？</h3>
+<p><strong>答案：</strong>
+FastAPI 是 ASGI 应用，用 <strong>ASGI 服务器</strong>运行：开发用 <code>uvicorn main:app --reload</code>；生产常用 <code>uvicorn</code>（可 <code>--workers N</code>）或 <strong>Gunicorn 作为进程管理器 + UvicornWorker</strong>（<code>gunicorn main:app -k uvicorn.workers.UvicornWorker</code>）来做多进程、监控与优雅重启。前面再挂 <strong>Nginx</strong> 做反向代理、TLS 终结、静态资源与负载均衡。注意：因 GIL，多进程才能利用多核；<code>--reload</code> 仅用于开发；配置好 CORS、环境变量、健康检查与 Sentry 监控。</p>
+<hr>
 <h2>Python 基础</h2>
-<h3>1. 什么是 Python？</h3>
+<h3>21. 什么是 Python？</h3>
 <p><strong>答案：</strong>
 Python 是一种高级、解释型、通用的编程语言，以简洁易读、生态丰富和强大的社区支持著称。</p>
-<h3>2. Python 是解释型语言还是编译型语言？</h3>
+<h3>22. Python 是解释型语言还是编译型语言？</h3>
 <p><strong>答案：</strong>
 Python 是解释型语言，源代码首先被编译为字节码，然后由 Python 虚拟机（PVM）解释执行。</p>
-<h3>3. Python 的 GIL 是什么？</h3>
+<h3>23. Python 的 GIL 是什么？</h3>
 <p><strong>答案：</strong>
 GIL 是全局解释器锁（Global Interpreter Lock），是 CPython 解释器的特性，用于保证同一时刻只有一个线程执行 Python 字节码，因此多线程无法充分利用多核 CPU。</p>
 <ul>
 <li><strong>CPU 密集型任务</strong>：多线程无法并行，只有一个核在跑，推荐用多进程（<code>multiprocessing</code>）绕过 GIL；</li>
 <li><strong>IO 密集型任务</strong>：线程在等待 IO（网络、磁盘）时会主动释放 GIL，其他线程可以继续执行，所以多线程依然能明显提升效率。</li>
 </ul>
-<h3>4. 什么是 Python 的浅拷贝和深拷贝？</h3>
+<h3>24. 什么是 Python 的浅拷贝和深拷贝？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li>浅拷贝 <code>copy.copy()</code>：只复制最外层对象，内部的子对象仍然共用同一个引用，修改子对象会互相影响；</li>
 <li>深拷贝 <code>copy.deepcopy()</code>：递归复制所有层级的对象，新旧对象完全独立、互不影响。</li>
 </ul>
 <p>列表的 <code>list.copy()</code>、切片 <code>a[:]</code>、<code>a * 2</code> 都只是浅拷贝。</p>
-<h3>5. <code>is</code> 和 <code>==</code> 有什么区别？</h3>
+<h3>25. <code>is</code> 和 <code>==</code> 有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>==</code> 比较值是否相等，<code>is</code> 比较对象在内存中的身份标识是否相同。</p>
-<h3>6. Python 中可变类型和不可变类型有哪些？</h3>
+<h3>26. Python 中可变类型和不可变类型有哪些？</h3>
 <p><strong>答案：</strong>
 可变类型：list、dict、set；不可变类型：int、float、str、tuple、bool、frozenset。</p>
-<h3>7. 列表和元组的区别是什么？</h3>
+<h3>27. 列表和元组的区别是什么？</h3>
 <p><strong>答案：</strong></p>
 <table>
 <thead>
@@ -110,17 +271,17 @@ GIL 是全局解释器锁（Global Interpreter Lock），是 CPython 解释器�
 </tr>
 </tbody></table>
 <p>函数 <code>return a, b</code> 底层其实就是返回一个元组。</p>
-<h3>8. 什么是列表推导式？</h3>
+<h3>28. 什么是列表推导式？</h3>
 <p><strong>答案：</strong>
 列表推导式是简洁创建列表的语法，例如 <code>[x*2 for x in range(10) if x % 2 == 0]</code>。</p>
-<h3>9. <code>*args</code> 和 <code>**kwargs</code> 的作用是什么？</h3>
+<h3>29. <code>*args</code> 和 <code>**kwargs</code> 的作用是什么？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>*args</code>：接收不定数量的<strong>位置参数</strong>，在函数内部打包成元组；</li>
 <li><code>**kwargs</code>：接收不定数量的<strong>关键字参数</strong>，在函数内部打包成字典。</li>
 </ul>
 <p>常用于函数封装和装饰器透传参数，兼容数量不确定的入参；调用时用 <code>*</code>、<code>**</code> 对序列/字典做解包。</p>
-<h3>10. 什么是 Python 的装饰器？</h3>
+<h3>30. 什么是 Python 的装饰器？</h3>
 <p><strong>答案：</strong>
 装饰器是一种高阶函数，用于在不修改原函数代码的前提下，扩展函数的功能（如日志、计时、缓存、权限校验、重试）。本质是 <code>func = decorator(func)</code> 的语法糖。</p>
 <pre><code class="language-python">import time
@@ -137,130 +298,130 @@ def timer(func):
 def test():
     time.sleep(0.1)
 </code></pre>
-<h3>11. 什么是 Lambda 表达式？</h3>
+<h3>31. 什么是 Lambda 表达式？</h3>
 <p><strong>答案：</strong>
 Lambda 表达式是匿名函数，语法为 <code>lambda x: x + 1</code>，适用于简单的临时函数场景。</p>
-<h3>12. Python 中如何实现闭包？</h3>
+<h3>32. Python 中如何实现闭包？</h3>
 <p><strong>答案：</strong>
 闭包是指内部函数引用了外部函数的变量，并且外部函数返回了内部函数，内部函数保留对外部变量的引用。</p>
-<h3>13. <code>map()</code>、<code>filter()</code> 和 <code>reduce()</code> 有什么区别？</h3>
+<h3>33. <code>map()</code>、<code>filter()</code> 和 <code>reduce()</code> 有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>map()</code> 对可迭代对象每个元素执行函数，<code>filter()</code> 按条件过滤，<code>reduce()</code> 对序列累积计算。</p>
-<h3>14. 什么是 Python 的迭代器和生成器？</h3>
+<h3>34. 什么是 Python 的迭代器和生成器？</h3>
 <p><strong>答案：</strong>
 迭代器实现 <code>__iter__</code> 和 <code>__next__</code> 方法；生成器使用 <code>yield</code> 关键字，可惰性生成值，节省内存。</p>
-<h3>15. <code>yield</code> 和 <code>return</code> 的区别是什么？</h3>
+<h3>35. <code>yield</code> 和 <code>return</code> 的区别是什么？</h3>
 <p><strong>答案：</strong>
 <code>return</code> 一次性返回结果并结束函数；<code>yield</code> 会暂停函数，保留状态，可多次返回结果。</p>
-<h3>16. 什么是生成器表达式？</h3>
+<h3>36. 什么是生成器表达式？</h3>
 <p><strong>答案：</strong>
 生成器表达式与列表推导式类似，但使用圆括号，返回生成器对象，例如 <code>(x*2 for x in range(10))</code>。</p>
-<h3>17. Python 中 <code>__init__</code> 和 <code>__new__</code> 有什么区别？</h3>
+<h3>37. Python 中 <code>__init__</code> 和 <code>__new__</code> 有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>__new__</code> 负责创建实例，<code>__init__</code> 负责初始化实例属性，通常 <code>__init__</code> 更常用。</p>
-<h3>18. 什么是 Python 的魔术方法？</h3>
+<h3>38. 什么是 Python 的魔术方法？</h3>
 <p><strong>答案：</strong>
 魔术方法是以双下划线开头和结尾的方法，如 <code>__str__</code>、<code>__repr__</code>、<code>__add__</code>，用于自定义对象行为。</p>
-<h3>19. <code>__str__</code> 和 <code>__repr__</code> 的区别是什么？</h3>
+<h3>39. <code>__str__</code> 和 <code>__repr__</code> 的区别是什么？</h3>
 <p><strong>答案：</strong>
 <code>__str__</code> 面向用户，返回可读字符串；<code>__repr__</code> 面向开发者，返回可重新创建对象的无歧义字符串。</p>
-<h3>20. 什么是 Python 的面向对象编程三大特性？</h3>
+<h3>40. 什么是 Python 的面向对象编程三大特性？</h3>
 <p><strong>答案：</strong>
 封装、继承、多态。Python 支持多继承，通过 <code>super()</code> 调用父类方法。</p>
 <h2>Python 进阶</h2>
-<h3>21. 什么是 Python 的 MRO？</h3>
+<h3>41. 什么是 Python 的 MRO？</h3>
 <p><strong>答案：</strong>
 MRO 是方法解析顺序，Python 使用 C3 线性化算法确定多继承中方法的查找顺序。</p>
-<h3>22. 什么是描述符（Descriptor）？</h3>
+<h3>42. 什么是描述符（Descriptor）？</h3>
 <p><strong>答案：</strong>
 描述符是实现了 <code>__get__</code>、<code>__set__</code> 或 <code>__delete__</code> 方法的类，用于控制属性访问。</p>
-<h3>23. <code>@property</code> 装饰器的作用是什么？</h3>
+<h3>43. <code>@property</code> 装饰器的作用是什么？</h3>
 <p><strong>答案：</strong>
 <code>@property</code> 可以将方法转换为属性访问，实现 getter、setter 和 deleter 的封装。</p>
-<h3>24. 什么是 Python 的元类（Metaclass）？</h3>
+<h3>44. 什么是 Python 的元类（Metaclass）？</h3>
 <p><strong>答案：</strong>
 元类是创建类的类，默认是 <code>type</code>。通过自定义元类可以控制类的创建过程。</p>
-<h3>25. 什么是 Python 的鸭子类型？</h3>
+<h3>45. 什么是 Python 的鸭子类型？</h3>
 <p><strong>答案：</strong>
 鸭子类型指不关注对象类型，只关注对象是否具有所需的方法或属性，即“如果它像鸭子一样叫，那它就是鸭子”。</p>
-<h3>26. Python 中的 <code>try...except...finally</code> 如何使用？</h3>
+<h3>46. Python 中的 <code>try...except...finally</code> 如何使用？</h3>
 <p><strong>答案：</strong>
 <code>try</code> 捕获异常，<code>except</code> 处理异常类型，<code>finally</code> 无论是否异常都会执行，常用于资源释放。</p>
-<h3>27. 什么是上下文管理器（Context Manager）？</h3>
+<h3>47. 什么是上下文管理器（Context Manager）？</h3>
 <p><strong>答案：</strong>
 上下文管理器用于自动管理资源，使用 <code>with</code> 语句，典型实现是 <code>__enter__</code> 和 <code>__exit__</code>。</p>
-<h3>28. <code>with open()</code> 的原理是什么？</h3>
+<h3>48. <code>with open()</code> 的原理是什么？</h3>
 <p><strong>答案：</strong>
 <code>with open()</code> 调用文件的 <code>__enter__</code> 打开文件，<code>__exit__</code> 关闭文件，确保资源释放。</p>
-<h3>29. 什么是 Python 的 <code>zip()</code> 函数？</h3>
+<h3>49. 什么是 Python 的 <code>zip()</code> 函数？</h3>
 <p><strong>答案：</strong>
 <code>zip()</code> 将多个可迭代对象的元素按位置打包成元组，返回迭代器，长度以最短序列为准。</p>
-<h3>30. 如何合并两个字典？</h3>
+<h3>50. 如何合并两个字典？</h3>
 <p><strong>答案：</strong>
 Python 3.9+ 支持 <code>dict1 | dict2</code>，旧版本可用 <code>{**dict1, **dict2}</code> 或 <code>dict1.update(dict2)</code>。</p>
-<h3>31. Python 中如何排序？</h3>
+<h3>51. Python 中如何排序？</h3>
 <p><strong>答案：</strong>
 列表使用 <code>sort()</code> 或 <code>sorted()</code>，可通过 <code>key</code> 参数指定排序规则，如 <code>sorted(list, key=lambda x: x[&#39;age&#39;])</code>。</p>
-<h3>32. 什么是 Python 的 enumerate()？</h3>
+<h3>52. 什么是 Python 的 enumerate()？</h3>
 <p><strong>答案：</strong>
 <code>enumerate()</code> 用于同时获取索引和值，例如 <code>for i, v in enumerate(list):</code>。</p>
-<h3>33. 什么是 Python 的 <code>defaultdict</code>？</h3>
+<h3>53. 什么是 Python 的 <code>defaultdict</code>？</h3>
 <p><strong>答案：</strong>
 <code>defaultdict</code> 是 <code>collections</code> 模块提供的字典，访问不存在的键时会自动返回默认值。</p>
-<h3>34. 什么是 Python 的 Counter？</h3>
+<h3>54. 什么是 Python 的 Counter？</h3>
 <p><strong>答案：</strong>
 <code>Counter</code> 是 <code>collections</code> 模块提供的计数器，用于快速统计可哈希对象的出现次数。</p>
-<h3>35. <code>deque</code> 和列表有什么区别？</h3>
+<h3>55. <code>deque</code> 和列表有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>deque</code> 是双端队列，两端插入和删除的时间复杂度为 O(1)，列表尾部插入 O(1)、头部插入 O(n)。</p>
 <h2>Python 高级与工程</h2>
-<h3>36. 什么是 Python 的内存管理？</h3>
+<h3>56. 什么是 Python 的内存管理？</h3>
 <p><strong>答案：</strong>
 Python 使用引用计数和垃圾回收机制管理内存，循环引用由分代垃圾回收器处理。</p>
-<h3>37. 什么是 Python 的 <code>__slots__</code>？</h3>
+<h3>57. 什么是 Python 的 <code>__slots__</code>？</h3>
 <p><strong>答案：</strong>
 <code>__slots__</code> 用于限制类实例可拥有的属性，减少内存占用并加速属性访问。</p>
-<h3>38. 什么是 Python 的反射和自省？</h3>
+<h3>58. 什么是 Python 的反射和自省？</h3>
 <p><strong>答案：</strong>
 自省是运行时检查对象类型的能力，如 <code>type()</code>、<code>dir()</code>、<code>hasattr()</code>、<code>getattr()</code>；反射是动态调用或修改对象成员。</p>
-<h3>39. 什么是 Python 的 monkey patch？</h3>
+<h3>59. 什么是 Python 的 monkey patch？</h3>
 <p><strong>答案：</strong>
 Monkey patch 指在运行时动态修改模块、类或函数的行为，常用于测试和临时修复。</p>
-<h3>40. 如何实现 Python 单例模式？</h3>
+<h3>60. 如何实现 Python 单例模式？</h3>
 <p><strong>答案：</strong>
 可通过重写 <code>__new__</code> 方法、使用元类或装饰器实现，确保类只有一个实例。</p>
-<h3>41. Python 中多线程和多进程如何选择？</h3>
+<h3>61. Python 中多线程和多进程如何选择？</h3>
 <p><strong>答案：</strong>
 CPU 密集型任务用多进程绕过 GIL；IO 密集型任务用多线程或协程提高效率。</p>
-<h3>42. 什么是 Python 的 asyncio 和协程？</h3>
+<h3>62. 什么是 Python 的 asyncio 和协程？</h3>
 <p><strong>答案：</strong>
 <code>asyncio</code> 是异步 IO 库，协程使用 <code>async</code> 和 <code>await</code> 关键字实现非阻塞并发。</p>
-<h3>43. <code>async</code> 和 <code>await</code> 的作用是什么？</h3>
+<h3>63. <code>async</code> 和 <code>await</code> 的作用是什么？</h3>
 <p><strong>答案：</strong>
 <code>async</code> 定义异步函数，<code>await</code> 挂起当前协程等待异步操作完成，不阻塞事件循环。</p>
-<h3>44. 什么是 Python 的虚拟环境？</h3>
+<h3>64. 什么是 Python 的虚拟环境？</h3>
 <p><strong>答案：</strong>
 虚拟环境是隔离的 Python 运行环境，用于管理不同项目的依赖，避免版本冲突。</p>
-<h3>45. 如何管理 Python 依赖？</h3>
+<h3>65. 如何管理 Python 依赖？</h3>
 <p><strong>答案：</strong>
 使用 <code>requirements.txt</code> 或 <code>pyproject.toml</code>，通过 <code>pip</code> 安装，工具可选 <code>venv</code>、<code>poetry</code>、<code>pipenv</code>。</p>
-<h3>46. 什么是 Python 的 WSGI 和 ASGI？</h3>
+<h3>66. 什么是 Python 的 WSGI 和 ASGI？</h3>
 <p><strong>答案：</strong>
 WSGI 是同步 Web 服务器网关接口，ASGI 支持异步通信，是现代异步框架（如 FastAPI）的基础。</p>
-<h3>47. 什么是 Python 的 Gunicorn 和 Uvicorn？</h3>
+<h3>67. 什么是 Python 的 Gunicorn 和 Uvicorn？</h3>
 <p><strong>答案：</strong>
 Gunicorn 是 WSGI HTTP 服务器，Uvicorn 是 ASGI 服务器，常与 FastAPI 配合使用。</p>
-<h3>48. Python 中如何进行单元测试？</h3>
+<h3>68. Python 中如何进行单元测试？</h3>
 <p><strong>答案：</strong>
 使用 <code>unittest</code> 或 <code>pytest</code> 编写测试用例，通过断言验证函数行为和输出。</p>
-<h3>49. 什么是 Python 的 Pytest fixture？</h3>
+<h3>69. 什么是 Python 的 Pytest fixture？</h3>
 <p><strong>答案：</strong>
 Fixture 是 pytest 的测试前置和后置处理机制，用于准备测试环境、共享测试数据。</p>
-<h3>50. 什么是 Python 的 PEP 8？</h3>
+<h3>70. 什么是 Python 的 PEP 8？</h3>
 <p><strong>答案：</strong>
 PEP 8 是 Python 代码风格指南，涵盖命名规范、缩进、行长、导入顺序等，旨在提高代码可读性。</p>
 <h2>Python 高频补充问题</h2>
-<h3>51. Python 2 和 Python 3 的主要区别？</h3>
+<h3>71. Python 2 和 Python 3 的主要区别？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>print</code> 从语句变为函数；<code>input()</code> 统一返回 str；</li>
@@ -270,11 +431,11 @@ PEP 8 是 Python 代码风格指南，涵盖命名规范、缩进、行长、导
 <li>异常语法 <code>except E as e</code>；<code>xrange</code> 被合并进 <code>range</code>；</li>
 <li>Python 3 强制统一了 <code>class</code> 定义，不再区分经典类与新式类。</li>
 </ul>
-<h3>52. 什么是类型注解（Type Hints）？会做类型检查吗？</h3>
+<h3>72. 什么是类型注解（Type Hints）？会做类型检查吗？</h3>
 <p><strong>答案：</strong>
 类型注解是 Python 3.5+（PEP 484）引入的语法，如 <code>def f(x: int) -&gt; str: ...</code>，变量声明 <code>name: str = &quot;a&quot;</code>。
 重要：解释器<strong>运行时不会强制检查</strong>类型，它只给阅读者和 IDE 提示；真正的校验需要 <code>mypy</code>、<code>pyright</code> 等静态检查工具。常见类型有 <code>Optional[X]</code>、<code>Union[A, B]</code>、<code>list[int]</code>、<code>Any</code>。</p>
-<h3>53. <code>@dataclass</code> 是什么？相比普通类有什么好处？</h3>
+<h3>73. <code>@dataclass</code> 是什么？相比普通类有什么好处？</h3>
 <p><strong>答案：</strong>
 <code>dataclass</code>（Python 3.7+）是自动生成 <code>__init__</code>、<code>__repr__</code>、<code>__eq__</code> 等样板代码的装饰器，只需声明字段：</p>
 <pre><code class="language-python">from dataclasses import dataclass, field
@@ -286,14 +447,14 @@ class User:
     tags: list[str] = field(default_factory=list)
 </code></pre>
 <p><code>frozen=True</code> 可生成不可变对象（可哈希）；<code>order=True</code> 自动生成比较方法。相比 namedtuple，它支持可变字段和默认值。</p>
-<h3>54. <code>isinstance()</code> 和 <code>type()</code> 有什么区别？</h3>
+<h3>74. <code>isinstance()</code> 和 <code>type()</code> 有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>isinstance(obj, cls)</code> 会考虑继承关系（子类也算），并支持传入元组一次判断多个类型；<code>type(obj) == cls</code> 是严格类型相等比较，不考虑继承。推荐优先用 <code>isinstance()</code>，更符Python 鸭子类型和里氏替换原则。</p>
-<h3>55. 什么是可哈希（hashable）？为什么 dict 的 key 必须是可哈希的？</h3>
+<h3>75. 什么是可哈希（hashable）？为什么 dict 的 key 必须是可哈希的？</h3>
 <p><strong>答案：</strong>
 一个对象是可哈希的，当它的 <code>hash()</code> 在其生命周期内不变，且能与其它对象做相等比较。不可变内置类型（int、str、tuple）可哈希，list、dict、set 不可哈希。
 字典基于哈希表实现，key 需要经哈希值定位桶位置，如果 key 可变则哈希值会变化，导致查询结果不一致，所以只能使用可哈希对象作 key。</p>
-<h3>56. Python 的引用计数机制有什么缺点？</h3>
+<h3>76. Python 的引用计数机制有什么缺点？</h3>
 <p><strong>答案：</strong>
 优点是实时性好、简单直观；缺点：</p>
 <ul>
@@ -301,19 +462,19 @@ class User:
 <li>引用计数维护开销大，每次赋值/传参都要增减计数；</li>
 <li>不是真正的“并行安全”机制，多线程下需要额外加锁。</li>
 </ul>
-<h3>57. Python 的分代垃圾回收（GC）是怎么工作的？</h3>
+<h3>77. Python 的分代垃圾回收（GC）是怎么工作的？</h3>
 <p><strong>答案：</strong>
 GC 采用“分代回收 + 标记-清除”：对象根据存活时长分为 0、1、2 三代，新对象在第 0 代；当某代分配量超过阈值（默认 700/10/10）时触发该代扫描，存活对象升到下一代。代数越高回收越少，体现了“对象越老越不容易死”的经验假设。可用 <code>gc.disable()</code>、<code>gc.collect()</code> 手动干预。</p>
-<h3>58. 模块（module）和包（package）有什么区别？<code>__init__.py</code> 的作用？</h3>
+<h3>78. 模块（module）和包（package）有什么区别？<code>__init__.py</code> 的作用？</h3>
 <p><strong>答案：</strong>
 模块是一个 <code>.py</code> 文件；包是含模块的目录。传统上包目录下需要 <code>__init__.py</code> 标记为包（Python 3.3+ 支持不含该文件的 namespace package）。<code>__init__.py</code> 在导入包时执行，可定义 <code>__all__</code> 控制 <code>from x import *</code> 的内容，也可做子模块预导入与初始化。</p>
-<h3>59. <code>if __name__ == &quot;__main__&quot;:</code> 是什么原理？</h3>
+<h3>79. <code>if __name__ == &quot;__main__&quot;:</code> 是什么原理？</h3>
 <p><strong>答案：</strong>
 每个模块都有一个 <code>__name__</code> 属性：直接运行时其为 <code>&quot;__main__&quot;</code>；被其它模块导入时其为模块名。因此该判断能让代码“本身运行则执行、被导入则不执行”，常用于写测试代码和脚本入口。</p>
-<h3>60. <code>import</code> 的背后发生了什么？<code>__pycache__</code> 是什么？</h3>
+<h3>80. <code>import</code> 的背后发生了什么？<code>__pycache__</code> 是什么？</h3>
 <p><strong>答案：</strong>
 导入时 Python 先查 <code>sys.modules</code> 缓存，命中则直接返回；未命中则由 import finder 在 <code>sys.path</code> 上定位文件，编译为字节码并执行模块代码。<code>__pycache__</code> 目录存放 <code>.pyc</code> 字节码缓存，源文件未变化时可跳过重复编译，加快启动（注意：它不会让程序运行更快，只是省编译）。</p>
-<h3>61. 什么是海象运算符 <code>:=</code>？</h3>
+<h3>81. 什么是海象运算符 <code>:=</code>？</h3>
 <p><strong>答案：</strong>
 Python 3.8 引入的赋值表达式，在表达式内部完成赋值并返回右值，减少重复计算：</p>
 <pre><code class="language-python">if (n := len(data)) &gt; 10:
@@ -322,7 +483,7 @@ while (chunk := f.read(8192)):
     process(chunk)
 </code></pre>
 <p>常见于条件、循环和推导式中需要复用中间结果的地方。</p>
-<h3>62. Python 3.10 的 <code>match...case</code> 是什么？</h3>
+<h3>82. Python 3.10 的 <code>match...case</code> 是什么？</h3>
 <p><strong>答案：</strong>
 结构化模式匹配（PEP 634），不只是 switch，还能对序列、字典、对象属性做解构匹配，并可用 <code>|</code> 组合模式、用 <code>if</code> 加 guard：</p>
 <pre><code class="language-python">match point:
@@ -335,13 +496,13 @@ while (chunk := f.read(8192)):
     case _:
         print(&quot;其它&quot;)
 </code></pre>
-<h3>63. f-string、<code>str.format()</code> 和 <code>%</code> 格式化有何区别？性能上呢？</h3>
+<h3>83. f-string、<code>str.format()</code> 和 <code>%</code> 格式化有何区别？性能上呢？</h3>
 <p><strong>答案：</strong>
 三者都能做字符串插值：f-string 是表达式级别的语法，最易读、最快；<code>format()</code> 可延迟求值、能作为模板重复使用；<code>%</code> 是老式写法，不推荐。f-string 在 Python 3.12 后支持内部使用同种引号，调试更方便。大量拼接时应用 <code>&quot;&quot;.join(list)</code> 而不是循环 <code>+=</code>，后者会反复创建新对象。</p>
-<h3>64. <code>functools.wraps</code> 的作用是什么？不写会怎样？</h3>
+<h3>84. <code>functools.wraps</code> 的作用是什么？不写会怎样？</h3>
 <p><strong>答案：</strong>
 装饰器包裹原函数后，<code>__name__</code>、<code>__doc__</code> 等元信息会丢失。<code>@functools.wraps(func)</code> 能把原函数的元信息拷贝到 wrapper 上。不写会影响文档生成、日志、序列化、依赖函数名的框架（如 Flask 路由、pytest 参数化）。<code>functools</code> 常用还有 <code>lru_cache</code>（缓存）、<code>partial</code>（部分调用）、<code>singledispatch</code>。</p>
-<h3>65. 如何写一个带参数的装饰器？</h3>
+<h3>85. 如何写一个带参数的装饰器？</h3>
 <p><strong>答案：</strong>
 带参数的装饰器需要再嵌套一层，返回真正的装饰器：</p>
 <pre><code class="language-python">import functools
@@ -363,19 +524,19 @@ def retry(times=3, delay=1):
 @retry(times=3, delay=0.5)
 def fetch(): ...
 </code></pre>
-<h3>66. <code>lru_cache</code> 和手动用 dict 缓存有什么区别？</h3>
+<h3>86. <code>lru_cache</code> 和手动用 dict 缓存有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>@functools.lru_cache(maxsize=128)</code> 自动按参数（必须可哈希）缓存返回值，默认淘汰最近最少使用项，带 <code>cache_info()</code>、<code>cache_clear()</code>；适用子纯函数、递归、重复计算开销大的场景。手写 dict 缓存需要自己管理淘汰策略和线程安全，且无法自动处理参数错误、内存泄漏问题。</p>
-<h3>67. <code>@staticmethod</code> 和 <code>@classmethod</code> 有什么区别？</h3>
+<h3>87. <code>@staticmethod</code> 和 <code>@classmethod</code> 有什么区别？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>@staticmethod</code>：不接收隐式参数，不能访问类或实例，相当于放在类命名空间里的普通函数；</li>
 <li><code>@classmethod</code>：第一个参数是类本身 <code>cls</code>，能访问/修改类状态，常用于定义工厂方法，且对子类友好（<code>cls</code> 指向实际子类）。</li>
 </ul>
-<h3>68. 什么是抽象类（ABC）？和接口有什么区别？</h3>
+<h3>88. 什么是抽象类（ABC）？和接口有什么区别？</h3>
 <p><strong>答案：</strong>
 Python 没有 <code>interface</code> 关键字，用 <code>abc.ABC</code> 和 <code>@abstractmethod</code> 实现：抽象类不能直接实例化，子类必须实现所有抽象方法。还可用 <code>@abstractproperty</code>、<code>register()</code> 做“虚拟子类”。与鸭子类型相比，ABC 能提供显式约束和 <code>isinstance</code> 检查。</p>
-<h3>69. 自定义异常怎么设计更合理？</h3>
+<h3>89. 自定义异常怎么设计更合理？</h3>
 <p><strong>答案：</strong>
 继承 <code>Exception</code> 而非 <code>BaseException</code>（后者包含 <code>KeyboardInterrupt</code>、<code>SystemExit</code>）；建议为库定义一个基异常，各具体异常继承它，方便调用方一次性捕获：</p>
 <pre><code class="language-python">class AppError(Exception): ...
@@ -383,10 +544,10 @@ class NotFoundError(AppError): ...
 raise NotFoundError(f&quot;user {uid}&quot;) from original  # 保留异常链
 </code></pre>
 <p>只捕获能处理的异常，不要写空的 <code>except:</code> 吞掉错误；<code>try...except...else...finally</code> 中 <code>else</code> 只在没抛异常时执行。</p>
-<h3>70. 生成器的 <code>send()</code>、<code>throw()</code>、<code>close()</code> 分别做什么？</h3>
+<h3>90. 生成器的 <code>send()</code>、<code>throw()</code>、<code>close()</code> 分别做什么？</h3>
 <p><strong>答案：</strong>
 <code>next()</code>/<code>__next__()</code> 相当于 <code>send(None)</code>；<code>send(value)</code> 恢复执行并把值作为当前 <code>yield</code> 表达式的结果，可实现双向通信（协程维形）；<code>throw(exc)</code> 在 yield 处抛出异常；<code>close()</code> 触发 <code>GeneratorExit</code>，可用 <code>try/finally</code> 做资源释放。PEP 380 的 <code>yield from</code> 能把控制权委派给子生成器，并自动透传 send/throw。</p>
-<h3>71. 写一个“读取超大文件”的高效方案</h3>
+<h3>91. 写一个“读取超大文件”的高效方案</h3>
 <p><strong>答案：</strong>
 不要 <code>f.read()</code> 一次读入内存。常见做法：</p>
 <pre><code class="language-python">with open(path, encoding=&quot;utf-8&quot;) as f:
@@ -394,38 +555,38 @@ raise NotFoundError(f&quot;user {uid}&quot;) from original  # 保留异常链
             process(line)
 </code></pre>
 <p>二进制大文件用固定块 <code>while chunk := f.read(8 * 1024 * 1024)</code>；JSON 大文件用 <code>ijson</code> 流式解析；CSV 用 <code>csv</code> 模块逐行处理。</p>
-<h3>72. <code>threading.Lock</code> 能解决什么问题？GIL 能保证线程安全吗？</h3>
+<h3>92. <code>threading.Lock</code> 能解决什么问题？GIL 能保证线程安全吗？</h3>
 <p><strong>答案：</strong>
 GIL 只保证单条字节码不会被打断，<strong>不保证复合操作（读-改-写）原子性</strong>，<code>count += 1</code> 仍会丢数据。需要用 <code>Lock</code>/<code>RLock</code>，或用 <code>with lock:</code> 自动释放；<code>queue.Queue</code> 本身就是线程安全的，优先用队列而不是自己加锁。另外 <code>multiprocessing</code> 下各进程内存不共享，需 <code>multiprocessing.Lock</code> 或共享内存。</p>
-<h3>73. <code>concurrent.futures</code> 怎么用？相比 <code>threading</code> 有什么优势？</h3>
+<h3>93. <code>concurrent.futures</code> 怎么用？相比 <code>threading</code> 有什么优势？</h3>
 <p><strong>答案：</strong>
 <code>ThreadPoolExecutor</code> / <code>ProcessPoolExecutor</code> 提供统一接口，只需 <code>submit()</code> 提交任务或 <code>map()</code> 批量执行，通过 <code>Future</code> 拿结果和异常，无需自己管理线程创建、回收与队列。可用 <code>as_completed()</code> 按完成顺序取结果，适合并发请求、批量计算场景。</p>
-<h3>74. 多进程间如何通信？</h3>
+<h3>94. 多进程间如何通信？</h3>
 <p><strong>答案：</strong>
 常用 <code>multiprocessing.Queue</code>（跨进程安全队列）、<code>Pipe</code>（双向管道）、共享内存 <code>Value</code>/<code>Array</code>、<code>Manager()</code> 代理对象，业务上更推荐用 Redis/RMQ 等外部中间件。进程内存不共享，传入的参数和返回值靠 pickle 序列化，因此不能传递不可序列化对象（如打开的文件句柄、lambda）。</p>
-<h3>75. <code>asyncio.gather()</code> 和 <code>ensure_future()</code> 有什么区别？</h3>
+<h3>95. <code>asyncio.gather()</code> 和 <code>ensure_future()</code> 有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>gather(*aws)</code> 并发调度多个协程，按<strong>传入顺序</strong>返回列表，一个抛异常会传递到 <code>return_exceptions=True</code> 控制下收集结果；<code>ensure_future()</code>（旧版 <code>asyncio.async</code>）只包装单个对象返回 Task，需自己 <code>await</code> 或 <code>wait()</code>。<code>Task</code> 是 <code>Future</code> 的子类，代表已被调度器执行的协程。</p>
-<h3>76. 异步代码中不小心写了同步阻塞调用会怎样？</h3>
+<h3>96. 异步代码中不小心写了同步阻塞调用会怎样？</h3>
 <p><strong>答案：</strong>
 整个事件循环被阻塞，所有协程一起卡住（常见错误：在 async 函数里用 <code>requests.get</code>、<code>time.sleep</code>、重型 CPU 计算）。应改用 <code>aiohttp</code>/<code>httpx</code>、<code>asyncio.sleep</code>；无法避免的阻塞调用用 <code>await asyncio.to_thread(...)</code> 或 <code>run_in_executor()</code> 丢到线程/进程池。</p>
-<h3>77. 如何使用 logging 而非 print？</h3>
+<h3>97. 如何使用 logging 而非 print？</h3>
 <p><strong>答案：</strong>
 <code>logging</code> 支持日志级别（DEBUG/INFO/WARNING/ERROR/CRITICAL）、格式化输出、多 Handler（控制台+文件+远程）、按大小/日期切分、模块层级控制。典型写法：模块内 <code>logger = logging.getLogger(__name__)</code>，入口用 <code>logging.basicConfig(level=..., format=..., handlers=[...])</code> 配置；日志用 <code>logger.info(&quot;user=%s&quot;, uid)</code> 惰性格式化，避免字符串拼接开销，也不要 <code>except: logger.error(str(e))</code> 而丢掉 traceback（用 <code>logger.exception</code>）。</p>
-<h3>78. Python 性能分析和优化思路？</h3>
+<h3>98. Python 性能分析和优化思路？</h3>
 <p><strong>答案：</strong>
 先测量再优化：<code>cProfile</code>/<code>pstats</code>、<code>timeit</code> 模块定位热点，<code>memory_profiler</code>、<code>objgraph</code> 查内存；也可用 <code>py-spy</code>、<code>scalene</code> 做采样分析。优化手段：选对数据结构（集合查找 O(1) vs 列表 O(n)）、避免重复计算和属性查找、用推导式/内置函数代替手写循环、<code>lru_cache</code> 缓存、批量代替逐条 IO、并行（多进程/异步）、必要环节用 NumPy/Cython/Rust 扩展。</p>
-<h3>79. 什么是常见内存泄漏原因？如何排查？</h3>
+<h3>99. 什么是常见内存泄漏原因？如何排查？</h3>
 <p><strong>答案：</strong>
 常见原因：全局容器只增不减、循环引用带 <code>__del__</code>、缓存未限长、异常 Traceback 持有对象、信号/回调注册未注销、线程未回收。排查：<code>gc.get_objects()</code> 统计对象数量、<code>tracemalloc</code> 追踪分配源头、<code>objgraph</code> 看引用链、配合 <code>sentry</code>/周期性重启定位。</p>
-<h3>80. Flask、Django、FastAPI 如何选型？</h3>
+<h3>100. Flask、Django、FastAPI 如何选型？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li>Django：全家桶，自带 ORM、Admin、表单、认证、中间件，适合业务复杂、需快速搭建后台的系统；</li>
 <li>Flask：微型框架，自由选组件，适合小型服务、脚本型接口、教学示例；</li>
 <li>FastAPI：基于 ASGI + Pydantic 类型注解，自动 Swagger 文档，异步高并发友好，适合 AI/推理接口、微服务。部署：Django/Flask 用 Gunicorn（WSGI），FastAPI 用 Uvicorn/Granian（ASGI）。</li>
 </ul>
-<h3>81. Python 做 AI/数据方向的常用库有哪些？</h3>
+<h3>101. Python 做 AI/数据方向的常用库有哪些？</h3>
 <p><strong>答案：</strong>
 数值计算：NumPy（向量化、广播）、Pandas（DataFrame、数据清洗）；可视化：Matplotlib、Seaborn；机器学习：scikit-learn、XGBoost；深度学习：PyTorch、TensorFlow/Keras；模型服务：FastAPI、vLLM；数据获取：requests、BeautifulSoup、Scrapy；工具：Jupyter、pytest、poetry。高频追问：Pandas 如何处理缺失值（<code>isna</code>/<code>fillna</code>/<code>dropna</code>）、如何避免 <code>SettingWithCopyWarning</code>（用 <code>.loc</code> 显式赋值）。</p>
 <hr>
@@ -433,7 +594,7 @@ GIL 只保证单条字节码不会被打断，<strong>不保证复合操作（�
 <blockquote>
 <p>分级：Python 基础 → Django 基础 → Django 进阶 → 工程/源码/性能难题</p>
 </blockquote>
-<h3>82. Django 的 MTV 架构，和 MVC 什么区别？</h3>
+<h3>102. Django 的 MTV 架构，和 MVC 什么区别？</h3>
 <p><strong>答案：</strong>
 MTV：Model、Template、View</p>
 <ul>
@@ -442,7 +603,7 @@ MTV：Model、Template、View</p>
 <li>View：视图，接收请求、处理业务、返回响应。</li>
 </ul>
 <p>MVC 中的 Controller 负责路由分发，Django 把路由放到 <code>urls.py</code>，View 承担了业务处理职责，所以称为 MTV。</p>
-<h3>83. Django 一次 HTTP 请求的完整生命周期？</h3>
+<h3>103. Django 一次 HTTP 请求的完整生命周期？</h3>
 <p><strong>答案：</strong></p>
 <ol>
 <li>WSGI 服务器接收 HTTP 请求；</li>
@@ -453,14 +614,14 @@ MTV：Model、Template、View</p>
 <li>响应逆序经过中间件 <code>process_response</code>；</li>
 <li>返回响应给客户端。</li>
 </ol>
-<h3>84. ORM 是什么？Django ORM 的优缺点？</h3>
+<h3>104. ORM 是什么？Django ORM 的优缺点？</h3>
 <p><strong>答案：</strong>
 ORM（对象关系映射）把面向对象的模型操作自动转换成 SQL。</p>
 <ul>
 <li>优点：不用手写原生 SQL，开发快，切换数据库成本低，防 SQL 注入；</li>
 <li>缺点：复杂 SQL 场景性能较差，部分数据库特有语法不好表达，容易写出 N+1 查询。</li>
 </ul>
-<h3>85. Model 中 <code>null</code> 和 <code>blank</code> 的区别？</h3>
+<h3>105. Model 中 <code>null</code> 和 <code>blank</code> 的区别？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>null</code>：数据库层面控制，字段是否允许存入 NULL；</li>
@@ -469,20 +630,20 @@ ORM（对象关系映射）把面向对象的模型操作自动转换成 SQL。<
 <blockquote>
 <p><code>CharField</code>/<code>TextField</code> 一般只设 <code>blank=True</code>，不要设 <code>null=True</code>，避免数据库同时存在 NULL 和空字符串两种“空”。</p>
 </blockquote>
-<h3>86. <code>path()</code> 和 <code>re_path()</code> 的区别？</h3>
+<h3>106. <code>path()</code> 和 <code>re_path()</code> 的区别？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>path()</code>：Django 2+ 推荐，支持内置路径转换器（<code>int</code>/<code>str</code>/<code>slug</code>/<code>uuid</code> 等）；</li>
 <li><code>re_path()</code>：用正则表达式匹配 URL，用于复杂路由，等价于旧版 <code>url()</code>。</li>
 </ul>
-<h3>87. 模板中 <code>{{ }}</code> 和 <code>{% %}</code> 的作用？什么是模板继承？</h3>
+<h3>107. 模板中 <code>{{ }}</code> 和 <code>{% %}</code> 的作用？什么是模板继承？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>{{ 变量 }}</code>：渲染变量输出（自动转义，防 XSS）；</li>
 <li><code>{% 标签 %}</code>：执行模板标签，如 <code>if</code>、<code>for</code>、<code>block</code>、<code>url</code>。</li>
 </ul>
 <p>模板继承：子模板 <code>{% extends &quot;base.html&quot; %}</code>，用 <code>{% block xxx %}</code> 覆盖父模板挖好的块，复用公共页面骨架。</p>
-<h3>88. Django Form 的作用？</h3>
+<h3>108. Django Form 的作用？</h3>
 <p><strong>答案：</strong></p>
 <ol>
 <li>自动渲染前端表单；</li>
@@ -492,7 +653,7 @@ ORM（对象关系映射）把面向对象的模型操作自动转换成 SQL。<
 </ol>
 <hr>
 <h2>Django 进阶</h2>
-<h3>89. Django 中间件有哪 5 个钩子？执行顺序？</h3>
+<h3>109. Django 中间件有哪 5 个钩子？执行顺序？</h3>
 <p><strong>答案：</strong></p>
 <ol>
 <li><code>process_request</code>：请求进入，路由匹配之前；</li>
@@ -502,32 +663,32 @@ ORM（对象关系映射）把面向对象的模型操作自动转换成 SQL。<
 <li><code>process_exception</code>：视图抛出异常时触发。</li>
 </ol>
 <p>执行特点：洋葱模型，请求阶段从上到下依次进入，响应阶段从下到上依次返回；任一 <code>process_request</code> 直接返回 HttpResponse 会短路后续视图。</p>
-<h3>90. <code>select_related</code> 和 <code>prefetch_related</code> 的区别？解决什么问题？</h3>
+<h3>110. <code>select_related</code> 和 <code>prefetch_related</code> 的区别？解决什么问题？</h3>
 <p><strong>答案：</strong>
 两者都用于解决 ORM 的 N+1 查询问题。</p>
 <ul>
 <li><code>select_related</code>：针对外键/一对一关联，用 SQL JOIN 一次查出，只一条 SQL；只能“正向”关联；</li>
 <li><code>prefetch_related</code>：针对多对多、反向外键（related_name），先查主表再用子查询 IN 取关联表，多条 SQL，不能在 SQL 层 JOIN 过滤。</li>
 </ul>
-<h3>91. CSRF 是什么？原理？什么时候可以关闭？</h3>
+<h3>111. CSRF 是什么？原理？什么时候可以关闭？</h3>
 <p><strong>答案：</strong>
 CSRF（跨站请求伪造）：诱导已登录用户的浏览器携带 Cookie 向目标站点发起非预期请求。
 Django 原理：生成 <code>csrf_token</code>，同时写入 Cookie 和表单隐藏字段，POST 时校验两者是否一致（攻击者读不到目标域 Cookie，无法伪造）。
 前后端分离 API 使用 JWT/Token 认证、不依赖 Cookie 会话时，可用 <code>@csrf_exempt</code> 装饰器（或全局中间件配置）关闭 CSRF 校验。</p>
-<h3>92. Django 常用信号、使用场景与坑？</h3>
+<h3>112. Django 常用信号、使用场景与坑？</h3>
 <p><strong>答案：</strong>
 常用信号：<code>pre_save</code>/<code>post_save</code>、<code>pre_delete</code>/<code>post_delete</code>、<code>m2m_changed</code>、<code>request_started</code> 等。
 作用：模型事件触发回调，将副作用业务（发邮件、写日志、同步索引）与主流程解耦。
 坑：信号默认同步执行，拖慢主请求；<code>bulk_create</code>、<code>bulk_update</code> 不会触发 <code>post_save</code>；执行顺序不可控、容易循环调用、调试困难，项目复杂后建议改用显式服务层调用或消息队列。</p>
-<h3>93. Django 缓存有哪些后端？缓存粒度？</h3>
+<h3>113. Django 缓存有哪些后端？缓存粒度？</h3>
 <p><strong>答案：</strong>
 后端：本地内存缓存（<code>LocMemCache</code>）、文件缓存、数据库缓存、Redis / Memcached（<code>django-redis</code>）。
 粒度：全站缓存（中间件）、视图级缓存（<code>@cache_page</code>）、模板片段缓存（<code>{% cache %}</code>）、底层对象缓存（直接操作 cache API）；支持多别名配置分别读写。</p>
-<h3>94. DRF 序列化器的作用？<code>serializer.save()</code> 的内部逻辑？</h3>
+<h3>114. DRF 序列化器的作用？<code>serializer.save()</code> 的内部逻辑？</h3>
 <p><strong>答案：</strong>
 序列化器两大核心：序列化（模型对象 → JSON）与反序列化（JSON → 校验 → 模型对象）。
 <code>save()</code>：前提是先调过 <code>is_valid()</code>；内部根据是否传入 <code>instance</code> 自动判断调用 <code>create()</code> 还是 <code>update()</code>，并把 <code>validated_data</code> 以及 <code>save()</code> 额外传入的关键字参数（如 <code>owner=request.user</code>）一并传给这两个方法。</p>
-<h3>95. DRF 的认证、权限、限流分别是什么？</h3>
+<h3>115. DRF 的认证、权限、限流分别是什么？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li>认证 Authentication：识别请求“是谁”（Session、Token、JWT、OAuth）；</li>
@@ -537,15 +698,15 @@ Django 原理：生成 <code>csrf_token</code>，同时写入 Cookie 和表单�
 </ul>
 <hr>
 <h2>Django 工程化 / 源码 / 性能调优</h2>
-<h3>96. ORM 的 N+1 查询怎么产生？如何排查和优化？</h3>
+<h3>116. ORM 的 N+1 查询怎么产生？如何排查和优化？</h3>
 <p><strong>答案：</strong>
 产生：查询主表数据后，循环遍历每条记录时单独查询关联表，形成 1 次主查询 + N 次关联查询。
 排查：打开 Django <code>django.db.backends</code> 日志打印 SQL，看查询次数；用 <code>django-debug-toolbar</code>、<code>nplusone</code> 库自动检测。
 优化：<code>select_related</code>、<code>prefetch_related</code>；<code>only()</code>/<code>defer()</code> 减少查询字段；<code>values()</code>/<code>values_list()</code> 避开模型实例化；<code>exists()</code> 代替 <code>len()&gt;0</code>；批量 <code>bulk_create</code>；极致场景下用原生 SQL 或自定义 Manager。</p>
-<h3>97. Django QuerySet 惰性查询是什么意思？</h3>
+<h3>117. Django QuerySet 惰性查询是什么意思？</h3>
 <p><strong>答案：</strong>
 QuerySet 是惰性加载：创建时不会执行 SQL，只有迭代、切片、<code>list()</code>、<code>bool()</code>、<code>first()</code> 等操作触发求值时才真正访库，结果缓存在 <code>_result_cache</code> 中。注意过滤链会生成新的 QuerySet，重复遍历时可先 <code>list(qs)</code> 避免重复查库。</p>
-<h3>98. Django 事务怎么使用？什么场景必须用事务？</h3>
+<h3>118. Django 事务怎么使用？什么场景必须用事务？</h3>
 <p><strong>答案：</strong>
 使用 <code>from django.db import transaction</code>：</p>
 <ul>
@@ -554,13 +715,13 @@ QuerySet 是惰性加载：创建时不会执行 SQL，只有迭代、切片、<
 <li><code>transaction.on_commit()</code> 注册提交后才执行的副作用（发通知、推消息）
 场景：多表数据必须同时成功或同时回滚，如订单创建 + 扣减库存；并发更新用 <code>select_for_update()</code> 加行锁。注意 MySQL 需 InnoDB 引擎，且事务内不要做耗时 IO。</li>
 </ul>
-<h3>99. DRF 的 ViewSet 和普通 APIView 有什么区别？</h3>
+<h3>119. DRF 的 ViewSet 和普通 APIView 有什么区别？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>APIView</code>：基础视图类，自己写 get/post 方法并逐个绑定 URL；</li>
 <li><code>ViewSet</code>：把一组相关接口（list/retrieve/create/update/partial_update/destroy）封装到一个类，配合 <code>DefaultRouter</code> 自动生成 URL 与 HTTP 方法映射，并用 <code>@action</code> 定义自定义路由，显著减少重复代码。</li>
 </ul>
-<h3>100. Django 项目部署常见问题？</h3>
+<h3>120. Django 项目部署常见问题？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>DEBUG=True</code> 不能上线，会泄露代码和敏感信息；<code>ALLOWED_HOSTS</code> 要配置；</li>
@@ -571,7 +732,7 @@ QuerySet 是惰性加载：创建时不会执行 SQL，只有迭代、切片、<
 <li>迁移上线前检查，大表加字段/索引要考虑锁表与 <code>SELECT FOR UPDATE</code> 影响；</li>
 <li>反向代理后需 <code>SECURE_PROXY_SSL_HEADER</code>，并开启 GZip、缓存、监控（Sentry）。</li>
 </ul>
-<h3>101. Django 多线程下模型实例有什么坑？</h3>
+<h3>121. Django 多线程下模型实例有什么坑？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li>Model 实例属于线程内对象，不能在线程间共享；</li>
@@ -580,15 +741,15 @@ QuerySet 是惰性加载：创建时不会执行 SQL，只有迭代、切片、<
 <li>在子线程里执行 ORM 后忘记 <code>connection.close()</code> 会残留连接。</li>
 </ul>
 <hr>
-<h2>Python 补充题（按难度排列，102-126）</h2>
+<h2>Python 补充题（按难度排列，122-146）</h2>
 <blockquote>
 <p>以下为高频补充题，覆盖前文未涉及的核心考点，按 🟢初级 → 🟡中级 → 🔴高级 排列。</p>
 </blockquote>
-<h3>🟢 102. Python 的优缺点是什么？</h3>
+<h3>🟢 122. Python 的优缺点是什么？</h3>
 <p><strong>答案：</strong>
 优点：语法简洁易读、开发效率高、生态丰富（AI/数据/Web/自动化）、跨平台、社区活跃、胶水语言（可调用 C/C++）。
 缺点：执行速度比编译型语言慢（GIL 限制多线程并行）、移动端和游戏开发较弱、运行时错误较多（动态类型）、打包体积大。</p>
-<h3>🟢 103. Python 是动态类型还是静态类型？强类型还是弱类型？</h3>
+<h3>🟢 123. Python 是动态类型还是静态类型？强类型还是弱类型？</h3>
 <p><strong>答案：</strong>
 Python 是<strong>动态强类型</strong>语言。</p>
 <ul>
@@ -596,7 +757,7 @@ Python 是<strong>动态强类型</strong>语言。</p>
 <li>强类型：类型检查严格，不同类型不会隐式转换（<code>&quot;1&quot; + 1</code> 会报错，而 JS/PHP 会隐式转换）。
 对比：C/Java 是静态强类型，JS 是动态弱类型。</li>
 </ul>
-<h3>🟢 104. Python 的作用域 LEGB 规则是什么？</h3>
+<h3>🟢 124. Python 的作用域 LEGB 规则是什么？</h3>
 <p><strong>答案：</strong>
 变量查找顺序：<strong>L</strong>ocal（局部）→ <strong>E</strong>nclosing（嵌套函数外层）→ <strong>G</strong>lobal（全局）→ <strong>B</strong>uilt-in（内置）。</p>
 <pre><code class="language-python">x = &quot;global&quot;
@@ -608,7 +769,7 @@ def outer():
     inner()
 </code></pre>
 <p>在函数内赋值默认创建局部变量，要修改外层需 <code>global</code>（改全局）或 <code>nonlocal</code>（改嵌套层）。</p>
-<h3>🟢 105. <code>global</code> 和 <code>nonlocal</code> 的区别是什么？</h3>
+<h3>🟢 125. <code>global</code> 和 <code>nonlocal</code> 的区别是什么？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><code>global</code>：声明变量来自<strong>全局作用域</strong>，用于在函数内修改全局变量；</li>
@@ -621,7 +782,7 @@ def outer():
         count += 1
     return inner
 </code></pre>
-<h3>🟢 106. 函数默认参数用可变对象有什么陷阱？</h3>
+<h3>🟢 126. 函数默认参数用可变对象有什么陷阱？</h3>
 <p><strong>答案：</strong>
 默认参数在函数<strong>定义时</strong>只计算一次，之后所有调用共享同一个对象。如果默认参数是可变对象（list/dict），多次调用会累积修改：</p>
 <pre><code class="language-python">def append(item, lst=[]):
@@ -637,7 +798,7 @@ append(2)  # [1, 2]  ← 不是预期的 [2]
     lst.append(item)
     return lst
 </code></pre>
-<h3>🟢 107. Python 函数参数传递是传值还是传引用？</h3>
+<h3>🟢 127. Python 函数参数传递是传值还是传引用？</h3>
 <p><strong>答案：</strong>
 都不是，Python 是<strong>传对象引用</strong>（Pass by Object Reference）。</p>
 <ul>
@@ -645,7 +806,7 @@ append(2)  # [1, 2]  ← 不是预期的 [2]
 <li>传入可变对象（list/dict）：函数内修改对象内容，外部也会变化（表现像传引用）；</li>
 <li>但如果在函数内重新赋值变量（<code>lst = [1,2]</code>），只是让局部变量指向新对象，不影响外部。</li>
 </ul>
-<h3>🟢 108. 字典（dict）的底层实现是什么？</h3>
+<h3>🟢 128. 字典（dict）的底层实现是什么？</h3>
 <p><strong>答案：</strong>
 Python 3.6+ 的 dict 底层是<strong>哈希表 + 稀疏索引数组 + 紧凑数组</strong>：</p>
 <ol>
@@ -655,7 +816,7 @@ Python 3.6+ 的 dict 底层是<strong>哈希表 + 稀疏索引数组 + 紧凑数
 <li>紧凑数组按插入顺序存储 <code>(hash, key, value)</code>。
 这样既保持了 O(1) 查找，又实现了插入有序（3.7+ 正式特性），还节省了内存。哈希冲突用<strong>开放寻址法</strong>（探测下一个槽位）解决。</li>
 </ol>
-<h3>🟢 109. list、dict、set 常见操作的时间复杂度？</h3>
+<h3>🟢 129. list、dict、set 常见操作的时间复杂度？</h3>
 <p><strong>答案：</strong></p>
 <table>
 <thead>
@@ -704,10 +865,10 @@ Python 3.6+ 的 dict 底层是<strong>哈希表 + 稀疏索引数组 + 紧凑数
 </tr>
 </tbody></table>
 <p>dict/set 的 O(1) 是平均情况，最坏 O(n)（哈希冲突严重时）。</p>
-<h3>🟢 110. Python 3.7+ 的 dict 为什么是有序的？</h3>
+<h3>🟢 130. Python 3.7+ 的 dict 为什么是有序的？</h3>
 <p><strong>答案：</strong>
 Python 3.6 重新实现了 dict 底层（PyPy 的方案），用&quot;稀疏索引 + 紧凑数组&quot;结构，紧凑数组按插入顺序存储，因此天然保持插入顺序。3.7 将其定为语言规范。有序 dict 节省了约 25% 内存，且迭代、<code>popitem</code> 等操作都按插入顺序。注意：有序指插入顺序，不是排序。</p>
-<h3>🟢 111. 类变量和实例变量的区别是什么？</h3>
+<h3>🟢 131. 类变量和实例变量的区别是什么？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li>类变量：定义在类中、方法外，所有实例共享一份，通过 <code>类名.变量</code> 或 <code>实例.变量</code> 访问；</li>
@@ -719,10 +880,10 @@ Python 3.6 重新实现了 dict 底层（PyPy 的方案），用&quot;稀疏索�
         self.name = &quot;&quot;  # 实例变量
 </code></pre>
 <p>坑：通过实例修改类变量（<code>a.count = 1</code>）实际是创建了同名实例变量，不影响类变量和其他实例；要改类变量须用 <code>A.count = 1</code>。</p>
-<h3>🟡 112. Python 私有属性的名称改写（name mangling）是什么？</h3>
+<h3>🟡 132. Python 私有属性的名称改写（name mangling）是什么？</h3>
 <p><strong>答案：</strong>
 Python 没有真正的私有，双下划线开头的属性（如 <code>__name</code>）会被解释器自动改名为 <code>_类名__name</code>，防止子类意外覆盖。这只是一种约定和保护机制，并非强制隐藏——外部仍可通过 <code>obj._类名__name</code> 访问。单下划线开头（<code>_name</code>）只是约定&quot;内部使用&quot;，不做任何改写。</p>
-<h3>🟡 113. <code>super()</code> 在多继承中是如何工作的？</h3>
+<h3>🟡 133. <code>super()</code> 在多继承中是如何工作的？</h3>
 <p><strong>答案：</strong>
 <code>super()</code> 不是简单调用&quot;父类&quot;，而是按 <strong>MRO（方法解析顺序）</strong> 调用下一个类。MRO 由 C3 线性化算法确定，保证每个类只调用一次、遵循继承拓扑顺序。</p>
 <pre><code class="language-python">class A:
@@ -733,7 +894,7 @@ class B(A):
         print(&quot;B&quot;)
 </code></pre>
 <p>可用 <code>类名.__mro__</code> 查看解析顺序。多继承中 <code>super()</code> 配合 MRO 实现了协作式多继承（如 <code>__init__</code> 链）。</p>
-<h3>🟡 114. 多个装饰器叠加时的执行顺序是什么？</h3>
+<h3>🟡 134. 多个装饰器叠加时的执行顺序是什么？</h3>
 <p><strong>答案：</strong>
 装饰器是自底向上应用（包装），自顶向下执行（调用时）。</p>
 <pre><code class="language-python">@decorator1
@@ -743,7 +904,7 @@ def func():
 # 等价于 func = decorator1(decorator2(func))
 </code></pre>
 <p>调用 <code>func()</code> 时：先进入 decorator1 的 wrapper → 再进入 decorator2 的 wrapper → 执行原函数 → 从 decorator2 返回 → 从 decorator1 返回。即&quot;先装饰的后执行，后装饰的先执行&quot;。</p>
-<h3>🟡 115. 上下文管理器有哪两种实现方式？</h3>
+<h3>🟡 135. 上下文管理器有哪两种实现方式？</h3>
 <p><strong>答案：</strong></p>
 <ol>
 <li><strong>类实现</strong>：定义 <code>__enter__</code>（进入 with 时执行，返回值赋给 as 变量）和 <code>__exit__</code>（退出时执行，可捕获异常，返回 True 抑制异常）；</li>
@@ -759,7 +920,7 @@ def my_open(path):
         f.close()
 </code></pre>
 <p>第二种更简洁，适合简单场景。</p>
-<h3>🟡 116. 描述符（Descriptor）的实际应用场景有哪些？</h3>
+<h3>🟡 136. 描述符（Descriptor）的实际应用场景有哪些？</h3>
 <p><strong>答案：</strong>
 描述符是实现了 <code>__get__</code>/<code>__set__</code>/<code>__delete__</code> 的类，用于控制属性访问。实际应用：</p>
 <ul>
@@ -774,7 +935,7 @@ def my_open(path):
         if val &lt; 0: raise ValueError
         obj.__dict__[self.name] = val
 </code></pre>
-<h3>🟡 117. Python 垃圾回收的完整机制是什么？</h3>
+<h3>🟡 137. Python 垃圾回收的完整机制是什么？</h3>
 <p><strong>答案：</strong>
 Python GC 由三部分组成：</p>
 <ol>
@@ -783,7 +944,7 @@ Python GC 由三部分组成：</p>
 <li><strong>分代回收</strong>（优化）：对象按存活时间分 0/1/2 三代，新对象在 0 代，存活则升代；代数越高回收频率越低，基于&quot;对象越老越不容易死&quot;的假设。
 可用 <code>gc</code> 模块手动控制（<code>gc.collect()</code>、<code>gc.disable()</code>）。</li>
 </ol>
-<h3>🟡 118. 循环引用是如何被回收的？</h3>
+<h3>🟡 138. 循环引用是如何被回收的？</h3>
 <p><strong>答案：</strong>
 引用计数无法回收循环引用（A→B→A，计数永远不为 0）。分代 GC 的<strong>标记-清除</strong>阶段处理：</p>
 <ol>
@@ -791,7 +952,7 @@ Python GC 由三部分组成：</p>
 <li>未被标记的对象（包括循环引用组）被判定为垃圾，执行回收。
 但如果循环引用中的对象定义了 <code>__del__</code>（终结器），GC 无法安全判断调用顺序，会将其放入 <code>gc.garbage</code> 列表而不自动回收，造成内存泄漏——这是 <code>__del__</code> 的经典坑。</li>
 </ol>
-<h3>🟡 119. 进程、线程、协程的区别和适用场景？</h3>
+<h3>🟡 139. 进程、线程、协程的区别和适用场景？</h3>
 <p><strong>答案：</strong></p>
 <table>
 <thead>
@@ -834,7 +995,7 @@ Python GC 由三部分组成：</p>
 </tr>
 </tbody></table>
 <p>Python 中：CPU 密集用多进程，IO 密集用多线程或协程（asyncio）。</p>
-<h3>🔴 120. 如何绕过 GIL？</h3>
+<h3>🔴 140. 如何绕过 GIL？</h3>
 <p><strong>答案：</strong>
 GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 Python 字节码。绕过方式：</p>
 <ol>
@@ -845,7 +1006,7 @@ GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 
 <li><strong>协程</strong>：不绕过 GIL，但在 IO 等待时切换，提高单线程并发度。
 注意：IO 密集型任务不需要绕过 GIL，因为等待 IO 时 GIL 会自动释放。</li>
 </ol>
-<h3>🔴 121. 死锁产生的条件和避免方法？</h3>
+<h3>🔴 141. 死锁产生的条件和避免方法？</h3>
 <p><strong>答案：</strong>
 死锁四要素（同时满足才会死锁）：</p>
 <ol>
@@ -862,7 +1023,7 @@ GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 
 <li>用 <code>queue.Queue</code> 等线程安全容器替代手工锁；</li>
 <li>用 <code>concurrent.futures</code> 等高层抽象。</li>
 </ul>
-<h3>🔴 122. asyncio 事件循环的工作原理是什么？</h3>
+<h3>🔴 142. asyncio 事件循环的工作原理是什么？</h3>
 <p><strong>答案：</strong>
 事件循环（Event Loop）是 asyncio 的核心，单线程内调度所有协程：</p>
 <ol>
@@ -872,7 +1033,7 @@ GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 
 <li>如此循环，直到所有任务完成。
 关键：协程在 <code>await</code> 处让出 CPU，而非被操作系统抢占，因此是<strong>协作式并发</strong>。事件循环用 <code>selectors</code>（epoll/kqueue）实现 IO 多路复用，单线程可处理大量并发连接。</li>
 </ol>
-<h3>🔴 123. multiprocessing 的 spawn/fork/forkserver 启动方式有什么区别？</h3>
+<h3>🔴 143. multiprocessing 的 spawn/fork/forkserver 启动方式有什么区别？</h3>
 <p><strong>答案：</strong>
 <code>multiprocessing</code> 创建子进程有三种方式（<code>set_start_method</code>）：</p>
 <ul>
@@ -881,7 +1042,7 @@ GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 
 <li><strong>forkserver</strong>：启动一个单线程服务进程，后续 fork 都从它复制，避免多线程 fork 问题，兼顾安全和速度。
 选择：Linux 多线程环境推荐 <code>spawn</code> 或 <code>forkserver</code>，避免 <code>fork</code> 的线程安全问题。</li>
 </ul>
-<h3>🔴 124. Python 3.11 / 3.12 / 3.13 有哪些重要新特性？</h3>
+<h3>🔴 144. Python 3.11 / 3.12 / 3.13 有哪些重要新特性？</h3>
 <p><strong>答案：</strong></p>
 <ul>
 <li><strong>3.11</strong>：速度提升约 10-60%（Faster CPython 项目）；更精准的错误提示（错误位置箭头）；<code>ExceptionGroup</code>/<code>except*</code> 批量异常；<code>tomllib</code> 标准库解析 TOML；<code>Self</code> 类型、<code>LiteralString</code>。</li>
@@ -889,7 +1050,7 @@ GIL 是 CPython 解释器的全局锁，同一时刻只允许一个线程执行 
 <li><strong>3.13</strong>：实验性<strong>移除 GIL</strong>（自由线程构建，<code>--disable-gil</code>）；JIT 编译器实验性支持；改进错误消息；<code>asyncio</code> 性能提升；更多模块支持自由线程。
 3.13 的无 GIL 是 Python 历史上的重大变革，目前是实验阶段，预计 3.14/3.15 逐步成熟。</li>
 </ul>
-<h3>🔴 125. 如何手写一个 LRU 缓存？</h3>
+<h3>🔴 145. 如何手写一个 LRU 缓存？</h3>
 <p><strong>答案：</strong>
 LRU（最近最少使用）缓存：容量满时淘汰最久未使用的项。用<strong>双向链表 + 哈希表</strong>实现 O(1) 读写：</p>
 <pre><code class="language-python">class Node:
@@ -939,7 +1100,7 @@ class LRUCache:
             self._add_to_head(node)
 </code></pre>
 <p>也可用 <code>collections.OrderedDict</code> 的 <code>move_to_end</code> 和 <code>popitem(last=False)</code> 快速实现。</p>
-<h3>🔴 126. Python 性能优化的常见手段有哪些？</h3>
+<h3>🔴 146. Python 性能优化的常见手段有哪些？</h3>
 <p><strong>答案：</strong>
 按投入产出比排序：</p>
 <ol>
@@ -955,7 +1116,7 @@ class LRUCache:
 </ol>
 <hr>
 <h2>总结</h2>
-<p>本套题共 126 道，覆盖 Python 基础语法、进阶特性、高级并发与工程、高频考点，以及 Django 全栈方向。按 🟢初级 → 🟡中级 → 🔴高级 从简单到难排列，适合 p1 级别 Python 面试的系统复习与查漏补缺。</p>
+<p>本套题共 146 道，覆盖 Python 基础语法、进阶特性、高级并发与工程、高频考点，以及 Django 全栈方向。按 🟢初级 → 🟡中级 → 🔴高级 从简单到难排列，适合 p1 级别 Python 面试的系统复习与查漏补缺。</p>
 </div>
 </body>
 </html>

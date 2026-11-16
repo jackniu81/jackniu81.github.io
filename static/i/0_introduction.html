@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自我介绍</title>
+<style>
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
+          --code-bg:#161b22; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+<h1>自我介绍</h1>
+<h2>概览</h2>
+<p>我之前在戴尔，负责官网特卖平台，团队 10 人，其中担任亚洲技术负责人 8 人，负责支持全球 20 多个国家、面向 toC 端与 toB 端的特卖业务。</p>
+<h2>前台 Web</h2>
+<ul>
+<li>支持新的需求、适配不同国家的业务需求与政策法规；</li>
+<li>优化页面性能与响应速度，核心指标参考 Core Web Vitals（CWV）；</li>
+<li>推进无障碍访问（A11y）、SEO 优化与用户行为埋点跟踪；</li>
+<li>支撑大流量并发与高可用——黑五峰值。源站 500 TPS、页面响应 0.5s；前端还有akamai，进一步提升性能。</li>
+<li>采用微前端（Micro-frontend）架构；</li>
+<li>部署在 PCF（Pivotal Cloud Foundry），便于扩展。</li>
+</ul>
+<h2>后台服务</h2>
+<ul>
+<li>基于微服务架构的一系列服务；</li>
+<li>通过 Kafka / RabbitMQ（RMQ）完成上下游系统交互。</li>
+</ul>
+<h2>Admin 管理后台</h2>
+<ul>
+<li>用于管理特卖分类、内容与推广信息；</li>
+<li>集成 AI Agent，构建长尾管理（longtail admin）能力；</li>
+<li>支持不常用、临时性的查询与校验场景；</li>
+<li>周边 50+ API 封装为工具（tools），设计文档、Spec 文档及预设查询步骤用于检索增强生成（RAG）。</li>
+<li>通过自然语言描述查询周边系统与特卖数据，用于数据校验、线上排错和生成简易报表；</li>
+</ul>
+<h2>我的工作</h2>
+<ul>
+<li>约 80% 时间投入具体执行，</li>
+<li>覆盖全流程： 需求 → 设计 → 实现 → cicd部署 → 测试 → 上线 → 支持的工作；</li>
+<li>基于 Spec-Driven Design（SDD）的AI编程：明确目标，需求落地后推动快速自动发布；实施阶段分步骤推进，每步 Review，防止跑偏。</li>
+</ul>
+</div>
+</body>
+</html>

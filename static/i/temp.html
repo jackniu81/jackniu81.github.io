@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent / LLM 里的「偏移（drift，也叫输出漂移、任务漂移）」</title>
+<style>
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
+          --code-bg:#161b22; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+<h1>AI Agent / LLM 里的「偏移（drift，也叫输出漂移、任务漂移）」</h1>
+<blockquote>
+<p>你前面做文章生成Agent、RAG写稿最容易碰到的问题：<strong>模型跑着跑着，慢慢偏离最开始设定好的目标、风格、约束、身份</strong>，就叫偏移（drift）。
+区分两个容易混的：<strong>模型权重漂移（weights drift）</strong> 和 <strong>对话/推理偏移（prompt drift，你业务里说的偏移基本都是这个）</strong>
+我们聊的是<strong>Agent流水线、文章生成场景的偏移</strong>，不是机器学习特征漂移。</p>
+</blockquote>
+<h2>1. 什么是偏移（通俗例子，贴合你的私活）</h2>
+<p>你给Agent设定：</p>
+<blockquote>
+<p>身份：企业SEO文案；风格平实；固定字数；必须基于产品手册；禁用夸大话术；每篇围绕指定关键词</p>
+</blockquote>
+<p>跑几轮之后慢慢出现：</p>
+<ul>
+<li>越写越飘，开始加营销大话、编造参数（脱离RAG素材）</li>
+<li>风格变了：本来专业平实，后面变得很口语、像小红书种草文</li>
+<li>主题跑偏：让写A产品，写着写着扯到别的产品</li>
+<li>无视规则：明明要求800字，后面随便写200字、或者超到2000字</li>
+<li>多轮Agent循环里，后面步骤忘掉前面的约束条件</li>
+</ul>
+<p>✅ 本质：<strong>大模型上下文里的约束信息被稀释、权重被后面内容盖过；或者模型本身偏好强于你的指令</strong>。
+MoE模型（gpt-oss-120b、Qwen3.5-122B这种）更容易出现：路由到不同专家，输出风格波动大，偏移会更明显。</p>
+<h2>2. 偏移分3类（做文章Agent要分开治理）</h2>
+<h3>① Prompt / 上下文漂移（最常见，你项目90%都是这个）</h3>
+<p>多轮循环、长上下文，<strong>系统提示词、品牌规范、约束条件被挤到上下文窗口远端</strong>，模型“看不见、记不住”规则。
+典型场景：批量连续生成几十篇文章、多步骤Agent（检索→摘要→扩写→润色→校验），越往后越不守规矩。</p>
+<h3>② 风格漂移（写内容接单最痛）</h3>
+<p>同一个任务，不同轮次口吻、结构、句式不一致。
+根源：基座模型本身有先验偏好；RAG召回的范文风格参差不齐，模型被范文带偏。</p>
+<h3>③ 事实/资料漂移（幻觉的一种）</h3>
+<p>脱离给定参考文档，自己瞎编，不再忠于客户给的产品资料。
+也就是：RAG召回失效、模型不信任检索片段，优先用内部参数知识输出。</p>
+<blockquote>
+<p>补充：不是幻觉=偏移。幻觉是编假内容；偏移是<strong>慢慢丢掉你预设的约束和目标</strong>，偏移最后往往带来幻觉。</p>
+</blockquote>
+<h2>3. 为什么 MoE（gpt-oss-120b / Qwen3.5-122B-A10B）更容易偏移？</h2>
+<p>MoE是路由激活不同专家层：</p>
+<ul>
+<li>不同专家擅长东西不一样；</li>
+<li>同样query，这次路由专家A，下次专家B；</li>
+<li>专家A写文严谨，专家B喜欢自由发挥；
+→ 表现就是：同样配置、同样prompt，两次输出差别很大，也就是漂移、不稳定。
+稠密大模型相对稳定一点，但长上下文多轮之后照样会偏移。</li>
+</ul>
+<h2>4. 一套落地防偏移方案（适配你的LangGraph文章Agent，接单直接用）</h2>
+<h3>方案1：约束隔离，不要把规则埋在历史对话里（最有效）</h3>
+<p>❌ 错误做法：系统提示词放最前面，然后不断追加生成内容，历史越堆越长，规则被压到底部。
+✅ 正确做法：</p>
+<ul>
+<li><strong>每一轮生成，独立带上完整约束块</strong>（品牌口吻、禁用词、结构模板、字数、写作要求），不是只发新query；</li>
+<li>把【固定规则块】和【动态输入（关键词+召回参考资料）】物理分开。&gt;</li>
+</ul>
+<blockquote>
+<p>LangGraph里：系统prompt作为独立节点常量，<strong>每次调用LLM都原样带上，不依赖对话记忆</strong>。</p>
+</blockquote>
+<h3>方案2：增加校验节点（你流水线必加）</h3>
+<p>生成完不直接交付，单独一个LLM校验节点：
+校验prompt模板示例：</p>
+<blockquote>
+<p>你是审核器，对照下面规则检查文章：
+规则列表：xxx
+参考资料：xxx
+待审核文章：xxx
+判断：是否偏移主题 / 是否风格不符 / 是否编造不在资料里的信息；不符合就输出【不通过】+修改指令。
+不通过 → 回传给生成节点重写；超过重试次数直接标记失败告警。
+这个节点就是专门用来拦截偏移。</p>
+</blockquote>
+<h3>方案3：RAG侧控制，防止范文带偏</h3>
+<ul>
+<li>召回的时候做rerank，过滤风格杂乱、无关范文；</li>
+<li>不要一次塞太多不同风格的参考文本进去；</li>
+<li>给客户准备少量<strong>标准范文模板</strong>，优先召回标准模板，而不是随便拉历史旧稿。</li>
+</ul>
+<h3>方案4：指令权重加强</h3>
+<p>关键约束用结构化标记，比如<code>&lt;RULE&gt;...&lt;/RULE&gt;</code>，在prompt里明确告诉模型：标签内内容优先级最高，不能忽略。
+很多模型对标记块有注意力偏向，不容易丢约束。</p>
+<h3>方案5：少用超长连续对话</h3>
+<p>批量生成文章：<strong>尽量做成无状态单轮调用</strong>，而不是同一个对话session里循环生成上百篇。
+同一个session越长，漂移越严重。</p>
+<h3>进阶方案（客户要求极高一致性时）</h3>
+<p>做DPO/偏好微调：拿【合规不偏移的样本】和【偏移坏样本】做偏好微调，压模型的自由发挥倾向。
+适合付费高、长期稳定的垂直客户；小私活一般不用，靠节点校验足够。</p>
+<h2>5. 接单话术（给客户解释偏移）</h2>
+<blockquote>
+<p>“大模型有漂移特性，连续产出内容的时候，很容易慢慢偏离咱们定好的品牌风格、产品口径。我们这套Agent流水线加了独立校验节点、固定规则注入，每次生成都会复核，保证几十上百篇内容口径统一，不会越写越飘。”</p>
+</blockquote>
+<h2>6. 一句话区分，避免混淆</h2>
+<ul>
+<li><strong>偏移drift</strong>：忘记规则、跑偏目标、风格不一致（行为飘）</li>
+<li><strong>幻觉hallucination</strong>：编造不存在事实（内容假）</li>
+<li><strong>温度temperature</strong>：控制随机性；温度高更容易偏移，但偏移≠温度高，低温度照样会偏移（长上下文遗忘约束）</li>
+</ul>
+<p>如果你想要，我给你一份LangGraph里的<strong>防偏移校验节点prompt</strong>，直接塞进你的文章生成Agent。</p>
+</div>
+</body>
+</html>
