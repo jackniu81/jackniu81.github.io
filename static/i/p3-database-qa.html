@@ -143,8 +143,174 @@ COMMIT; -- 或 ROLLBACK;
 WHERE id=1 AND version=5; -- 若影响行数=0则冲突，重试
 </code></pre>
 <p>适合读多写少、冲突少场景，性能更好。</p>
+<h2>MySQL</h2>
+<h3>11. MySQL 有哪些存储引擎？InnoDB 和 MyISAM 的区别？</h3>
+<p><strong>答案：</strong>
+MySQL 5.5 起默认引擎是 <strong>InnoDB</strong>，旧版本默认 MyISAM。核心区别：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>InnoDB</th>
+<th>MyISAM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>事务</td>
+<td>支持（ACID）</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>锁粒度</td>
+<td>行锁（并发好）</td>
+<td>表锁</td>
+</tr>
+<tr>
+<td>外键</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>崩溃恢复</td>
+<td>支持（redo log）</td>
+<td>不支持，易损坏</td>
+</tr>
+<tr>
+<td>索引结构</td>
+<td>聚簇索引（数据在主键索引叶子节点）</td>
+<td>非聚簇（索引和数据分离）</td>
+</tr>
+<tr>
+<td>COUNT(*)</td>
+<td>需扫描统计</td>
+<td>存了总行数，直接返回（无 WHERE 时）</td>
+</tr>
+</tbody></table>
+<p>结论：绝大多数场景直接用 InnoDB；MyISAM 只在极少数只读、无事务需求的场景考虑。</p>
+<h3>12. 什么是聚簇索引和非聚簇索引？什么是回表？</h3>
+<p><strong>答案：</strong>
+InnoDB 中<strong>聚簇索引</strong>（主键索引）的叶子节点直接存整行数据；<strong>二级索引</strong>（非聚簇）叶子节点存的是主键值。通过二级索引查询时，先在二级索引找到主键，再到聚簇索引取整行，这个过程叫<strong>回表</strong>（两次 B+ 树查找）。
+优化手段：① <strong>覆盖索引</strong>——把查询需要的列都放进联合索引，避免回表（EXPLAIN 中 Extra 显示 <code>Using index</code>）；② 主键尽量短且自增（二级索引都存主键，UUID 主键会导致索引膨胀和页分裂）。</p>
+<h3>13. InnoDB 的 MVCC 是如何实现的？</h3>
+<p><strong>答案：</strong>
+MVCC（多版本并发控制）让读写不互相阻塞，靠三部分实现：</p>
+<ul>
+<li><strong>隐藏列</strong>：每行记录有 <code>trx_id</code>（最后修改的事务 ID）和 <code>roll_pointer</code>（指向 undo log 中的旧版本）</li>
+<li><strong>undo log 版本链</strong>：每次修改生成旧版本，串成链表</li>
+<li><strong>ReadView</strong>：事务快照读时生成，记录当前活跃事务 ID 列表，按可见性规则沿版本链找到对自己可见的版本</li>
+</ul>
+<p>RC 级别每次 SELECT 都生成新 ReadView（所以能读到别人已提交的修改）；RR 级别只在第一次 SELECT 生成，之后复用（所以可重复读）。注意：MVCC 只作用于<strong>快照读</strong>（普通 SELECT），<code>SELECT ... FOR UPDATE</code>、UPDATE、DELETE 是<strong>当前读</strong>，走锁机制。</p>
+<h3>14. 什么是行锁、间隙锁、Next-Key 锁？如何避免死锁？</h3>
+<p><strong>答案：</strong>
+InnoDB 行级锁有三种形态：<strong>Record Lock</strong>（锁住索引记录本身）、<strong>Gap Lock</strong>（锁住记录之间的间隙，阻止其他事务插入，防幻读）、<strong>Next-Key Lock</strong>（Record + Gap，左开右闭区间）。RR 级别下当前读默认加 Next-Key 锁；RC 级别只有 Record 锁。
+注意：锁加在<strong>索引</strong>上，如果 UPDATE 的 WHERE 条件没走索引，会退化为锁全表（锁住所有行）。
+避免死锁：① 多个事务按相同顺序访问表/行；② 事务尽量短小，尽快提交；③ 走索引缩小锁范围；④ 设置 <code>innodb_lock_wait_timeout</code>；⑤ 业务层捕获死锁错误（MySQL 错误码 1213）后重试。</p>
+<h3>15. 如何定位和优化慢查询？EXPLAIN 怎么看？</h3>
+<p><strong>答案：</strong>
+定位：开启慢查询日志（<code>slow_query_log=ON</code>，<code>long_query_time=1</code>），用 <code>mysqldumpslow</code> 或 pt-query-digest 分析。
+<code>EXPLAIN</code> 关键列：</p>
+<ul>
+<li><strong>type</strong>：访问类型，从好到差 <code>system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL</code>，出现 ALL（全表扫描）要警惕</li>
+<li><strong>key</strong>：实际使用的索引；<strong>rows</strong>：预估扫描行数</li>
+<li><strong>Extra</strong>：<code>Using index</code>（覆盖索引，好）、<code>Using filesort</code>（额外排序）、<code>Using temporary</code>（临时表，GROUP BY/DISTINCT 常见）需要优化</li>
+</ul>
+<p>常见优化：加合适的联合索引（注意最左前缀）、避免 SELECT *、大分页用延迟关联（先查主键再 JOIN）、<code>LIMIT</code> 深分页改为游标方式（<code>WHERE id &gt; last_id LIMIT n</code>）、必要时反范式冗余字段减少 JOIN。</p>
+<h3>16. MySQL 主从复制的原理？读写分离和分库分表怎么做？</h3>
+<p><strong>答案：</strong>
+<strong>主从复制</strong>：主库把变更写入 <strong>binlog</strong> → 从库 IO 线程拉取写入 <strong>relay log</strong> → 从库 SQL 线程重放。默认异步复制（主库不等从库确认），可配置半同步复制降低丢数据风险。复制延迟是读写分离的经典问题：写后立即读走主库，或用 GTID 判断从库是否追上。
+<strong>读写分离</strong>：写走主库、读走从库，中间件（ProxySQL、MyCat）或应用层路由。
+<strong>分库分表</strong>：单表过大（经验值千万级以上）或单库连接/IO 到瓶颈时考虑。垂直拆分（按业务拆库、按字段拆表）优先；水平拆分按分片键（如 user_id 取模/范围）路由，需解决跨分片 JOIN、分布式事务、全局 ID（雪花算法）、扩容迁移等问题。中间件：ShardingSphere。原则：先优化索引和架构，分库分表是最后手段。</p>
+<h2>PostgreSQL</h2>
+<h3>17. PostgreSQL 和 MySQL 有什么区别？如何选型？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>MySQL（InnoDB）</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定位</td>
+<td>简单可靠、互联网 OLTP</td>
+<td>功能全面的对象-关系型数据库</td>
+</tr>
+<tr>
+<td>SQL 标准</td>
+<td>部分支持</td>
+<td>遵循度高，窗口函数/CTE 支持早且完善</td>
+</tr>
+<tr>
+<td>数据类型</td>
+<td>常规类型</td>
+<td>JSONB、数组、UUID、范围、几何、自定义类型</td>
+</tr>
+<tr>
+<td>MVCC</td>
+<td>undo log 版本链</td>
+<td>行多版本 + VACUUM 清理</td>
+</tr>
+<tr>
+<td>默认隔离级别</td>
+<td>REPEATABLE READ</td>
+<td>READ COMMITTED</td>
+</tr>
+<tr>
+<td>扩展生态</td>
+<td>插件较少</td>
+<td>PostGIS（地理）、pg_trgm（模糊搜索）、TimescaleDB 等</td>
+</tr>
+<tr>
+<td>复制</td>
+<td>binlog 逻辑复制为主</td>
+<td>流复制（物理）+ 逻辑复制</td>
+</tr>
+</tbody></table>
+<p>选型：互联网高并发简单读写、团队熟悉 MySQL 生态 → MySQL；复杂查询/分析、JSON 文档与关系混合、地理信息、需要丰富索引和扩展 → PostgreSQL。两者性能在多数场景差距不大，团队熟悉度往往比数据库本身更重要。</p>
+<h3>18. PostgreSQL 的 MVCC 和 MySQL 有何不同？为什么需要 VACUUM？</h3>
+<p><strong>答案：</strong>
+PG 的 MVCC 是<strong>行多版本</strong>：UPDATE 实际是「标记旧行失效 + 插入新行」，每行有 <code>xmin</code>/<code>xmax</code> 记录创建/删除它的事务 ID，事务按快照判断哪个版本可见。旧版本（死元组 dead tuple）留在表文件中，不像 MySQL 存在 undo log 里可自动回收。
+因此需要 <strong>VACUUM</strong>：① 回收死元组空间供复用；② 更新可见性映射；③ 防止事务 ID 回卷（wraparound，严重时会强制停库）。autovacuum 默认自动运行，但大批量写入/删除的表需要调参（<code>autovacuum_vacuum_scale_factor</code>）或手动 VACUUM。<code>VACUUM FULL</code> 会重写整表并加排他锁，生产慎用。这也是 PG 频繁 UPDATE 的表容易「膨胀（bloat）」的原因。</p>
+<h3>19. PostgreSQL 的 JSONB、数组等特有类型怎么用？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-sql">-- JSONB：二进制存储的 JSON，可建 GIN 索引，支持包含/存在查询
+CREATE TABLE events (id serial PRIMARY KEY, payload jsonb);
+SELECT * FROM events WHERE payload @&gt; &#39;{&quot;type&quot;: &quot;click&quot;}&#39;;
+SELECT payload-&gt;&gt;&#39;user_id&#39; FROM events;  -- -&gt;&gt; 取文本，-&gt; 取 jsonb
+CREATE INDEX idx_payload ON events USING gin (payload);
+
+-- 数组类型
+CREATE TABLE posts (id serial, tags text[]);
+SELECT * FROM posts WHERE tags @&gt; ARRAY[&#39;nodejs&#39;];
+
+-- UUID / 生成列 / 枚举
+CREATE TABLE users (id uuid DEFAULT gen_random_uuid() PRIMARY KEY);
+</code></pre>
+<p>JSONB vs JSON：JSONB 写入稍慢但查询快、支持索引，绝大多数场景选 JSONB。这让 PG 能「一库两用」：核心字段用关系列保证约束，灵活字段放 JSONB，兼顾 MySQL + MongoDB 的部分场景。</p>
+<h3>20. PostgreSQL 支持哪些索引类型？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>B-Tree</strong>（默认）：等值、范围、排序，同 MySQL</li>
+<li><strong>GIN</strong>（倒排索引）：JSONB、数组、全文搜索（tsvector）、pg_trgm 模糊匹配</li>
+<li><strong>GiST / SP-GiST</strong>：几何、地理（PostGIS）、范围类型、最近邻搜索</li>
+<li><strong>BRIN</strong>：块级摘要索引，超大表且数据物理有序（如时间序列）时极省空间</li>
+<li><strong>Hash</strong>：仅等值查询</li>
+</ul>
+<p>特色用法：</p>
+<pre><code class="language-sql">-- 部分索引：只索引满足条件的行，小而快
+CREATE INDEX idx_active ON users (email) WHERE status = &#39;active&#39;;
+-- 表达式索引：解决「对列做函数导致索引失效」问题
+CREATE INDEX idx_lower_email ON users (lower(email));
+-- 模糊搜索：LIKE &#39;%keyword%&#39; 也能走索引
+CREATE EXTENSION pg_trgm;
+CREATE INDEX idx_name_trgm ON users USING gin (name gin_trgm_ops);
+</code></pre>
+<h3>21. PostgreSQL 的事务隔离级别和 MySQL 有什么不同？</h3>
+<p><strong>答案：</strong>
+PG 默认 <strong>READ COMMITTED</strong>（MySQL 默认 RR）。PG 实际只实现三种级别：RC、RR、SERIALIZABLE（声明 READ UNCOMMITTED 会按 RC 执行，因为 MVCC 天然不可能脏读）。PG 的 RR 基于事务级快照，幻读也不会出现。PG 的 SERIALIZABLE 用 <strong>SSI</strong>（可串行化快照隔离）实现：不加读写锁，通过检测读写依赖冲突，发现不可串行化时让其中一个事务报错回滚（错误码 40001），应用层需重试。对比 MySQL 的 SERIALIZABLE 把所有 SELECT 隐式加共享锁，PG 的 SSI 并发性能通常更好。另外 PG 支持事务内 DDL（<code>CREATE TABLE</code> 可回滚），MySQL 的 DDL 会隐式提交事务。</p>
 <h2>NoSQL</h2>
-<h3>11. Redis 是什么？有哪些数据结构？</h3>
+<h3>22. Redis 是什么？有哪些数据结构？</h3>
 <p><strong>答案：</strong>
 Redis 是内存数据库，支持持久化，以高性能键值存储为核心。数据结构：</p>
 <ul>
@@ -155,13 +321,13 @@ Redis 是内存数据库，支持持久化，以高性能键值存储为核心�
 <li><strong>Sorted Set</strong>：排行榜（<code>ZADD</code>，按分数排序，<code>ZRANGE</code>/<code>ZRANK</code>）</li>
 <li><strong>Bitmap/HyperLogLog/Stream</strong>：特殊用途（统计日活、流式日志）</li>
 </ul>
-<h3>12. Redis 的缓存策略有哪些？</h3>
+<h3>23. Redis 的缓存策略有哪些？</h3>
 <p><strong>答案：</strong>
 <strong>缓存击穿</strong>（热点 key 过期，大量请求直击 DB）：互斥锁（只允许一个请求重建缓存）或不设过期时间+主动更新。<strong>缓存穿透</strong>（查询不存在的数据，缓存永远不命中）：布隆过滤器拦截、缓存空值（短 TTL）。<strong>缓存雪崩</strong>（大量 key 同时过期）：过期时间加随机抖动、Redis 集群高可用。<strong>缓存更新策略</strong>：Cache-Aside（读缓存、缓存未命中查 DB 并写入）、Write-Through、Write-Behind。</p>
-<h3>13. MongoDB 和 MySQL 如何选择？</h3>
+<h3>24. MongoDB 和 MySQL 如何选择？</h3>
 <p><strong>答案：</strong>
 MongoDB（文档型 NoSQL）适合：数据结构多变（Schema 灵活）、嵌套文档（评论、标签等）、大量非结构化数据、快速迭代原型、需要水平扩展。MySQL（关系型）适合：数据结构稳定、需要复杂关联查询、严格事务（金融）、数据一致性要求高。混合使用也很常见：MySQL 存核心业务数据，MongoDB 存日志/用户行为，Redis 做缓存。</p>
-<h3>14. 什么是 ORM？常见 Node.js ORM 有哪些？</h3>
+<h3>25. 什么是 ORM？常见 Node.js ORM 有哪些？</h3>
 <p><strong>答案：</strong>
 ORM（对象关系映射）允许用面向对象的方式操作数据库，自动生成 SQL，避免手写 SQL。常见 Node.js ORM：</p>
 <ul>
@@ -178,11 +344,98 @@ ORM（对象关系映射）允许用面向对象的方式操作数据库，自�
   take: 10,
 });
 </code></pre>
-<h3>15. 什么是数据库连接池？</h3>
+<h3>26. 什么是数据库连接池？</h3>
 <p><strong>答案：</strong>
 连接池预先创建并维护一定数量的数据库连接，请求时从池中借用，用完归还，避免每次操作都建立/断开连接（建立连接开销大）。关键参数：最小连接数、最大连接数（超过则等待或报错）、空闲超时。Node.js 中 Prisma/TypeORM/Sequelize 都内置连接池管理。生产环境需根据数据库和服务器性能调整池大小。</p>
+<h2>Node.js 中的数据库应用</h2>
+<h3>27. Node.js 如何连接 MySQL / PostgreSQL？驱动如何选？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>MySQL</strong>：<code>mysql2</code>（事实标准，支持 Promise、预处理语句、连接池）</li>
+<li><strong>PostgreSQL</strong>：<code>pg</code>（node-postgres，事实标准）</li>
+<li>ORM 层：Prisma / Drizzle / TypeORM / Sequelize（底层也是这些驱动或自有实现）</li>
+</ul>
+<pre><code class="language-typescript">// mysql2/promise
+import mysql from &#39;mysql2/promise&#39;;
+const pool = mysql.createPool({
+  host: &#39;localhost&#39;, user: &#39;app&#39;, database: &#39;demo&#39;,
+  connectionLimit: 10, waitForConnections: true,
+});
+const [rows] = await pool.query(&#39;SELECT * FROM users WHERE id = ?&#39;, [1]);
+
+// pg
+import { Pool } from &#39;pg&#39;;
+const pool = new Pool({ host: &#39;localhost&#39;, database: &#39;demo&#39;, max: 10 });
+const { rows } = await pool.query(&#39;SELECT * FROM users WHERE id = $1&#39;, [1]);
+</code></pre>
+<p>注意占位符差异：mysql2 用 <code>?</code>，pg 用 <code>$1, $2</code>。Serverless 环境（连接数易爆）可加 PgBouncer 或 Prisma Accelerate 这类连接代理。</p>
+<h3>28. 如何防止 SQL 注入？</h3>
+<p><strong>答案：</strong>
+核心原则：<strong>永远不要拼接用户输入到 SQL 字符串</strong>，用参数化查询（预处理语句），驱动会把参数作为数据而非 SQL 代码传输：</p>
+<pre><code class="language-typescript">// ✗ 危险：字符串拼接
+pool.query(`SELECT * FROM users WHERE name = &#39;${name}&#39;`);
+// ✓ 参数化
+pool.query(&#39;SELECT * FROM users WHERE name = ?&#39;, [name]);      // mysql2
+pool.query(&#39;SELECT * FROM users WHERE name = $1&#39;, [name]);     // pg
+</code></pre>
+<p>补充：① 表名/列名/ORDER BY 方向不能参数化，需用白名单校验；② ORM 的查询 API 天然参数化，但 <code>$queryRaw</code> / <code>sequelize.query</code> 等原始 SQL 接口仍要用参数绑定（Prisma 的 <code>$queryRaw</code> 配合模板字符串标签用法是安全的，<code>$queryRawUnsafe</code> 不安全）；③ 数据库账号遵循最小权限原则。</p>
+<h3>29. Node.js 中如何正确使用连接池和事务？</h3>
+<p><strong>答案：</strong>
+事务的关键：<strong>所有语句必须在同一个连接上执行</strong>，不能从池里随机拿连接。正确做法是取出一个连接，用完归还：</p>
+<pre><code class="language-typescript">// mysql2
+const conn = await pool.getConnection();
+try {
+  await conn.beginTransaction();
+  await conn.query(&#39;UPDATE accounts SET balance = balance - ? WHERE id = ?&#39;, [100, 1]);
+  await conn.query(&#39;UPDATE accounts SET balance = balance + ? WHERE id = ?&#39;, [100, 2]);
+  await conn.commit();
+} catch (e) {
+  await conn.rollback();
+  throw e;
+} finally {
+  conn.release(); // 必须归还，否则连接泄漏，池耗尽后所有请求挂起
+}
+
+// pg
+const client = await pool.connect();
+try {
+  await client.query(&#39;BEGIN&#39;);
+  // ... 同上
+  await client.query(&#39;COMMIT&#39;);
+} catch (e) {
+  await client.query(&#39;ROLLBACK&#39;);
+  throw e;
+} finally {
+  client.release();
+}
+</code></pre>
+<p>ORM 封装了这套样板：Prisma 用 <code>prisma.$transaction([...])</code> 或交互式 <code>$transaction(async (tx) =&gt; {...})</code>。常见事故：忘记 release、在事务里做耗时的外部 HTTP 调用（长时间占用连接和锁）。</p>
+<h3>30. 大量数据的查询和插入如何优化？</h3>
+<p><strong>答案：</strong>
+<strong>查询</strong>：① 分页避免深 OFFSET，用游标分页；② 流式读取避免一次性把百万行加载进内存：</p>
+<pre><code class="language-typescript">// pg：pg-query-stream
+import QueryStream from &#39;pg-query-stream&#39;;
+const stream = client.query(new QueryStream(&#39;SELECT * FROM big_table&#39;));
+for await (const row of stream) { /* 逐行处理 */ }
+// mysql2：pool.query(...).stream() 同样支持
+</code></pre>
+<p><strong>插入</strong>：① 批量 INSERT（一条语句多组 VALUES）远快于逐条插入，mysql2 用 <code>pool.query(&#39;INSERT INTO t (a,b) VALUES ?&#39;, [rows])</code>，pg 可用 <code>pg-copy-streams</code> 走 COPY 协议（最快）；② 大批量分批提交（如每 1000 行一个事务）；③ 导入场景可先删索引、导入后重建。
+<strong>其他</strong>：只 SELECT 需要的列；聚合尽量下推到数据库；Node 单线程不要在拿到大量行后做重 CPU 计算，会阻塞事件循环。</p>
+<h3>31. ORM 和原生 SQL 如何选择？</h3>
+<p><strong>答案：</strong>
+<strong>ORM 优势</strong>：类型安全（Prisma/Drizzle 生成的 TS 类型）、迁移管理（migration）、防注入、开发效率高、切换数据库成本低。<strong>原生 SQL 优势</strong>：复杂查询（窗口函数、CTE、递归）表达力强、性能可精确控制、无抽象泄漏。
+实践建议：CRUD 用 ORM，复杂报表/分析查询用原生 SQL（Prisma <code>$queryRaw</code>、Drizzle <code>sql</code> 模板），两者混用是主流。面试加分点：了解 ORM 的 <strong>N+1 问题</strong>——循环里逐条查关联数据，应改为 include/join 一次取回或 DataLoader 批量合并；以及 ORM 生成的 SQL 要用日志/EXPLAIN 验证，避免隐式全表扫描。</p>
+<h3>32. 数据库连接异常、超时和优雅关闭如何处理？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>错误处理</strong>：pg 的 Pool 要监听 <code>error</code> 事件（空闲连接被服务端断开时触发，不监听会导致进程崩溃）；mysql2 连接错误后池会自动重建连接</li>
+<li><strong>超时</strong>：设置查询超时（pg：<code>statement_timeout</code>；mysql2：连接级配置），避免慢查询无限占用连接；获取连接也要有等待上限</li>
+<li><strong>重试</strong>：只对可重试错误（死锁 1213/40001、连接闪断）做指数退避重试，且写操作重试要保证幂等</li>
+<li><strong>优雅关闭</strong>：进程收到 SIGTERM 时先停止接收新请求，等在途请求完成，再 <code>pool.end()</code> / <code>prisma.$disconnect()</code>，最后退出；K8s 环境配合 preStop hook</li>
+<li><strong>健康检查</strong>：就绪探针执行 <code>SELECT 1</code>，数据库不可用时摘除流量而不是让请求堆积</li>
+</ul>
 <h2>总结</h2>
-<p>这些题目覆盖了 SQL 基础、索引优化、事务和锁、Redis 数据结构与缓存策略、NoSQL 选型和 ORM，适合作为全栈/后端方向数据库面试复习资料。</p>
+<p>这些题目覆盖了 SQL 基础、索引优化、事务和锁、MySQL 存储引擎与 MVCC、PostgreSQL 特性与选型、Redis 数据结构与缓存策略、NoSQL 选型，以及 Node.js 中驱动使用、防注入、连接池事务、大数据量处理和 ORM 实践，适合作为全栈/后端方向数据库面试复习资料。</p>
 </div>
 </body>
 </html>
