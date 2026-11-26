@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackniu81.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="2026 年的 Web 生态已和五年前不是同一个物种：AIGC 让页面结构越来越“非标”，反爬从 IP 封禁升级到硬件级指纹与行为建模，改版速度远超选择器的寿命。硬编码规则的爬虫正集体陷入维护泥潭，而 LLM 与 Agent 又在重构采集的底层逻辑。本文不谈概念，只谈落地：哪些活该交给模型，哪些活必须留在工程底座上。   一、范式转移：为什么旧脚本集体失效爬虫技术的每一次迭代，都对应 Web 侧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当爬虫学会“思考”：2026 数据采集的 AI 觉醒与工程突围">
+<meta property="og:url" content="https://jackniu81.github.io/2026/11/26/Crawler-AI-Awakening-2026/index.html">
+<meta property="og:site_name" content="Jack N @ GitHub">
+<meta property="og:description" content="2026 年的 Web 生态已和五年前不是同一个物种：AIGC 让页面结构越来越“非标”，反爬从 IP 封禁升级到硬件级指纹与行为建模，改版速度远超选择器的寿命。硬编码规则的爬虫正集体陷入维护泥潭，而 LLM 与 Agent 又在重构采集的底层逻辑。本文不谈概念，只谈落地：哪些活该交给模型，哪些活必须留在工程底座上。   一、范式转移：为什么旧脚本集体失效爬虫技术的每一次迭代，都对应 Web 侧">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackniu81.github.io/img/2026/Crawler-AI-2026.png">
+<meta property="og:image" content="https://jackniu81.github.io/img/2026/2026-spider.png">
+<meta property="article:published_time" content="2026-11-26T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-26T13:47:21.607Z">
+<meta property="article:author" content="Jack">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackniu81.github.io/img/2026/Crawler-AI-2026.png">
+
+
+<link rel="canonical" href="https://jackniu81.github.io/2026/11/26/Crawler-AI-Awakening-2026/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackniu81.github.io/2026/11/26/Crawler-AI-Awakening-2026/","path":"2026/11/26/Crawler-AI-Awakening-2026/","title":"当爬虫学会“思考”：2026 数据采集的 AI 觉醒与工程突围"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>当爬虫学会“思考”：2026 数据采集的 AI 觉醒与工程突围 | Jack N @ GitHub</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jack N @ GitHub</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Full stack AI Engineer, focus on: React/Vue, Node.js and .Net</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%8C%83%E5%BC%8F%E8%BD%AC%E7%A7%BB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A7%E8%84%9A%E6%9C%AC%E9%9B%86%E4%BD%93%E5%A4%B1%E6%95%88"><span class="nav-number">1.</span> <span class="nav-text">一、范式转移：为什么旧脚本集体失效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81AI-%E8%A7%89%E9%86%92%EF%BC%9A%E8%AE%A9%E6%A8%A1%E5%9E%8B%E6%89%BF%E6%8B%85%E5%86%B3%E7%AD%96"><span class="nav-number">2.</span> <span class="nav-text">二、AI 觉醒：让模型承担决策</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-LLM-%E8%AF%AD%E4%B9%89%E5%8C%96%E6%8F%90%E5%8F%96"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 LLM 语义化提取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%99%BA%E8%83%BD%E4%BD%93%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 智能体与代码自动生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E8%BE%B9%E7%95%8C%EF%BC%9A%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E8%AF%A5%E7%94%A8-AI"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 边界：什么时候不该用 AI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%B7%A5%E7%A8%8B%E7%AA%81%E5%9B%B4%EF%BC%9A%E5%B7%A5%E4%B8%9A%E7%BA%A7%E5%BA%95%E5%BA%A7%E4%BB%8D%E6%98%AF%E5%9F%BA%E7%9F%B3"><span class="nav-number">3.</span> <span class="nav-text">三、工程突围：工业级底座仍是基石</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%9F%BA%E7%A1%80%E5%B1%82%EF%BC%9A%E8%BD%BB%E9%87%8F%E9%9D%99%E6%80%81%E6%8A%93%E5%8F%96"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 基础层：轻量静态抓取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%B8%B2%E6%9F%93%E5%B1%82%EF%BC%9A%E5%8A%A8%E6%80%81%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%A4%8D%E6%9D%82%E4%BA%A4%E4%BA%92"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 渲染层：动态渲染与复杂交互</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E8%B0%83%E5%BA%A6%E5%B1%82%EF%BC%9A%E8%A7%84%E6%A8%A1%E5%8C%96%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 调度层：规模化与分布式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%B7%B7%E5%90%88%E6%9E%B6%E6%9E%84%EF%BC%9A%E8%AE%A9%E5%BF%AB%E4%BB%BB%E5%8A%A1%E5%88%AB%E7%AD%89%E6%85%A2%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 混合架构：让快任务别等慢任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AF%B9%E6%8A%97%E4%B8%8E%E5%90%88%E8%A7%84%EF%BC%9A%E6%88%90%E6%9C%AC%E5%B7%B2%E7%BB%8F%E5%B7%A5%E7%A8%8B%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">四、对抗与合规：成本已经工程化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%E5%86%B3%E7%AD%96%E7%9F%A9%E9%98%B5"><span class="nav-number">5.</span> <span class="nav-text">五、技术选型决策矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD%EF%BC%9A%E7%88%AC%E8%99%AB%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E8%83%BD%E5%8A%9B%E9%87%8D%E6%9E%84"><span class="nav-number">6.</span> <span class="nav-text">结语：爬虫工程师的能力重构</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack</p>
+  <div class="site-description" itemprop="description">Full stack AI Engineer, focus on: React/Vue, Node.js and .Net</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/26/Crawler-AI-Awakening-2026/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React/Vue, Node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="当爬虫学会“思考”：2026 数据采集的 AI 觉醒与工程突围 | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          当爬虫学会“思考”：2026 数据采集的 AI 觉醒与工程突围
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-26 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-26T09:00:00+08:00">2026-11-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>2026 年的 Web 生态已和五年前不是同一个物种：AIGC 让页面结构越来越“非标”，反爬从 IP 封禁升级到硬件级指纹与行为建模，改版速度远超选择器的寿命。硬编码规则的爬虫正集体陷入维护泥潭，而 LLM 与 Agent 又在重构采集的底层逻辑。本文不谈概念，只谈落地：哪些活该交给模型，哪些活必须留在工程底座上。</p>
+</blockquote>
+<p><img src="/img/2026/Crawler-AI-2026.png" alt="2026 年爬虫双轨架构：AI 语义驱动 + 工程化底座"></p>
+<h2 id="一、范式转移：为什么旧脚本集体失效"><a href="#一、范式转移：为什么旧脚本集体失效" class="headerlink" title="一、范式转移：为什么旧脚本集体失效"></a>一、范式转移：为什么旧脚本集体失效</h2><p>爬虫技术的每一次迭代，都对应 Web 侧的一次“反制”。今天的压力来自三处：</p>
+<ol>
+<li><strong>页面结构不再稳定</strong>。模板化站点大量减少，同一业务的不同页面可能由不同框架渲染，甚至由 AI 动态生成布局，CSS&#x2F;XPath 的路径假设随时作废。</li>
+<li><strong>风控进入硬件级</strong>。TLS、Canvas&#x2F;WebGL、字体指纹构成环境画像，鼠标轨迹、滚动节奏构成行为画像，“改个 UA”早已没有意义。</li>
+<li><strong>维护成本指数上升</strong>。中等规模项目里，选择器维护常占全部工作量的 60% 以上，每次改版都是一次线上事故。</li>
+</ol>
+<p>传统爬虫的本质是<strong>把对页面结构的假设写死在代码里</strong>，假设一变，代码即失效。AI 带来的变化，是把这份假设从“代码”搬进了“模型”——由模型在运行时理解语义，而不是由开发者预先猜测 DOM。</p>
+<h2 id="二、AI-觉醒：让模型承担决策"><a href="#二、AI-觉醒：让模型承担决策" class="headerlink" title="二、AI 觉醒：让模型承担决策"></a>二、AI 觉醒：让模型承担决策</h2><h3 id="2-1-LLM-语义化提取"><a href="#2-1-LLM-语义化提取" class="headerlink" title="2.1 LLM 语义化提取"></a>2.1 LLM 语义化提取</h3><p>最直接的做法：不再写选择器，而是把精简后的 HTML（或页面截图）交给大模型，用结构化 Prompt 让它输出 JSON。它对 DOM 微调有极强鲁棒性，因为模型看的是“这是一张商品卡，标题在这、价格在那”，而不是 <code>div.list &gt; div:nth-child(3) &gt; span</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Product</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    title: <span class="built_in">str</span> = Field(description=<span class="string">&quot;商品名称&quot;</span>)</span><br><span class="line">    price: <span class="built_in">float</span> = Field(description=<span class="string">&quot;现价，数字类型&quot;</span>)</span><br><span class="line">    currency: <span class="built_in">str</span> = Field(default=<span class="string">&quot;CNY&quot;</span>)</span><br><span class="line"></span><br><span class="line">SCHEMA = Product.model_json_schema()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract</span>(<span class="params">html: <span class="built_in">str</span></span>) -&gt; Product:</span><br><span class="line">    resp = client.chat.completions.create(</span><br><span class="line">        model=<span class="string">&quot;gpt-5-mini&quot;</span>,</span><br><span class="line">        response_format=&#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;json_object&quot;</span>&#125;,</span><br><span class="line">        messages=[</span><br><span class="line">            &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;你是数据提取器，只输出符合 schema 的 JSON。&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">f&quot;schema: <span class="subst">&#123;SCHEMA&#125;</span>\n\nHTML:\n<span class="subst">&#123;html[:<span class="number">20000</span>]&#125;</span>&quot;</span>&#125;,</span><br><span class="line">        ],</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> Product.model_validate_json(resp.choices[<span class="number">0</span>].message.content)</span><br></pre></td></tr></table></figure>
+
+<p>三个必须正视的代价：<strong>Token 成本</strong>（先做 HTML 清洗，去 script&#x2F;style&#x2F;注释、只留有文本的节点，通常能压到原始体积的 10%~20%）、<strong>延迟</strong>（单页百毫秒到数秒，不适合高频采集）、<strong>幻觉</strong>（实测约 5% 的字段会“编造”或错位）。所以生产环境必须用 Pydantic 做类型与范围校验，校验失败的记录进人工复核队列，而不是直接入库。</p>
+<h3 id="2-2-智能体与代码自动生成"><a href="#2-2-智能体与代码自动生成" class="headerlink" title="2.2 智能体与代码自动生成"></a>2.2 智能体与代码自动生成</h3><p>第二层变化发生在“写代码”本身。给出目标 URL 与字段需求，AI 编程助手即可产出含请求头、选择器、重试与反爬处理的完整脚本，报错后再自行定位、修改、重跑，一次性任务的效率提升是数量级的。</p>
+<p>更进一步的是 AI 原生浏览器框架（Stagehand、Lightpanda）——只需声明意图，例如“登录后导出近 30 天订单”，浏览器结合 DOM 快照与视觉信息自主决定等待、滚动、点击、翻页，几十行交互脚本被压缩成一句话。</p>
+<h3 id="2-3-边界：什么时候不该用-AI"><a href="#2-3-边界：什么时候不该用-AI" class="headerlink" title="2.3 边界：什么时候不该用 AI"></a>2.3 边界：什么时候不该用 AI</h3><p>AI 不是万能药。<strong>高频、结构稳定、字段明确的页面</strong>用 LLM 提取属于高射炮打蚊子：成本高、延迟大、还不如 <code>lxml</code> 稳定。它真正的甜区是高价值低频的定向数据、频繁改版的长期维护型站点、一次性抓取与原型验证，以及长文这类非结构化内容的字段化。判断标准只有一句：<strong>当规则维护成本大于模型调用成本时，才轮到语义提取上场。</strong></p>
+<h2 id="三、工程突围：工业级底座仍是基石"><a href="#三、工程突围：工业级底座仍是基石" class="headerlink" title="三、工程突围：工业级底座仍是基石"></a>三、工程突围：工业级底座仍是基石</h2><p>在大规模、高并发、严苛反爬的工业场景，传统框架不但没被取代，反而形成了更清晰的分层技术栈。</p>
+<h3 id="3-1-基础层：轻量静态抓取"><a href="#3-1-基础层：轻量静态抓取" class="headerlink" title="3.1 基础层：轻量静态抓取"></a>3.1 基础层：轻量静态抓取</h3><p><code>requests</code>&#x2F;<code>httpx</code> + <code>lxml</code> 是性能天花板最高的一层，<code>lxml</code> 的解析速度通常比 <code>BeautifulSoup</code> 快 5 倍以上，能用 <code>lxml</code> 就别用 <code>bs4</code>，适用于结构稳定的静态 HTML、已逆向成功的接口与小批量数据。关键实践：显式设置 <code>timeout</code> 与重试退避；请求头按真实浏览器的顺序构造（<code>User-Agent</code>、<code>Accept</code>、<code>Accept-Language</code>、<code>Sec-Fetch-*</code> 的顺序本身也是指纹）。</p>
+<h3 id="3-2-渲染层：动态渲染与复杂交互"><a href="#3-2-渲染层：动态渲染与复杂交互" class="headerlink" title="3.2 渲染层：动态渲染与复杂交互"></a>3.2 渲染层：动态渲染与复杂交互</h3><p><code>Playwright</code> 已全面替代 <code>Selenium</code>：多内核（Chromium&#x2F;Firefox&#x2F;WebKit）、内置自动等待、内存占用更低，配合 <code>playwright-stealth</code> 还能隐藏 <code>navigator.webdriver</code> 等自动化特征，适用于 SPA、强反爬站点与需要模拟登录&#x2F;表单&#x2F;点击翻页的复杂交互。关键实践：<strong>默认不渲染</strong>，只在必要请求上显式开启；上下文池化复用，避免每请求新建带来的内存泄漏。</p>
+<h3 id="3-3-调度层：规模化与分布式"><a href="#3-3-调度层：规模化与分布式" class="headerlink" title="3.3 调度层：规模化与分布式"></a>3.3 调度层：规模化与分布式</h3><p><code>Scrapy</code> 仍是批量采集的主流选择：内置异步并发、请求队列、自动去重与 Item Pipeline，配合 <code>scrapy-redis</code> 把调度器与去重集合外置即可多机分布式。追求极致吞吐时，Go 的 <code>Colly</code> 单机每分钟可处理 2~3 万静态页面，静态编译、内存占用低，已是企业级采集的常见底座。</p>
+<h3 id="3-4-混合架构：让快任务别等慢任务"><a href="#3-4-混合架构：让快任务别等慢任务" class="headerlink" title="3.4 混合架构：让快任务别等慢任务"></a>3.4 混合架构：让快任务别等慢任务</h3><p>最实用的生产形态是“<strong>Scrapy 管调度与存储 + Playwright 管渲染</strong>”：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同一个 Spider 内按需切换渲染</span></span><br><span class="line"><span class="keyword">yield</span> scrapy.Request(url, meta=&#123;<span class="string">&quot;playwright&quot;</span>: <span class="literal">True</span>, <span class="string">&quot;playwright_page_goto_kwargs&quot;</span>: &#123;<span class="string">&quot;wait_until&quot;</span>: <span class="string">&quot;domcontentloaded&quot;</span>&#125;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 双队列调度：静态请求高优先级，渲染请求低优先级独立并发</span></span><br><span class="line">custom_settings = &#123;</span><br><span class="line">    <span class="string">&quot;PLAYWRIGHT_ABORT_REQUEST&quot;</span>: <span class="keyword">lambda</span> req: req.resource_type <span class="keyword">in</span> &#123;<span class="string">&quot;image&quot;</span>, <span class="string">&quot;media&quot;</span>, <span class="string">&quot;font&quot;</span>&#125;,</span><br><span class="line">    <span class="string">&quot;CONCURRENT_REQUESTS&quot;</span>: <span class="number">64</span>,</span><br><span class="line">    <span class="string">&quot;CONCURRENT_REQUESTS_PER_DOMAIN&quot;</span>: <span class="number">8</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要点是把两类请求拆成两条队列：HTTP 请求走高优先级、高并发；渲染请求走独立低并发队列，并限制单域名的浏览器上下文数量，防止慢任务把快任务堵死。</p>
+<h2 id="四、对抗与合规：成本已经工程化"><a href="#四、对抗与合规：成本已经工程化" class="headerlink" title="四、对抗与合规：成本已经工程化"></a>四、对抗与合规：成本已经工程化</h2><p>今天的反爬已是“网络层—环境层—行为层—业务层”的四层矩阵：TLS 指纹能识别绝大多数未打补丁的客户端，数据中心 IP 被系统性封禁，鼠标轨迹与停留时长被用于机器人判定。对抗侧同样是体系化应对：</p>
+<ul>
+<li><strong>网络层</strong>：<code>curl-impersonate</code> 在 TLS&#x2F;HTTP2 层模拟 Chrome&#x2F;Firefox 特征；高隐匿场景可选 <code>Camoufox</code>（Firefox 内核的反检测补丁版）；代理必须走住宅或移动出口，并用<strong>粘性会话</strong>保证多步骤流程中的身份一致。</li>
+<li><strong>环境层</strong>：完整随机化浏览器指纹（Canvas、WebGL、时区、语言、字体），而不是只伪装 UA。</li>
+<li><strong>行为层</strong>：模拟人类行为序列——非匀速滚动、随机停顿、合理的点击热区分布。</li>
+</ul>
+<p>但技术能做的，不等于可以做的。合规底线要写进工程规范：只采集公开可访问数据、遵守 <code>robots.txt</code>、控制频率不影响对方服务、<strong>绝不绕过身份验证与付费墙、严禁采集个人敏感信息</strong>；并建立采集白名单与日志审计，把合规做成可追溯的流程，而不是口头承诺。</p>
+<h2 id="五、技术选型决策矩阵"><a href="#五、技术选型决策矩阵" class="headerlink" title="五、技术选型决策矩阵"></a>五、技术选型决策矩阵</h2><table>
+<thead>
+<tr>
+<th>业务场景</th>
+<th>推荐技术栈</th>
+<th>核心理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>静态页面、小批量</td>
+<td>requests&#x2F;httpx + lxml</td>
+<td>轻量、快速、性能天花板最高</td>
+</tr>
+<tr>
+<td>大规模、中等反爬</td>
+<td>Scrapy（+ scrapy-redis）</td>
+<td>工业级并发、内置去重与管道、易分布式</td>
+</tr>
+<tr>
+<td>强反爬、动态渲染</td>
+<td>Playwright + stealth 插件</td>
+<td>JS 渲染完备、多内核、特征伪装</td>
+</tr>
+<tr>
+<td>复杂交互、多步流程</td>
+<td>Playwright + 住宅&#x2F;移动代理</td>
+<td>模拟真实用户行为、突破 IP 封锁</td>
+</tr>
+<tr>
+<td>页面频繁变动、非结构化</td>
+<td>LLM 语义提取 &#x2F; AI Agent</td>
+<td>语义理解、抗 DOM 结构变化</td>
+</tr>
+<tr>
+<td>快速开发、低代码</td>
+<td>AI 编程助手（Claude Code 等）</td>
+<td>自然语言生成代码、报错自愈</td>
+</tr>
+<tr>
+<td>超大规模、极致性能</td>
+<td>Go Colly &#x2F; Rust reqwest</td>
+<td>高并发、低内存、静态编译部署</td>
+</tr>
+</tbody></table>
+<p>选型只需记住三句话：<strong>能用接口解决的绝不开浏览器；能用传统解析的绝不碰 AI；只有当规则维护成本超过模型调用成本时，才考虑语义提取。</strong><br><img src="/img/2026/2026-spider.png" alt="2026 年爬虫双轨架构：AI 语义驱动 + 工程化底座"></p>
+<h2 id="结语：爬虫工程师的能力重构"><a href="#结语：爬虫工程师的能力重构" class="headerlink" title="结语：爬虫工程师的能力重构"></a>结语：爬虫工程师的能力重构</h2><p>2026 年的爬虫工程师，正从“规则编写者”转型为“对抗体系搭建者 + AI 采集架构师 + 合规风控负责人”，技能重心从“选择器怎么写”迁移到“Prompt 怎么设计、系统怎么分层、风险怎么兜底”。</p>
+<p>两者不是替代关系，而是<strong>分层互补</strong>：高频稳定的核心数据继续跑在 Scrapy&#x2F;Playwright 底座上，长尾多变的边缘数据交给 LLM 与 Agent。真正的分水岭不在用了什么模型，而在是否把“采集”当成有 SLO、有可观测性、有合规边界的工程系统来建设。落地路径也很清楚：先补齐监控、重试与校验，再把 AI 提取以旁路接入、只处理失败样本，最后才放大语义提取的流量占比。<strong>先稳住，再智能</strong>——这是 2026 年最务实的采集哲学。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Web/" rel="tag"># Web</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/13/How-to-Choose-Between-LangChain-LangGraph-Deep-Agents-Managed-Deep-Agents.md/" rel="prev" title="LangChain、LangGraph、Deep Agents、Managed Deep Agents：四个框架到底该选哪个？">
+                  <i class="fa fa-angle-left"></i> LangChain、LangGraph、Deep Agents、Managed Deep Agents：四个框架到底该选哪个？
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

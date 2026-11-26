@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">110</span>
+          <span class="site-state-item-count">111</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -154,6 +154,154 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/11/26/Crawler-AI-Awakening-2026/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack N @ GitHub">
+      <meta itemprop="description" content="Full stack AI Engineer, focus on: React/Vue, Node.js and .Net">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Jack N @ GitHub">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/26/Crawler-AI-Awakening-2026/" class="post-title-link" itemprop="url">当爬虫学会“思考”：2026 数据采集的 AI 觉醒与工程突围</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-11-26 09:00:00" itemprop="dateCreated datePublished" datetime="2026-11-26T09:00:00+08:00">2026-11-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>2026 年的 Web 生态已和五年前不是同一个物种：AIGC 让页面结构越来越“非标”，反爬从 IP 封禁升级到硬件级指纹与行为建模，改版速度远超选择器的寿命。硬编码规则的爬虫正集体陷入维护泥潭，而 LLM 与 Agent 又在重构采集的底层逻辑。本文不谈概念，只谈落地：哪些活该交给模型，哪些活必须留在工程底座上。</p>
+</blockquote>
+<p><img src="/img/2026/Crawler-AI-2026.png" alt="2026 年爬虫双轨架构：AI 语义驱动 + 工程化底座"></p>
+<h2 id="一、范式转移：为什么旧脚本集体失效"><a href="#一、范式转移：为什么旧脚本集体失效" class="headerlink" title="一、范式转移：为什么旧脚本集体失效"></a>一、范式转移：为什么旧脚本集体失效</h2><p>爬虫技术的每一次迭代，都对应 Web 侧的一次“反制”。今天的压力来自三处：</p>
+<ol>
+<li><strong>页面结构不再稳定</strong>。模板化站点大量减少，同一业务的不同页面可能由不同框架渲染，甚至由 AI 动态生成布局，CSS&#x2F;XPath 的路径假设随时作废。</li>
+<li><strong>风控进入硬件级</strong>。TLS、Canvas&#x2F;WebGL、字体指纹构成环境画像，鼠标轨迹、滚动节奏构成行为画像，“改个 UA”早已没有意义。</li>
+<li><strong>维护成本指数上升</strong>。中等规模项目里，选择器维护常占全部工作量的 60% 以上，每次改版都是一次线上事故。</li>
+</ol>
+<p>传统爬虫的本质是<strong>把对页面结构的假设写死在代码里</strong>，假设一变，代码即失效。AI 带来的变化，是把这份假设从“代码”搬进了“模型”——由模型在运行时理解语义，而不是由开发者预先猜测 DOM。</p>
+<h2 id="二、AI-觉醒：让模型承担决策"><a href="#二、AI-觉醒：让模型承担决策" class="headerlink" title="二、AI 觉醒：让模型承担决策"></a>二、AI 觉醒：让模型承担决策</h2><h3 id="2-1-LLM-语义化提取"><a href="#2-1-LLM-语义化提取" class="headerlink" title="2.1 LLM 语义化提取"></a>2.1 LLM 语义化提取</h3><p>最直接的做法：不再写选择器，而是把精简后的 HTML（或页面截图）交给大模型，用结构化 Prompt 让它输出 JSON。它对 DOM 微调有极强鲁棒性，因为模型看的是“这是一张商品卡，标题在这、价格在那”，而不是 <code>div.list &gt; div:nth-child(3) &gt; span</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Product</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    title: <span class="built_in">str</span> = Field(description=<span class="string">&quot;商品名称&quot;</span>)</span><br><span class="line">    price: <span class="built_in">float</span> = Field(description=<span class="string">&quot;现价，数字类型&quot;</span>)</span><br><span class="line">    currency: <span class="built_in">str</span> = Field(default=<span class="string">&quot;CNY&quot;</span>)</span><br><span class="line"></span><br><span class="line">SCHEMA = Product.model_json_schema()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract</span>(<span class="params">html: <span class="built_in">str</span></span>) -&gt; Product:</span><br><span class="line">    resp = client.chat.completions.create(</span><br><span class="line">        model=<span class="string">&quot;gpt-5-mini&quot;</span>,</span><br><span class="line">        response_format=&#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;json_object&quot;</span>&#125;,</span><br><span class="line">        messages=[</span><br><span class="line">            &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;你是数据提取器，只输出符合 schema 的 JSON。&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">f&quot;schema: <span class="subst">&#123;SCHEMA&#125;</span>\n\nHTML:\n<span class="subst">&#123;html[:<span class="number">20000</span>]&#125;</span>&quot;</span>&#125;,</span><br><span class="line">        ],</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> Product.model_validate_json(resp.choices[<span class="number">0</span>].message.content)</span><br></pre></td></tr></table></figure>
+
+<p>三个必须正视的代价：<strong>Token 成本</strong>（先做 HTML 清洗，去 script&#x2F;style&#x2F;注释、只留有文本的节点，通常能压到原始体积的 10%~20%）、<strong>延迟</strong>（单页百毫秒到数秒，不适合高频采集）、<strong>幻觉</strong>（实测约 5% 的字段会“编造”或错位）。所以生产环境必须用 Pydantic 做类型与范围校验，校验失败的记录进人工复核队列，而不是直接入库。</p>
+<h3 id="2-2-智能体与代码自动生成"><a href="#2-2-智能体与代码自动生成" class="headerlink" title="2.2 智能体与代码自动生成"></a>2.2 智能体与代码自动生成</h3><p>第二层变化发生在“写代码”本身。给出目标 URL 与字段需求，AI 编程助手即可产出含请求头、选择器、重试与反爬处理的完整脚本，报错后再自行定位、修改、重跑，一次性任务的效率提升是数量级的。</p>
+<p>更进一步的是 AI 原生浏览器框架（Stagehand、Lightpanda）——只需声明意图，例如“登录后导出近 30 天订单”，浏览器结合 DOM 快照与视觉信息自主决定等待、滚动、点击、翻页，几十行交互脚本被压缩成一句话。</p>
+<h3 id="2-3-边界：什么时候不该用-AI"><a href="#2-3-边界：什么时候不该用-AI" class="headerlink" title="2.3 边界：什么时候不该用 AI"></a>2.3 边界：什么时候不该用 AI</h3><p>AI 不是万能药。<strong>高频、结构稳定、字段明确的页面</strong>用 LLM 提取属于高射炮打蚊子：成本高、延迟大、还不如 <code>lxml</code> 稳定。它真正的甜区是高价值低频的定向数据、频繁改版的长期维护型站点、一次性抓取与原型验证，以及长文这类非结构化内容的字段化。判断标准只有一句：<strong>当规则维护成本大于模型调用成本时，才轮到语义提取上场。</strong></p>
+<h2 id="三、工程突围：工业级底座仍是基石"><a href="#三、工程突围：工业级底座仍是基石" class="headerlink" title="三、工程突围：工业级底座仍是基石"></a>三、工程突围：工业级底座仍是基石</h2><p>在大规模、高并发、严苛反爬的工业场景，传统框架不但没被取代，反而形成了更清晰的分层技术栈。</p>
+<h3 id="3-1-基础层：轻量静态抓取"><a href="#3-1-基础层：轻量静态抓取" class="headerlink" title="3.1 基础层：轻量静态抓取"></a>3.1 基础层：轻量静态抓取</h3><p><code>requests</code>&#x2F;<code>httpx</code> + <code>lxml</code> 是性能天花板最高的一层，<code>lxml</code> 的解析速度通常比 <code>BeautifulSoup</code> 快 5 倍以上，能用 <code>lxml</code> 就别用 <code>bs4</code>，适用于结构稳定的静态 HTML、已逆向成功的接口与小批量数据。关键实践：显式设置 <code>timeout</code> 与重试退避；请求头按真实浏览器的顺序构造（<code>User-Agent</code>、<code>Accept</code>、<code>Accept-Language</code>、<code>Sec-Fetch-*</code> 的顺序本身也是指纹）。</p>
+<h3 id="3-2-渲染层：动态渲染与复杂交互"><a href="#3-2-渲染层：动态渲染与复杂交互" class="headerlink" title="3.2 渲染层：动态渲染与复杂交互"></a>3.2 渲染层：动态渲染与复杂交互</h3><p><code>Playwright</code> 已全面替代 <code>Selenium</code>：多内核（Chromium&#x2F;Firefox&#x2F;WebKit）、内置自动等待、内存占用更低，配合 <code>playwright-stealth</code> 还能隐藏 <code>navigator.webdriver</code> 等自动化特征，适用于 SPA、强反爬站点与需要模拟登录&#x2F;表单&#x2F;点击翻页的复杂交互。关键实践：<strong>默认不渲染</strong>，只在必要请求上显式开启；上下文池化复用，避免每请求新建带来的内存泄漏。</p>
+<h3 id="3-3-调度层：规模化与分布式"><a href="#3-3-调度层：规模化与分布式" class="headerlink" title="3.3 调度层：规模化与分布式"></a>3.3 调度层：规模化与分布式</h3><p><code>Scrapy</code> 仍是批量采集的主流选择：内置异步并发、请求队列、自动去重与 Item Pipeline，配合 <code>scrapy-redis</code> 把调度器与去重集合外置即可多机分布式。追求极致吞吐时，Go 的 <code>Colly</code> 单机每分钟可处理 2~3 万静态页面，静态编译、内存占用低，已是企业级采集的常见底座。</p>
+<h3 id="3-4-混合架构：让快任务别等慢任务"><a href="#3-4-混合架构：让快任务别等慢任务" class="headerlink" title="3.4 混合架构：让快任务别等慢任务"></a>3.4 混合架构：让快任务别等慢任务</h3><p>最实用的生产形态是“<strong>Scrapy 管调度与存储 + Playwright 管渲染</strong>”：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同一个 Spider 内按需切换渲染</span></span><br><span class="line"><span class="keyword">yield</span> scrapy.Request(url, meta=&#123;<span class="string">&quot;playwright&quot;</span>: <span class="literal">True</span>, <span class="string">&quot;playwright_page_goto_kwargs&quot;</span>: &#123;<span class="string">&quot;wait_until&quot;</span>: <span class="string">&quot;domcontentloaded&quot;</span>&#125;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 双队列调度：静态请求高优先级，渲染请求低优先级独立并发</span></span><br><span class="line">custom_settings = &#123;</span><br><span class="line">    <span class="string">&quot;PLAYWRIGHT_ABORT_REQUEST&quot;</span>: <span class="keyword">lambda</span> req: req.resource_type <span class="keyword">in</span> &#123;<span class="string">&quot;image&quot;</span>, <span class="string">&quot;media&quot;</span>, <span class="string">&quot;font&quot;</span>&#125;,</span><br><span class="line">    <span class="string">&quot;CONCURRENT_REQUESTS&quot;</span>: <span class="number">64</span>,</span><br><span class="line">    <span class="string">&quot;CONCURRENT_REQUESTS_PER_DOMAIN&quot;</span>: <span class="number">8</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要点是把两类请求拆成两条队列：HTTP 请求走高优先级、高并发；渲染请求走独立低并发队列，并限制单域名的浏览器上下文数量，防止慢任务把快任务堵死。</p>
+<h2 id="四、对抗与合规：成本已经工程化"><a href="#四、对抗与合规：成本已经工程化" class="headerlink" title="四、对抗与合规：成本已经工程化"></a>四、对抗与合规：成本已经工程化</h2><p>今天的反爬已是“网络层—环境层—行为层—业务层”的四层矩阵：TLS 指纹能识别绝大多数未打补丁的客户端，数据中心 IP 被系统性封禁，鼠标轨迹与停留时长被用于机器人判定。对抗侧同样是体系化应对：</p>
+<ul>
+<li><strong>网络层</strong>：<code>curl-impersonate</code> 在 TLS&#x2F;HTTP2 层模拟 Chrome&#x2F;Firefox 特征；高隐匿场景可选 <code>Camoufox</code>（Firefox 内核的反检测补丁版）；代理必须走住宅或移动出口，并用<strong>粘性会话</strong>保证多步骤流程中的身份一致。</li>
+<li><strong>环境层</strong>：完整随机化浏览器指纹（Canvas、WebGL、时区、语言、字体），而不是只伪装 UA。</li>
+<li><strong>行为层</strong>：模拟人类行为序列——非匀速滚动、随机停顿、合理的点击热区分布。</li>
+</ul>
+<p>但技术能做的，不等于可以做的。合规底线要写进工程规范：只采集公开可访问数据、遵守 <code>robots.txt</code>、控制频率不影响对方服务、<strong>绝不绕过身份验证与付费墙、严禁采集个人敏感信息</strong>；并建立采集白名单与日志审计，把合规做成可追溯的流程，而不是口头承诺。</p>
+<h2 id="五、技术选型决策矩阵"><a href="#五、技术选型决策矩阵" class="headerlink" title="五、技术选型决策矩阵"></a>五、技术选型决策矩阵</h2><table>
+<thead>
+<tr>
+<th>业务场景</th>
+<th>推荐技术栈</th>
+<th>核心理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>静态页面、小批量</td>
+<td>requests&#x2F;httpx + lxml</td>
+<td>轻量、快速、性能天花板最高</td>
+</tr>
+<tr>
+<td>大规模、中等反爬</td>
+<td>Scrapy（+ scrapy-redis）</td>
+<td>工业级并发、内置去重与管道、易分布式</td>
+</tr>
+<tr>
+<td>强反爬、动态渲染</td>
+<td>Playwright + stealth 插件</td>
+<td>JS 渲染完备、多内核、特征伪装</td>
+</tr>
+<tr>
+<td>复杂交互、多步流程</td>
+<td>Playwright + 住宅&#x2F;移动代理</td>
+<td>模拟真实用户行为、突破 IP 封锁</td>
+</tr>
+<tr>
+<td>页面频繁变动、非结构化</td>
+<td>LLM 语义提取 &#x2F; AI Agent</td>
+<td>语义理解、抗 DOM 结构变化</td>
+</tr>
+<tr>
+<td>快速开发、低代码</td>
+<td>AI 编程助手（Claude Code 等）</td>
+<td>自然语言生成代码、报错自愈</td>
+</tr>
+<tr>
+<td>超大规模、极致性能</td>
+<td>Go Colly &#x2F; Rust reqwest</td>
+<td>高并发、低内存、静态编译部署</td>
+</tr>
+</tbody></table>
+<p>选型只需记住三句话：<strong>能用接口解决的绝不开浏览器；能用传统解析的绝不碰 AI；只有当规则维护成本超过模型调用成本时，才考虑语义提取。</strong><br><img src="/img/2026/2026-spider.png" alt="2026 年爬虫双轨架构：AI 语义驱动 + 工程化底座"></p>
+<h2 id="结语：爬虫工程师的能力重构"><a href="#结语：爬虫工程师的能力重构" class="headerlink" title="结语：爬虫工程师的能力重构"></a>结语：爬虫工程师的能力重构</h2><p>2026 年的爬虫工程师，正从“规则编写者”转型为“对抗体系搭建者 + AI 采集架构师 + 合规风控负责人”，技能重心从“选择器怎么写”迁移到“Prompt 怎么设计、系统怎么分层、风险怎么兜底”。</p>
+<p>两者不是替代关系，而是<strong>分层互补</strong>：高频稳定的核心数据继续跑在 Scrapy&#x2F;Playwright 底座上，长尾多变的边缘数据交给 LLM 与 Agent。真正的分水岭不在用了什么模型，而在是否把“采集”当成有 SLO、有可观测性、有合规边界的工程系统来建设。落地路径也很清楚：先补齐监控、重试与校验，再把 AI 提取以旁路接入、只处理失败样本，最后才放大语义提取的流量占比。<strong>先稳住，再智能</strong>——这是 2026 年最务实的采集哲学。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2647,104 +2795,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://jackniu81.github.io/2026/10/11/Algorithm-House-Robber/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jack">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jack N @ GitHub">
-      <meta itemprop="description" content="Full stack AI Engineer, focus on: React/Vue, Node.js and .Net">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Jack N @ GitHub">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/10/11/Algorithm-House-Robber/" class="post-title-link" itemprop="url">算法 - 打家劫舍</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-10-11 13:45:02" itemprop="dateCreated datePublished" datetime="2026-10-11T13:45:02+08:00">2026-10-11</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="1-题目"><a href="#1-题目" class="headerlink" title="1. 题目"></a>1. 题目</h1><p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是<strong>相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警</strong>。</p>
-<p>给定一个代表每个房屋存放金额的非负整数数组，计算你<strong>不触动警报装置</strong>的情况下，一夜之内能够偷窃到的最高金额。</p>
-<p>示例:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3,1]</span><br><span class="line">输出: 4</span><br><span class="line">解释: 偷 1 号(=1) 和 3 号(=3) 号房屋，1 + 3 = 4。</span><br><span class="line"></span><br><span class="line">输入: [2,7,9,3,1]</span><br><span class="line">输出: 12</span><br><span class="line">解释: 偷 1、3、5 号房屋，2 + 9 + 1 = 12。</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-解题思路"><a href="#2-解题思路" class="headerlink" title="2. 解题思路"></a>2. 解题思路</h1><p>经典「选&#x2F;不选」线性 DP。</p>
-<h2 id="2-1-状态定义"><a href="#2-1-状态定义" class="headerlink" title="2.1 状态定义"></a>2.1 状态定义</h2><p><code>dp[i]</code> &#x3D; 考虑到第 i 间房时的最高金额。对第 i 间房有两种选择：</p>
-<ul>
-<li><strong>不偷 i</strong>：<code>dp[i] = dp[i-1]</code>（沿用前一间的最优）。</li>
-<li><strong>偷 i</strong>：则不能偷 i-1，<code>dp[i] = dp[i-2] + nums[i]</code>。</li>
-</ul>
-<p>转移：<code>dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code>。</p>
-<ul>
-<li>时间复杂度：O(n)，空间复杂度：O(n) → 优化到 O(1)。</li>
-</ul>
-<h2 id="2-2-滚动变量"><a href="#2-2-滚动变量" class="headerlink" title="2.2 滚动变量"></a>2.2 滚动变量</h2><p>只用两个变量 <code>prev</code>(dp[i-2]) 与 <code>curr</code>(dp[i-1]) 交替更新，无需数组：每步 <code>([prev, curr] = [curr, max(curr, prev + num)])</code>。</p>
-<h1 id="3-TypeScript-实现"><a href="#3-TypeScript-实现" class="headerlink" title="3. TypeScript 实现"></a>3. TypeScript 实现</h1><h2 id="3-1-O-1-空间（推荐）"><a href="#3-1-O-1-空间（推荐）" class="headerlink" title="3.1 O(1) 空间（推荐）"></a>3.1 O(1) 空间（推荐）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">rob</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> prev = <span class="number">0</span>; <span class="comment">// dp[i-2]</span></span><br><span class="line">    <span class="keyword">let</span> curr = <span class="number">0</span>; <span class="comment">// dp[i-1]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> num <span class="keyword">of</span> nums) &#123;</span><br><span class="line">        <span class="keyword">const</span> next = <span class="title class_">Math</span>.<span class="title function_">max</span>(curr, prev + num);</span><br><span class="line">        prev = curr;</span><br><span class="line">        curr = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">rob</span>([<span class="number">2</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">3</span>, <span class="number">1</span>])); <span class="comment">// 12</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-显式-DP-数组（便于理解）"><a href="#3-2-显式-DP-数组（便于理解）" class="headerlink" title="3.2 显式 DP 数组（便于理解）"></a>3.2 显式 DP 数组（便于理解）</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">robDP</span>(<span class="params"><span class="attr">nums</span>: <span class="built_in">number</span>[]</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> n = nums.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (n === <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(n).<span class="title function_">fill</span>(<span class="number">0</span>);</span><br><span class="line">    dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(dp[i - <span class="number">1</span>], (dp[i - <span class="number">2</span>] ?? <span class="number">0</span>) + nums[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="4-面试延伸"><a href="#4-面试延伸" class="headerlink" title="4. 面试延伸"></a>4. 面试延伸</h1><ul>
-<li><strong>进阶 II：环形街道（House Robber II）</strong>——首尾相邻不能同时偷，拆成「不偷首」和「不偷尾」两个线性子问题取 max，<code>max(rob(nums[0..n-2]), rob(nums[1..n-1]))</code>。</li>
-<li><strong>进阶 III：树形 DP（House Robber III）</strong>——在二叉树上做「偷当前根 vs 偷左右子」的决策，后序 DFS 返回 <code>[不偷, 偷]</code> 一对值，是树形 DP 模板。</li>
-<li>本题是「最大子序列和 &#x2F; 股票买卖」等同族「每步二选一」DP 的原型，掌握状态定义 + 滚动优化即可通吃。</li>
-</ul>
-<blockquote>
-<p>难度：中等 | LeetCode 198 | 线性 DP</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
