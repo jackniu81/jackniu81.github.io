@@ -986,6 +986,16 @@ Redis：<code>SET key value NX PX 30000</code>，value 用唯一 token，释放�
 <li><strong>红黑树/AVL</strong>：二叉，高度大 → 磁盘 IO 次数多，不适合磁盘存储
 补充：PostgreSQL 默认同样用 B-Tree（B+ 树变体），另有 GIN/GiST/BRIN 应对 JSONB、全文、地理、超大时序表。</li>
 </ul>
+<h3>81.1 ## 坑点速记（笔试秒选）</h3>
+<ol>
+<li>不要在索引列运算：<code>date(create_time) = xxx</code> ❌</li>
+<li>字符串数字，不要不加引号：<code>phone=138xxx</code> ❌</li>
+<li><code>like &#39;%abc&#39;</code> 不走索引；<code>like &#39;abc%&#39;</code> ✅</li>
+<li><code>is null</code> 可以走索引，只是 NULL 值多的时候效果差</li>
+<li>联合索引，等值放前面，范围放后面</li>
+<li>select * 破坏覆盖索引，尽量只查需要字段</li>
+<li>order by 字段不在索引，大概率 filesort</li>
+</ol>
 <h3>82. 什么是最左前缀原则和索引下推（ICP）？</h3>
 <p><strong>答案：</strong>
 对 <code>(a, b, c)</code> 索引：</p>
