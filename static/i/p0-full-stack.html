@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全栈 常见面试题（附答案，侧重 React）</title>
+<style>
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8b949e; --border:#30363d;
+          --code-bg:#161b22; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+         "Hiragino Sans GB","Microsoft YaHei",sans-serif; line-height:1.7; }
+  .wrap { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+  h1,h2,h3,h4 { line-height:1.3; margin-top:1.8em; }
+  h1 { border-bottom:1px solid var(--border); padding-bottom:.3em; margin-top:0; }
+  h2 { border-bottom:1px solid var(--border); padding-bottom:.2em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+         background:var(--code-bg); padding:.2em .4em; border-radius:6px; font-size:.9em; }
+  pre { background:var(--code-bg); padding:16px; border-radius:8px; overflow-x:auto;
+        border:1px solid var(--border); }
+  pre code { background:none; padding:0; font-size:.85em; }
+  blockquote { margin:1em 0; padding:0 1em; color:var(--muted);
+               border-left:.25em solid var(--border); }
+  table { border-collapse:collapse; display:block; overflow-x:auto; margin:1em 0; }
+  th,td { border:1px solid var(--border); padding:8px 12px; }
+  th { background:var(--code-bg); }
+  hr { border:none; border-top:1px solid var(--border); margin:2em 0; }
+  .top-link { display:inline-block; margin-bottom:20px; font-size:.9em; }
+  ul,ol { padding-left:2em; }
+  .group { margin:1.5em 0; }
+  .group ul { padding-left:0; list-style:none; }
+  .group li { margin:.4em 0; }
+  .group .src { color:var(--muted); font-size:.85em; margin-left:.5em; }
+  .meta { color:var(--muted); font-size:.9em; margin-bottom:1em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="top-link" href="index.html">← 返回索引</a>
+<h1>全栈 常见面试题（附答案，侧重 React）</h1>
+<h2>一、全栈基础与架构</h2>
+<h3>1. 一个现代 React 全栈应用通常由哪些部分组成？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>前端</strong>：React + 路由（React Router / Next.js App Router）+ 状态管理（服务端状态用 TanStack Query，客户端状态用 Zustand/Jotai）+ 构建工具（Vite / Next.js）</li>
+<li><strong>BFF / API 层</strong>：Next.js Route Handlers、NestJS 或 Express，负责鉴权、聚合下游服务、裁剪字段</li>
+<li><strong>领域服务</strong>：按业务边界拆分的服务，服务间同步调用（HTTP/gRPC）或异步消息（Kafka/RabbitMQ）</li>
+<li><strong>数据层</strong>：PostgreSQL / MySQL 存核心数据，Redis 做缓存 / 会话 / 分布式锁，对象存储放文件</li>
+<li><strong>基础设施</strong>：Docker + K8s、CI/CD、日志 / 指标 / 链路追踪、灰度发布</li>
+</ul>
+<p>面试表达要点：说清「每一层的职责 + 层与层之间的契约（OpenAPI / 共享类型）」，比罗列技术栈更加分。</p>
+<h3>2. CSR、SSR、SSG、ISR、RSC 有什么区别？如何选型？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>渲染位置</th>
+<th>首屏/SEO</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CSR</td>
+<td>浏览器</td>
+<td>首屏慢、SEO 差</td>
+<td>后台管理系统、登录后内网应用</td>
+</tr>
+<tr>
+<td>SSR</td>
+<td>服务端每次请求渲染</td>
+<td>首屏快、SEO 好</td>
+<td>需要 SEO 且内容个性化（订单页、个人主页）</td>
+</tr>
+<tr>
+<td>SSG</td>
+<td>构建时生成静态 HTML</td>
+<td>最快、可 CDN</td>
+<td>文档、博客、营销页</td>
+</tr>
+<tr>
+<td>ISR</td>
+<td>静态 + 定时/按需再生成</td>
+<td>快且可更新</td>
+<td>商品详情、资讯列表等「准静态」页面</td>
+</tr>
+<tr>
+<td>RSC</td>
+<td>服务端组件，只把交互部分下发 JS</td>
+<td>减少客户端 bundle</td>
+<td>Next.js App Router 默认模式</td>
+</tr>
+</tbody></table>
+<p>选型原则：<strong>先问 SEO 与首屏要求，再问数据实时性，最后看服务器成本</strong>。同一应用可按路由混用，比如营销页 SSG、列表页 ISR、后台 CSR。</p>
+<h3>3. 什么是 BFF？全栈开发中如何避免 BFF 变成「第二套业务逻辑」？</h3>
+<p><strong>答案：</strong>
+BFF（Backend for Frontend）是面向具体端（Web / App / 小程序）的聚合层，负责：鉴权与租户上下文、聚合多个下游服务、裁剪与适配字段、做端上特有的缓存。</p>
+<p>避免越界的原则：</p>
+<ul>
+<li>BFF 只做<strong>编排与适配</strong>，业务规则（价格计算、库存扣减、状态机流转）必须留在领域服务</li>
+<li>明确禁止 BFF 直连其他服务的数据库</li>
+<li>用契约测试 / OpenAPI 保证 BFF 与下游的接口稳定</li>
+<li>一个端一个 BFF，而不是一个 BFF 服务所有端</li>
+</ul>
+<h3>4. 全栈项目如何做 monorepo 与前后端类型共享？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>工具</strong>：pnpm workspace + Turborepo（任务编排与缓存），或 Nx</li>
+<li><strong>典型目录</strong>：<code>apps/web</code>（React）、<code>apps/api</code>（Node）、<code>packages/ui</code>、<code>packages/shared</code>（DTO、zod schema、常量）、<code>packages/api-client</code>（自动生成的请求 SDK）</li>
+<li><strong>类型打通</strong>：OpenAPI 生成客户端（openapi-typescript / orval），或直接用 tRPC / ts-rest 共享类型；Node 侧用 zod 在边界校验并导出 <code>z.infer</code> 类型给前端</li>
+<li><strong>收益</strong>：接口改动编译期就报错，避免「后端加字段、前端还在用旧结构」的契约漂移</li>
+<li><strong>注意</strong>：共享包只放类型与纯函数，不要放依赖 Node API 的代码到前端</li>
+</ul>
+<h2>二、React（重点）</h2>
+<h3>5. React 的渲染流程是怎样的？虚拟 DOM 到底解决了什么问题？</h3>
+<p><strong>答案：</strong>
+流程：<code>setState</code> → 调度（Scheduler）→ 构建新的 Fiber 树（render 阶段，可中断）→ 与当前树 diff → commit 阶段一次性提交 DOM 变更 → 执行 layout effect 与 passive effect。</p>
+<p>虚拟 DOM 的价值不是「比原生 DOM 快」，而是：</p>
+<ul>
+<li>让开发者用<strong>声明式</strong>方式描述 UI，不用手工追踪该改哪个节点</li>
+<li>提供跨平台抽象（Web / Native / Canvas）</li>
+<li>把多次状态更新合并成一次批量 DOM 提交
+真实性能收益来自「减少 DOM 操作次数 + 批量更新 + 可预测的更新路径」，而非 VDOM diff 本身。</li>
+</ul>
+<h3>6. 什么是 Fiber？为什么 React 要重写协调器？</h3>
+<p><strong>答案：</strong>
+Fiber 是把渲染工作拆成可中断、可恢复的链表节点（每个节点保存 <code>return/child/sibling</code> 指针、优先级、副作用标记）。旧版 Stack Reconciler 递归渲染不可中断，一棵大树会长时间占用主线程造成卡顿；Fiber 支持：</p>
+<ul>
+<li><strong>时间切片</strong>：把渲染拆成 5ms 左右的小片，让出主线程给输入与动画</li>
+<li><strong>优先级调度</strong>：<code>startTransition</code>、<code>useDeferredValue</code> 让低优先级更新可被打断/丢弃</li>
+<li><strong>双缓冲</strong>：current 树与 workInProgress 树交替，保证提交阶段原子性
+render 阶段可中断，commit 阶段不可中断——这是并发渲染的根本约定。</li>
+</ul>
+<h3>7. React 18/19 的并发特性解决什么问题？<code>startTransition</code> 和 <code>useDeferredValue</code> 怎么用？</h3>
+<p><strong>答案：</strong>
+解决「一次高开销更新阻塞用户输入」。并发渲染让低优先级更新可被打断，输入始终流畅。</p>
+<pre><code class="language-tsx">const [query, setQuery] = useState(&#39;&#39;);
+const [list, setList] = useState&lt;Item[]&gt;([]);
+const deferredQuery = useDeferredValue(query); // 列表基于延后的值渲染
+
+// 或者显式标记低优先级更新
+startTransition(() =&gt; setList(computeHeavyList(query)));
+</code></pre>
+<p>区别：<code>useDeferredValue</code> 适合「基于某个值派生渲染」，<code>startTransition</code> 适合「主动触发的重更新」。两者都不能让计算变快，只是让 UI 不被阻塞，重计算仍应放到 <code>useMemo</code> / Worker / 服务端。React 19 还提供 <code>useTransition</code> 的 <code>isPending</code>，用于展示「加载中」的过渡态。</p>
+<h3>8. Hooks 的实现原理是什么？为什么不能有条件地调用 Hook？</h3>
+<p><strong>答案：</strong>
+Hooks 在函数组件对应的 Fiber 上维护一条<strong>单向链表</strong>（<code>memoizedState</code>），每次渲染按<strong>调用顺序</strong>依次读取/写入节点。<code>useState</code> 取链表第 n 个节点存 state，<code>useEffect</code> 取第 n 个节点存 effect 与依赖。
+如果放在 <code>if</code> 里：某次渲染跳过了某个 Hook，后续 Hook 的位置整体错位，读到别人的 state 或报 &quot;Rendered fewer hooks than expected&quot;。所以规则是：<strong>只在顶层调用</strong>，循环/条件逻辑放到 Hook 内部（如 <code>useEffect</code> 里 <code>if</code>）。
+补充：<code>useState</code> 初始值只在首次挂载生效，这也解释了为什么后续传值被忽略。</p>
+<h3>9. <code>setState</code> 之后为什么拿不到新值？批处理（batching）怎么理解？</h3>
+<p><strong>答案：</strong>
+<code>setState</code> 是<strong>请求更新</strong>而非立即赋值，更新在本次事件处理结束后统一调度。React 18 起所有场景（setTimeout、Promise、原生事件）默认自动批处理，只在 <code>flushSync</code> 中同步刷新。</p>
+<pre><code class="language-tsx">setCount(count + 1);
+setCount(count + 1);            // 两次都基于同一个旧 count，只 +1
+setCount(c =&gt; c + 1);
+setCount(c =&gt; c + 1);           // 函数式更新，+2
+</code></pre>
+<p>需要读新值时：用函数式更新、在 <code>useEffect</code> 中监听，或把派生值当普通变量直接算（不要为了同步读值而额外加 state）。</p>
+<h3>10. <code>useEffect</code> 和 <code>useLayoutEffect</code> 有什么区别？effect 的执行时机是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>useEffect</code>：commit 之后<strong>异步</strong>执行（绘制后），不阻塞浏览器绘制；适合请求、订阅、日志</li>
+<li><code>useLayoutEffect</code>：DOM 变更后、浏览器绘制<strong>前</strong>同步执行；适合测量布局、避免闪烁（如 tooltip 定位）</li>
+<li>SSR 中 <code>useLayoutEffect</code> 会告警（没有 DOM），应在浏览器端使用；<code>useEffect</code> 在 SSR 不执行
+顺序：render → 变更 DOM → <code>useLayoutEffect</code>（清理旧的→执行新的）→ 浏览器绘制 → <code>useEffect</code>。清理函数在依赖变化或卸载时先执行，且执行的是<strong>上一次渲染闭包</strong>中的清理逻辑。</li>
+</ul>
+<h3>11. 为什么 StrictMode 下 effect 会执行两次？这暴露了什么问题？</h3>
+<p><strong>答案：</strong>
+开发环境用严格模式模拟「挂载 → 卸载 → 再挂载」，验证 effect 是否具备<strong>幂等性与清理能力</strong>，为未来 Offscreen / 复用组件做准备。它暴露的问题：</p>
+<ul>
+<li>订阅、定时器、事件监听未清理 → 泄漏</li>
+<li>请求未取消 → 竞态与重复请求</li>
+<li>非幂等的初始化（如重复上报、重复创建连接）
+正确写法：effect 里「建立资源」必须配套「清理资源」；初始化只跑一次的逻辑不要放 effect（可放模块级或由服务端保证幂等）。</li>
+</ul>
+<h3>12. 什么是闭包陷阱（stale closure）？如何避免？</h3>
+<p><strong>答案：</strong>
+effect / 回调里捕获的是<strong>创建时那次渲染</strong>的变量，后续 state 变化不会更新旧闭包。</p>
+<pre><code class="language-tsx">useEffect(() =&gt; {
+  const id = setInterval(() =&gt; setCount(count + 1), 1000); // 永远 +1
+  return () =&gt; clearInterval(id);
+}, []); // 依赖为空 → count 被冻结
+</code></pre>
+<p>解决方案：① 用函数式更新 <code>setCount(c =&gt; c + 1)</code>；② 补全依赖数组；③ 用 <code>useRef</code> 保存最新值；④ 用 <code>useEffectEvent</code>（React 19）或自定义 <code>useLatest</code>；⑤ 事件绑定时用 ref 转发最新回调。</p>
+<h3>13. <code>useMemo</code>、<code>useCallback</code>、<code>React.memo</code> 什么时候真的有用？误用有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>useMemo</code>：缓存<strong>昂贵计算</strong>结果（大数组过滤/排序、派生对象），或需要稳定引用作为依赖</li>
+<li><code>useCallback</code>：把回调传给 <code>memo</code> 子组件 / 作为 effect 依赖时才有意义</li>
+<li><code>React.memo</code>：组件渲染成本高且 props 频繁不变时才有收益
+误用与坑：</li>
+<li>到处加 memo，比较成本 &gt; 渲染成本，还增加心智负担</li>
+<li><code>memo</code> 因 props 引用每次变化而失效（<code>style={{}}</code>、内联回调、<code>items={data.filter(...)}</code>）</li>
+<li>依赖数组写错导致缓存旧值，比不缓存更危险
+推荐做法：先用 React Profiler 找热点，再针对性优化；能用<strong>状态结构</strong>（把 state 下沉、拆分 context）解决的，不靠 memo。</li>
+</ul>
+<h3>14. React 的状态管理如何选型？服务端状态和客户端状态为什么要分开？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>服务端状态</strong>（来自 API 的数据）：TanStack Query / SWR / RTK Query，自带缓存、失效、重试、去重、分页、乐观更新</li>
+<li><strong>客户端状态</strong>：局部用 <code>useState</code>/<code>useReducer</code>；跨组件用 Context；复杂用 Zustand（轻量、selector 订阅）或 Jotai（原子化）；遗留大型项目用 Redux Toolkit</li>
+<li><strong>URL 状态</strong>：筛选、排序、分页、tab 放进 querystring，可分享可回退
+核心观点：<strong>不要把服务端数据搬进 Redux</strong>，否则要自己实现缓存失效、去重、竞态处理，重复造轮子且容易脏数据。</li>
+</ul>
+<h3>15. TanStack Query / SWR 的缓存机制是什么？<code>staleTime</code> 与 <code>gcTime</code> 区别？</h3>
+<p><strong>答案：</strong>
+以 queryKey 为缓存键存快照：</p>
+<ul>
+<li><code>staleTime</code>：数据「新鲜」的时长，期间不发请求；过期后变 stale，在窗口聚焦/重新挂载/网络恢复时后台重取（stale-while-revalidate）</li>
+<li><code>gcTime</code>（原 cacheTime）：没有组件订阅后，缓存保留多久再回收</li>
+<li><code>invalidateQueries</code>：标记失效并立即重取，常配合 mutation 的 <code>onSuccess</code></li>
+<li>其他能力：请求去重（同一 key 并发只发一次）、<code>placeholderData</code>/<code>keepPreviousData</code> 避免分页闪烁、乐观更新（<code>onMutate</code> + 回滚）、无限滚动（<code>useInfiniteQuery</code>）
+实践：写操作成功后精确失效相关 key，而不是 <code>refetch</code> 整个页面。</li>
+</ul>
+<h3>16. 列表为什么要用 <code>key</code>？用数组下标当 key 有什么问题？</h3>
+<p><strong>答案：</strong>
+<code>key</code> 是 React 判断「同一元素在多次渲染间身份」的依据，用于复用 DOM 与组件状态、减少重建。
+用 index 的问题：列表插入/删除/排序后，key 与数据错位 → 组件状态（输入框内容、展开状态、动画）串位，未变化的元素也被重建，性能与正确性双输。
+正确做法：用业务唯一 id；确实没有时用稳定组合键（如 <code>${type}-${id}</code>）。不要用 <code>Math.random()</code> 或每次渲染新建对象作为 key。</p>
+<h3>17. React 的 diff / 协调算法有哪些假设？跨层级移动节点会怎样？</h3>
+<p><strong>答案：</strong>
+启发式规则（O(n)）：</p>
+<ol>
+<li>只做<strong>同层比较</strong>，不跨层级移动；跨层移动视为「删除 + 新建」，状态丢失</li>
+<li><strong>类型不同</strong>直接卸载整棵子树重建（<code>div</code> → <code>span</code> 会重建）</li>
+<li>同层列表靠 <code>key</code> 匹配复用
+面试加分：说明「为什么列表要用 key」正是规则 3；说明「React 不做树编辑距离最小化」是性能取舍，编辑距离算法复杂度 O(n³) 无法接受。</li>
+</ol>
+<h3>18. 受控组件与非受控组件如何选择？表单最佳实践是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>受控：值来自 state，<code>value + onChange</code>，便于实时校验、联动、格式化，但每次输入触发重渲染</li>
+<li>非受控：<code>defaultValue + ref</code>，由 DOM 管理，性能更好，适合简单表单/文件上传
+实践：</li>
+<li>大表单用 React Hook Form / TanStack Form（非受控 + 少量订阅）避免整表重渲染</li>
+<li>表单校验 schema 用 zod，同一份 schema 前后端共用</li>
+<li>受控组件的 <code>value</code> 不能传 <code>undefined</code>（会变非受控并告警）；<code>value={x ?? &#39;&#39;}</code></li>
+<li>提交时用 <code>form</code> 的 <code>onSubmit</code> 而不是按钮 <code>onClick</code>，天然支持回车提交与无障碍</li>
+</ul>
+<h3>19. <code>ref</code> 有哪些用途？React 19 的 ref 有哪些变化？</h3>
+<p><strong>答案：</strong>
+用途：访问 DOM（聚焦、滚动、测量、播放媒体）、保存不触发渲染的可变值（定时器 id、上一次的值）、暴露子组件命令式方法。</p>
+<pre><code class="language-tsx">// React 19：function 组件可直接接收 ref，不再强制 forwardRef
+function Input({ ref, ...props }: { ref?: React.Ref&lt;HTMLInputElement&gt; }) {
+  return &lt;input ref={ref} {...props} /&gt;;
+}
+</code></pre>
+<p>其他变化：<code>useRef</code> 现在<strong>必须传参</strong>；<code>ref</code> 回调支持返回清理函数；<code>useImperativeHandle</code> 仍用于收窄暴露的 API。
+注意：不要用 ref 绕过数据流做状态共享，那是反模式。</p>
+<h3>20. 如何设计一个高质量的自定义 Hook？</h3>
+<p><strong>答案：</strong>
+原则：</p>
+<ul>
+<li><strong>单一职责 + 命名以 use 开头</strong>（lint 规则依赖它做 Hook 规则检查）</li>
+<li>返回值优先用对象（可扩展），只有两个值时可考虑元组（如 <code>[value, setValue]</code>）</li>
+<li>内部处理清理、竞态、错误，对外暴露 loading/error 状态</li>
+<li>不隐藏副作用语义：封装请求的 Hook 要说明何时触发、如何重试</li>
+<li>与 UI 解耦，便于测试；依赖通过参数注入而非全局单例</li>
+</ul>
+<pre><code class="language-tsx">function useDebouncedValue&lt;T&gt;(value: T, delay = 300) {
+  const [v, setV] = useState(value);
+  useEffect(() =&gt; {
+    const id = setTimeout(() =&gt; setV(value), delay);
+    return () =&gt; clearTimeout(id);
+  }, [value, delay]);
+  return v;
+}
+</code></pre>
+<h3>21. React 组件之间有哪些通信方式？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>父子：props / 回调（状态提升）</li>
+<li>深层嵌套：Context（注意拆分 Provider 与 selector 化，避免全树重渲染）、组件组合（children / slot 模式优于 Context）</li>
+<li>兄弟：状态提升到共同父级</li>
+<li>全局：Zustand / Redux / Jotai</li>
+<li>跨路由/可分享：URL 参数</li>
+<li>服务端数据：Query 缓存（天然跨组件共享）</li>
+<li>iframe / 多窗口：postMessage；跨端：BroadcastChannel
+选型顺序：props → 组合 → Context → 状态库，越靠前耦合越低。</li>
+</ul>
+<h3>22. Context 的性能问题是什么？如何避免 Provider 值变化导致全量重渲染？</h3>
+<p><strong>答案：</strong>
+Context 值一变，<strong>所有消费者</strong>都重渲染，即使它们只用到其中一个字段；且 Provider 父组件重渲染会重建 value 对象，引发连锁更新。
+优化手段：</p>
+<ul>
+<li><code>useMemo</code> 稳定 value；<code>useCallback</code> 稳定方法</li>
+<li>按关注点拆成多个 Context（UserContext / ThemeContext），而不是一个大对象</li>
+<li>状态与 dispatch 分离（dispatch 引用稳定）</li>
+<li>高频变化的值不要放 Context（用 Zustand selector 订阅）</li>
+<li>组件组合：把 <code>children</code> 作为 prop 传入，避免 Provider 内部重渲染波及子树</li>
+</ul>
+<h3>23. 错误边界（Error Boundary）能捕获什么？不能捕获什么？</h3>
+<p><strong>答案：</strong>
+能捕获：子树 render、生命周期、构造函数中抛出的错误。
+不能捕获：事件处理器（需 try/catch）、异步代码（Promise/setTimeout）、SSR、错误边界自身。
+实现：类组件 <code>static getDerivedStateFromError</code> + <code>componentDidCatch</code>；函数组件可用 <code>react-error-boundary</code>。
+实践：按路由/区块包裹多个边界（避免一处崩溃白屏）、上报错误到 Sentry、边界提供「重试」；React 19 的 <code>onUncaughtError</code> / <code>onCaughtError</code> 可在根节点统一处理。异步数据错误交给 Suspense + Query 的 error 状态。</p>
+<h3>24. Suspense 与 <code>lazy</code> 如何配合实现代码分割？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-tsx">const Editor = lazy(() =&gt; import(&#39;./Editor&#39;));
+&lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;
+  &lt;Editor /&gt;
+&lt;/Suspense&gt;
+</code></pre>
+<ul>
+<li>路由级分割收益最大（配合 <code>React.lazy</code> 或框架的路由级 code splitting）</li>
+<li>与 Query 结合：<code>useSuspenseQuery</code> + Suspense 让加载态与组件逻辑分离（React 19 的 <code>use(promise)</code> 同理）</li>
+<li>分割粒度不是越细越好：过多 chunk 增加请求数，用打包分析（<code>rollup-plugin-visualizer</code>）判断</li>
+<li>交互预期明确时可 <code>import()</code> 预加载（hover 时 prefetch）</li>
+</ul>
+<h3>25. React 应用性能优化的完整清单是什么？</h3>
+<p><strong>答案：</strong>
+按「测量 → 定位 → 优化」的顺序：</p>
+<ol>
+<li><strong>测量</strong>：React DevTools Profiler 看哪些组件渲染、耗时、为何渲染（props/state/context）；Lighthouse / Web Vitals 看 LCP、INP、CLS</li>
+<li><strong>减少渲染</strong>：状态下沉、组件拆分、<code>memo</code> + 稳定引用、拆分 Context、列表虚拟化</li>
+<li><strong>减少计算</strong>：<code>useMemo</code>、把重计算移到 Worker 或服务端、避免在 render 中创建大对象</li>
+<li><strong>减少包体</strong>：路由级 code splitting、按需引入（图标/图表库）、依赖替换（dayjs 替 moment）、分析重复依赖</li>
+<li><strong>减少网络</strong>：缓存（Query staleTime）、分页/游标、接口聚合（BFF）、预取、图片 <code>srcset</code> + lazy</li>
+<li><strong>提升感知性能</strong>：骨架屏、乐观更新、<code>useTransition</code> 过渡态、prefetch on hover</li>
+</ol>
+<h3>26. 虚拟列表的原理是什么？长列表还有哪些坑？</h3>
+<p><strong>答案：</strong>
+只渲染可视区 + 缓冲区的节点，用占位撑起总高度：</p>
+<ul>
+<li>已知行高：<code>startIndex = floor(scrollTop / itemHeight)</code>，容器 <code>padding-top: startIndex*itemHeight</code></li>
+<li>不定行高：用 ResizeObserver 或估算 + 动态修正（<code>@tanstack/react-virtual</code>、<code>react-window</code>）
+坑与对策：</li>
+<li>滚动中高频 setState → 用 <code>requestAnimationFrame</code> 节流，或直接改 transform</li>
+<li>行内图片加载导致高度抖动 → 预留宽高比</li>
+<li>焦点/输入框被回收 → 提高缓冲区、保持受控状态在父层</li>
+<li>无障碍与搜索（Ctrl+F）失效 → 提供「加载全部」或分页兜底</li>
+<li>排序/筛选后需重置滚动位置</li>
+</ul>
+<h3>27. 竞态请求如何处理？为什么只清理 effect 还不够？</h3>
+<p><strong>答案：</strong>
+场景：快速切换筛选条件，旧请求晚返回覆盖新结果。</p>
+<pre><code class="language-tsx">useEffect(() =&gt; {
+  const ctrl = new AbortController();
+  fetch(`/api/items?q=${q}`, { signal: ctrl.signal })
+    .then(r =&gt; r.json()).then(setItems)
+    .catch(e =&gt; { if (e.name !== &#39;AbortError&#39;) setError(e); });
+  return () =&gt; ctrl.abort();   // 卸载或 q 变化时取消
+}, [q]);
+</code></pre>
+<p>补充手段：请求序号比对（只接受最新一次）、用 Query 库（按 key 去重并只更新当前 key 的数据）、服务端幂等与缓存。注意：清理只解决「不再需要的结果」，若请求有副作用（写操作），必须靠幂等键兜底。</p>
+<h3>28. React 全栈中的鉴权怎么做？Token 存哪里更安全？</h3>
+<p><strong>答案：</strong>
+推荐 <strong>httpOnly + Secure + SameSite Cookie 存 Refresh Token，短期 Access Token 放内存</strong>：</p>
+<ul>
+<li>localStorage 存 token：任何 XSS 都能偷走，且无法被 httpOnly 保护</li>
+<li>Cookie 方案需防 CSRF：<code>SameSite=Lax/Strict</code>、双重提交 token、校验 <code>Origin</code></li>
+<li>BFF 模式最省心：浏览器只与同源 BFF 交互，BFF 持有 token（BFF 模式）
+流程：登录 → 下发 refresh cookie + access token → 401 时静默刷新（并发去重，只发一次刷新请求）→ 登出时服务端吊销 refresh token（存 Redis 黑名单/版本号）。
+其他：路由守卫只做 UI 隐藏，<strong>权限必须在服务端校验</strong>；敏感操作二次验证；token 轮换（rotation）防重放。</li>
+</ul>
+<h3>29. 前端请求层如何设计（拦截器、错误处理、重试、超时）？</h3>
+<p><strong>答案：</strong>
+一层封装，业务只关心数据：</p>
+<ul>
+<li><strong>实例与拦截器</strong>：统一 baseURL、超时、<code>Authorization</code>、<code>X-Request-Id</code>；响应拦截器统一解包 <code>{ code, data, message }</code> 与错误提示</li>
+<li><strong>错误分类</strong>：网络错误 / 4xx（业务错误，不要重试）/ 5xx（可重试）/ 超时；401 触发刷新，403 跳无权限，429 退避</li>
+<li><strong>重试</strong>：只对幂等请求（GET/幂等 PUT）指数退避 + 抖动，避免雪崩</li>
+<li><strong>取消</strong>：传 <code>AbortSignal</code>，组件卸载或条件变化时取消</li>
+<li><strong>去重与缓存</strong>：同一请求合并（Query 库默认做）；GET 可加 ETag</li>
+<li><strong>可观测</strong>：透传 traceId，前端错误带用户与环境信息上报</li>
+<li>类型：接口返回用 zod 校验（尤其第三方 API），避免「后端改了字段前端静默出错」</li>
+</ul>
+<h3>30. React 项目的测试策略是什么？测试金字塔如何落地？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>单元/组件测试</strong>：Vitest + React Testing Library，按用户行为断言（<code>getByRole</code>），不测实现细节</li>
+<li><strong>接口 mock</strong>：MSW 拦截网络层，比 mock 模块更接近真实</li>
+<li><strong>集成/E2E</strong>：Playwright 覆盖登录、下单等关键路径，跑在真实浏览器</li>
+<li><strong>契约测试</strong>：前端用 OpenAPI/Schema 校验 mock 与真实接口一致
+落地点：</li>
+<li>多写「用户可见行为」，少写快照测试（快照一改全红，价值低）</li>
+<li>避免 <code>act</code> 告警：用 <code>findBy*</code> 等异步查询、<code>userEvent</code></li>
+<li>CI 里跑 <code>--coverage</code>，但覆盖率不是目标，关键分支覆盖才有意义</li>
+</ul>
+<h3>31. React 常见反模式有哪些？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>直接修改 state（<code>state.items.push(x)</code>）→ 引用不变，不重渲染；应返回新对象/数组</li>
+<li>把可派生数据放进 state → 双份数据不同步；应直接在 render 中派生</li>
+<li>用 <code>useEffect</code> 做「响应 state 变化再 setState」→ 容易多渲染一轮甚至死循环；应改为事件内更新或 <code>useMemo</code></li>
+<li>用 <code>useEffect</code> 监听 props 变化同步到 state → 优先 key 重置或受控</li>
+<li>一切依赖都写 <code>[]</code> → 闭包陷阱</li>
+<li>在 render 中请求数据（SSR 里会重复、CSR 里会丢竞态）</li>
+<li>过深的 Context 传递 + 巨型 Provider</li>
+<li>用 index 作 key</li>
+<li>组件文件过大、职责混杂 → 拆分容器组件与展示组件</li>
+</ul>
+<h2>三、JavaScript</h2>
+<h3>32. 解释事件循环（Event Loop），浏览器和 Node.js 有何区别？</h3>
+<p><strong>答案：</strong>
+JS 单线程 + 任务队列：执行同步代码 → 清空<strong>微任务</strong>（Promise.then、queueMicrotask、MutationObserver）→ 取一个<strong>宏任务</strong>（setTimeout、I/O、事件）执行 → 再清空微任务。
+浏览器：渲染在微任务清空后的帧时机进行，长任务阻塞渲染。
+Node.js：宏任务分阶段（timers → pending → poll → check → close），每阶段结束清空微任务，<code>process.nextTick</code> 队列优先于 Promise 微任务。
+常见考点：<code>setTimeout(0)</code> 与 <code>Promise.then</code> 顺序；<code>await</code> 之后是微任务；<code>requestAnimationFrame</code> 在渲染前执行。</p>
+<h3>33. 什么是闭包？有哪些典型应用和内存问题？</h3>
+<p><strong>答案：</strong>
+闭包是函数与其词法环境的组合：内层函数引用外层变量，外层执行完变量仍被保留。
+应用：模块私有变量（IIFE）、函数柯里化、防抖节流保存定时器、React Hook 捕获渲染值。
+内存问题：被闭包长期引用的对象无法回收（大数组、DOM、缓存），典型泄漏场景：定时器未清理、事件监听未解绑、全局缓存无限增长、闭包持有已卸载组件。解决：清理副作用、用 <code>WeakMap</code>/<code>WeakRef</code>、大对象用完置空。</p>
+<h3>34. <code>var</code>、<code>let</code>、<code>const</code> 的区别？什么是 TDZ？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>var</code>：函数作用域、变量提升（值为 undefined）、可重复声明、挂到全局对象</li>
+<li><code>let/const</code>：块级作用域、提升但不初始化 → <strong>暂时性死区（TDZ）</strong>，访问抛 ReferenceError；不可重复声明</li>
+<li><code>const</code>：绑定不可重新赋值，但对象/数组内容可变（可用 <code>Object.freeze</code> 浅冻结）
+实践：默认 <code>const</code>，需重赋值用 <code>let</code>，避免 <code>var</code>；循环里 <code>let</code> 每次迭代生成新绑定，这也是 <code>setTimeout</code> 输出 0..4 的原因。</li>
+</ul>
+<h3>35. <code>this</code> 的指向规则是什么？箭头函数有什么不同？</h3>
+<p><strong>答案：</strong>
+优先级从高到低：<code>new</code> 绑定 → 显式绑定（<code>call</code>/<code>apply</code>/<code>bind</code>）→ 隐式绑定（<code>obj.method()</code>）→ 默认绑定（严格模式 undefined，非严格全局对象）。
+箭头函数：没有自己的 <code>this</code>，取定义时外层作用域；也不能 <code>new</code>、没有 <code>arguments</code>、没有 <code>prototype</code>。
+易错点：<code>setTimeout(obj.method)</code> 丢失 this；React 类组件方法需 bind；回调里改用箭头函数或提前保存 <code>const self = this</code>/<code>bind</code>。</p>
+<h3>36. 原型与原型链是什么？<code>new</code> 做了什么？如何实现继承？</h3>
+<p><strong>答案：</strong>
+每个对象有 <code>__proto__</code> 指向构造函数的 <code>prototype</code>，属性查找沿原型链直到 <code>Object.prototype</code> 的 <code>null</code>。
+<code>new F()</code>：创建空对象 → 原型指向 <code>F.prototype</code> → 执行 <code>F</code>（this 指向新对象）→ 返回对象（若构造函数返回对象则用它）。
+继承：</p>
+<pre><code class="language-js">class Animal { constructor(name) { this.name = name; } speak() { return this.name; } }
+class Dog extends Animal { speak() { return super.speak() + &#39; woof&#39;; } }
+</code></pre>
+<p><code>class</code> 本质是语法糖，<code>super()</code> 调用父构造。避免手写原型链继承的坑（忘记 <code>constructor</code>、引用类型属性共享）。</p>
+<h3>37. <code>Promise</code> 的三种状态与常用静态方法如何区分？</h3>
+<p><strong>答案：</strong>
+状态：pending → fulfilled / rejected，一经改变不可逆。</p>
+<ul>
+<li><code>Promise.all</code>：全成功才成功，任一失败立即 reject（适合「缺一不可」）</li>
+<li><code>Promise.allSettled</code>：等全部结束，返回状态数组（批量任务，部分失败不影响）</li>
+<li><code>Promise.race</code>：第一个结束的（成功或失败）决定结果（超时控制）</li>
+<li><code>Promise.any</code>：第一个<strong>成功</strong>的（多镜像源，全部失败抛 AggregateError）
+工程用法：<code>Promise.allSettled</code> + 逐项重试；并发控制用 <code>p-limit</code> 或信号量，避免瞬间打爆服务。</li>
+</ul>
+<h3>38. 如何手写 debounce 与 throttle？如何选择？</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-js">function debounce(fn, delay = 300) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() =&gt; fn.apply(this, args), delay);
+  };
+}
+function throttle(fn, interval = 200) {
+  let last = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - last &gt;= interval) { last = now; fn.apply(this, args); }
+  };
+}
+</code></pre>
+<p>选择：debounce 适合「等用户停手」（搜索联想、输入校验、resize 结束）；throttle 适合「过程中要稳定反馈」（滚动进度、拖拽、按钮防连点）。细节：支持 <code>leading/trailing</code>、<code>cancel</code>、<code>flush</code>（如组件卸载或提交时立即触发一次）。</p>
+<h3>39. 深拷贝如何实现？<code>structuredClone</code> 与 JSON 方案的区别？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><code>JSON.parse(JSON.stringify(obj))</code>：丢失 <code>undefined</code>、函数、Symbol、Date 变字符串、NaN→null、循环引用报错</li>
+<li><code>structuredClone</code>：原生深拷贝，支持 Date/Map/Set/ArrayBuffer/循环引用；不支持函数、DOM、类原型（变普通对象）</li>
+<li>手写递归：处理循环引用（WeakMap 记录）、数组/对象/Date/RegExp/Map/Set，注意原型
+工程建议：优先<strong>不可变更新</strong>（不拷贝整棵树，只复制路径上的节点，如 Immer）；传输大对象用 <code>structuredClone</code> 或 Worker 的 postMessage（本身结构化克隆）。</li>
+</ul>
+<h3>40. ESM 与 CommonJS 有什么区别？Node 全栈项目中如何取舍？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>ESM</th>
+<th>CJS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语法</td>
+<td><code>import/export</code></td>
+<td><code>require/module.exports</code></td>
+</tr>
+<tr>
+<td>加载</td>
+<td>静态解析、可 tree-shaking、异步</td>
+<td>同步、运行时</td>
+</tr>
+<tr>
+<td>绑定</td>
+<td>实时绑定（值变化可见）</td>
+<td>导出值拷贝</td>
+</tr>
+<tr>
+<td>顶层 await</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+</tbody></table>
+<ul>
+<li>前端只用 ESM（Vite 依赖原生 ESM 与 tree-shaking）</li>
+<li>Node 现代项目用 ESM（<code>&quot;type&quot;: &quot;module&quot;</code>），注意 <code>__dirname</code> 需 <code>import.meta.url</code> 推导</li>
+<li>混合场景：ESM 可 <code>import</code> CJS（default 互操作），CJS 不能同步 <code>require</code> ESM（可用动态 <code>import()</code>）</li>
+<li>路径与扩展名：ESM 要求完整扩展名与 <code>package.json</code> 的 <code>exports</code> 配置正确</li>
+</ul>
+<h3>41. 如何控制 Promise 并发数量？手写一个并发调度器</h3>
+<p><strong>答案：</strong></p>
+<pre><code class="language-js">async function pool(tasks, limit = 5) {
+  const results = new Array(tasks.length);
+  let i = 0;
+  const worker = async () =&gt; {
+    while (i &lt; tasks.length) {
+      const idx = i++;
+      results[idx] = await tasks[idx]();   // 每个 worker 自己取下一个任务
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, tasks.length) }, worker));
+  return results;
+}
+</code></pre>
+<p>应用：批量请求下游 API、批量上传文件、批量写库。要点：不要用「分批 <code>Promise.all</code>」的写法（每批要等最慢的那个），worker 模式才能始终跑满并发。</p>
+<h3>42. 什么是内存泄漏？前端常见场景和排查方法？</h3>
+<p><strong>答案：</strong>
+成因都是「本该回收的对象仍被引用」：</p>
+<ul>
+<li>全局变量/缓存无限增长（用 Map 存 key 却从不删）→ LRU 上限</li>
+<li>未清理的定时器、<code>requestAnimationFrame</code>、事件监听、WebSocket、IntersectionObserver</li>
+<li>闭包持有大对象（如表单校验函数持有整个表单）</li>
+<li>已卸载组件仍被外部引用（Axios 回调里 setState → 警告 + 泄漏）</li>
+<li>老代码里的 <code>attachEvent</code>/<code>window.onresize</code> 覆盖与重复绑定
+排查：Chrome DevTools Memory → Heap snapshot 对比（Detached DOM）、Performance Monitor 观察内存曲线、<code>FinalizationRegistry</code> 验证回收、React StrictMode 双挂载暴露泄漏。</li>
+</ul>
+<h2>四、HTML 与 CSS</h2>
+<h3>43. 什么是语义化 HTML？为什么它对全栈项目重要？</h3>
+<p><strong>答案：</strong>
+用含义正确的标签表达结构：<code>header/nav/main/section/article/aside/footer</code>、<code>button</code> 而非可点击 <code>div</code>、<code>label</code> 关联表单控件、<code>table</code> 用于表格数据。
+价值：① 无障碍（屏幕阅读器按语义导航）；② SEO 与分享卡片解析；③ 键盘交互（<code>button</code> 天然可聚焦、响应回车）；④ 代码可读与可维护。
+测试常问：为什么不用 <code>div</code> 做按钮？因为需要手动补 <code>role=&quot;button&quot;</code>、<code>tabindex</code>、键盘事件，且容易漏掉禁用态与焦点样式。</p>
+<h3>44. 盒模型是什么？<code>box-sizing: border-box</code> 解决了什么问题？</h3>
+<p><strong>答案：</strong>
+标准盒模型：<code>width</code> 只含 content，实际占用 = width + padding + border；<code>border-box</code> 下 width 含 padding 与 border，布局计算更直观。</p>
+<pre><code class="language-css">*, *::before, *::after { box-sizing: border-box; }
+</code></pre>
+<p>面试延伸：<code>getBoundingClientRect()</code> 返回的是 border-box 尺寸；<code>offsetWidth</code> 含 border 不含 margin；百分比宽高基于包含块 content box（除非 border-box）。</p>
+<h3>45. 什么是 BFC？能解决哪些实际问题？</h3>
+<p><strong>答案：</strong>
+BFC（块级格式化上下文）是一块独立的渲染区域，内部布局不影响外部。触发方式：<code>overflow</code> 非 visible、<code>float</code>、<code>position: absolute/fixed</code>、<code>display: flow-root</code>（最干净）、<code>contain: layout</code>。
+用途：① 清除浮动（父元素包裹浮动子元素）；② 阻止 margin 合并；③ 两栏自适应布局（右侧不浮动 + <code>overflow: hidden</code> 不与浮动重叠）；④ 防止被浮动元素环绕。
+注意：<code>display: flow-root</code> 是专门为此设计的，不产生副作用。</p>
+<h3>46. Flex 和 Grid 如何选择？常用布局怎么写？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>Flex：<strong>一维</strong>布局（一行或一列），内容驱动，适合导航、工具栏、卡片内部对齐</li>
+<li>Grid：<strong>二维</strong>布局，容器驱动，适合页面骨架、仪表盘、卡片网格</li>
+</ul>
+<pre><code class="language-css">/* 居中 */
+.center { display: grid; place-items: center; }
+/* 圣杯布局 */
+.layout { display: grid; grid-template: &quot;h h&quot; auto &quot;l m&quot; 1fr &quot;f f&quot; auto / 200px 1fr; min-height: 100vh; }
+/* 自适应卡片 */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+</code></pre>
+<p>坑：flex 子项默认 <code>min-width: auto</code> 导致内容撑破容器，需 <code>min-width: 0</code> 才能让 <code>text-overflow: ellipsis</code> 生效。</p>
+<h3>47. 有哪些水平垂直居中方案？各自适用场景？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li><code>display: grid; place-items: center</code>（首选，代码最少）</li>
+<li><code>display: flex; justify-content: center; align-items: center</code></li>
+<li>绝对定位 + <code>inset: 0; margin: auto</code>（需要定宽高时）</li>
+<li>绝对定位 + <code>transform: translate(-50%, -50%)</code>（不定宽高，兼容老浏览器）</li>
+<li><code>line-height</code> 等于高度（单行文本）</li>
+<li><code>margin: auto</code> 配合块级宽度（仅水平）
+面试点：说明「不定宽高」与「不影响文档流」两个维度，选择就有依据。</li>
+</ol>
+<h3>48. 什么是层叠上下文？<code>z-index</code> 为什么不起作用？</h3>
+<p><strong>答案：</strong>
+层叠上下文是一组元素的层叠顺序封闭环境，触发条件包括：根元素、<code>position</code> + <code>z-index</code> 非 auto、<code>opacity &lt; 1</code>、<code>transform</code>/<code>filter</code>/<code>will-change</code>、<code>isolation: isolate</code>、<code>contain: paint</code>。
+<code>z-index</code> 失效的常见原因：① 父级形成了层叠上下文且层级更低，子元素再大也压不过兄弟上下文；② 元素是 <code>position: static</code>（z-index 不生效）；③ 被 <code>overflow: hidden</code> 祖先裁剪；④ 被 <code>clip-path</code> 或 <code>mask</code> 裁剪。
+排查思路：沿 DOM 向上找到最近的层叠上下文，看它相对于「兄弟上下文」的层级，而不是看目标元素自身的 z-index。</p>
+<h3>49. 重排（reflow）、重绘（repaint）和合成（composite）有什么区别？如何优化动画？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>重排：几何属性变化（width/height/top/font-size/增删节点）→ 重新计算布局，代价最高</li>
+<li>重绘：仅视觉变化（color/background/visibility）→ 不重排</li>
+<li>合成：只改 <code>transform</code>/<code>opacity</code> 时可在合成线程完成，不占主线程
+优化原则：</li>
+<li>动画只用 <code>transform</code> 与 <code>opacity</code>；用 <code>will-change: transform</code> 提前提升合成层（不要滥用，会吃显存）</li>
+<li>批量读写 DOM，避免「读-写-读-写」引发布局抖动（layout thrashing）</li>
+<li>用 <code>DocumentFragment</code>、<code>requestAnimationFrame</code>、<code>content-visibility: auto</code></li>
+<li>避免频繁改 <code>class</code> 引起大面积重排，改用固定尺寸容器 + 内部变化</li>
+</ul>
+<h3>50. 响应式布局有哪些手段？媒体查询、容器查询、<code>clamp</code> 怎么配合？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>视口：<code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</code></li>
+<li>媒体查询：按视口宽度切换断点（移动优先，<code>min-width</code> 向上叠加）</li>
+<li>容器查询：<code>@container (min-width: 400px)</code>，组件随父容器宽度自适应，适合设计系统（比媒体查询更可复用）</li>
+<li>流式：<code>clamp(1rem, 2.5vw, 2rem)</code> 做字号/间距；<code>min()/max()</code> 控制容器</li>
+<li>单位：<code>rem</code>（跟随根字号，利于无障碍）、<code>vw/vh</code>、<code>dvh</code>（移动端解决地址栏高度问题）、<code>svh/lvh</code></li>
+<li>图片：<code>srcset</code> + <code>sizes</code>，<code>loading=&quot;lazy&quot;</code>，<code>aspect-ratio</code> 防抖动
+原则：布局用 Grid/Flex 自适应，局部用容器查询，只有页面级断点才用媒体查询。</li>
+</ul>
+<h3>51. CSS 变量、CSS Modules、CSS-in-JS、Tailwind 如何取舍？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>CSS 变量</strong>：运行时主题切换、设计 token（<code>--color-primary</code>），可被 JS 读写</li>
+<li><strong>CSS Modules</strong>：局部作用域，零运行时，适合中大型项目</li>
+<li><strong>CSS-in-JS</strong>（styled-components/emotion）：动态样式方便，但有运行时开销、SSR 需抽取样式，RSC 下支持受限</li>
+<li><strong>Tailwind</strong>：约束式原子类，产出体积小（配合 purge），缺点是模板冗长、需团队约定
+React 全栈实践：设计系统用 CSS 变量 + Tailwind 或 CSS Modules；主题切换靠 <code>data-theme</code> 覆盖变量；避免同一项目混用多套方案。</li>
+</ul>
+<h3>52. 移动端适配有哪些坑？（1px、安全区、点击延迟、滚动）</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>1px 边框</strong>：DPR 导致视觉变粗，用 <code>transform: scaleY(0.5)</code> 伪元素或 <code>border-image</code></li>
+<li><strong>安全区</strong>：<code>padding: env(safe-area-inset-bottom)</code>，配合 <code>viewport-fit=cover</code></li>
+<li><strong>点击延迟</strong>：现代浏览器在正确 viewport 下已移除 300ms 延迟；若仍有，检查 <code>touch-action</code></li>
+<li><strong>100vh 抖动</strong>：移动端地址栏伸缩，改用 <code>100dvh</code> 或 JS 设置 CSS 变量</li>
+<li><strong>滚动穿透</strong>：弹窗打开时给 body 加 <code>overflow: hidden</code> 并记录滚动位置，关闭后还原</li>
+<li><strong>输入框被键盘顶起</strong>：<code>position: fixed</code> 底部按钮错位，监听 <code>visualViewport</code> 或用 sticky</li>
+<li><strong>移动端 click 与 touch 混用</strong>：统一用 click/pointer 事件，避免 300ms 与重复触发</li>
+</ul>
+<h3>53. 前端如何做可访问性（a11y）？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>语义标签 + 正确的 <code>label</code>（<code>htmlFor</code>）/ <code>fieldset</code>/<code>legend</code></li>
+<li>键盘可达：<code>tabindex</code> 管理焦点顺序，弹窗做焦点陷阱（focus trap）与 Esc 关闭，关闭后焦点归还触发元素</li>
+<li>ARIA：只在语义标签不足时补 <code>role</code>/<code>aria-*</code>（如 <code>aria-expanded</code>、<code>aria-live</code> 通知）</li>
+<li>对比度 ≥ 4.5:1；不要仅用颜色传达状态；尊重 <code>prefers-reduced-motion</code></li>
+<li>图片 <code>alt</code>；表单错误用 <code>aria-describedby</code> 关联并 <code>role=&quot;alert&quot;</code></li>
+<li>测试：Lighthouse/axe、键盘走查、屏幕阅读器实测
+面试加分：说明「可访问性本质是可测试的交互契约」，也能顺带提升自动化测试稳定性（按 role 查询）。</li>
+</ul>
+<h3>54. 首屏性能（LCP/CLS/INP）如何优化？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>LCP</strong>：关键 CSS 内联、字体 <code>font-display: swap</code> + 预加载、首屏图片 <code>fetchpriority=&quot;high&quot;</code> 并避免懒加载、SSR/SSG 直出、CDN 与 HTTP 缓存（<code>Cache-Control: immutable</code>）、减少渲染阻塞 JS</li>
+<li><strong>CLS</strong>：图片/视频/广告预留尺寸（<code>aspect-ratio</code>）、骨架屏占位、字体 <code>size-adjust</code> 或 <code>font-display</code>、避免顶部动态插入内容</li>
+<li><strong>INP</strong>：拆分长任务（<code>scheduler.yield</code>、Worker）、虚拟列表、减少首屏 JS、避免同步布局读取</li>
+<li><strong>通用</strong>：路由级拆包、<code>modulepreload</code>、第三方脚本延迟加载、用 RUM（web-vitals）持续观测真实用户数据</li>
+</ul>
+<h2>五、API 设计</h2>
+<h3>55. RESTful API 的设计原则是什么？资源如何命名？</h3>
+<p><strong>答案：</strong>
+原则：以<strong>资源</strong>为中心、用 HTTP 方法表达动作、无状态、可缓存、统一接口。
+命名规范：</p>
+<ul>
+<li>名词复数：<code>/users</code>、<code>/orders/{id}/items</code>；避免动词（<code>/getUser</code> ✗）</li>
+<li>层级表达从属关系，层级过深时拆平（<code>/orders?userId=1</code>）</li>
+<li>过滤/排序/分页用 querystring：<code>?status=paid&amp;sort=-createdAt&amp;page=2&amp;pageSize=20</code></li>
+<li>动作型操作才用动词子资源：<code>POST /orders/{id}/cancel</code>、<code>POST /payments/{id}/refund</code></li>
+<li>大小写统一 kebab-case，camelCase 用于 JSON 字段</li>
+<li>复数与单数、<code>-</code> 与 <code>_</code> 全项目统一，写进规范文档</li>
+</ul>
+<h3>56. HTTP 方法、状态码和安全/幂等性怎么对应？PUT 和 PATCH 区别？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>语义</th>
+<th>安全</th>
+<th>幂等</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>查询</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>创建/动作</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>全量替换</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>局部更新</td>
+<td>✗</td>
+<td>不一定</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>删除</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>状态码：200/201（创建，带 Location）/204（无内容）/400/401/403/404/409（冲突）/412/422（校验失败）/429（限流）/500/503。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>要点：<strong>幂等性决定了客户端能否安全重试</strong>；PATCH 若用 JSON Merge Patch 则幂等，用「数值增减」则不幂等。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3>57. 分页有哪几种方案？深分页为什么慢？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>Offset 分页</strong>：<code>LIMIT 20 OFFSET 10000</code>，语义简单、可跳页；但数据库要扫描并丢弃前 N 条，越深越慢，且并发插入会重复/漏数据</li>
+<li><strong>游标/键集分页</strong>：<code>WHERE created_at &lt; :cursor ORDER BY created_at DESC LIMIT 20</code>，走索引稳定 O(页大小)，适合信息流、无限滚动；缺点是不能随机跳页，游标需要稳定排序键（<code>(created_at, id)</code> 复合避免重复）</li>
+<li><strong>延迟关联</strong>：深分页先查主键再回表：<code>SELECT * FROM t JOIN (SELECT id FROM t ORDER BY id LIMIT 10000, 20) x USING(id)</code></li>
+<li>大数据导出用游标 + 流式读取，不要一次性 <code>findAll</code>
+API 设计建议：默认 <code>page/pageSize</code>，信息流类接口提供 <code>cursor/limit</code> 并返回 <code>nextCursor</code>。</li>
+</ul>
+<h3>58. 错误响应应该如何设计？</h3>
+<p><strong>答案：</strong>
+统一结构（可参考 RFC 9457 Problem Details）：</p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;https://api.example.com/errors/insufficient-stock&quot;,
+  &quot;title&quot;: &quot;库存不足&quot;,
+  &quot;status&quot;: 409,
+  &quot;code&quot;: &quot;INSUFFICIENT_STOCK&quot;,
+  &quot;traceId&quot;: &quot;5f2c...&quot;,
+  &quot;errors&quot;: [{ &quot;field&quot;: &quot;quantity&quot;, &quot;message&quot;: &quot;最多可购买 2 件&quot; }]
+}
+</code></pre>
+<p>原则：① HTTP 状态码表达<strong>类别</strong>，<code>code</code> 表达<strong>业务原因</strong>，两者都要有；② 字段级校验错误集中返回，前端可直接映射到表单；③ 不泄漏堆栈与 SQL；④ 带 <code>traceId</code> 便于联合排查；⑤ 错误信息可国际化（前端按 code 映射文案，而不是直接展示服务端中文）。</p>
+<h3>59. 什么是幂等性？如何保证接口幂等？</h3>
+<p><strong>答案：</strong>
+同一请求执行多次与一次效果相同。实现：</p>
+<ul>
+<li><strong>幂等键</strong>：客户端生成 <code>Idempotency-Key</code>（UUID），服务端 Redis <code>SET NX</code> 记录状态与结果，重复请求直接返回首次结果</li>
+<li><strong>唯一约束</strong>：数据库唯一索引（如 <code>orders(user_id, client_order_no)</code>）兜底，捕获唯一冲突返回已存在</li>
+<li><strong>状态机</strong>：只允许特定状态流转（<code>pending → paid</code>），条件更新 <code>UPDATE ... WHERE status=&#39;pending&#39;</code> 并检查影响行数</li>
+<li><strong>去重表 / 令牌</strong>：预发令牌、消费消息记录 messageId
+要点：写入前先判重、写入时用约束兜底、写入后返回同一结果；异步场景（消息、回调）同样需要，且要处理「执行中」的并发请求（加锁或返回 409/202）。</li>
+</ul>
+<h3>60. JWT 与 Session 怎么选？JWT 有哪些缺陷？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>Session</strong>：服务端存状态（内存/Redis），可随时吊销，横向扩展依赖共享存储；天然防篡改（只传 sessionId）</li>
+<li><strong>JWT</strong>：自包含、无状态、跨服务易验证；但<strong>无法主动吊销</strong>（除非引入黑名单/版本号）、体积大、payload 可解码（不能放敏感信息）、密钥泄露影响全局
+实践：短生命周期 access token（5-15 分钟）+ refresh token 落库可吊销；或用「JWT 只做网关校验 + 会话状态仍在 Redis」的混合模式。
+OAuth2 场景：授权码 + PKCE 用于第三方登录；服务间用 client credentials；scope 控制权限粒度。</li>
+</ul>
+<h3>61. REST、GraphQL、gRPC、tRPC 如何选择？</h3>
+<p><strong>答案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>优势</th>
+<th>代价</th>
+<th>场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>REST</td>
+<td>简单、缓存友好、通用</td>
+<td>易 over/under-fetching、多接口聚合</td>
+<td>对外 API、公开接口</td>
+</tr>
+<tr>
+<td>GraphQL</td>
+<td>按需取字段、单请求聚合、强类型 schema</td>
+<td>复杂度高、缓存与限流难、N+1 需 DataLoader</td>
+<td>多端差异大、BFF</td>
+</tr>
+<tr>
+<td>gRPC</td>
+<td>二进制、HTTP/2 多路复用、流式、代码生成</td>
+<td>浏览器支持需 grpc-web、调试成本</td>
+<td>内部服务间通信</td>
+</tr>
+<tr>
+<td>tRPC</td>
+<td>TS 端到端类型零代码生成</td>
+<td>限定 TS 全栈</td>
+<td>单体/全栈团队快速迭代</td>
+</tr>
+<tr>
+<td>全栈常见组合：外部 REST（OpenAPI 文档）+ 内部 gRPC + 前端 BFF 用 tRPC/GraphQL。</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3>62. 如何设计限流与防刷？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>算法：<strong>令牌桶</strong>（允许突发、长期限速，最常用）、漏桶（恒定速率）、固定/滑动窗口（简单但有边界突刺）、滑动日志（精确但耗内存）</li>
+<li>维度：IP、用户 ID、API key、租户、接口 + 全局；分级阈值不同</li>
+<li>实现：Redis + Lua 保证原子性（<code>INCR + EXPIRE</code> 或令牌桶脚本）；网关层（Nginx/Kong/Envoy）做粗粒度，应用层做业务粒度</li>
+<li>返回：<code>429</code> + <code>Retry-After</code> + <code>X-RateLimit-*</code> 头</li>
+<li>防刷补充：验证码、设备指纹、行为风控、黑名单、幂等键、签名校验（<code>HMAC(timestamp + nonce + body)</code> 防重放）
+注意：多实例下必须用集中式计数（Redis），本地计数器会导致实际限额翻倍。</li>
+</ul>
+<h3>63. 文件上传接口如何设计？（大文件、断点续传）</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>中小文件</strong>：<code>multipart/form-data</code> 直传服务端，限制类型与大小（服务端校验 magic number，不只看扩展名），随机文件名，存对象存储</li>
+<li><strong>大文件</strong>：前端分片（如 5MB）→ 初始化上传（返回 uploadId）→ 并发上传分片（每片带 index 与校验和）→ 完成合并 → 服务端校验总大小与 hash</li>
+<li><strong>直传对象存储</strong>：服务端签发<strong>预签名 URL</strong>，浏览器直传 S3/OSS，避免流量过服务器；上传完成后回调/轮询确认</li>
+<li><strong>断点续传</strong>：服务端记录已完成分片（Redis/DB），前端重传前先查询已上传分片</li>
+<li><strong>安全</strong>：限制 MIME 与大小、病毒扫描、私有 bucket + 短时签名 URL、按租户隔离路径</li>
+<li><strong>体验</strong>：进度条、取消、秒传（hash 去重）</li>
+</ul>
+<h3>64. Webhook 如何设计得可靠？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>签名</strong>：<code>X-Signature: HMAC-SHA256(secret, timestamp + body)</code>，接收方校验并拒绝过期时间戳（防重放）</li>
+<li><strong>幂等</strong>：事件带唯一 <code>eventId</code>，接收方按 eventId 去重</li>
+<li><strong>重试</strong>：指数退避（如 1s/10s/1min/10min…），最多 N 次，超过进死信队列并告警</li>
+<li><strong>快速响应</strong>：先返回 2xx 再异步处理，避免发送方超时重试</li>
+<li><strong>顺序</strong>：不保证有序，用 <code>version</code>/时间戳做业务侧幂等与状态机校验</li>
+<li><strong>可观测</strong>：投递日志、失败面板、手动重放接口、订阅方健康检查（连续失败自动停推）</li>
+</ul>
+<h3>65. 实时通信该选轮询、SSE 还是 WebSocket？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>短轮询</strong>：实现最简单，浪费请求，适合低频状态查询</li>
+<li><strong>长轮询</strong>：兼容性好，服务端连接占用高，逐步被淘汰</li>
+<li><strong>SSE</strong>：服务端单向推送、基于 HTTP、自动重连、可穿代理，适合通知、进度、行情（单向）</li>
+<li><strong>WebSocket</strong>：全双工、低延迟，适合聊天、协同编辑、游戏；需处理心跳、重连、鉴权（握手时校验 token）、多实例广播（Redis Pub/Sub / 消息队列）
+工程要点：断线重连要补拉增量（lastEventId/游标）；SSE 在 HTTP/1.1 有 6 连接数限制（HTTP/2 缓解）；K8s 环境注意负载均衡与空闲超时。</li>
+</ul>
+<h3>66. 如何做 API 版本管理与向后兼容？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>策略：URL 版本（<code>/v1/users</code>，最直观）、Header 版本（<code>Accept: application/vnd.api+json;v=2</code>）、字段级演进</li>
+<li>兼容原则（Postel 定律）：<strong>加字段是兼容的，删字段/改语义/改类型是破坏性的</strong>；枚举只能加不能删（客户端要能容忍未知值）</li>
+<li>弃用流程：先文档标记 deprecated + 响应头 <code>Deprecation</code>/<code>Sunset</code> + 监控调用量 → 通知使用方 → 到期下线</li>
+<li>契约保障：OpenAPI 规范 + 契约测试 + SDK 自动生成，前端不手写类型</li>
+<li>灰度：新旧版本并行，用 feature flag 与网关路由分流</li>
+</ul>
+<h2>六、微服务</h2>
+<h3>67. 单体架构和微服务如何取舍？什么时候不该上微服务？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>单体优先</strong>：早期业务不确定、团队小、缺少自动化运维时，模块化单体（modular monolith）成本最低、调试与事务最简单</li>
+<li><strong>拆分的真实动机</strong>：团队规模扩大导致协作冲突、不同模块伸缩需求差异大、发布频率互相阻塞、技术栈异构</li>
+<li><strong>不该拆的信号</strong>：没有 CI/CD 与可观测性、没有明确的服务边界（DDD 未梳理）、团队没有按服务拆分运维能力、业务还在快速试错</li>
+<li><strong>代价</strong>：分布式复杂性（网络不可靠、一致性、调试链路长）、运维成本、数据一致性、跨服务查询、延迟增加
+面试表达：<strong>微服务是组织架构问题，不是技术偏好问题</strong>（康威定律）。</li>
+</ul>
+<h3>68. 微服务如何拆分？边界怎么定？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>按业务能力 / DDD 限界上下文</strong>：围绕聚合根与业务语言划分（订单、库存、支付、账户），而不是按技术分层（controller 服务、dao 服务）</li>
+<li><strong>数据所有权</strong>：一个服务独占自己的库，其他服务只能通过 API 访问，禁止跨库 JOIN</li>
+<li><strong>变更频率与团队边界</strong>：变化节奏一致的放一起，一个团队负责一个或几个服务</li>
+<li><strong>拆分粒度</strong>：先粗后细，过细会导致跨服务调用链过长（一次请求 10 跳）</li>
+<li><strong>反模式</strong>：共享数据库、分布式单体（所有服务一起发布）、贫血服务（只做 CRUD 的薄壳）
+落地路径：先在单体里划清模块边界与接口，再按压力与团队边界逐步抽出。</li>
+</ul>
+<h3>69. 服务间通信如何选择同步还是异步？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>同步（HTTP/gRPC）</strong>：需要立即结果（查库存、扣款授权）、调用链清晰；但强耦合、级联故障风险高，必须配超时、重试、熔断</li>
+<li><strong>异步（消息队列）</strong>：解耦、削峰、最终一致性（下单后发通知、扣积分、写报表）；代价是复杂度（幂等、顺序、积压、可观测）
+实践原则：<strong>核心链路的关键校验用同步，非关键的后续动作全部异步</strong>；同步调用要限制深度（不超过 3 层），否则改为编排（Saga/流程引擎）。</li>
+</ul>
+<h3>70. 消息队列如何保证不丢消息、不重复消费？</h3>
+<p><strong>答案：</strong>
+不丢：</p>
+<ol>
+<li>生产端：开启确认（Kafka <code>acks=all</code>、RabbitMQ publisher confirm）+ 本地事务表/Outbox 保证「业务落库与发消息」原子</li>
+<li>Broker：持久化 + 多副本（<code>min.insync.replicas</code>）</li>
+<li>消费端：处理成功后再 ack（手动提交 offset），失败进入重试队列/死信队列
+不重复：消息系统只能保证 <strong>at-least-once</strong>，去重靠消费端：</li>
+</ol>
+<ul>
+<li>业务幂等（唯一键、状态机条件更新）</li>
+<li>去重表/Redis set 记录 messageId（注意设置合理过期）
+顺序：按业务键分区（同一订单的消息进同一 partition），或单消费者串行处理</li>
+</ul>
+<h3>71. 分布式事务有哪几种方案？Saga 怎么落地？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>2PC/XA</strong>：强一致，同步阻塞、协调者单点，性能差，跨库少用</li>
+<li><strong>TCC</strong>（Try-Confirm-Cancel）：业务层补偿，侵入大但一致性好，适合资金类</li>
+<li><strong>Saga</strong>：把长事务拆成本地事务序列，失败时按逆序执行补偿；编排式（orchestrator）易观测，协同式（choreography，事件驱动）耦合低但链路难追</li>
+<li><strong>本地消息表 / Outbox + 消息队列</strong>：最常用的最终一致方案（落库与发消息同事务，再由投递器发送）</li>
+<li><strong>事务消息</strong>（RocketMQ）：半消息 + 回查
+落地要点：补偿必须<strong>幂等</strong>、允许<strong>空回滚</strong>与<strong>悬挂</strong>处理；业务上尽量设计成「不需要回滚」的单向流程（先冻结后确认）；给每个流程加超时与人工兜底。</li>
+</ul>
+<h3>72. 服务发现与 API 网关的职责是什么？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>服务发现</strong>：注册（启动上报实例、心跳/TTL）与发现（客户端拉取或 DNS）；Consul/Eureka/Nacos，K8s 里 Service + CoreDNS 天然完成</li>
+<li><strong>API 网关</strong>：统一入口，负责路由、鉴权（JWT 校验、scope）、限流、熔断、灰度、协议转换、请求日志与追踪注入、CORS、响应缓存、WebSocket 代理</li>
+<li>边界划分：网关只管<strong>横切关注点</strong>，不写业务逻辑；BFF 在其后做端适配</li>
+<li>注意：网关会成为单点和性能瓶颈，需多副本 + 无状态 + 自身限流；避免在网关做重 CPU 处理（如大响应体转换）</li>
+</ul>
+<h3>73. 微服务如何做容错？（超时、重试、熔断、隔离、降级）</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>超时</strong>：每个调用都设超时，且下游超时 &lt; 上游超时（逐层递减），避免线程/连接堆积</li>
+<li><strong>重试</strong>：只对幂等 + 可重试错误（5xx、连接失败、超时）重试；指数退避 + 抖动 + 上限（如 3 次），并设重试预算防止流量放大</li>
+<li><strong>熔断</strong>：失败率/慢调用比例超阈值后快速失败（closed → open → half-open），给下游恢复时间</li>
+<li><strong>舱壁隔离</strong>：线程池/连接池按依赖隔离，一个下游故障不拖垮全部（也可用信号量）</li>
+<li><strong>降级</strong>：返回缓存/默认值/静态兜底，关闭非核心功能（推荐位、评分）</li>
+<li><strong>限流与负载保护</strong>：入口限流 + 自适应并发（如 Netflix concurrency-limits）
+原则：假设「依赖一定会失败」，把失败设计成可预期状态。</li>
+</ul>
+<h3>74. 微服务可观测性怎么建？（日志、指标、链路追踪）</h3>
+<p><strong>答案：</strong>
+三大支柱 + 一个关联键：</p>
+<ul>
+<li><strong>日志</strong>：结构化 JSON、统一字段（traceId、spanId、userId、service、level），集中收集（Loki/ELK），避免打印敏感信息</li>
+<li><strong>指标</strong>：RED（Rate/Errors/Duration）与 USE（Utilization/Saturation/Errors）、四个黄金信号（延迟、流量、错误、饱和度）；Prometheus + Grafana，配 SLO 与告警</li>
+<li><strong>追踪</strong>：OpenTelemetry 自动埋点，traceId 贯穿网关 → 服务 → 消息 → DB，采样策略（头部采样/尾部采样），Jaeger/Tempo 展示</li>
+<li><strong>关联</strong>：traceId 同时写入日志与响应头，前端错误上报也带上
+工程建议：先定义 SLO 再建告警，告警要可执行；避免指标高基数（不要把 userId 当 label）。</li>
+</ul>
+<h3>75. 分布式锁如何实现？Redis 方案有哪些坑？</h3>
+<p><strong>答案：</strong>
+Redis：<code>SET key value NX PX 30000</code>，value 用唯一 token，释放时用 Lua 校验 token 再删（防误删）；业务超时用看门狗续期。
+坑与争议：</p>
+<ul>
+<li>主从切换可能丢锁（异步复制），Redlock 在时钟漂移与网络分区下被质疑（Martin Kleppmann 的经典争论）</li>
+<li>锁只能降低并发，<strong>强一致场景要用数据库约束/乐观锁</strong></li>
+<li>业务执行时间 &gt; 锁过期会导致并发进入，需续期或 fencing token（带单调递增版本，下游校验）</li>
+<li>不要把锁当成事务，锁内失败要能回滚
+替代：ZooKeeper/etcd（基于一致性协议，更可靠但性能低）、数据库行锁/唯一键。</li>
+</ul>
+<h3>76. 微服务的数据一致性：跨服务查询和统计怎么做？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>禁止跨库 JOIN</strong>，改 API 聚合（BFF 组合）或 CQRS 读模型</li>
+<li><strong>CQRS + 物化视图</strong>：订阅领域事件，写入专门为查询优化的读库/ES，读侧最终一致</li>
+<li><strong>事件驱动的本地副本</strong>：订单服务订阅用户变更事件，维护 <code>user_snapshot</code>，避免实时远程调用</li>
+<li><strong>统计/报表</strong>：CDC（Debezium）抽取到数仓（ClickHouse/BigQuery）做 OLAP，不在业务库跑重聚合</li>
+<li><strong>缓存</strong>：热点数据用 Redis，注意失效与一致性（Cache-Aside + 延迟双删/订阅 binlog）</li>
+<li>设计原则：明确每个读模型可接受的<strong>延迟上限</strong>，并把它写进 SLA</li>
+</ul>
+<h3>77. 服务如何部署与发布？蓝绿、金丝雀、灰度怎么做？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>制品</strong>：Docker 镜像（多阶段构建、非 root、固定 tag/digest）+ Helm/Kustomize</li>
+<li><strong>蓝绿</strong>：两套环境切换流量，回滚快但资源翻倍</li>
+<li><strong>金丝雀/灰度</strong>：按比例或请求特征（header、用户 ID 哈希、地域）导入流量，观察错误率与延迟后逐步放量；需要按版本可观测</li>
+<li><strong>滚动发布</strong>：K8s 默认，配合 <code>maxSurge/maxUnavailable</code>、readinessProbe，优雅关闭（preStop + <code>terminationGracePeriodSeconds</code>）保证在途请求不中断</li>
+<li><strong>数据库变更</strong>：先加列后写代码、双写迁移、可空字段、避免破坏性 DDL；迁移脚本与发布解耦（expand-contract 模式）</li>
+<li><strong>回滚</strong>：镜像可回退，但要考虑数据不可逆变更（新增列易回滚，删列难）</li>
+</ul>
+<h3>78. 微服务的安全边界怎么设计？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>零信任</strong>：内网也不默认可信，服务间 mTLS（Istio/Linkerd 自动注入）</li>
+<li><strong>认证与授权</strong>：用户身份用 OIDC/JWT，服务身份用 client credentials 或 SPIFFE；授权在服务内部校验（网关校验只做第一层）</li>
+<li><strong>最小权限</strong>：数据库账号、消息主题、对象存储桶按服务隔离</li>
+<li><strong>密钥管理</strong>：Vault/KMS/Secrets Manager，禁止硬编码；定期轮换</li>
+<li><strong>输入与输出</strong>：所有边界做 schema 校验（zod/protobuf），防注入与越权（IDOR：按资源归属校验，不能只查 ID）</li>
+<li><strong>审计与合规</strong>：敏感操作留审计日志，PII 脱敏与加密存储</li>
+</ul>
+<h3>79. 微服务如何做容量规划与压测？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>基线</strong>：先做单服务压测得 QPS-延迟曲线，找到拐点（延迟陡升处 = 容量上限）</li>
+<li><strong>模型</strong>：按峰值 QPS × 冗余系数（如 1.5-2）× 单实例能力 → 实例数；考虑依赖（DB 连接数、Redis 带宽）而非只算应用层</li>
+<li><strong>连接池与并发</strong>：实例数 × 池大小 ≤ 数据库 <code>max_connections</code>，否则用 PgBouncer/连接代理</li>
+<li><strong>全链路压测</strong>：流量染色（压测标）打到影子库/影子表，避免污染生产数据；逐步加压观察瓶颈（应用 CPU → DB → 下游）</li>
+<li><strong>容量保护</strong>：限流、队列长度保护、自动扩缩容（HPA 基于 CPU/自定义指标如队列积压）</li>
+<li>常见坑：只压单接口不压组合链路；忽略 GC 与连接池回收；压测机自身成为瓶颈</li>
+</ul>
+<h2>七、数据库：索引与性能优化</h2>
+<h3>80. 如何为一个查询设计索引？联合索引的列顺序怎么定？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li>明确查询模式：<code>WHERE</code> 等值列 → 范围列 → 排序列</li>
+<li>联合索引顺序按 <strong>最左前缀 + 等值在前、范围在后</strong>：<code>(tenant_id, status, created_at)</code> 能服务 <code>tenant_id=? AND status=? AND created_at&gt;? ORDER BY created_at</code></li>
+<li>排序列放最后，且方向一致，才能避免 <code>filesort</code></li>
+<li>兼顾<strong>选择性</strong>：选择性高（区分度大）的列优先，但顺序首先服从查询模式</li>
+<li>尽量做成<strong>覆盖索引</strong>，减少回表</li>
+<li>控制索引数量：每个索引都增加写放大与存储，单表索引一般不超过 5-6 个
+反例：给每个列单独建索引（优化器只能用一个，浪费）；把 <code>status</code>（低区分度）放最左导致索引失效。</li>
+</ol>
+<h3>81. 为什么 MySQL 用 B+ 树而不是 B 树、哈希、红黑树？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>B+ 树</strong>：非叶子节点只存键（扇出大 → 树高 3-4 层即可覆盖千万行）、叶子节点双向链表支持范围扫描与排序、数据都在叶子（查询稳定 IO）</li>
+<li><strong>B 树</strong>：非叶子也存数据，扇出小、树更高，范围查询需中序遍历，效率低</li>
+<li><strong>哈希</strong>：等值 O(1)，不支持范围、排序、最左前缀；InnoDB 只有自适应哈希索引</li>
+<li><strong>红黑树/AVL</strong>：二叉，高度大 → 磁盘 IO 次数多，不适合磁盘存储
+补充：PostgreSQL 默认同样用 B-Tree（B+ 树变体），另有 GIN/GiST/BRIN 应对 JSONB、全文、地理、超大时序表。</li>
+</ul>
+<h3>82. 什么是最左前缀原则和索引下推（ICP）？</h3>
+<p><strong>答案：</strong>
+对 <code>(a, b, c)</code> 索引：</p>
+<ul>
+<li><code>a</code>、<code>(a,b)</code>、<code>(a,b,c)</code> 都能用；<code>b</code> 或 <code>(b,c)</code> 单独不能</li>
+<li><code>a=? AND c=?</code> 只能用 <code>a</code> 部分，<code>c</code> 需回表过滤（除非索引覆盖）</li>
+<li>范围列会截断后续列：<code>a&gt;1 AND b=2</code> 中 <code>b</code> 无法用于定位
+<strong>索引下推（ICP）</strong>：MySQL 5.6+ 把 <code>WHERE</code> 中能用索引列判断的条件下推到存储引擎层过滤，减少回表次数（EXPLAIN Extra 显示 <code>Using index condition</code>）。PG 没有 ICP 概念，但有 index-only scan 与更丰富的索引类型。</li>
+</ul>
+<h3>83. 拿到一条慢 SQL，你的排查步骤是什么？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li><strong>确认现象</strong>：耗时、频率、影响面（慢查询日志 / <code>pg_stat_statements</code> / APM，按总耗时排序而不只看单次最慢）</li>
+<li><strong>看执行计划</strong>：MySQL <code>EXPLAIN</code> / <code>EXPLAIN ANALYZE</code>；PG <code>EXPLAIN (ANALYZE, BUFFERS)</code>——对比<strong>预估行数 vs 实际行数</strong>，偏差大说明统计信息过期或选择率估算错误</li>
+<li><strong>定位瓶颈</strong>：全表扫描（type=ALL / Seq Scan）、回表过多、filesort/临时表、嵌套循环放大、锁等待</li>
+<li><strong>验证假设</strong>：在只读从库或影子库改索引/改 SQL 复测；对比 <code>rows</code>、<code>actual time</code>、<code>buffers</code></li>
+<li><strong>落方案</strong>：加/改索引（在线 DDL）、重写 SQL（去掉函数、拆分大查询）、改分页方式、加缓存、必要时改数据模型（冗余字段/汇总表）</li>
+<li><strong>回归与监控</strong>：上线后对比 P95/P99，确认没有影响其他查询（新索引可能让优化器选错）
+注意：<code>UPDATE pg_stat_statements</code> / <code>ANALYZE</code> 更新统计信息、<code>VACUUM</code> 清理膨胀，常是「本来快突然变慢」的元凶。</li>
+</ol>
+<h3>84. 覆盖索引为什么快？如何验证生效？</h3>
+<p><strong>答案：</strong>
+二级索引叶子存主键，若查询需要的列都在索引里，则无需回表（少一次 B+ 树查找 + 随机 IO）。</p>
+<ul>
+<li>MySQL：<code>EXPLAIN</code> 的 Extra 出现 <code>Using index</code></li>
+<li>PostgreSQL：出现 <code>Index Only Scan</code>，并需 <code>Heap Fetches: 0</code>（依赖 visibility map，VACUUM 不及时会退化为回表）
+实践：把常用列表页字段一起建联合索引（注意别把大字段如 text 放进索引）；PostgreSQL 可用 <code>INCLUDE (col)</code> 附加非键列到索引，既能覆盖又不影响排序。</li>
+</ul>
+<h3>85. 深分页和数据导出的性能怎么优化？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>深分页：<code>WHERE id &gt; :lastId ORDER BY id LIMIT 20</code>（游标）；或延迟关联只在子查询取主键再 JOIN 回表</li>
+<li>导出：服务端流式查询（pg-query-stream / <code>COPY TO</code>、mysql2 stream），边读边写，避免一次性加载百万行</li>
+<li>计数：<code>COUNT(*)</code> 大表很贵，缓存总数、用估算（<code>pg_class.reltuples</code>）或「是否还有下一页」代替总页数</li>
+<li>大批量写：批量 VALUES / <code>COPY</code>，分批提交，导入前禁用索引与触发器，导入后重建</li>
+<li>报表类：CDC 同步到 OLAP，避免在业务主库跑聚合</li>
+</ul>
+<h3>86. 大表加索引、改字段如何做到不停机？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li>MySQL 8：<code>ALTER TABLE ... ADD INDEX</code> 支持 Online DDL（<code>ALGORITHM=INPLACE, LOCK=NONE</code>），但仍需评估耗时与主从延迟；超大表用 <code>gh-ost</code> / <code>pt-online-schema-change</code>（影子表 + 触发器/binlog 同步）</li>
+<li>PostgreSQL：<code>CREATE INDEX CONCURRENTLY</code>（不阻塞写，但会留下 invalid 索引，失败需 <code>DROP INDEX CONCURRENTLY</code> 重来）；<code>ALTER TABLE ... ADD COLUMN DEFAULT</code> 在 PG 11+ 是元数据操作，不重写表</li>
+<li>变更顺序（expand-contract）：先加新列/新索引 → 双写并回填（分批）→ 切读 → 停写旧列/删旧列</li>
+<li>注意：长事务会阻塞 DDL 与 VACUUM；设置 <code>lock_timeout</code> 避免排队阻塞后续请求；低峰执行并监控复制延迟</li>
+</ul>
+<h3>87. 事务该怎么划边界？长事务有什么危害？</h3>
+<p><strong>答案：</strong>
+边界原则：</p>
+<ul>
+<li>一个事务只包含<strong>必要的数据库操作</strong>，不包含 HTTP 调用、发消息、文件上传、邮件发送（外部副作用无法回滚，还会长时间持锁）</li>
+<li>尽量短：避免在事务里做循环批量写、等待用户输入</li>
+<li>跨服务用最终一致（Outbox/Saga），而不是把多个库塞进一个事务</li>
+<li>读多写少的校验放在事务外，提交前用条件更新/唯一约束守住最后一道
+长事务危害：长时间持有锁 → 阻塞其他事务、放大死锁概率、MySQL 的 undo 版本链变长（快照读要遍历更多版本）、PG 阻止 VACUUM 回收死元组导致膨胀、主从延迟。
+监控：MySQL <code>information_schema.innodb_trx</code>；PG <code>pg_stat_activity</code> 中 <code>state=&#39;idle in transaction&#39;</code>（连接池泄漏的典型信号）。</li>
+</ul>
+<h3>88. N+1 查询是什么？如何发现和解决？</h3>
+<p><strong>答案：</strong>
+现象：列表查 100 条订单，再对每条查用户 → 101 次查询（ORM 的懒加载最容易触发）。
+发现：开启 SQL 日志（Prisma <code>log: [&#39;query&#39;]</code>、TypeORM logging），APM 里同一 SQL 高频出现；单元测试断言查询次数。
+解决：</p>
+<ul>
+<li>JOIN / <code>include</code> / <code>relationLoadStrategy: &#39;join&#39;</code> 一次取回</li>
+<li>批量 <code>IN</code> 查询后在内存拼装（<code>where: { id: { in: ids } }</code>）</li>
+<li>DataLoader 合并同一 tick 内的请求（GraphQL 必备）</li>
+<li>读模型/汇总表避免每次聚合
+注意：JOIN 也有代价（行放大），一对多时可用「两个批量查询 + 内存映射」更稳。</li>
+</ul>
+<h3>89. 缓存与数据库如何保持一致？</h3>
+<p><strong>答案：</strong>
+主流是 <strong>Cache-Aside</strong>：读时未命中查库回填；写时<strong>先更新数据库，再删除缓存</strong>（而不是更新缓存）。
+为什么删而不是更新：并发写时更新缓存可能乱序留下旧值；删除让下次读自然回填。
+仍有窗口：删除缓存失败 → 用消息/订阅 binlog（Canal/Debezium）异步重试删除；读旧值回填问题 → 延迟双删或给缓存加短 TTL 兜底。
+其他：</p>
+<ul>
+<li>强一致场景（余额、库存）不要用缓存做主数据，改读主库或用分布式锁</li>
+<li>热点 key 用逻辑过期 + 互斥重建，防击穿</li>
+<li>多级缓存（本地 Caffeine + Redis）要注意失效广播</li>
+<li>最终一致要给业务定义可接受延迟（如 1s 内）</li>
+</ul>
+<h3>90. 数据库连接数为什么会打满？全栈应用如何排查？</h3>
+<p><strong>答案：</strong>
+常见原因：</p>
+<ul>
+<li>每个请求新建连接（未用连接池）</li>
+<li>连接池配置过大 × 实例数 &gt; 数据库上限（K8s 扩容后成倍放大）</li>
+<li>事务/连接未释放（忘记 <code>release</code>、异常路径遗漏 <code>finally</code>）</li>
+<li>慢查询长期占用连接，请求排队进而堆积</li>
+<li>Serverless/边缘函数天然多实例，必须用 PgBouncer/Prisma Accelerate/Neon proxy
+排查：MySQL <code>SHOW PROCESSLIST</code>、<code>Threads_connected</code>；PG <code>pg_stat_activity</code> 按 <code>state</code> 分组（<code>idle in transaction</code> 是元凶）、<code>pgbouncer</code> 的 pool 指标。
+治理：池大小按 <code>实例数 × pool ≤ max_connections × 0.8</code> 计算、设置 <code>connectionTimeout</code>、<code>statement_timeout</code> 与 <code>idle_in_transaction_session_timeout</code>、把长任务移出请求链路。</li>
+</ul>
+<h3>91. 读写分离后「写后读不到」怎么办？</h3>
+<p><strong>答案：</strong>
+原因：主从复制是异步的，从库有延迟（大事务、DDL、从库负载高会放大）。
+方案（按推荐度）：</p>
+<ol>
+<li><strong>关键路径读主库</strong>：写操作后的一段时间（如 1s）内，该用户的读请求走主库（粘性会话）</li>
+<li><strong>GTID / LSN 位点校验</strong>：写入时返回位点，读从库前检查是否已追平，未追平则走主库或等待</li>
+<li><strong>会话级路由</strong>：同一事务/请求上下文内固定走主库；cookie 或 header 标记</li>
+<li><strong>业务规避</strong>：写后直接用返回值渲染，不立刻回查；列表页容忍短暂延迟</li>
+<li><strong>缓存兜底</strong>：写成功后同步更新/删除缓存，读走缓存
+另外要监控 <code>Seconds_Behind_Master</code> / PG 的 <code>pg_stat_replication</code> 延迟，延迟过高时自动降级为读主库。</li>
+</ol>
+<h2>八、综合场景题</h2>
+<h3>92. 设计一个「商品列表」页面：筛选 + 排序 + 分页，前后端如何配合？</h3>
+<p><strong>答案：</strong>
+前端：</p>
+<ul>
+<li>筛选/排序/分页状态放 URL（可分享、可回退），用 <code>useSearchParams</code> 驱动 Query key</li>
+<li><code>placeholderData: keepPreviousData</code> 避免翻页闪烁；骨架屏；筛选变化用 <code>useDeferredValue</code> 或防抖</li>
+<li>请求取消：AbortController 或 Query 自动处理</li>
+<li>空态/错误态/加载态齐全，列表虚拟化（长列表）
+接口：<code>GET /products?category=&amp;priceMin=&amp;priceMax=&amp;sort=-sales&amp;cursor=</code>，返回 <code>{ items, nextCursor }</code> 或 <code>{ items, total, page }</code>
+数据库：联合索引 <code>(category_id, status, sales DESC, id)</code> 支持筛选 + 排序 + 游标；选择性高的条件前置；避免 <code>%keyword%</code>（PG 用 pg_trgm，MySQL 用全文索引或 ES）
+缓存：类目首页结果缓存 + 失效策略；总数缓存</li>
+</ul>
+<h3>93. 设计一个下单流程，如何保证不超卖、不重复下单、失败可回滚？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li><strong>防重复</strong>：前端按钮置灰 + 后端幂等键 <code>(user_id, client_order_no)</code> 唯一索引；重复请求返回已有订单</li>
+<li><strong>库存</strong>：Redis 预扣（Lua 原子扣减）或 DB 条件更新 <code>UPDATE stock SET qty=qty-1 WHERE sku=? AND qty&gt;=1</code>，检查影响行数；高并发下用「分段库存/队列串行化」</li>
+<li><strong>创建订单</strong>：本地事务写订单 + 订单项 + 库存流水；发消息用 Outbox 表保证不丢</li>
+<li><strong>异步后续</strong>：扣积分、发通知、写报表通过消息（消费端幂等）</li>
+<li><strong>超时未支付</strong>：延迟消息/定时任务关单并回补库存（补偿操作幂等）</li>
+<li><strong>一致性</strong>：Saga 或「先冻结后确认」；对账任务兜底（库存流水与订单对账）</li>
+<li><strong>可观测</strong>：全链路 traceId、订单状态机审计日志</li>
+</ol>
+<h3>94. 如何设计一个通知中心（站内信 + 邮件 + 推送）？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>接入层</strong>：统一 <code>POST /notifications</code>，参数含模板 ID、接收人、变量、渠道优先级</li>
+<li><strong>模板与偏好</strong>：模板版本化；用户订阅偏好与免打扰时段</li>
+<li><strong>异步</strong>：写库 + 发消息（Outbox），消费者按渠道分发；失败重试 + 死信</li>
+<li><strong>限流与去重</strong>：同一事件短时间去重（Redis key）、每用户每日上限、按渠道降级（推送失败 → 站内信）</li>
+<li><strong>实时</strong>：站内信未读数用 Redis 计数，WebSocket/SSE 推送，前端轮询兜底</li>
+<li><strong>可靠性</strong>：投递记录表（状态机 pending/sent/failed）、可重放、第三方回调验签</li>
+<li><strong>合规</strong>：退订、PII 脱敏、审计</li>
+</ul>
+<h3>95. 前后端如何协作定义接口并避免联调返工？</h3>
+<p><strong>答案：</strong></p>
+<ul>
+<li><strong>契约先行</strong>：OpenAPI/GraphQL schema 放进仓库，评审后再开发；前端用 mock（MSW/Prism）并行推进</li>
+<li><strong>类型自动生成</strong>：<code>openapi-typescript</code>、<code>orval</code>、tRPC 直接共享类型，杜绝手写接口类型</li>
+<li><strong>运行时校验</strong>：后端 zod 校验入参并导出类型，前端对响应也做 schema 校验（第三方/关键接口）</li>
+<li><strong>错误契约</strong>：错误码枚举、字段级错误结构、分页结构统一</li>
+<li><strong>契约测试</strong>：CI 里校验实现与 schema 一致；破坏性变更需版本升级</li>
+<li><strong>环境与数据</strong>：共享 mock 数据、seed 脚本、独立测试租户</li>
+<li><strong>联调清单</strong>：鉴权方式、超时与重试、幂等、空态/错误态、分页边界（0 条/最后一条）</li>
+</ul>
+<h3>96. 生产环境出现「页面白屏/接口 500」，你的排查链路是什么？</h3>
+<p><strong>答案：</strong></p>
+<ol>
+<li><strong>确认范围</strong>：单用户 / 单区域 / 全量？哪个版本、哪个接口、什么时间点开始（对比发布记录）</li>
+<li><strong>前端</strong>：Sentry/前端监控错误堆栈、source map 定位；是否 hydration 失败、chunk 加载 404（发版后旧 index.html 引用旧 chunk → 需保留旧版本或加 <code>cache-control: no-cache</code> 的入口 HTML）；用户环境与浏览器</li>
+<li><strong>网络层</strong>：网关/CDN 状态码分布、CORS、证书、限流 429</li>
+<li><strong>服务端</strong>：请求量/错误率/延迟（RED 指标）、异常日志与 traceId 串联调用链、DB 慢查询与连接池、下游依赖熔断</li>
+<li><strong>定位根因</strong>：最近发布、配置变更、数据异常（某条脏数据触发边界）、依赖升级、流量突增</li>
+<li><strong>止血再修复</strong>：回滚/降级/开关关闭 → 再修根因 → 补监控与回归用例
+原则：先恢复再定位；所有结论用证据（指标/日志/链路），不要凭猜测。</li>
+</ol>
+<h2>总结</h2>
+<p>本文覆盖 React 全栈的核心考点：全栈架构与渲染模式选型、React 原理（Fiber/并发/Hooks）与工程实践（状态管理、性能优化、SSR/RSC、鉴权与请求层）、JavaScript 语言与异步机制、HTML/CSS 布局与渲染性能、REST/GraphQL 接口设计与幂等限流、微服务拆分与分布式一致性/容错/可观测性，以及 MySQL/PostgreSQL 的索引设计、慢查询排查、分页与缓存一致性问题。
+建议复习顺序：先能讲清「一次请求从浏览器到数据库的完整链路」，再用 React 与数据库的细节题填充；场景题重点练习「幂等、超时重试、最终一致、可观测」这四个关键词，它们是全栈面试的高频得分点。</p>
+</div>
+</body>
+</html>
